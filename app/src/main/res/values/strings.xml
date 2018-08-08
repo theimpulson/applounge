@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">App Installer</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_categories">Categories</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_updates">Updates</string>
+    <string name="menu_settings">Settings</string>
+
 </resources>
