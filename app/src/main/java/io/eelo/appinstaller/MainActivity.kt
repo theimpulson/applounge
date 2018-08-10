@@ -6,15 +6,68 @@ import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.annotation.SuppressLint
+import android.support.v4.app.Fragment
+import android.view.MenuItem
+import io.eelo.appinstaller.categories.CategoriesFragment
+import io.eelo.appinstaller.home.HomeFragment
+import io.eelo.appinstaller.search.SearchFragment
+import io.eelo.appinstaller.settings.SettingsFragment
+import io.eelo.appinstaller.updates.UpdatesFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+    private var currentFragment: Fragment? = null
+    private val homeFragment = HomeFragment()
+    private val categoriesFragment = CategoriesFragment()
+    private val searchFragment = SearchFragment()
+    private val updatesFragment = UpdatesFragment()
+    private val settingsFragment = SettingsFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Show the home fragment by default
+        showFragment(homeFragment)
+
+        bottom_navigation_view.setOnNavigationItemSelectedListener(this)
+
+        // Disable shifting of nav bar items
         removeShiftMode(bottom_navigation_view)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when {
+            item.itemId == R.id.menu_home -> {
+                showFragment(homeFragment)
+                return true
+            }
+            item.itemId == R.id.menu_categories -> {
+                showFragment(categoriesFragment)
+                return true
+            }
+            item.itemId == R.id.menu_search -> {
+                showFragment(searchFragment)
+                return true
+            }
+            item.itemId == R.id.menu_updates -> {
+                showFragment(updatesFragment)
+                return true
+            }
+            item.itemId == R.id.menu_settings -> {
+                showFragment(settingsFragment)
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun showFragment(fragment: Fragment) {
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.frame_layout, fragment)
+                .commit()
+        currentFragment = fragment
     }
 
     @SuppressLint("RestrictedApi")
