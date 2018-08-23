@@ -7,4 +7,29 @@
     <string name="menu_updates">Updates</string>
     <string name="menu_settings">Settings</string>
 
+    <string name="update_interval">Automatically update interval</string>
+    <string-array name="update_interval_options">
+        <item>@string/hourly</item>
+        <item>@string/daily</item>
+        <item>@string/weekly</item>
+        <item>@string/monthly</item>
+    </string-array>
+    <string-array name="update_interval_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <string name="hourly">Hourly</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="only_wifi">Only on Wi-Fi</string>
+    <string name="only_wifi_desc">Only update automatically on unmetered networks like Wi-Fi</string>
+    <string name="auto_update">Automatically install updates</string>
+    <string name="auto_update_desc">Download and install update apps in the background</string>
+    <string name="notify_updates">Show available updates</string>
+    <string name="notify_updates_desc">Show a notification when updates are available</string>
+    <string name="updates">Updates</string>
+
 </resources>
