@@ -6,5 +6,16 @@
     <string name="menu_search">Search</string>
     <string name="menu_updates">Updates</string>
     <string name="menu_settings">Settings</string>
-
+    
+    <string name="preference_updates_title">Updates</string>
+    <string name="preference_update_interval_default">24</string>
+    <string name="preference_update_interval_title">Automatic update interval</string>
+    <string name="preference_update_wifi_only_title">Only on Wi-Fi</string>
+    <string name="preference_update_wifi_only_description">Update apps automatically only on
+        un-metered networks like Wi-Fi</string>
+    <string name="preference_update_install_automatically_title">Automatically install updates</string>
+    <string name="preference_update_install_automatically_description">Download and install app
+        updates in the background</string>
+    <string name="preference_update_notify_available_title">Show available updates</string>
+    <string name="preference_update_notify_available_description">Show a notification when app updates are available</string>
 </resources>
