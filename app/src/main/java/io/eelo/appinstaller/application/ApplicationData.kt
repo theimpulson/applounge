@@ -1,21 +1,20 @@
 package io.eelo.appinstaller.application
 
-class ApplicationData {
+class ApplicationData(var packageName: String, var lastVersion: String) {
 
-    var name: String? = null
-    var description: String? = null
-    var packageName: String? = null
-    var category: String? = null
-    var author: String? = null
-    var createdOn: String? = null
-    var numberOfDownloads: Int = 0
-    var source: String? = null
-    var liscence: String? = null
-    var license: String? = null
-    var lastVersion: String? = null
-    var appLink: String? = null
-    var textScore: Double = 0.toDouble()
-    var iconImagePath: String? = null
-    var otherImagesPath: Array<String>? = null
+    var name = ""
+    var description = ""
+    var category = ""
+    var author = ""
+    var createdOn = ""
+    var numberOfDownloads = 0
+    var source = ""
+    var license = ""
+    var stars = 0f
+    var icon = ""
+    var images = arrayOf<String>()
+    var id = ""
+    var lastModified = ""
+
 
 }
