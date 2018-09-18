@@ -1,12 +1,19 @@
 <resources>
     <string name="app_name">App Installer</string>
 
+    <!-- Common -->
+    <string name="app_icon_content_description">App icon</string>
+    <string name="app_reviews_content_description">App reviews</string>
+    <string name="action_install">Install</string>
+
+    <!-- Bottom Navigation Bar -->
     <string name="menu_home">Home</string>
     <string name="menu_categories">Categories</string>
     <string name="menu_search">Search</string>
     <string name="menu_updates">Updates</string>
     <string name="menu_settings">Settings</string>
-    
+
+    <!-- Settings Fragment -->
     <string name="preference_updates_title">Updates</string>
     <string name="preference_update_interval_default">24</string>
     <string name="preference_update_interval_title">Automatic update interval</string>

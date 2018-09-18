@@ -5,4 +5,8 @@
     <color name="colorAccent">#4CAF50</color>
 
     <color name="colorDivider">#607D8B</color>
+
+    <color name="colorRatingGood">#4CAF50</color>
+    <color name="colorRatingNeutral">#FFEB3B</color>
+    <color name="colorRatingBad">#F44336</color>
 </resources>
