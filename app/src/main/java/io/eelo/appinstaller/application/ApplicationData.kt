@@ -15,6 +15,5 @@ class ApplicationData(var packageName: String, var lastVersion: String) {
     var images = arrayOf<String>()
     var id = ""
     var lastModified = ""
-
-
+    var privacyScore = 0
 }

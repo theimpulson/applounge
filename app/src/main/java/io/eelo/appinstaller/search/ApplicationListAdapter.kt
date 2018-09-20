@@ -32,11 +32,11 @@ class ApplicationListAdapter(private val appList: ArrayList<Application>) :
 
     // Set properties of views in the view holder
     override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
-        holder.title.text = appList[position].title
-        holder.author.text = appList[position].author
-        holder.ratingBar.rating = appList[position].rating
-        holder.rating.text = appList[position].rating.toString()
-        holder.privacyScore.text = appList[position].privacyScore.toString() + "%"
+        holder.title.text = appList[position].data.name
+        holder.author.text = appList[position].data.author
+        holder.ratingBar.rating = appList[position].data.stars
+        holder.rating.text = appList[position].data.stars.toString()
+        holder.privacyScore.text = appList[position].data.privacyScore.toString() + "%"
     }
 
     // Size of the app list
