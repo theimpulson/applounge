@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.Application
+import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment() {
 
@@ -51,7 +52,7 @@ class SearchFragment : Fragment() {
 
         // Handle search queries
         searchView.setOnSearchClickListener {
-            searchViewModel.search(searchView.query.toString())
+            searchViewModel.onSearchClick(searchView.query.toString())
         }
 
         return view

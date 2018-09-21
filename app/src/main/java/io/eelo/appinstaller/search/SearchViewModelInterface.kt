@@ -3,7 +3,9 @@ package io.eelo.appinstaller.search
 import io.eelo.appinstaller.application.Application
 
 interface SearchViewModelInterface {
-    fun search(searchQuery: String)
+    fun onSearchClick(searchQuery: String)
 
-    fun install(application: Application)
+    fun onApplicationClick(application: Application)
+
+    fun onInstallClick(application: Application)
 }
