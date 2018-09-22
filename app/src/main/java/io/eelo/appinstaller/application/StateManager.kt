@@ -1,6 +1,7 @@
 package io.eelo.appinstaller.application
 
-class StateManager(private val app: Application, private val listener: ApplicationStateListener) {
+class StateManager(private val app: Application) {
+    var listener: ApplicationStateListener = ApplicationStateListener.EMPTY()
     var state = State.NOT_DOWNLOADED
         private set
 

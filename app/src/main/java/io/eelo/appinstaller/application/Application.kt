@@ -1,12 +1,12 @@
 package io.eelo.appinstaller.application
 
-import android.content.Context
 import android.content.pm.PackageManager
+import io.eelo.appinstaller.Settings
 import java.io.File
 
-class Application(APKsFolder: String, private val serverURL: String, internal val data: ApplicationData, private val context: Context) {
-    private val apkFile = File(APKsFolder + data.packageName + "-" + data.lastVersion + ".apk")
-    private val packageManager = context.packageManager
+class Application(private val settings: Settings, internal val data: ApplicationData) {
+    private val apkFile = File(settings.APKsFolder + data.packageName + "-" + data.lastVersion + ".apk")
+    private val packageManager = settings.context!!.packageManager
 
     val isLastVersionInstalled: Boolean
         get() {
@@ -35,14 +35,14 @@ class Application(APKsFolder: String, private val serverURL: String, internal va
 
 
     fun launch() {
-        context.startActivity(context.packageManager.getLaunchIntentForPackage(data.packageName))
+        settings.context!!.startActivity(settings.context!!.packageManager.getLaunchIntentForPackage(data.packageName))
     }
 
     fun install() {
-        Installer(apkFile, context).install()
+        Installer(apkFile, settings.context!!).install()
     }
 
     fun createDownloader(): Downloader {
-        return Downloader(serverURL, data, apkFile)
+        return Downloader(settings.serverPath, data, apkFile)
     }
 }
