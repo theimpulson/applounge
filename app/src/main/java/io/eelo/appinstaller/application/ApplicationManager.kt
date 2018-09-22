@@ -1,34 +1,37 @@
 package io.eelo.appinstaller.application
 
-import java.io.IOException
-
 import io.eelo.appinstaller.application.State.DOWNLOADING
 import io.eelo.appinstaller.application.State.INSTALLING
+import java.io.IOException
 
 class ApplicationManager(private val app: Application) {
-    private var stateManager: StateManager? = null
-    private var listener: ApplicationStateListener? = null
+    private val stateManager = StateManager(app)
 
     val data: ApplicationData
         get() = app.data
 
-    fun initialize(listener: ApplicationStateListener) {
-        this.listener = listener
-        stateManager = StateManager(app, listener)
-        stateManager!!.find()
+    fun findState() {
+        stateManager.find()
     }
+
+    fun setListener(listener: ApplicationStateListener) {
+        stateManager.listener = listener
+    }
+
+    val state: State
+        get() = stateManager.state
 
     @Synchronized
     fun buttonClicked() {
-        when (stateManager!!.state) {
+        when (stateManager.state) {
             State.INSTALLED -> app.launch()
             State.DOWNLOADED -> {
-                stateManager!!.changeState(INSTALLING)
+                stateManager.changeState(INSTALLING)
                 app.install()
-                stateManager!!.find()
+                stateManager.find()
             }
             State.NOT_UPDATED, State.NOT_DOWNLOADED -> {
-                stateManager!!.changeState(DOWNLOADING)
+                stateManager.changeState(DOWNLOADING)
                 download()
             }
         }
@@ -36,16 +39,16 @@ class ApplicationManager(private val app: Application) {
 
     private fun download() {
         val downloader = app.createDownloader()
-        listener!!.downloading(downloader)
+        stateManager.listener.downloading(downloader)
         Thread {
             try {
                 downloader.download()
-                stateManager!!.changeState(INSTALLING)
+                stateManager.changeState(INSTALLING)
                 app.install()
-                stateManager!!.find()
+                stateManager.find()
             } catch (e: IOException) {
-                stateManager!!.find()
-                listener!!.anErrorHasOccurred()
+                stateManager.find()
+                stateManager.listener.anErrorHasOccurred()
             }
         }.start()
     }

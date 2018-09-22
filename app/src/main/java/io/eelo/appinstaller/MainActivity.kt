@@ -16,23 +16,22 @@ import io.eelo.appinstaller.updates.UpdatesFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
-    private var currentFragment: Fragment? = null
+    private val settings = Settings()
     private val homeFragment = HomeFragment()
     private val categoriesFragment = CategoriesFragment()
-    private val searchFragment = SearchFragment()
+    private val searchFragment = SearchFragment.newInstance(settings)
     private val updatesFragment = UpdatesFragment()
     private val settingsFragment = SettingsFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // Show the home fragment by default
+        settings.context = applicationContext
+        settings.serverPath = ""
+        settings.APKsFolder = ""
+        settings.resultsPerPage = 10
         showFragment(homeFragment)
-
         bottom_navigation_view.setOnNavigationItemSelectedListener(this)
-
-        // Disable shifting of nav bar items
         removeShiftMode(bottom_navigation_view)
     }
 
@@ -67,7 +66,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment)
                 .commit()
-        currentFragment = fragment
     }
 
     @SuppressLint("RestrictedApi")
