@@ -8,6 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+
+        <item name="autoCompleteTextViewStyle">@style/SearchSuggestionTheme</item>
+        <item name="textAppearanceSearchResultTitle">@style/SearchSuggestionTextTheme</item>
+    </style>
+
+    <style name="SearchSuggestionTheme" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:popupBackground">#FAFAFA</item>
+    </style>
+
+    <style name="SearchSuggestionTextTheme" parent="TextAppearance.AppCompat.SearchResult.Title">
+        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
 </resources>
