@@ -1,5 +1,6 @@
 package io.eelo.appinstaller.search
 
+import android.content.Context
 import io.eelo.appinstaller.application.Application
 
 interface SearchViewModelInterface {
@@ -7,7 +8,7 @@ interface SearchViewModelInterface {
 
     fun onSearchQuerySubmitted(searchQuery: String)
 
-    fun onApplicationClick(application: Application)
+    fun onApplicationClick(context: Context, application: Application)
 
-    fun onInstallClick(application: Application)
+    fun onInstallClick(context:Context, application: Application)
 }

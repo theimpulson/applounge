@@ -2,6 +2,7 @@ package io.eelo.appinstaller.search
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.content.Context
 import io.eelo.appinstaller.application.Application
 
 class SearchViewModel : ViewModel(), SearchViewModelInterface {
@@ -23,11 +24,11 @@ class SearchViewModel : ViewModel(), SearchViewModelInterface {
         searchModel.search(searchQuery)
     }
 
-    override fun onApplicationClick(application: Application) {
+    override fun onApplicationClick(context: Context, application: Application) {
         // TODO Show detailed view of application
     }
 
-    override fun onInstallClick(application: Application) {
-        searchModel.install(application)
+    override fun onInstallClick(context: Context, application: Application) {
+        searchModel.install(context, application)
     }
 }

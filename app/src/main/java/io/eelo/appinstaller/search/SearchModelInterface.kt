@@ -1,5 +1,6 @@
 package io.eelo.appinstaller.search
 
+import android.content.Context
 import io.eelo.appinstaller.application.Application
 
 interface SearchModelInterface {
@@ -7,5 +8,5 @@ interface SearchModelInterface {
 
     fun search(searchQuery: String)
 
-    fun install(application: Application)
+    fun install(context: Context, application: Application)
 }

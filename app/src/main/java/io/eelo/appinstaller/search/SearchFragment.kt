@@ -15,8 +15,10 @@ import android.view.ViewGroup
 import io.eelo.appinstaller.R
 import android.provider.BaseColumns
 import android.database.MatrixCursor
+import io.eelo.appinstaller.common.ApplicationListAdapter
 
-class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
+class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener,
+        ApplicationListAdapter.AdapterClickListener {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var searchView: SearchView
     private val SUGGESTION_KEY = "suggestion"
@@ -28,6 +30,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         searchView = view.findViewById(R.id.search_view)
         val recyclerView = view.findViewById<RecyclerView>(R.id.app_list)
         val viewManager = LinearLayoutManager(context)
+        val adapter = ApplicationListAdapter(context!!, searchViewModel.getApplications().value!!)
 
         // Initialise search view
         val from = arrayOf(SUGGESTION_KEY)
@@ -40,7 +43,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = viewManager
-        recyclerView.adapter = ApplicationListAdapter(searchViewModel.getApplications().value!!)
+        recyclerView.adapter = adapter
+        adapter.setOnItemClickListener(this)
 
         // Bind search view suggestions adapter to search suggestions list in view model
         searchViewModel.getSuggestions().observe(this, Observer {
@@ -59,6 +63,10 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         searchView.setOnQueryTextListener(this)
 
         return view
+    }
+
+    override fun onItemClick(position: Int) {
+        searchViewModel.onApplicationClick(context!!, searchViewModel.getApplications().value!![position])
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

@@ -1,6 +1,7 @@
 package io.eelo.appinstaller.search
 
 import android.arch.lifecycle.MutableLiveData
+import android.content.Context
 import io.eelo.appinstaller.application.Application
 
 class SearchModel : SearchModelInterface {
@@ -27,7 +28,8 @@ class SearchModel : SearchModelInterface {
         // update the applicationList variable (applicationList.value).
     }
 
-    override fun install(application: Application) {
+    override fun install(context: Context, application: Application) {
         // TODO Install APK
+        // Jo Please install the app from here.
     }
 }

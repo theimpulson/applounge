@@ -5,6 +5,8 @@
     <string name="app_icon_content_description">App icon</string>
     <string name="app_reviews_content_description">App reviews</string>
     <string name="action_install">Install</string>
+    <string name="action_update">Update</string>
+    <string name="action_launch">Open</string>
 
     <!-- Bottom Navigation Bar -->
     <string name="menu_home">Home</string>
