@@ -85,13 +85,16 @@ class ApplicationListAdapter(private val context: Context, private val applicati
                 holder.privacyScore.setTextColor(context.resources.getColor(R.color.colorRatingBad))
             }
         }
-        when {
-            applicationList[position].isInstalled -> {
+        if (applicationList[position].isInstalled) {
+            if (!applicationList[position].isLastVersionInstalled) {
+                holder.installButton.text = context.getString(R.string.action_update)
+            }
+            else {
                 holder.installButton.text = context.getString(R.string.action_launch)
             }
-            else -> {
-                holder.installButton.text = context.getString(R.string.action_install)
-            }
+        }
+        else {
+            holder.installButton.text = context.getString(R.string.action_install)
         }
     }
 
