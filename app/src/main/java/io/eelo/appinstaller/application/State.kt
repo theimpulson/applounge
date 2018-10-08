@@ -1,10 +1,10 @@
 package io.eelo.appinstaller.application
 
 enum class State(val buttonText: String) {
-    NOT_DOWNLOADED("install"),
-    NOT_UPDATED("install"),
-    DOWNLOADING("install"),
+    NOT_DOWNLOADED("download"),
+    NOT_UPDATED("update"),
+    DOWNLOADING("downloading"),
     DOWNLOADED("install"),
-    INSTALLING("install"),
-    INSTALLED("install");
+    INSTALLING("installing"),
+    INSTALLED("launch");
 }

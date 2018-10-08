@@ -1,48 +1,79 @@
 package io.eelo.appinstaller.application
 
-import android.content.pm.PackageManager
 import io.eelo.appinstaller.Settings
-import java.io.File
+import io.eelo.appinstaller.application.State.*
+import java.io.IOException
 
-class Application(private val settings: Settings, internal val data: ApplicationData) {
-    private val apkFile = File(settings.APKsFolder + data.packageName + "-" + data.lastVersion + ".apk")
-    private val packageManager = settings.context!!.packageManager
+import java.util.concurrent.atomic.AtomicInteger
 
-    val isLastVersionInstalled: Boolean
-        get() {
-            return try {
-                val packageInfo = packageManager.getPackageInfo(data.packageName, 0)
-                packageInfo.versionName == data.lastVersion
-            } catch (ignored: PackageManager.NameNotFoundException) {
-                false
+class Application(private val settings: Settings, var data: ApplicationData) {
+
+    private val uses = AtomicInteger(0)
+    private val info = ApplicationInfo(settings, data)
+    private val stateManager = StateManager(info)
+
+    fun addListener(listener: ApplicationStateListener) {
+        stateManager.addListener(listener)
+    }
+
+    fun removeListener(listener: ApplicationStateListener) {
+        stateManager.removeListener(listener)
+    }
+
+    val state: State
+        get() = stateManager.state
+
+    fun incrementUses() {
+        uses.incrementAndGet()
+    }
+
+    fun decrementUses() {
+        uses.decrementAndGet();
+        settings.installManager!!.tryRemove(this)
+    }
+
+    @Synchronized
+    fun buttonClicked() {
+        when (stateManager.state) {
+            INSTALLED -> info.launch()
+            DOWNLOADED -> {
+                stateManager.changeState(INSTALLING)
+                settings.installManager!!.install(data.packageName)
             }
-
-        }
-
-    val isInstalled: Boolean
-        get() {
-            return try {
-                packageManager.getPackageInfo(data.packageName, 0)
-                true
-            } catch (ignored: PackageManager.NameNotFoundException) {
-                false
+            NOT_UPDATED, NOT_DOWNLOADED -> {
+                stateManager.changeState(DOWNLOADING)
+                settings.installManager!!.download(data.packageName)
             }
-
+            DOWNLOADING -> {
+            }
+            INSTALLING -> {
+            }
         }
+    }
 
-    val isDownloaded: Boolean
-        get() = apkFile.exists()
-
-
-    fun launch() {
-        settings.context!!.startActivity(settings.context!!.packageManager.getLaunchIntentForPackage(data.packageName))
+    fun download() {
+        val downloader = info.createDownloader()
+        stateManager.notifyDownloading(downloader)
+        Thread {
+            try {
+                downloader.download()
+                stateManager.changeState(INSTALLING)
+                settings.installManager!!.install(data.packageName)
+                stateManager.find()
+            } catch (e: IOException) {
+                stateManager.find()
+                stateManager.notifyError()
+            }
+        }.start()
     }
 
     fun install() {
-        Installer(apkFile, settings.context!!).install()
+        info.install()
+        stateManager.find()
     }
 
-    fun createDownloader(): Downloader {
-        return Downloader(settings.serverPath, data, apkFile)
+    fun isUsed(): Boolean {
+        return uses.get() == 0
     }
+
 }

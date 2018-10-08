@@ -1,12 +1,18 @@
 package io.eelo.appinstaller.application
 
-class StateManager(private val app: Application) {
-    var listener: ApplicationStateListener = ApplicationStateListener.EMPTY()
+import java.util.*
+
+class StateManager(private val app: ApplicationInfo) {
+    private var listeners = Collections.synchronizedList(ArrayList<ApplicationStateListener>())
     var state = State.NOT_DOWNLOADED
         private set
 
+    init {
+        find()
+    }
+
     fun find() {
-        state = if (app.isLastVersionInstalled) {
+        changeState(if (app.isLastVersionInstalled) {
             State.INSTALLED
         } else if (app.isInstalled) {
             if (app.isDownloaded) State.DOWNLOADED else State.NOT_UPDATED
@@ -14,12 +20,37 @@ class StateManager(private val app: Application) {
             State.DOWNLOADED
         } else {
             State.NOT_DOWNLOADED
-        }
-        listener.stateChanged(state)
+        })
     }
 
     fun changeState(state: State) {
         this.state = state
-        listener.stateChanged(state)
+        notifyStateChange()
+    }
+
+    fun addListener(listener: ApplicationStateListener) {
+        listeners.add(listener)
+    }
+
+    fun removeListener(listener: ApplicationStateListener) {
+        listeners.remove(listener)
+    }
+
+    fun notifyDownloading(downloader: Downloader) {
+        listeners.forEach { listener: ApplicationStateListener ->
+            listener.downloading(downloader)
+        }
+    }
+
+    fun notifyError() {
+        listeners.forEach { listener: ApplicationStateListener ->
+            listener.anErrorHasOccurred()
+        }
+    }
+
+    private fun notifyStateChange() {
+        listeners.forEach { listener: ApplicationStateListener ->
+            listener.stateChanged(state)
+        }
     }
 }

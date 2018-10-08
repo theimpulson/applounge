@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.search
+package io.eelo.appinstaller.search.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

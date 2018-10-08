@@ -1,10 +1,11 @@
 package io.eelo.appinstaller.application
 
+import io.eelo.appinstaller.utlis.Constants
 import java.io.*
 import java.net.URL
 import java.net.URLConnection
 
-class Downloader internal constructor(private val serverURL: String, private val data: ApplicationData, private val apkFile: File) {
+class Downloader internal constructor(private val data: ApplicationData, private val apkFile: File) {
     var status = 0
         private set
     var total = 0
@@ -12,7 +13,7 @@ class Downloader internal constructor(private val serverURL: String, private val
 
     @Throws(IOException::class)
     fun download() {
-        val url = URL(serverURL + "apps?action=download&id=" + data.id + "&version=" + data.lastVersion)
+        val url = URL(Constants.BASE_URL + "apps?action=download&id=" + data.id + "&version=" + data.lastVersion)
         val connection = url.openConnection()
         total = connection.contentLength
         transferBytes(connection)

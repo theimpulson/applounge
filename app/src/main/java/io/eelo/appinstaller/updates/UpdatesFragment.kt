@@ -11,8 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.common.ApplicationListAdapter
+import io.eelo.appinstaller.updates.viewModel.UpdatesViewModel
 
-class UpdatesFragment : Fragment(), ApplicationListAdapter.AdapterClickListener {
+class UpdatesFragment : Fragment() {
     private lateinit var updatesViewModel: UpdatesViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -20,27 +21,21 @@ class UpdatesFragment : Fragment(), ApplicationListAdapter.AdapterClickListener 
 
         updatesViewModel = ViewModelProviders.of(this).get(UpdatesViewModel::class.java)
         val recyclerView = view.findViewById<RecyclerView>(R.id.app_list)
-        val viewManager = LinearLayoutManager(context)
-        val adapter = ApplicationListAdapter(context!!, updatesViewModel.getApplications().value!!)
 
-        // Initialise recycler view
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = viewManager
-        recyclerView.adapter = adapter
-        adapter.setOnItemClickListener(this)
+        initializeRecyclerView(recyclerView)
 
         // Bind recycler view adapter to search results list in view model
         updatesViewModel.getApplications().observe(this, Observer {
             recyclerView.adapter.notifyDataSetChanged()
         })
 
-        // Get a list of all apps with updates
         updatesViewModel.loadApplicationList()
-
         return view
     }
 
-    override fun onItemClick(position: Int) {
-        updatesViewModel.onApplicationClick(context!!, updatesViewModel.getApplications().value!![position])
+    private fun initializeRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = ApplicationListAdapter(context!!, updatesViewModel.getApplications().value!!)
     }
 }

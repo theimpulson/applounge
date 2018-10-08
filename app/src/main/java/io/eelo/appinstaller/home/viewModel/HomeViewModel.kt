@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.home
+package io.eelo.appinstaller.home.viewModel
 
 class HomeViewModel : HomeViewModelInterface {
 }

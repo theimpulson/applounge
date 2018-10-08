@@ -1,9 +1,9 @@
-package io.eelo.appinstaller.updates
+package io.eelo.appinstaller.updates.viewModel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.content.Context
 import io.eelo.appinstaller.application.Application
+import io.eelo.appinstaller.updates.model.UpdatesModel
 
 class UpdatesViewModel : ViewModel(), UpdatesViewModelInterface {
     private val updatesModel = UpdatesModel()
@@ -14,13 +14,5 @@ class UpdatesViewModel : ViewModel(), UpdatesViewModelInterface {
 
     override fun loadApplicationList() {
         updatesModel.loadApplicationList()
-    }
-
-    override fun onApplicationClick(context: Context, application: Application) {
-        // TODO Launch app detailed view
-    }
-
-    override fun onUpdateClick(context: Context, application: Application) {
-        updatesModel.update(context, application)
     }
 }
