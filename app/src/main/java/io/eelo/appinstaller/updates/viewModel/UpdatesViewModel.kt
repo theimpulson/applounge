@@ -8,7 +8,7 @@ import io.eelo.appinstaller.updates.model.UpdatesModel
 class UpdatesViewModel : ViewModel(), UpdatesViewModelInterface {
     private val updatesModel = UpdatesModel()
 
-    fun getApplications(): MutableLiveData<ArrayList<Application>> {
+    override fun getApplications(): MutableLiveData<ArrayList<Application>> {
         return updatesModel.applicationList
     }
 

@@ -8,11 +8,11 @@ import io.eelo.appinstaller.search.model.SearchModel
 class SearchViewModel : ViewModel(), SearchViewModelInterface {
     private val searchModel = SearchModel()
 
-    fun getSuggestions(): MutableLiveData<ArrayList<String>> {
+    override fun getSuggestions(): MutableLiveData<ArrayList<String>> {
         return searchModel.suggestionList
     }
 
-    fun getApplications(): MutableLiveData<ArrayList<Application>> {
+    override fun getApplications(): MutableLiveData<ArrayList<Application>> {
         return searchModel.applicationList
     }
 
