@@ -1,14 +1,17 @@
 package io.eelo.appinstaller.search.model
 
+import android.app.Activity
 import android.arch.lifecycle.MutableLiveData
-import io.eelo.appinstaller.Settings
 import io.eelo.appinstaller.application.Application
+import io.eelo.appinstaller.application.InstallManager
 
-class SearchModel(private val settings: Settings) : SearchModelInterface {
+class SearchModel : SearchModelInterface {
 
     val suggestionList = MutableLiveData<ArrayList<String>>()
     val applicationList = MutableLiveData<ArrayList<Application>>()
     private var element: SearchElement? = null
+    private var installManager: InstallManager? = null
+    private var activity: Activity? = null
 
     init {
         if (suggestionList.value == null) {
@@ -22,22 +25,28 @@ class SearchModel(private val settings: Settings) : SearchModelInterface {
     override fun searchSuggestions(searchQuery: String) {
         Thread {
             // TODO search suggestions
-            suggestionList.value = arrayListOf(searchQuery, searchQuery + "a", searchQuery + "b", searchQuery + "c")
+            val suggestions = arrayListOf(searchQuery, searchQuery + "a", searchQuery + "b", searchQuery + "c")
+            activity.run {
+                suggestionList.value = suggestions
+            }
         }.start()
     }
 
     override fun search(searchQuery: String) {
-        element?.apps?.forEach {
-            app -> app.decrementUses()
+        element?.apps?.forEach { app ->
+            app.decrementUses()
         }
-        element = SearchElement(searchQuery, settings)
+        element = SearchElement(searchQuery, installManager!!)
         loadMore()
     }
 
     override fun loadMore() {
         Thread {
             element!!.search()
-            applicationList.value = element!!.apps
+            val apps = element!!.apps
+            activity!!.runOnUiThread {
+                applicationList.value = apps
+            }
         }.start()
     }
 }

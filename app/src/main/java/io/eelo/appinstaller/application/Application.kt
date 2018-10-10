@@ -1,15 +1,15 @@
 package io.eelo.appinstaller.application
 
+import android.content.Context
 import io.eelo.appinstaller.Settings
 import io.eelo.appinstaller.application.State.*
 import java.io.IOException
-
 import java.util.concurrent.atomic.AtomicInteger
 
-class Application(private val settings: Settings, var data: ApplicationData) {
+class Application(var data: ApplicationData, context: Context, settings: Settings, private val installManager: InstallManager) {
 
     private val uses = AtomicInteger(0)
-    private val info = ApplicationInfo(settings, data)
+    private val info = ApplicationInfo(data, settings, context)
     private val stateManager = StateManager(info)
 
     fun addListener(listener: ApplicationStateListener) {
@@ -29,7 +29,7 @@ class Application(private val settings: Settings, var data: ApplicationData) {
 
     fun decrementUses() {
         uses.decrementAndGet();
-        settings.installManager!!.tryRemove(this)
+        installManager.tryRemove(this)
     }
 
     @Synchronized
@@ -38,11 +38,11 @@ class Application(private val settings: Settings, var data: ApplicationData) {
             INSTALLED -> info.launch()
             DOWNLOADED -> {
                 stateManager.changeState(INSTALLING)
-                settings.installManager!!.install(data.packageName)
+                installManager.install(data.packageName)
             }
             NOT_UPDATED, NOT_DOWNLOADED -> {
                 stateManager.changeState(DOWNLOADING)
-                settings.installManager!!.download(data.packageName)
+                installManager.download(data.packageName)
             }
             DOWNLOADING -> {
             }
@@ -58,7 +58,7 @@ class Application(private val settings: Settings, var data: ApplicationData) {
             try {
                 downloader.download()
                 stateManager.changeState(INSTALLING)
-                settings.installManager!!.install(data.packageName)
+                installManager.install(data.packageName)
                 stateManager.find()
             } catch (e: IOException) {
                 stateManager.find()

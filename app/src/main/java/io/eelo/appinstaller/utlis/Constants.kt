@@ -7,8 +7,4 @@ object Constants {
 
     // Search
     const val RESULTS_PER_PAGE = 10
-
-    //Download
-    const val APKS_FOLDER = ""
-    // TODO change the APKs_FOLDER
 }

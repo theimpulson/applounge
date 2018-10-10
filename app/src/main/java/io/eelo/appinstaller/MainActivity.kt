@@ -6,6 +6,7 @@ import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.annotation.SuppressLint
+import android.content.Context
 import android.support.v4.app.Fragment
 import android.view.MenuItem
 import io.eelo.appinstaller.categories.CategoriesFragment
