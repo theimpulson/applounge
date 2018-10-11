@@ -1,8 +1,8 @@
 package io.eelo.appinstaller.search.model
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.eelo.appinstaller.application.Application
-import io.eelo.appinstaller.application.InstallManager
+import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.utlis.Constants
 import java.io.IOException
 import java.net.URL

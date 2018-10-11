@@ -1,15 +1,14 @@
-package io.eelo.appinstaller.application
+package io.eelo.appinstaller.application.model
 
 import android.content.Context
-import io.eelo.appinstaller.Settings
-import io.eelo.appinstaller.application.State.*
+import io.eelo.appinstaller.application.model.State.*
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
 
-class Application(var data: ApplicationData, context: Context, settings: Settings, private val installManager: InstallManager) {
+class Application(var data: ApplicationData, context: Context, private val installManager: InstallManager) {
 
     private val uses = AtomicInteger(0)
-    private val info = ApplicationInfo(data, settings, context)
+    private val info = ApplicationInfo(data, context)
     private val stateManager = StateManager(info)
 
     fun addListener(listener: ApplicationStateListener) {
@@ -75,5 +74,4 @@ class Application(var data: ApplicationData, context: Context, settings: Setting
     fun isUsed(): Boolean {
         return uses.get() == 0
     }
-
 }

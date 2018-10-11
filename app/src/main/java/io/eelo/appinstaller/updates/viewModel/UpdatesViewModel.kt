@@ -2,7 +2,7 @@ package io.eelo.appinstaller.updates.viewModel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import io.eelo.appinstaller.application.Application
+import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.updates.model.UpdatesModel
 
 class UpdatesViewModel : ViewModel(), UpdatesViewModelInterface {

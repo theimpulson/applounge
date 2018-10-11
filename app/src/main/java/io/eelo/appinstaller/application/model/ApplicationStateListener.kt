@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.application
+package io.eelo.appinstaller.application.model
 
 interface ApplicationStateListener {
 

@@ -1,12 +1,12 @@
-package io.eelo.appinstaller.application
+package io.eelo.appinstaller.application.model
 
 import android.content.Context
 import android.content.pm.PackageManager
-import io.eelo.appinstaller.Settings
+import io.eelo.appinstaller.utlis.Constants.APK_FOLDER
 import java.io.File
 
-class ApplicationInfo(private val data: ApplicationData, settings: Settings, private val context: Context) {
-    private val apkFile = File(settings.APKsFolder + data.packageName + "-" + data.lastVersion + ".apk")
+class ApplicationInfo(private val data: ApplicationData, private val context: Context) {
+    private val apkFile = File(APK_FOLDER + data.packageName + "-" + data.lastVersion + ".apk")
     private val packageManager = context.packageManager
 
     val isLastVersionInstalled: Boolean

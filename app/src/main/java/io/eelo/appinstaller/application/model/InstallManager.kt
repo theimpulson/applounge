@@ -1,11 +1,10 @@
-package io.eelo.appinstaller.application
+package io.eelo.appinstaller.application.model
 
 import android.content.Context
-import io.eelo.appinstaller.Settings
 import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 
-class InstallManager (private val settings: Settings, private val context: Context){
+class InstallManager(private val context: Context) {
 
     private val apps = HashMap<String, Application>()
     private val downloading = ArrayBlockingQueue<String>(1000)
@@ -14,7 +13,7 @@ class InstallManager (private val settings: Settings, private val context: Conte
     @Synchronized
     fun findOrCreateApp(data: ApplicationData): Application {
         if (apps.containsKey(data.packageName)) {
-            apps[data.packageName] = Application(data, context, settings, this)
+            apps[data.packageName] = Application(data, context, this)
         }
         val app = apps[data.packageName]!!
         app.incrementUses()
@@ -66,6 +65,4 @@ class InstallManager (private val settings: Settings, private val context: Conte
             apps.remove(packageName)
         }
     }
-
-
 }

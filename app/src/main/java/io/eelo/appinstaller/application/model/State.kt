@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.application
+package io.eelo.appinstaller.application.model
 
 enum class State(val buttonText: String) {
     NOT_DOWNLOADED("download"),
@@ -6,5 +6,5 @@ enum class State(val buttonText: String) {
     DOWNLOADING("downloading"),
     DOWNLOADED("install"),
     INSTALLING("installing"),
-    INSTALLED("launch");
+    INSTALLED("open");
 }

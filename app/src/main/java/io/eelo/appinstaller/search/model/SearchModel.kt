@@ -2,8 +2,8 @@ package io.eelo.appinstaller.search.model
 
 import android.app.Activity
 import android.arch.lifecycle.MutableLiveData
-import io.eelo.appinstaller.application.Application
-import io.eelo.appinstaller.application.InstallManager
+import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.InstallManager
 
 class SearchModel : SearchModelInterface {
 

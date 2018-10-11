@@ -1,7 +1,7 @@
 package io.eelo.appinstaller.search.viewModel
 
 import android.arch.lifecycle.MutableLiveData
-import io.eelo.appinstaller.application.Application
+import io.eelo.appinstaller.application.model.Application
 
 interface SearchViewModelInterface {
 

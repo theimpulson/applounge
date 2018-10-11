@@ -1,7 +1,7 @@
 package io.eelo.appinstaller.updates.model
 
 import android.arch.lifecycle.MutableLiveData
-import io.eelo.appinstaller.application.Application
+import io.eelo.appinstaller.application.model.Application
 
 class UpdatesModel : UpdatesModelInterface {
     val applicationList = MutableLiveData<ArrayList<Application>>()

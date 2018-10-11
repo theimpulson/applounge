@@ -2,7 +2,7 @@ package io.eelo.appinstaller.search.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-import io.eelo.appinstaller.application.ApplicationData
+import io.eelo.appinstaller.application.model.ApplicationData
 
 class ApplicationResult(@param:JsonProperty("_id") private val packageName: String,
                         @param:JsonProperty("id") private val id: String,

@@ -7,4 +7,7 @@ object Constants {
 
     // Search
     const val RESULTS_PER_PAGE = 10
+
+    // Application
+    const val APK_FOLDER = ""
 }

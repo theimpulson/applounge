@@ -2,7 +2,7 @@ package io.eelo.appinstaller.search.viewModel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import io.eelo.appinstaller.application.Application
+import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.search.model.SearchModel
 
 class SearchViewModel : ViewModel(), SearchViewModelInterface {

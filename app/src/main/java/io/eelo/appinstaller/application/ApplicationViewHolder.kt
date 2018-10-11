@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.common
+package io.eelo.appinstaller.application
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -9,10 +9,14 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.*
+import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.ApplicationStateListener
+import io.eelo.appinstaller.application.model.Downloader
+import io.eelo.appinstaller.application.model.State
+import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
 import kotlinx.android.synthetic.main.application_list_item.view.*
 
-class AppViewHolder(val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
+class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
 
     private val icon: ImageView = view.app_icon
     private val title: TextView = view.app_title
@@ -21,18 +25,24 @@ class AppViewHolder(val view: View) : RecyclerView.ViewHolder(view), Application
     private val rating: TextView = view.app_rating
     private val privacyScore: TextView = view.app_privacy_score
     private val installButton: Button = view.app_install
-    private var app: Application? = null
+    private var application: Application? = null
+    private var context: Context? = null
+
+    private val applicationViewModel = ApplicationViewModel()
 
     init {
         view.setOnClickListener {
-            //TODO show the application's activity
+            if (context != null && application != null) {
+                applicationViewModel.onApplicationClick(context!!, application!!)
+            }
         }
-        installButton.setOnClickListener { app?.buttonClicked() }
+        installButton.setOnClickListener { application?.buttonClicked() }
     }
 
-    fun changeApp(app: Application, context: Context) {
-        this.app?.removeListener(this)
-        this.app = app
+    fun createApplicationView(app: Application, context: Context) {
+        this.application?.removeListener(this)
+        this.application = app
+        this.context = context
         app.addListener(this)
         title.text = app.data.name
         author.text = app.data.author

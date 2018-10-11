@@ -1,8 +1,8 @@
 package io.eelo.appinstaller.search.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import io.eelo.appinstaller.application.Application
-import io.eelo.appinstaller.application.InstallManager
+import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.InstallManager
 import java.util.*
 
 class SearchResult(@param:JsonProperty("pages") val pages: Int,

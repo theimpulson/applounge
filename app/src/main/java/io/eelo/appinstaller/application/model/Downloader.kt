@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.application
+package io.eelo.appinstaller.application.model
 
 import io.eelo.appinstaller.utlis.Constants
 import java.io.*
