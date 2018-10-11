@@ -27,6 +27,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
         searchViewModel = ViewModelProviders.of(this).get(SearchViewModel::class.java)
+        searchViewModel.initialise(context!!)
         searchView = view.findViewById(R.id.search_view)
         val recyclerView = view.findViewById<RecyclerView>(R.id.app_list)
 

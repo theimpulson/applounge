@@ -1,7 +1,7 @@
 package io.eelo.appinstaller.search.model
 
-import android.app.Activity
 import android.arch.lifecycle.MutableLiveData
+import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 
@@ -10,8 +10,7 @@ class SearchModel : SearchModelInterface {
     val suggestionList = MutableLiveData<ArrayList<String>>()
     val applicationList = MutableLiveData<ArrayList<Application>>()
     private var element: SearchElement? = null
-    private var installManager: InstallManager? = null
-    private var activity: Activity? = null
+    private lateinit var installManager: InstallManager
 
     init {
         if (suggestionList.value == null) {
@@ -22,31 +21,32 @@ class SearchModel : SearchModelInterface {
         }
     }
 
+    override fun initialise(context: Context) {
+        installManager = InstallManager(context)
+    }
+
     override fun searchSuggestions(searchQuery: String) {
-        Thread {
-            // TODO search suggestions
-            val suggestions = arrayListOf(searchQuery, searchQuery + "a", searchQuery + "b", searchQuery + "c")
-            activity.run {
-                suggestionList.value = suggestions
-            }
-        }.start()
+        val suggestions = arrayListOf(searchQuery, searchQuery + "a", searchQuery + "b", searchQuery + "c")
+        onSearchSuggestionsRetrieved(suggestions)
+    }
+
+    override fun onSearchSuggestionsRetrieved(suggestionsList: ArrayList<String>) {
+        this.suggestionList.value = suggestionsList
     }
 
     override fun search(searchQuery: String) {
         element?.apps?.forEach { app ->
             app.decrementUses()
         }
-        element = SearchElement(searchQuery, installManager!!)
+        element = SearchElement(searchQuery, installManager, this)
         loadMore()
     }
 
     override fun loadMore() {
-        Thread {
-            element!!.search()
-            val apps = element!!.apps
-            activity!!.runOnUiThread {
-                applicationList.value = apps
-            }
-        }.start()
+        element!!.search()
+    }
+
+    override fun onSearchComplete(applicationList: ArrayList<Application>) {
+        this.applicationList.value = applicationList
     }
 }
