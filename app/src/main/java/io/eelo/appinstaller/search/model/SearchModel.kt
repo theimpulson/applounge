@@ -43,7 +43,7 @@ class SearchModel : SearchModelInterface {
     }
 
     override fun loadMore() {
-        element!!.search()
+        element!!.loadMoreInBackground()
     }
 
     override fun onSearchComplete(applicationList: ArrayList<Application>) {

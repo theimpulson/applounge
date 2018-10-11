@@ -12,7 +12,7 @@ class InstallManager(private val context: Context) {
 
     @Synchronized
     fun findOrCreateApp(data: ApplicationData): Application {
-        if (apps.containsKey(data.packageName)) {
+        if (!apps.containsKey(data.packageName)) {
             apps[data.packageName] = Application(data, context, this)
         }
         val app = apps[data.packageName]!!
