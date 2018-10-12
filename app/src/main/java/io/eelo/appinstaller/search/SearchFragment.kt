@@ -15,13 +15,21 @@ import android.view.ViewGroup
 import io.eelo.appinstaller.R
 import android.provider.BaseColumns
 import android.database.MatrixCursor
+import android.widget.ProgressBar
+import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.search.viewModel.SearchViewModel
+import android.app.Activity
+import android.view.inputmethod.InputMethodManager
+
 
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var searchView: SearchView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
     private val SUGGESTION_KEY = "suggestion"
+    private var applicationList = ArrayList<Application>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
@@ -29,7 +37,10 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         searchViewModel = ViewModelProviders.of(this).get(SearchViewModel::class.java)
         searchViewModel.initialise(context!!)
         searchView = view.findViewById(R.id.search_view)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.app_list)
+        recyclerView = view.findViewById(R.id.app_list)
+        recyclerView.visibility = View.VISIBLE
+        progressBar = view.findViewById(R.id.progress_bar)
+        progressBar.visibility = View.GONE
 
         // Initialise search view
         val from = arrayOf(SUGGESTION_KEY)
@@ -42,7 +53,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ApplicationListAdapter(context!!, searchViewModel.getApplications().value!!)
+        recyclerView.adapter = ApplicationListAdapter(context!!, applicationList)
 
         // Bind search view suggestions adapter to search suggestions list in view model
         searchViewModel.getSuggestions().observe(this, Observer {
@@ -51,7 +62,11 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
         // Bind recycler view adapter to search results list in view model
         searchViewModel.getApplications().observe(this, Observer {
+            applicationList.clear()
+            applicationList.addAll(searchViewModel.getApplications().value!!)
+            progressBar.visibility = View.GONE
             recyclerView.adapter.notifyDataSetChanged()
+            recyclerView.visibility = View.VISIBLE
         })
 
         // Handle suggestion clicks
@@ -65,9 +80,12 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {
+            hideKeyboard(activity as Activity)
+            recyclerView.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
             searchViewModel.onSearchQuerySubmitted(it)
         }
-        return true
+        return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
@@ -92,5 +110,16 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             cursor.addRow(arrayOf(i, suggestions[i]))
         }
         searchView.suggestionsAdapter.changeCursor(cursor)
+    }
+
+    private fun hideKeyboard(activity: Activity) {
+        val inputMethodManager = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        //Find the currently focused view, so we can grab the correct window token from it.
+        var view = activity.currentFocus
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = View(activity)
+        }
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

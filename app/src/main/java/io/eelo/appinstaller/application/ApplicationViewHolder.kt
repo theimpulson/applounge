@@ -1,7 +1,6 @@
 package io.eelo.appinstaller.application
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
@@ -15,6 +14,7 @@ import io.eelo.appinstaller.application.model.Downloader
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
 import kotlinx.android.synthetic.main.application_list_item.view.*
+import java.text.DecimalFormat
 
 class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
 
@@ -47,8 +47,9 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
         title.text = app.data.name
         author.text = app.data.author
         ratingBar.rating = app.data.stars
-        rating.text = app.data.stars.toString()
-        ratingBar.progressBackgroundTintList = ColorStateList.valueOf(findStarsColor(app.data.stars, context))
+        val decimalFormat = DecimalFormat("##.0")
+        rating.text = decimalFormat.format(app.data.stars).toString()
+        rating.setTextColor(findStarsColor(app.data.stars, context))
         privacyScore.text = app.data.privacyScore.toString()
         privacyScore.setTextColor(findPrivacyColor(app.data.privacyScore, context))
         installButton.text = app.state.buttonText
@@ -56,8 +57,8 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
 
     private fun findStarsColor(stars: Float, context: Context): Int {
         return context.resources.getColor(when {
-            stars >= 4 -> R.color.colorRatingGood
-            stars >= 3 -> R.color.colorRatingNeutral
+            stars >= 4.0f -> R.color.colorRatingGood
+            stars >= 3.0f -> R.color.colorRatingNeutral
             else -> R.color.colorRatingBad
         })
     }

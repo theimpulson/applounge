@@ -6,7 +6,7 @@ object Constants {
     const val BASE_URL = "https://api.cleanapk.org/"
 
     // Search
-    const val RESULTS_PER_PAGE = 10
+    const val RESULTS_PER_PAGE = 20
 
     // Application
     const val APK_FOLDER = ""
