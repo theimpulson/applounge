@@ -10,7 +10,7 @@ class SearchModel : SearchModelInterface {
     val suggestionList = MutableLiveData<ArrayList<String>>()
     val applicationList = MutableLiveData<ArrayList<Application>>()
     private var element: SearchElement? = null
-    private lateinit var installManager: InstallManager
+    private var installManager: InstallManager? = null
 
     init {
         if (suggestionList.value == null) {
@@ -22,7 +22,9 @@ class SearchModel : SearchModelInterface {
     }
 
     override fun initialise(context: Context) {
-        installManager = InstallManager(context)
+        if (installManager == null) {
+            installManager = InstallManager(context)
+        }
     }
 
     override fun searchSuggestions(searchQuery: String) {
@@ -38,7 +40,7 @@ class SearchModel : SearchModelInterface {
         element?.apps?.forEach { app ->
             app.decrementUses()
         }
-        element = SearchElement(searchQuery, installManager, this)
+        element = SearchElement(searchQuery, installManager!!, this)
         loadMore()
     }
 

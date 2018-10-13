@@ -19,7 +19,7 @@ class UpdatesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_updates, container, false)
 
-        updatesViewModel = ViewModelProviders.of(this).get(UpdatesViewModel::class.java)
+        updatesViewModel = ViewModelProviders.of(activity!!).get(UpdatesViewModel::class.java)
         val recyclerView = view.findViewById<RecyclerView>(R.id.app_list)
 
         initializeRecyclerView(recyclerView)

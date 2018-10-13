@@ -34,7 +34,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
-        searchViewModel = ViewModelProviders.of(this).get(SearchViewModel::class.java)
+        searchViewModel = ViewModelProviders.of(activity!!).get(SearchViewModel::class.java)
         searchViewModel.initialise(context!!)
         searchView = view.findViewById(R.id.search_view)
         recyclerView = view.findViewById(R.id.app_list)
@@ -67,6 +67,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             progressBar.visibility = View.GONE
             recyclerView.adapter.notifyDataSetChanged()
             recyclerView.visibility = View.VISIBLE
+            recyclerView.scrollToPosition(0)
         })
 
         // Handle suggestion clicks
