@@ -1,6 +1,9 @@
 package io.eelo.appinstaller.application
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.support.v7.app.AlertDialog
+import android.support.v7.widget.AlertDialogLayout
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
@@ -52,7 +55,7 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
         rating.setTextColor(findStarsColor(app.data.stars, context))
         privacyScore.text = app.data.privacyScore.toString()
         privacyScore.setTextColor(findPrivacyColor(app.data.privacyScore, context))
-        installButton.text = app.state.buttonText
+        stateChanged(app.state)
     }
 
     private fun findStarsColor(stars: Float, context: Context): Int {
@@ -75,8 +78,15 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
         installButton.text = state.buttonText
     }
 
+    @SuppressLint("SetTextI18n")
     override fun downloading(downloader: Downloader) {
-        // TODO
+        downloader.addListener { count, total ->
+            installButton.text = "${toMiB(count)}/${toMiB(total)} MiB"
+        }
+    }
+
+    private fun toMiB(length: Int): Double {
+        return length.div(10486).div(100.0)
     }
 
     override fun anErrorHasOccurred() {

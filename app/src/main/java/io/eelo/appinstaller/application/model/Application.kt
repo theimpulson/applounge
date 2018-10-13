@@ -9,7 +9,7 @@ class Application(var data: ApplicationData, context: Context, private val insta
 
     private val uses = AtomicInteger(0)
     private val info = ApplicationInfo(data, context)
-    private val stateManager = StateManager(info)
+    private val stateManager = StateManager(info, this)
 
     fun addListener(listener: ApplicationStateListener) {
         stateManager.addListener(listener)
@@ -21,6 +21,7 @@ class Application(var data: ApplicationData, context: Context, private val insta
 
     val state: State
         get() = stateManager.state
+    var downloader: Downloader? = null
 
     fun incrementUses() {
         uses.incrementAndGet()
@@ -51,11 +52,11 @@ class Application(var data: ApplicationData, context: Context, private val insta
     }
 
     fun download() {
-        val downloader = info.createDownloader()
-        stateManager.notifyDownloading(downloader)
+        downloader = info.createDownloader()
+        stateManager.notifyDownloading(downloader!!)
         Thread {
             try {
-                downloader.download()
+                downloader!!.download()
                 stateManager.changeState(INSTALLING)
                 installManager.install(data.packageName)
                 stateManager.find()

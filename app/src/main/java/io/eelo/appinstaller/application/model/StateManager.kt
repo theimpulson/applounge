@@ -2,7 +2,7 @@ package io.eelo.appinstaller.application.model
 
 import java.util.*
 
-class StateManager(private val app: ApplicationInfo) {
+class StateManager(private val info: ApplicationInfo, private val app: Application) {
     private var listeners = Collections.synchronizedList(ArrayList<ApplicationStateListener>())
     var state = State.NOT_DOWNLOADED
         private set
@@ -12,11 +12,11 @@ class StateManager(private val app: ApplicationInfo) {
     }
 
     fun find() {
-        changeState(if (app.isLastVersionInstalled) {
+        changeState(if (info.isLastVersionInstalled) {
             State.INSTALLED
-        } else if (app.isInstalled) {
-            if (app.isDownloaded) State.DOWNLOADED else State.NOT_UPDATED
-        } else if (app.isDownloaded) {
+        } else if (info.isInstalled) {
+            if (info.isDownloaded) State.DOWNLOADED else State.NOT_UPDATED
+        } else if (info.isDownloaded) {
             State.DOWNLOADED
         } else {
             State.NOT_DOWNLOADED
@@ -30,6 +30,9 @@ class StateManager(private val app: ApplicationInfo) {
 
     fun addListener(listener: ApplicationStateListener) {
         listeners.add(listener)
+        if (state == State.DOWNLOADING) {
+            app.downloader?.let { listener.downloading(it) }
+        }
     }
 
     fun removeListener(listener: ApplicationStateListener) {

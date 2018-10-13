@@ -6,10 +6,11 @@ import java.net.URL
 import java.net.URLConnection
 
 class Downloader internal constructor(private val data: ApplicationData, private val apkFile: File) {
-    var status = 0
+    var count = 0
         private set
     var total = 0
         private set
+    private val listeners = ArrayList<(Int, Int) -> Unit>()
 
     @Throws(IOException::class)
     fun download() {
@@ -37,7 +38,16 @@ class Downloader internal constructor(private val data: ApplicationData, private
             return false
         }
         output.write(buffer)
-        status += count
+        this.count += count
+        notifyListeners()
         return true
+    }
+
+    private fun notifyListeners() {
+        listeners.forEach { listener -> listener.invoke(count, total) }
+    }
+
+    fun addListener(listener: (Int, Int) -> Unit) {
+        listeners.add(listener)
     }
 }
