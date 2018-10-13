@@ -75,4 +75,8 @@ class Application(var data: ApplicationData, context: Context, private val insta
     fun isUsed(): Boolean {
         return uses.get() == 0
     }
+
+    fun searchFullData() {
+        // TODO get the full data from the server
+    }
 }

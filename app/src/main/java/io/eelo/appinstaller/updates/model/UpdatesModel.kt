@@ -1,10 +1,12 @@
 package io.eelo.appinstaller.updates.model
 
 import android.arch.lifecycle.MutableLiveData
+import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 
 class UpdatesModel : UpdatesModelInterface {
+
     val applicationList = MutableLiveData<ArrayList<Application>>()
 
     init {
@@ -15,7 +17,11 @@ class UpdatesModel : UpdatesModelInterface {
 
     var installManager: InstallManager? = null
 
-    override fun loadApplicationList() {
-        // TODO Load list of app updates
+    override fun loadApplicationList(context: Context) {
+        UnUpdatedAppsFinder(context.packageManager, this, installManager!!).execute()
+    }
+
+    override fun onAppsFound(applications: ArrayList<Application>) {
+        applicationList.value = applications
     }
 }
