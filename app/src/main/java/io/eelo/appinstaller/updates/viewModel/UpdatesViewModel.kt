@@ -2,6 +2,7 @@ package io.eelo.appinstaller.updates.viewModel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.updates.model.UpdatesModel
 
@@ -12,7 +13,7 @@ class UpdatesViewModel : ViewModel(), UpdatesViewModelInterface {
         return updatesModel.applicationList
     }
 
-    override fun loadApplicationList() {
-        updatesModel.loadApplicationList()
+    override fun loadApplicationList(context: Context) {
+        updatesModel.loadApplicationList(context)
     }
 }

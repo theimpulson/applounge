@@ -29,7 +29,7 @@ class UpdatesFragment : Fragment() {
             recyclerView.adapter.notifyDataSetChanged()
         })
 
-        updatesViewModel.loadApplicationList()
+        updatesViewModel.loadApplicationList(context!!)
         return view
     }
 
