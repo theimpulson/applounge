@@ -2,8 +2,6 @@ package io.eelo.appinstaller.application
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.AlertDialogLayout
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
@@ -75,7 +73,29 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
     }
 
     override fun stateChanged(state: State) {
-        installButton.text = state.buttonText
+        var installButtonText = context!!.resources.getString(R.string.action_install)
+        var isInstallButtonEnabled = true
+        when (state) {
+            State.DOWNLOADING -> {
+                installButtonText = context!!.resources.getString(R.string.state_downloading)
+                isInstallButtonEnabled = false
+            }
+            State.INSTALLING -> {
+                installButtonText = context!!.resources.getString(R.string.state_installing)
+                isInstallButtonEnabled = false
+            }
+            State.INSTALLED -> {
+                installButtonText = context!!.resources.getString(R.string.action_launch)
+                isInstallButtonEnabled = true
+            }
+            State.NOT_UPDATED -> {
+                installButtonText = context!!.resources.getString(R.string.action_update)
+                isInstallButtonEnabled = true
+            }
+        }
+
+        installButton.text = installButtonText
+        installButton.isEnabled = isInstallButtonEnabled
     }
 
     @SuppressLint("SetTextI18n")

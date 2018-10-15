@@ -7,7 +7,9 @@
     <string name="app_privacy_score_content_description">App privacy score</string>
     <string name="app_energy_score_content_description">App energy score</string>
     <string name="app_rating_content_description">App rating</string>
+    <string name="state_downloading">Downloading</string>
     <string name="action_install">Install</string>
+    <string name="state_installing">Installing</string>
     <string name="action_update">Update</string>
     <string name="action_launch">Open</string>
     <string name="action_share">Share</string>
