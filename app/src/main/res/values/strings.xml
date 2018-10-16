@@ -24,6 +24,10 @@
     <string name="menu_updates">Updates</string>
     <string name="menu_settings">Settings</string>
 
+    <!-- Categories fragment -->
+    <string name="applications_categories_title">Apps</string>
+    <string name="games_categories_title">Games</string>
+
     <!-- Settings Fragment -->
     <string name="preference_updates_title">Updates</string>
     <string name="preference_update_interval_default">24</string>
