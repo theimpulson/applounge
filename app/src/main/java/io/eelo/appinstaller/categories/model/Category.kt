@@ -1,3 +1,5 @@
 package io.eelo.appinstaller.categories.model
 
-class Category(val title: String, val id: String)
+import java.io.Serializable
+
+class Category(val title: String, val id: String) : Serializable

@@ -59,6 +59,9 @@ class CategoriesFragment : Fragment() {
             context!!.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
             textView.setBackgroundResource(outValue.resourceId)
             applicationsCategoriesList.addView(textView)
+            textView.setOnClickListener { _ ->
+                categoriesViewModel.onCategoryClick(context!!, it)
+            }
         }
     }
 
@@ -77,6 +80,9 @@ class CategoriesFragment : Fragment() {
             context!!.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
             textView.setBackgroundResource(outValue.resourceId)
             gamesCategoriesList.addView(textView)
+            textView.setOnClickListener { _ ->
+                categoriesViewModel.onCategoryClick(context!!, it)
+            }
         }
     }
 }

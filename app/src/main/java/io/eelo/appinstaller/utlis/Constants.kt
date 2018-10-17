@@ -10,4 +10,7 @@ object Constants {
 
     // Application
     const val APK_FOLDER = ""
+
+    // Categories
+    const val CATEGORY_KEY = "category_key"
 }
