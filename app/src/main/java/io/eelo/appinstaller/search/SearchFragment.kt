@@ -25,6 +25,7 @@ import android.view.inputmethod.InputMethodManager
 
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
     private lateinit var searchViewModel: SearchViewModel
+    private lateinit var focusView: View
     private lateinit var searchView: SearchView
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
@@ -36,6 +37,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
         searchViewModel = ViewModelProviders.of(activity!!).get(SearchViewModel::class.java)
         searchViewModel.initialise(context!!)
+        focusView = view.findViewById(R.id.view)
+        focusView.requestFocus()
         searchView = view.findViewById(R.id.search_view)
         recyclerView = view.findViewById(R.id.app_list)
         recyclerView.visibility = View.VISIBLE
@@ -82,6 +85,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {
             hideKeyboard(activity as Activity)
+            focusView.requestFocus()
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             searchViewModel.onSearchQuerySubmitted(it)
@@ -122,5 +126,10 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             view = View(activity)
         }
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    override fun onResume() {
+        focusView.requestFocus()
+        super.onResume()
     }
 }
