@@ -1,7 +1,6 @@
 package io.eelo.appinstaller.application
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
@@ -27,7 +26,7 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
     private val privacyScore: TextView = view.app_privacy_score
     private val installButton: Button = view.app_install
     private var application: Application? = null
-    private var context: Context? = null
+    private var context = view.context
 
     private val applicationViewModel = ApplicationViewModel()
 
@@ -40,23 +39,22 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
         installButton.setOnClickListener { application?.buttonClicked() }
     }
 
-    fun createApplicationView(app: Application, context: Context) {
+    fun createApplicationView(app: Application) {
         this.application?.removeListener(this)
         this.application = app
-        this.context = context
         app.addListener(this)
         title.text = app.data.name
         author.text = app.data.author
         ratingBar.rating = app.data.stars
         val decimalFormat = DecimalFormat("##.0")
         rating.text = decimalFormat.format(app.data.stars).toString()
-        rating.setTextColor(findStarsColor(app.data.stars, context))
+        rating.setTextColor(findStarsColor(app.data.stars))
         privacyScore.text = app.data.privacyScore.toString()
-        privacyScore.setTextColor(findPrivacyColor(app.data.privacyScore, context))
+        privacyScore.setTextColor(findPrivacyColor(app.data.privacyScore))
         stateChanged(app.state)
     }
 
-    private fun findStarsColor(stars: Float, context: Context): Int {
+    private fun findStarsColor(stars: Float): Int {
         return context.resources.getColor(when {
             stars >= 4.0f -> R.color.colorRatingGood
             stars >= 3.0f -> R.color.colorRatingNeutral
@@ -64,7 +62,7 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
         })
     }
 
-    private fun findPrivacyColor(privacyScore: Int, context: Context): Int {
+    private fun findPrivacyColor(privacyScore: Int): Int {
         return context.resources.getColor(when {
             privacyScore >= 7 -> R.color.colorRatingGood
             privacyScore >= 4 -> R.color.colorRatingNeutral
@@ -76,8 +74,16 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
         var installButtonText = context!!.resources.getString(R.string.action_install)
         var isInstallButtonEnabled = true
         when (state) {
+            State.NOT_DOWNLOADED -> {
+                installButtonText = context!!.resources.getString(R.string.action_install)
+                isInstallButtonEnabled = true
+            }
             State.DOWNLOADING -> {
                 installButtonText = context!!.resources.getString(R.string.state_downloading)
+                isInstallButtonEnabled = false
+            }
+            State.DOWNLOADED -> {
+                installButtonText = context!!.resources.getString(R.string.state_downloaded)
                 isInstallButtonEnabled = false
             }
             State.INSTALLING -> {
