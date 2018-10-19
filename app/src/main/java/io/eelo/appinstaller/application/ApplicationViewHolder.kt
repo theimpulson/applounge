@@ -1,7 +1,7 @@
 package io.eelo.appinstaller.application
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
@@ -28,7 +28,6 @@ class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(vi
     private val privacyScore: TextView = view.app_privacy_score
     private val installButton: Button = view.app_install
     private var application: Application? = null
-
     private val applicationViewModel = ApplicationViewModel()
 
     init {
@@ -41,6 +40,11 @@ class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(vi
     }
 
     fun createApplicationView(app: Application) {
+        ImageDownloader(object : OnImageLoaded {
+            override fun onImageLoaded(bitmap: Bitmap) {
+                icon.setImageBitmap(bitmap)
+            }
+        }).execute(app.data.icon)
         this.application?.removeListener(this)
         this.application = app
         app.addListener(this)

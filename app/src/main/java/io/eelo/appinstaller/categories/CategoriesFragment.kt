@@ -12,12 +12,15 @@ import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.categories.viewModel.CategoriesViewModel
 import android.util.TypedValue
+import android.widget.ProgressBar
 
 class CategoriesFragment : Fragment() {
 
     private lateinit var categoriesViewModel: CategoriesViewModel
     private lateinit var applicationsCategoriesList: LinearLayout
     private lateinit var gamesCategoriesList: LinearLayout
+    private lateinit var categoriesContainer: LinearLayout
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
@@ -27,24 +30,29 @@ class CategoriesFragment : Fragment() {
 
         categoriesViewModel = ViewModelProviders.of(activity!!).get(CategoriesViewModel::class.java)
         categoriesViewModel.loadApplicationsCategories()
-        loadApplicationsCategories()
+        showApplicationsCategories()
         categoriesViewModel.loadGamesCategories()
-        loadGamesCategories()
+        showGamesCategories()
+
+        categoriesContainer = view.findViewById(R.id.categories_container)
+        categoriesContainer.visibility = View.GONE
+        progressBar = view.findViewById(R.id.progress_bar)
+        progressBar.visibility = View.VISIBLE
 
         // Bind to the list of applications categories
         categoriesViewModel.getApplicationsCategories().observe(this, Observer {
-            loadApplicationsCategories()
+            showApplicationsCategories()
         })
 
         // Bind to the list of games categories
         categoriesViewModel.getGamesCategories().observe(this, Observer {
-            loadGamesCategories()
+            showGamesCategories()
         })
 
         return view
     }
 
-    private fun loadApplicationsCategories() {
+    private fun showApplicationsCategories() {
         applicationsCategoriesList.removeAllViews()
         categoriesViewModel.getApplicationsCategories().value!!.forEach {
             val textView = TextView(context)
@@ -62,10 +70,12 @@ class CategoriesFragment : Fragment() {
             textView.setOnClickListener { _ ->
                 categoriesViewModel.onCategoryClick(context!!, it)
             }
+            categoriesContainer.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
         }
     }
 
-    private fun loadGamesCategories() {
+    private fun showGamesCategories() {
         gamesCategoriesList.removeAllViews()
         categoriesViewModel.getGamesCategories().value!!.forEach {
             val textView = TextView(context)
@@ -83,6 +93,8 @@ class CategoriesFragment : Fragment() {
             textView.setOnClickListener { _ ->
                 categoriesViewModel.onCategoryClick(context!!, it)
             }
+            categoriesContainer.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
         }
     }
 }

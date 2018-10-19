@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.eelo.appinstaller.R
+import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.updates.viewModel.UpdatesViewModel
 
@@ -23,6 +24,7 @@ class UpdatesFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.app_list)
 
         initializeRecyclerView(recyclerView)
+        updatesViewModel.initialise(InstallManager(context!!))//TODO
 
         // Bind recycler view adapter to search results list in view model
         updatesViewModel.getApplications().observe(this, Observer {

@@ -27,7 +27,6 @@ class SearchElement(private val query: String, private val installManager: Insta
     }
 
     override fun onPostExecute(result: Void?) {
-        super.onPostExecute(result)
         callback.onSearchComplete(apps)
     }
 
