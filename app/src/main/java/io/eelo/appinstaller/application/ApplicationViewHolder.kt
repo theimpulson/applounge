@@ -40,11 +40,17 @@ class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(vi
     }
 
     fun createApplicationView(app: Application) {
-        ImageDownloader(object : OnImageLoaded {
-            override fun onImageLoaded(bitmap: Bitmap) {
-                icon.setImageBitmap(bitmap)
-            }
-        }).execute(app.data.icon)
+        if (app.data.iconImage != null) {
+            icon.setImageBitmap(app.data.iconImage)
+        } else {
+            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+            ImageDownloader(object : OnImageLoaded {
+                override fun onImageLoaded(bitmap: Bitmap) {
+                    icon.setImageBitmap(bitmap)
+                    app.data.iconImage = bitmap
+                }
+            }).execute(app.data.icon)
+        }
         this.application?.removeListener(this)
         this.application = app
         app.addListener(this)
