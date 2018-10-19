@@ -14,6 +14,7 @@ import io.eelo.appinstaller.application.model.ApplicationStateListener
 import io.eelo.appinstaller.application.model.Downloader
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
+import io.eelo.appinstaller.common.ProxyBitmap
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
@@ -41,13 +42,13 @@ class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(vi
 
     fun createApplicationView(app: Application) {
         if (app.data.iconImage != null) {
-            icon.setImageBitmap(app.data.iconImage)
+            icon.setImageBitmap((app.data.iconImage as ProxyBitmap).getBitmap())
         } else {
             icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
             ImageDownloader(object : OnImageLoaded {
                 override fun onImageLoaded(bitmap: Bitmap) {
                     icon.setImageBitmap(bitmap)
-                    app.data.iconImage = bitmap
+                    app.data.iconImage = ProxyBitmap(bitmap)
                 }
             }).execute(app.data.icon)
         }

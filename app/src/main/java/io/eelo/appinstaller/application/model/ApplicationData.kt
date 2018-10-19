@@ -1,6 +1,6 @@
 package io.eelo.appinstaller.application.model
 
-import android.graphics.Bitmap
+import io.eelo.appinstaller.common.ProxyBitmap
 
 class ApplicationData {
 
@@ -12,7 +12,7 @@ class ApplicationData {
     var lastVersion: String
     var author = ""
     var icon = ""
-    var iconImage: Bitmap? = null
+    var iconImage: ProxyBitmap? = null
     var images = arrayOf<String>()
 
     var description = ""
