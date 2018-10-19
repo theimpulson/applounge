@@ -5,41 +5,38 @@ import android.content.pm.PackageManager
 import io.eelo.appinstaller.utlis.Constants.APK_FOLDER
 import java.io.File
 
-class ApplicationInfo(private val data: ApplicationData, private val context: Context) {
+class ApplicationInfo(private val data: ApplicationData) {
     private val apkFile = File(APK_FOLDER + data.packageName + "-" + data.lastVersion + ".apk")
-    private val packageManager = context.packageManager
 
-    val isLastVersionInstalled: Boolean
-        get() {
-            return try {
-                val packageInfo = packageManager.getPackageInfo(data.packageName, 0)
-                packageInfo.versionName == data.lastVersion
-            } catch (ignored: PackageManager.NameNotFoundException) {
-                false
-            }
-
+    fun isLastVersionInstalled(context: Context): Boolean {
+        return try {
+            val packageInfo = context.packageManager.getPackageInfo(data.packageName, 0)
+            packageInfo.versionName == data.lastVersion
+        } catch (ignored: PackageManager.NameNotFoundException) {
+            false
         }
 
-    val isInstalled: Boolean
-        get() {
-            return try {
-                packageManager.getPackageInfo(data.packageName, 0)
-                true
-            } catch (ignored: PackageManager.NameNotFoundException) {
-                false
-            }
+    }
 
+    fun isInstalled(context: Context): Boolean {
+        return try {
+            context.packageManager.getPackageInfo(data.packageName, 0)
+            true
+        } catch (ignored: PackageManager.NameNotFoundException) {
+            false
         }
+
+    }
 
     val isDownloaded: Boolean
         get() = apkFile.exists()
 
 
-    fun launch() {
+    fun launch(context: Context) {
         context.startActivity(context.packageManager.getLaunchIntentForPackage(data.packageName))
     }
 
-    fun install() {
+    fun install(context: Context) {
         Installer(apkFile, context).install()
     }
 

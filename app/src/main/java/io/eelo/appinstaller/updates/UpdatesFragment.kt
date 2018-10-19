@@ -36,6 +36,6 @@ class UpdatesFragment : Fragment() {
     private fun initializeRecyclerView(recyclerView: RecyclerView) {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ApplicationListAdapter(context!!, updatesViewModel.getApplications().value!!)
+        recyclerView.adapter = ApplicationListAdapter(updatesViewModel.getApplications().value!!)
     }
 }

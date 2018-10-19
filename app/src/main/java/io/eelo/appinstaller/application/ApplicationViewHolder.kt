@@ -16,8 +16,9 @@ import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
-class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
+class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
 
     private val icon: ImageView = view.app_icon
     private val title: TextView = view.app_title
@@ -27,45 +28,43 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
     private val privacyScore: TextView = view.app_privacy_score
     private val installButton: Button = view.app_install
     private var application: Application? = null
-    private var context: Context? = null
 
     private val applicationViewModel = ApplicationViewModel()
 
     init {
         view.setOnClickListener {
-            if (context != null && application != null) {
-                applicationViewModel.onApplicationClick(context!!, application!!)
+            if (application != null) {
+                applicationViewModel.onApplicationClick(view.context, application!!)
             }
         }
-        installButton.setOnClickListener { application?.buttonClicked() }
+        installButton.setOnClickListener { application?.buttonClicked(view.context) }
     }
 
-    fun createApplicationView(app: Application, context: Context) {
+    fun createApplicationView(app: Application) {
         this.application?.removeListener(this)
         this.application = app
-        this.context = context
         app.addListener(this)
         title.text = app.data.name
         author.text = app.data.author
         ratingBar.rating = app.data.stars
         val decimalFormat = DecimalFormat("##.0")
         rating.text = decimalFormat.format(app.data.stars).toString()
-        rating.setTextColor(findStarsColor(app.data.stars, context))
+        rating.setTextColor(findStarsColor(app.data.stars))
         privacyScore.text = app.data.privacyScore.toString()
-        privacyScore.setTextColor(findPrivacyColor(app.data.privacyScore, context))
+        privacyScore.setTextColor(findPrivacyColor(app.data.privacyScore))
         stateChanged(app.state)
     }
 
-    private fun findStarsColor(stars: Float, context: Context): Int {
-        return context.resources.getColor(when {
+    private fun findStarsColor(stars: Float): Int {
+        return view.context.resources.getColor(when {
             stars >= 4.0f -> R.color.colorRatingGood
             stars >= 3.0f -> R.color.colorRatingNeutral
             else -> R.color.colorRatingBad
         })
     }
 
-    private fun findPrivacyColor(privacyScore: Int, context: Context): Int {
-        return context.resources.getColor(when {
+    private fun findPrivacyColor(privacyScore: Int): Int {
+        return view.context.resources.getColor(when {
             privacyScore >= 7 -> R.color.colorRatingGood
             privacyScore >= 4 -> R.color.colorRatingNeutral
             else -> R.color.colorRatingBad
@@ -73,28 +72,26 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
     }
 
     override fun stateChanged(state: State) {
-        var installButtonText = context!!.resources.getString(R.string.action_install)
+        var installButtonText = R.string.action_install
         var isInstallButtonEnabled = true
         when (state) {
             State.DOWNLOADING -> {
-                installButtonText = context!!.resources.getString(R.string.state_downloading)
+                installButtonText = R.string.state_downloading
                 isInstallButtonEnabled = false
             }
             State.INSTALLING -> {
-                installButtonText = context!!.resources.getString(R.string.state_installing)
+                installButtonText = R.string.state_installing
                 isInstallButtonEnabled = false
             }
             State.INSTALLED -> {
-                installButtonText = context!!.resources.getString(R.string.action_launch)
-                isInstallButtonEnabled = true
+                installButtonText = R.string.action_launch
             }
             State.NOT_UPDATED -> {
-                installButtonText = context!!.resources.getString(R.string.action_update)
-                isInstallButtonEnabled = true
+                installButtonText = R.string.action_update
             }
         }
 
-        installButton.text = installButtonText
+        installButton.text = view.context.resources.getString(installButtonText)
         installButton.isEnabled = isInstallButtonEnabled
     }
 
@@ -106,7 +103,8 @@ class ApplicationViewHolder(val view: View) : RecyclerView.ViewHolder(view), App
     }
 
     private fun toMiB(length: Int): Double {
-        return length.div(10486).div(100.0)
+        val inMiB = length.div(1048576)
+        return inMiB.times(100.0).roundToInt().div(100.0)
     }
 
     override fun anErrorHasOccurred() {

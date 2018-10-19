@@ -17,15 +17,7 @@ constructor(@param:JsonProperty("_id") private val packageName: String,
 
 
     fun createApplicationData(): ApplicationData {
-        val applicationData = ApplicationData(packageName, lastVersion)
-        applicationData.name = name
-        applicationData.author = author
-        applicationData.icon = icon
-        applicationData.images = images
-        applicationData.id = id
-        applicationData.stars = stars
-        applicationData.lastModified = lastModified
-        return applicationData
+        return ApplicationData(packageName, stars, lastModified, id, name, lastVersion, author, icon, images)
     }
 
 }
