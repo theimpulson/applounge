@@ -22,6 +22,11 @@ class ApplicationData {
 
     var hasFullData = false
 
+    constructor(packageName: String) {
+        this.packageName = packageName
+        lastVersion = ""
+    }
+
     constructor(packageName: String,
                 stars: Float,
                 lastModified: String,

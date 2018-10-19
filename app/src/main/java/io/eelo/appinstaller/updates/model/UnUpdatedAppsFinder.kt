@@ -38,7 +38,7 @@ class UnUpdatedAppsFinder(private val packageManager: PackageManager, private va
     private fun getInstalledApplications(): ArrayList<ApplicationData> {
         val result = ArrayList<ApplicationData>()
         packageManager.getInstalledApplications(0).forEach { app ->
-            result.add(ApplicationData(app.packageName, ""))
+            result.add(ApplicationData(app.packageName))
         }
         return result
     }
