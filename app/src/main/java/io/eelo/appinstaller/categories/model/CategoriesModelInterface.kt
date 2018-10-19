@@ -4,4 +4,6 @@ interface CategoriesModelInterface {
     fun loadApplicationsCategories()
 
     fun loadGamesCategories()
+
+    fun loadApplicationsInCategory(category: Category)
 }
