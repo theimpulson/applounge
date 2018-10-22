@@ -25,6 +25,9 @@
     <string name="menu_updates">Updates</string>
     <string name="menu_settings">Settings</string>
 
+    <!-- Home Fragment -->
+    <string name="app_store_banner_content_description">App store banner</string>
+
     <!-- Categories fragment -->
     <string name="applications_categories_title">Apps</string>
     <string name="games_categories_title">Games</string>
@@ -41,4 +44,5 @@
         updates in the background</string>
     <string name="preference_update_notify_available_title">Show available updates</string>
     <string name="preference_update_notify_available_description">Show a notification when app updates are available</string>
+
 </resources>
