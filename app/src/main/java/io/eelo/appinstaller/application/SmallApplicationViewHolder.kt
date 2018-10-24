@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.RatingBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
@@ -16,17 +15,14 @@ import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
 import io.eelo.appinstaller.common.ProxyBitmap
 import kotlinx.android.synthetic.main.application_list_item.view.*
-import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
-class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
+class SmallApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
 
     private val icon: ImageView = view.app_icon
     private val title: TextView = view.app_title
-    private val author: TextView = view.app_author
-    private val ratingBar: RatingBar = view.app_rating_bar
-    private val rating: TextView = view.app_rating
-    private val privacyScore: TextView = view.app_privacy_score
+    /*private val rating: TextView = view.app_rating
+    private val privacyScore: TextView = view.app_privacy_score*/
     private val installButton: Button = view.app_install
     private var application: Application? = null
     private val applicationViewModel = ApplicationViewModel()
@@ -56,13 +52,11 @@ class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(vi
         this.application = app
         app.addListener(this)
         title.text = app.data.name
-        author.text = app.data.author
-        ratingBar.rating = app.data.stars
-        val decimalFormat = DecimalFormat("##.0")
+        /*val decimalFormat = DecimalFormat("##.0")
         rating.text = decimalFormat.format(app.data.stars).toString()
         rating.setTextColor(findStarsColor(app.data.stars))
         privacyScore.text = app.data.privacyScore.toString()
-        privacyScore.setTextColor(findPrivacyColor(app.data.privacyScore))
+        privacyScore.setTextColor(findPrivacyColor(app.data.privacyScore))*/
         stateChanged(app.state)
     }
 

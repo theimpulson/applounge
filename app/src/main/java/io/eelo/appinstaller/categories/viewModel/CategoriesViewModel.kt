@@ -14,11 +14,19 @@ class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
     private val categoriesModel = CategoriesModel()
 
     override fun getApplicationsCategories(): MutableLiveData<ArrayList<Category>> {
-        return categoriesModel.applicationsCategoriesList
+        val applicationsCategories = categoriesModel.applicationsCategoriesList
+        applicationsCategories.value!!.forEach {
+            it.title = it.id.replace("_", " ").capitalize()
+        }
+        return applicationsCategories
     }
 
     override fun getGamesCategories(): MutableLiveData<ArrayList<Category>> {
-        return categoriesModel.gamesCategoriesList
+        val gamesCategories = categoriesModel.gamesCategoriesList
+        gamesCategories.value!!.forEach {
+            it.title = it.id.replace("_", " ").capitalize()
+        }
+        return gamesCategories
     }
 
     override fun getApplicationsInCategory(): MutableLiveData<ArrayList<Application>> {

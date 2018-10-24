@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +21,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var imageCarousel: ViewPager
-    private var imagesList = ArrayList<Bitmap>()
+    private val imagesList = ArrayList<Bitmap>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
@@ -28,6 +30,7 @@ class HomeFragment : Fragment() {
         imageCarousel = view.findViewById(R.id.image_carousel)
         imageCarousel.visibility = View.GONE
         val imageCarouselAdapter = ImageCarouselAdapter(context!!, imagesList)
+        val categoryList = view.findViewById<RecyclerView>(R.id.category_list)
 
         // Initialise the image carousel
         val scroller = ViewPager::class.java.getDeclaredField("mScroller")
@@ -35,8 +38,12 @@ class HomeFragment : Fragment() {
         val imageCarouselScroller = ImageCarouselScroller(context!!)
         scroller.set(imageCarousel, imageCarouselScroller)
         imageCarousel.adapter = imageCarouselAdapter
-
         homeViewModel.loadCarouselImages()
+
+        // Initialise category list
+        categoryList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        categoryList.adapter = HomeCategoryAdapter(homeViewModel.getApplications().value!!)
+        homeViewModel.loadApplications()
 
         // Bind to the list of images for the carousel
         homeViewModel.getCarouselImages().observe(this, Observer {
@@ -46,6 +53,11 @@ class HomeFragment : Fragment() {
             imageCarousel.visibility = View.VISIBLE
             imageCarousel.setCurrentItem(0, false)
             ImageCarouselTimer(((imageCarouselAdapter.count - 1) * 4000).toLong(), 4000).start()
+        })
+
+        // Bind to the list of applications
+        homeViewModel.getApplications().observe(this, Observer {
+            categoryList.adapter = HomeCategoryAdapter(homeViewModel.getApplications().value!!)
         })
 
         return view
