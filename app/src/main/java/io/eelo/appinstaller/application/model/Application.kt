@@ -8,8 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger
 class Application(var data: ApplicationData, context: Context, private val installManager: InstallManager) {
 
     private val uses = AtomicInteger(0)
-    private val info = ApplicationInfo(data)
-    private val stateManager = StateManager(info, this, context)
+    private val info = ApplicationInfo(data, context)
+    private val stateManager = StateManager(info, this)
 
     fun addListener(listener: ApplicationStateListener) {
         stateManager.addListener(listener)
@@ -28,14 +28,14 @@ class Application(var data: ApplicationData, context: Context, private val insta
     }
 
     fun decrementUses() {
-        uses.decrementAndGet();
+        uses.decrementAndGet()
         installManager.tryRemove(this)
     }
 
     @Synchronized
-    fun buttonClicked(context: Context) {
+    fun buttonClicked() {
         when (stateManager.state) {
-            INSTALLED -> info.launch(context)
+            INSTALLED -> info.launch()
             DOWNLOADED -> {
                 stateManager.changeState(INSTALLING)
                 installManager.install(data.packageName)
@@ -45,31 +45,32 @@ class Application(var data: ApplicationData, context: Context, private val insta
                 installManager.download(data.packageName)
             }
             DOWNLOADING -> {
+
             }
             INSTALLING -> {
             }
         }
     }
 
-    fun download(context: Context) {
+    fun download() {
+        searchFullData()
         downloader = info.createDownloader()
         stateManager.notifyDownloading(downloader!!)
-        Thread {
-            try {
-                downloader!!.download()
-                stateManager.changeState(INSTALLING)
-                installManager.install(data.packageName)
-                stateManager.find(context)
-            } catch (e: IOException) {
-                stateManager.find(context)
-                stateManager.notifyError()
-            }
-        }.start()
+        try {
+            downloader!!.download()
+            stateManager.changeState(INSTALLING)
+            installManager.install(data.packageName)
+            stateManager.find()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            stateManager.find()
+            stateManager.notifyError()
+        }
     }
 
-    fun install(context: Context) {
-        info.install(context)
-        stateManager.find(context)
+    fun install() {
+        info.install()
+        stateManager.find()
     }
 
     fun isUsed(): Boolean {

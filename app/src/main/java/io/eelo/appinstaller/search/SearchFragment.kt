@@ -21,6 +21,7 @@ import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.search.viewModel.SearchViewModel
 import android.app.Activity
 import android.view.inputmethod.InputMethodManager
+import io.eelo.appinstaller.application.model.InstallManager
 
 
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
@@ -31,12 +32,17 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     private lateinit var progressBar: ProgressBar
     private val SUGGESTION_KEY = "suggestion"
     private var applicationList = ArrayList<Application>()
+    private var installManager:InstallManager? = null
+
+    fun initialise(installManager: InstallManager) {
+        this.installManager = installManager
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
         searchViewModel = ViewModelProviders.of(activity!!).get(SearchViewModel::class.java)
-        searchViewModel.initialise(context!!)
+        searchViewModel.initialise(installManager!!)
         focusView = view.findViewById(R.id.view)
         focusView.requestFocus()
         searchView = view.findViewById(R.id.search_view)

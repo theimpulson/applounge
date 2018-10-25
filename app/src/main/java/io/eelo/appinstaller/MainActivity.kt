@@ -1,14 +1,22 @@
 package io.eelo.appinstaller
 
-import android.support.v7.app.AppCompatActivity
+import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
+import android.os.Message
+import android.os.Messenger
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
-import android.annotation.SuppressLint
-import android.content.Context
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.application.model.InstallManagerService
 import io.eelo.appinstaller.categories.CategoriesFragment
 import io.eelo.appinstaller.home.HomeFragment
 import io.eelo.appinstaller.search.SearchFragment
@@ -28,13 +36,44 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Thread {
+            val installManager = createInstallManager()
+            initialiseFragments(installManager)
+            showFragment(homeFragment)
+        }.start()
         // Show the home fragment by default
-        showFragment(homeFragment)
 
         bottom_navigation_view.setOnNavigationItemSelectedListener(this)
 
         // Disable shifting of nav bar items
         removeShiftMode(bottom_navigation_view)
+    }
+
+    private fun initialiseFragments(installManager: InstallManager) {
+        searchFragment.initialise(installManager)
+        updatesFragment.initialise(installManager)
+    }
+
+    private fun createInstallManager(): InstallManager {
+        startService(Intent(this, InstallManagerService::class.java))
+        val blocker = Object()
+        var installManager: InstallManager? = null
+        bindService(Intent(this, InstallManagerService::class.java), object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName, service: IBinder) {
+                Messenger(service).send(Message.obtain(null, 0, { result: InstallManager ->
+                    installManager = result
+                    synchronized(blocker) {
+                        blocker.notify()
+                    }
+                }))
+            }
+
+            override fun onServiceDisconnected(name: ComponentName) {}
+        }, Context.BIND_AUTO_CREATE)
+        synchronized(blocker) {
+            blocker.wait()
+        }
+        return installManager!!
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -91,5 +130,4 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             itemView.setChecked(itemView.itemData.isChecked)
         }
     }
-
 }

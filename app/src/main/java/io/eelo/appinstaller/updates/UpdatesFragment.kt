@@ -16,6 +16,11 @@ import io.eelo.appinstaller.updates.viewModel.UpdatesViewModel
 
 class UpdatesFragment : Fragment() {
     private lateinit var updatesViewModel: UpdatesViewModel
+    private var installManager: InstallManager? = null
+
+    fun initialise(installManager: InstallManager) {
+        this.installManager = installManager
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_updates, container, false)
@@ -24,7 +29,7 @@ class UpdatesFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.app_list)
 
         initializeRecyclerView(recyclerView)
-        updatesViewModel.initialise(InstallManager(context!!))//TODO
+        updatesViewModel.initialise(installManager!!)
 
         // Bind recycler view adapter to search results list in view model
         updatesViewModel.getApplications().observe(this, Observer {

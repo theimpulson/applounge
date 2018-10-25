@@ -3,6 +3,7 @@
     package="io.eelo.appinstaller">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -20,6 +21,7 @@
         </activity>
         <activity android:name=".application.ApplicationActivity" />
         <activity android:name=".categories.CategoryActivity" />
+        <service android:name=".application.model.InstallManagerService"/>
     </application>
 
 </manifest>

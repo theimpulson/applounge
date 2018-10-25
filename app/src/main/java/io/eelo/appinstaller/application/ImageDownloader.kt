@@ -8,7 +8,7 @@ import io.eelo.appinstaller.utlis.Constants
 import java.io.IOException
 import java.net.URL
 
-class ImageDownloader(private val listener: OnImageLoaded) : AsyncTask<String, Void, Bitmap>() {
+class ImageDownloader(private val listener: (Bitmap) -> Unit) : AsyncTask<String, Void, Bitmap>() {
 
 
     override fun doInBackground(vararg image: String): Bitmap? {
@@ -23,7 +23,7 @@ class ImageDownloader(private val listener: OnImageLoaded) : AsyncTask<String, V
 
     override fun onPostExecute(bitmap: Bitmap?) {
         if (bitmap != null) {
-            listener.onImageLoaded(bitmap)
+            listener.invoke(bitmap)
         }
     }
 }

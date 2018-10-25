@@ -1,7 +1,7 @@
 package io.eelo.appinstaller.application
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
+import android.os.AsyncTask
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
@@ -37,7 +37,7 @@ class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(vi
                 applicationViewModel.onApplicationClick(view.context, application!!)
             }
         }
-        installButton.setOnClickListener { application?.buttonClicked(view.context) }
+        installButton.setOnClickListener { application?.buttonClicked() }
     }
 
     fun createApplicationView(app: Application) {
@@ -45,12 +45,11 @@ class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(vi
             icon.setImageBitmap((app.data.iconImage as ProxyBitmap).getBitmap())
         } else {
             icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
-            ImageDownloader(object : OnImageLoaded {
-                override fun onImageLoaded(bitmap: Bitmap) {
-                    icon.setImageBitmap(bitmap)
-                    app.data.iconImage = ProxyBitmap(bitmap)
-                }
-            }).execute(app.data.icon)
+            ImageDownloader {
+                icon.setImageBitmap(it)
+                app.data.iconImage = ProxyBitmap(it)
+
+            }.execute(app.data.icon)
         }
         this.application?.removeListener(this)
         this.application = app
@@ -101,9 +100,16 @@ class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(vi
                 installButtonText = R.string.action_update
             }
         }
+        object : AsyncTask<Void, Void, Void>() {
+            override fun doInBackground(vararg params: Void?): Void? {
+                return null
+            }
 
-        installButton.text = view.context.resources.getString(installButtonText)
-        installButton.isEnabled = isInstallButtonEnabled
+            override fun onPostExecute(result: Void?) {
+                installButton.text = view.context.resources.getString(installButtonText)
+                installButton.isEnabled = isInstallButtonEnabled
+            }
+        }.execute()
     }
 
     @SuppressLint("SetTextI18n")

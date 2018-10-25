@@ -5,7 +5,7 @@ import java.io.*
 import java.net.URL
 import java.net.URLConnection
 
-class Downloader internal constructor(private val data: ApplicationData, private val apkFile: File) {
+class Downloader(private val data: ApplicationData, private val apkFile: File) {
     var count = 0
         private set
     var total = 0
@@ -14,7 +14,7 @@ class Downloader internal constructor(private val data: ApplicationData, private
 
     @Throws(IOException::class)
     fun download() {
-        val url = URL(Constants.BASE_URL + "apps?action=download&id=" + data.id + "&version=" + data.lastVersion)
+        val url = URL(Constants.DOWNLOAD_URL + data.downloadLink)
         val connection = url.openConnection()
         total = connection.contentLength
         transferBytes(connection)

@@ -24,6 +24,7 @@ class ApplicationData {
     var privacyScore = 0
 
     var hasFullData = false
+    var downloadLink = ""
 
     constructor(packageName: String) {
         this.packageName = packageName

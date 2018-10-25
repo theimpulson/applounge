@@ -46,7 +46,7 @@ class InstallManager(private val context: Context) {
     private fun startDownloads() {
         while (true) {
             val app = apps[downloading.take()]!!
-            app.download(context)
+            app.download()
             tryRemove(app)
         }
     }
@@ -54,7 +54,7 @@ class InstallManager(private val context: Context) {
     private fun startInstalls() {
         while (true) {
             val app = apps[installing.take()]!!
-            app.install(context)
+            app.install()
             tryRemove(app)
         }
     }

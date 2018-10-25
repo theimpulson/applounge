@@ -21,10 +21,8 @@ class SearchModel : SearchModelInterface {
         }
     }
 
-    override fun initialise(context: Context) {
-        if (installManager == null) {
-            installManager = InstallManager(context)
-        }
+    override fun initialise(installManager: InstallManager) {
+        this.installManager = installManager
     }
 
     override fun searchSuggestions(searchQuery: String) {
