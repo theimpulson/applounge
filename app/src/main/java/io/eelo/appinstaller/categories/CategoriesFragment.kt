@@ -30,9 +30,7 @@ class CategoriesFragment : Fragment() {
 
         categoriesViewModel = ViewModelProviders.of(activity!!).get(CategoriesViewModel::class.java)
         categoriesViewModel.loadApplicationsCategories()
-        showApplicationsCategories()
         categoriesViewModel.loadGamesCategories()
-        showGamesCategories()
 
         categoriesContainer = view.findViewById(R.id.categories_container)
         categoriesContainer.visibility = View.GONE
