@@ -74,7 +74,7 @@ class Application(var data: ApplicationData, context: Context, private val insta
     }
 
     fun isUsed(): Boolean {
-        return uses.get() == 0
+        return uses.get() != 0
     }
 
     fun searchFullData() {

@@ -10,7 +10,7 @@ object Constants {
     const val RESULTS_PER_PAGE = 20
 
     // Application
-    const val APK_FOLDER = "apks/"
+    const val APK_FOLDER = "/app_installer/"
 
     // Categories
     const val CATEGORY_KEY = "category_key"
