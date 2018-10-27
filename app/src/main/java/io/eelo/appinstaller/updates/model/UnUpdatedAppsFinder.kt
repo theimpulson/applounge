@@ -17,7 +17,6 @@ class UnUpdatedAppsFinder(private val packageManager: PackageManager, private va
     }
 
     override fun onPostExecute(result: Void?) {
-        super.onPostExecute(result)
         callback.onAppsFound(this.result!!)
     }
 

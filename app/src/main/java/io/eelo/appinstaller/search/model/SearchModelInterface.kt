@@ -1,10 +1,10 @@
 package io.eelo.appinstaller.search.model
 
-import android.content.Context
 import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.InstallManager
 
 interface SearchModelInterface {
-    fun initialise(context: Context)
+    fun initialise(installManager: InstallManager)
 
     fun searchSuggestions(searchQuery: String)
 
