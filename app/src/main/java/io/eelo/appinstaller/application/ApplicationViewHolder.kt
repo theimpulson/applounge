@@ -49,7 +49,7 @@ class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(vi
                 icon.setImageBitmap(it)
                 app.data.iconImage = ProxyBitmap(it)
 
-            }.execute(app.data.icon)
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, app.data.icon)
         }
         this.application?.removeListener(this)
         this.application = app
@@ -109,7 +109,7 @@ class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(vi
                 installButton.text = view.context.resources.getString(installButtonText)
                 installButton.isEnabled = isInstallButtonEnabled
             }
-        }.execute()
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
     @SuppressLint("SetTextI18n")
