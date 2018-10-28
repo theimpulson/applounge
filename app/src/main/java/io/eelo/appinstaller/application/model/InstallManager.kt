@@ -4,14 +4,14 @@ import android.content.Context
 import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 
-class InstallManager(private val context: Context) {
+class InstallManager {
 
     private val apps = HashMap<String, Application>()
     private val downloading = ArrayBlockingQueue<String>(1000)
     private val installing = ArrayBlockingQueue<String>(1000)
 
     @Synchronized
-    fun findOrCreateApp(data: ApplicationData): Application {
+    fun findOrCreateApp(context: Context, data: ApplicationData): Application {
         if (!apps.containsKey(data.packageName)) {
             apps[data.packageName] = Application(data, context, this)
         }
@@ -34,27 +34,27 @@ class InstallManager(private val context: Context) {
         }
     }
 
-    fun start() {
+    fun start(context: Context) {
         Thread {
-            startDownloads()
+            startDownloads(context)
         }.start()
         Thread {
-            startInstalls()
+            startInstalls(context)
         }.start()
     }
 
-    private fun startDownloads() {
+    private fun startDownloads(context: Context) {
         while (true) {
             val app = apps[downloading.take()]!!
-            app.download()
+            app.download(context)
             tryRemove(app)
         }
     }
 
-    private fun startInstalls() {
+    private fun startInstalls(context: Context) {
         while (true) {
             val app = apps[installing.take()]!!
-            app.install()
+            app.install(context)
             tryRemove(app)
         }
     }

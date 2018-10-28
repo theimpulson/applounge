@@ -18,7 +18,7 @@ class UpdatesModel : UpdatesModelInterface {
     var installManager: InstallManager? = null
 
     override fun loadApplicationList(context: Context) {
-        UnUpdatedAppsFinder(context.packageManager, this, installManager!!).execute()
+        UnUpdatedAppsFinder(context.packageManager, this, installManager!!).execute(context)
     }
 
     override fun onAppsFound(applications: ArrayList<Application>) {

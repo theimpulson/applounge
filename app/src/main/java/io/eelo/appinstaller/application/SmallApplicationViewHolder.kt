@@ -33,7 +33,7 @@ class SmallApplicationViewHolder(private val view: View) : RecyclerView.ViewHold
                 applicationViewModel.onApplicationClick(view.context, application!!)
             }
         }
-        installButton.setOnClickListener { application?.buttonClicked() }
+        installButton.setOnClickListener { application?.buttonClicked(view.context) }
     }
 
     fun createApplicationView(app: Application) {
