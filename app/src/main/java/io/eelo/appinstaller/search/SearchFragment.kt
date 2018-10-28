@@ -94,7 +94,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             focusView.requestFocus()
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
-            searchViewModel.onSearchQuerySubmitted(it)
+            searchViewModel.onSearchQuerySubmitted(context!!, it)
         }
         return false
     }

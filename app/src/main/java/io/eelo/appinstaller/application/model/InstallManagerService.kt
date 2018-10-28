@@ -9,12 +9,12 @@ import android.os.Messenger
 
 class InstallManagerService : Service() {
 
-    private val installManager = InstallManager(this)
+    private val installManager = InstallManager()
     private val messenger = Messenger(SimpleHandler(installManager))
 
 
     override fun onCreate() {
-        installManager.start()
+        installManager.start(this)
     }
 
     override fun onBind(intent: Intent): IBinder? {

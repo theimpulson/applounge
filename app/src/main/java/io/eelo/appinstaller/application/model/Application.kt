@@ -8,8 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger
 class Application(var data: ApplicationData, context: Context, private val installManager: InstallManager) {
 
     private val uses = AtomicInteger(0)
-    private val info = ApplicationInfo(data, context)
-    private val stateManager = StateManager(info, this)
+    private val info = ApplicationInfo(data)
+    private val stateManager = StateManager(context, info, this)
 
     fun addListener(listener: ApplicationStateListener) {
         stateManager.addListener(listener)
@@ -33,9 +33,9 @@ class Application(var data: ApplicationData, context: Context, private val insta
     }
 
     @Synchronized
-    fun buttonClicked() {
+    fun buttonClicked(context: Context) {
         when (stateManager.state) {
-            INSTALLED -> info.launch()
+            INSTALLED -> info.launch(context)
             DOWNLOADED -> {
                 stateManager.changeState(INSTALLING)
                 installManager.install(data.packageName)
@@ -52,7 +52,7 @@ class Application(var data: ApplicationData, context: Context, private val insta
         }
     }
 
-    fun download() {
+    fun download(context: Context) {
         searchFullData()
         downloader = info.createDownloader()
         stateManager.notifyDownloading(downloader!!)
@@ -60,17 +60,17 @@ class Application(var data: ApplicationData, context: Context, private val insta
             downloader!!.download()
             stateManager.changeState(INSTALLING)
             installManager.install(data.packageName)
-            stateManager.find()
+            stateManager.find(context)
         } catch (e: IOException) {
             e.printStackTrace()
-            stateManager.find()
+            stateManager.find(context)
             stateManager.notifyError()
         }
     }
 
-    fun install() {
-        info.install()
-        stateManager.find()
+    fun install(context: Context) {
+        info.install(context)
+        stateManager.find(context)
     }
 
     fun isUsed(): Boolean {

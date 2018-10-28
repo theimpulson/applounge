@@ -26,7 +26,7 @@ class SearchViewModel : ViewModel(), SearchViewModelInterface {
         searchModel.searchSuggestions(searchQuery)
     }
 
-    override fun onSearchQuerySubmitted(searchQuery: String) {
-        searchModel.search(searchQuery)
+    override fun onSearchQuerySubmitted(context: Context, searchQuery: String) {
+        searchModel.search(context, searchQuery)
     }
 }

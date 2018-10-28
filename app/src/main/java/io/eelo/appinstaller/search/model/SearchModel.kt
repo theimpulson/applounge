@@ -34,16 +34,16 @@ class SearchModel : SearchModelInterface {
         this.suggestionList.value = suggestionsList
     }
 
-    override fun search(searchQuery: String) {
+    override fun search(context: Context, searchQuery: String) {
         element?.apps?.forEach { app ->
             app.decrementUses()
         }
         element = SearchElement(searchQuery, installManager!!, this)
-        loadMore()
+        loadMore(context)
     }
 
-    override fun loadMore() {
-        element!!.loadMoreInBackground()
+    override fun loadMore(context: Context) {
+        element!!.loadMoreInBackground(context)
     }
 
     override fun onSearchComplete(applicationList: ArrayList<Application>) {
