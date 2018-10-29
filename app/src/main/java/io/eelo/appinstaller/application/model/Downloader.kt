@@ -1,5 +1,6 @@
 package io.eelo.appinstaller.application.model
 
+import io.eelo.appinstaller.utlis.Constants
 import java.io.*
 import java.net.URL
 import java.net.URLConnection
@@ -18,9 +19,7 @@ class Downloader(private val data: ApplicationData, private val apkFile: File) {
     @Throws(IOException::class)
     fun download() {
         createApkFile()
-        //TODO use /e/ download link
-        val url = URL("https://download.apkpure.com/b/apk/b3JnLnRlbGVncmFtLm1lc3Nlbmdlcl8xMzYxM18yYjViNGNlMg?_fn=VGVsZWdyYW1fdjQuOS4xX2Fwa3B1cmUuY29tLmFwaw&k=b4902eaa91a28bc048ec061cb71795485bd5da7e&as=e40cc9541c4eb208e8b575eed2c1a7f05bd337f6&_p=b3JnLnRlbGVncmFtLm1lc3Nlbmdlcg&c=1%7CCOMMUNICATION%7CZGV2PVRlbGVncmFtJTIwRlotTExDJnQ9YXBrJnZuPTQuOS4xJnZjPTEzNjEz")
-        //Constants.DOWNLOAD_URL + data.downloadLink)
+        val url = URL(Constants.DOWNLOAD_URL + data.lastVersionObj.downloadLink)
         val connection = url.openConnection()
         total = connection.contentLength
         transferBytes(connection)

@@ -1,8 +1,11 @@
 package io.eelo.appinstaller.application.model
 
 import android.content.Context
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.eelo.appinstaller.application.model.State.*
+import io.eelo.appinstaller.utlis.Constants
 import java.io.IOException
+import java.net.URL
 import java.util.concurrent.atomic.AtomicInteger
 
 class Application(var data: ApplicationData, context: Context, private val installManager: InstallManager) {
@@ -10,6 +13,12 @@ class Application(var data: ApplicationData, context: Context, private val insta
     private val uses = AtomicInteger(0)
     private val info = ApplicationInfo(data)
     private val stateManager = StateManager(context, info, this)
+
+    init {
+        if (data.id != "") {
+            searchFullData()
+        }
+    }
 
     fun addListener(listener: ApplicationStateListener) {
         stateManager.addListener(listener)
@@ -77,7 +86,11 @@ class Application(var data: ApplicationData, context: Context, private val insta
         return uses.get() != 0
     }
 
+    companion object {
+        private val dataReader = ObjectMapper().readerFor(ApplicationData::class.java)
+    }
+
     fun searchFullData() {
-        // TODO get the full data from the server
+        data = dataReader.readValue<ApplicationData>(URL(Constants.BASE_URL + "apps?action=app_detail&id=" + data.id))
     }
 }
