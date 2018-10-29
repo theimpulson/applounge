@@ -7,7 +7,7 @@ import io.eelo.appinstaller.utlis.Constants.APK_FOLDER
 import java.io.File
 
 class ApplicationInfo(private val data: ApplicationData) {
-    private val apkFile = File(getExternalStorageDirectory(), APK_FOLDER + data.packageName + "-" + data.lastVersion + ".apk")
+    private val apkFile = File(getExternalStorageDirectory(), APK_FOLDER + data.packageName + "-" + data.lastVersionName + ".apk")
 
     fun isLastVersionInstalled(context: Context): Boolean {
         return try {
