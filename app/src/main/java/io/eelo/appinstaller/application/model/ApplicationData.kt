@@ -13,7 +13,9 @@ class ApplicationData {
     val lastVersion: String
         get() = lastVersionObj.version
     val lastVersionObj: Version
-        get() = versions[lastVersionName]!!
+        get() {
+            return versions[lastVersionName]!!
+        }
 
     //util data
     var lastModified = ""
@@ -38,10 +40,11 @@ class ApplicationData {
     var stars = 0f
     var privacyScore = 0
 
-    var hasFullData = false
+    var dataIndex = 0
 
     constructor(packageName: String) {
         this.packageName = packageName
+        dataIndex = 0
     }
 
     constructor(packageName: String,
@@ -60,7 +63,7 @@ class ApplicationData {
         this.author = author
         this.icon = icon
         this.images = images
-        this.hasFullData = false
+        dataIndex = 1
     }
 
     @Suppress("unused")
@@ -95,7 +98,7 @@ class ApplicationData {
         this.lastVersionName = lastVersionName
         this.appLink = appLink
         this.lastAccessed = lastAccessed
-        hasFullData = true
+        dataIndex = 2
     }
 
     @Suppress("unused")
@@ -114,5 +117,49 @@ class ApplicationData {
                 result["source_apk_download"] as String,
                 result["whats_new"] as String?,
                 name)
+    }
+
+    fun update(data: ApplicationData) {
+        when (data.dataIndex) {
+            0 -> {
+                packageName = data.packageName
+            }
+            1 -> {
+                if (dataIndex < 1) {
+                    dataIndex = 1
+                }
+                packageName = data.packageName
+                lastModified = data.lastModified
+                id = data.id
+                name = data.name
+                lastVersionName = data.lastVersionName
+                author = data.author
+                icon = data.icon
+                images = data.images
+            }
+            2 -> {
+                dataIndex = 2
+                id = data.id
+                icon = data.icon
+                packageName = data.packageName
+                createdOn = data.createdOn
+                category = data.category
+                author = data.author
+                source = data.source
+                description = data.description
+                images = data.images
+                lastModified = data.lastModified
+                licence = data.licence
+                name = data.name
+                lastVersionName = data.lastVersionName
+                appLink = data.appLink
+                lastAccessed = data.lastAccessed
+                versions = data.versions
+            }
+        }
+        this.name = data.name
+        if (data.iconImage != null) {
+            iconImage = data.iconImage
+        }
     }
 }

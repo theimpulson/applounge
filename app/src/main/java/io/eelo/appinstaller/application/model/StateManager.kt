@@ -3,14 +3,10 @@ package io.eelo.appinstaller.application.model
 import android.content.Context
 import java.util.*
 
-class StateManager(context: Context, private val info: ApplicationInfo, private val app: Application) {
+class StateManager(private val info: ApplicationInfo, private val app: Application) {
     private var listeners = Collections.synchronizedList(ArrayList<ApplicationStateListener>())
     var state = State.NOT_DOWNLOADED
         private set
-
-    init {
-        find(context)
-    }
 
     fun find(context: Context) {
         changeState(if (info.isLastVersionInstalled(context)) {

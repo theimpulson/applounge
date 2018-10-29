@@ -8,15 +8,16 @@ import java.io.IOException
 import java.net.URL
 import java.util.concurrent.atomic.AtomicInteger
 
-class Application(var data: ApplicationData, context: Context, private val installManager: InstallManager) {
+class Application(val data: ApplicationData, context: Context, private val installManager: InstallManager) {
 
     private val uses = AtomicInteger(0)
     private val info = ApplicationInfo(data)
-    private val stateManager = StateManager(context, info, this)
+    private val stateManager = StateManager(info, this)
 
     init {
         if (data.id != "") {
             searchFullData()
+            stateManager.find(context)
         }
     }
 
@@ -91,6 +92,7 @@ class Application(var data: ApplicationData, context: Context, private val insta
     }
 
     fun searchFullData() {
-        data = dataReader.readValue<ApplicationData>(URL(Constants.BASE_URL + "apps?action=app_detail&id=" + data.id))
+        val newData = dataReader.readValue<ApplicationData>(URL(Constants.BASE_URL + "apps?action=app_detail&id=" + data.id))
+        data.update(newData)
     }
 }
