@@ -1,5 +1,6 @@
 package io.eelo.appinstaller.home
 
+import android.app.Activity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -12,7 +13,7 @@ import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.SmallApplicationListAdapter
 import kotlinx.android.synthetic.main.home_category_list_item.view.*
 
-class HomeCategoryAdapter(private val categoryHashMap: HashMap<Category, ArrayList<Application>>) : RecyclerView.Adapter<HomeCategoryAdapter.HomeCategoryViewHolder>() {
+class HomeCategoryAdapter(private val activity: Activity, private val categoryHashMap: HashMap<Category, ArrayList<Application>>) : RecyclerView.Adapter<HomeCategoryAdapter.HomeCategoryViewHolder>() {
 
     private val categoryList = categoryHashMap.keys.toCollection(ArrayList())
 
@@ -29,7 +30,7 @@ class HomeCategoryAdapter(private val categoryHashMap: HashMap<Category, ArrayLi
     override fun onBindViewHolder(holder: HomeCategoryViewHolder, position: Int) {
         holder.title.text = categoryList[position].title
         holder.applicationList.layoutManager = LinearLayoutManager(holder.view.context, LinearLayoutManager.HORIZONTAL, false)
-        holder.applicationList.adapter = SmallApplicationListAdapter(categoryHashMap[categoryList[position]]!!.toList())
+        holder.applicationList.adapter = SmallApplicationListAdapter(activity, categoryHashMap[categoryList[position]]!!.toList())
     }
 
     override fun getItemCount() = categoryHashMap.size

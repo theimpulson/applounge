@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
 
         // Initialise category list
         categoryList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        categoryList.adapter = HomeCategoryAdapter(homeViewModel.getApplications().value!!)
+        categoryList.adapter = HomeCategoryAdapter(activity!!, homeViewModel.getApplications().value!!)
         homeViewModel.loadApplications()
 
         // Bind to the list of images for the carousel
@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
 
         // Bind to the list of applications
         homeViewModel.getApplications().observe(this, Observer {
-            categoryList.adapter = HomeCategoryAdapter(homeViewModel.getApplications().value!!)
+            categoryList.adapter = HomeCategoryAdapter(activity!!, homeViewModel.getApplications().value!!)
         })
 
         return view

@@ -1,6 +1,9 @@
 package io.eelo.appinstaller.application
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.pm.PackageManager
 import android.os.AsyncTask
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -15,11 +18,12 @@ import io.eelo.appinstaller.application.model.Downloader
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
 import io.eelo.appinstaller.common.ProxyBitmap
+import io.eelo.appinstaller.utlis.Constants.STORAGE_PERMISSION_REQUEST_CODE
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
-class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
+class ApplicationViewHolder(private val activity: Activity, private val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
 
     private val icon: ImageView = view.app_icon
     private val title: TextView = view.app_title
@@ -37,7 +41,18 @@ class ApplicationViewHolder(private val view: View) : RecyclerView.ViewHolder(vi
                 applicationViewModel.onApplicationClick(view.context, application!!)
             }
         }
-        installButton.setOnClickListener { application?.buttonClicked(view.context) }
+        installButton.setOnClickListener {
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    activity.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE_PERMISSION_REQUEST_CODE)
+                } else {
+                    application?.buttonClicked(view.context)
+                }
+            } else {
+                application?.buttonClicked(view.context)
+            }
+        }
     }
 
     fun createApplicationView(app: Application) {

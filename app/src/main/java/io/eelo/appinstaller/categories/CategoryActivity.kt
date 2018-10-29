@@ -49,7 +49,7 @@ class CategoryActivity : AppCompatActivity() {
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = ApplicationListAdapter(applicationList)
+        recyclerView.adapter = ApplicationListAdapter(this, applicationList)
 
         // Bind to the list of applications in this activity's category
         categoriesViewModel.getApplicationsInCategory().observe(this, Observer {

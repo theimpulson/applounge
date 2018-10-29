@@ -62,7 +62,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ApplicationListAdapter(applicationList)
+        recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList)
 
         // Bind search view suggestions adapter to search suggestions list in view model
         searchViewModel.getSuggestions().observe(this, Observer {

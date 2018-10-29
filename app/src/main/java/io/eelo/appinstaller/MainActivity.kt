@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Message
@@ -15,6 +16,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.widget.Toast
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.application.model.InstallManagerService
 import io.eelo.appinstaller.categories.CategoriesFragment
@@ -22,6 +24,7 @@ import io.eelo.appinstaller.home.HomeFragment
 import io.eelo.appinstaller.search.SearchFragment
 import io.eelo.appinstaller.settings.SettingsFragment
 import io.eelo.appinstaller.updates.UpdatesFragment
+import io.eelo.appinstaller.utlis.Constants.STORAGE_PERMISSION_REQUEST_CODE
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -128,6 +131,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             val itemView = menuView.getChildAt(i) as BottomNavigationItemView
             itemView.setShiftingMode(false)
             itemView.setChecked(itemView.itemData.isChecked)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == STORAGE_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            Toast.makeText(this, resources.getString(R.string.error_storage_permission_denied), Toast.LENGTH_LONG).show()
         }
     }
 }
