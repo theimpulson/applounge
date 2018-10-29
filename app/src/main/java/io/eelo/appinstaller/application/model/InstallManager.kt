@@ -14,6 +14,8 @@ class InstallManager {
     fun findOrCreateApp(context: Context, data: ApplicationData): Application {
         if (!apps.containsKey(data.packageName)) {
             apps[data.packageName] = Application(data, context, this)
+        } else {
+            apps[data.packageName]!!.data.update(data)
         }
         val app = apps[data.packageName]!!
         app.incrementUses()
