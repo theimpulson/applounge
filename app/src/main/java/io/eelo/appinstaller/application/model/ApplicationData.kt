@@ -39,6 +39,7 @@ class ApplicationData {
     //unsupported data
     var stars = 0f
     var privacyScore = 0
+    var energyScore = 0
 
     var dataIndex = 0
 
@@ -157,7 +158,6 @@ class ApplicationData {
                 versions = data.versions
             }
         }
-        this.name = data.name
         if (data.iconImage != null) {
             iconImage = data.iconImage
         }

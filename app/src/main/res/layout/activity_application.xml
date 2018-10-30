@@ -36,7 +36,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/layout_padding_medium"
+                android:paddingEnd="@dimen/layout_padding_medium">
 
                 <ImageView
                     android:id="@+id/app_icon"
@@ -91,7 +93,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/layout_margin_medium"
                 android:gravity="center_vertical|end"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/layout_padding_medium"
+                android:paddingEnd="@dimen/layout_padding_medium">
 
                 <TextView
                     android:id="@+id/app_size"
@@ -104,12 +108,17 @@
 
                 <Button
                     android:id="@+id/app_install"
-                    android:layout_width="72dp"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="@dimen/layout_margin_large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/layout_margin_medium"
                     android:background="@drawable/app_install_border"
                     android:foreground="?android:selectableItemBackground"
-                    android:text="@string/action_install" />
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:padding="@dimen/layout_padding_medium"
+                    android:text="@string/action_install"
+                    android:textSize="@dimen/text_size_small" />
 
             </LinearLayout>
 

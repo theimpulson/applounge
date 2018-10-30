@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         Thread {
             val installManager = createInstallManager()
             initialiseFragments(installManager)
+            // Show the home fragment by default
             showFragment(homeFragment)
         }.start()
-        // Show the home fragment by default
 
         bottom_navigation_view.setOnNavigationItemSelectedListener(this)
 
