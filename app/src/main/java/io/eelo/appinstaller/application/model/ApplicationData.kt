@@ -79,11 +79,12 @@ class ApplicationData {
                 @JsonProperty("description") description: String,
                 @JsonProperty("other_images_path") images: Array<String>,
                 @JsonProperty("last_modified") lastModified: String,
-                @JsonProperty("licence") licence: String,
+                @JsonProperty("licence") licence: String?,
+                @JsonProperty("license") license: String?,
                 @JsonProperty("name") name: String,
                 @JsonProperty("latest_version") lastVersionName: String,
                 @JsonProperty("app_link") appLink: String,
-                @JsonProperty("last_accessed") lastAccessed: String) {
+                @JsonProperty("last_accessed") lastAccessed: String?) {
         this.id = id
         this.icon = icon
         this.packageName = packageName
@@ -94,22 +95,24 @@ class ApplicationData {
         this.description = description
         this.images = images
         this.lastModified = lastModified
-        this.licence = licence
+        this.licence = licence ?: (license ?: "")
         this.name = name
         this.lastVersionName = lastVersionName
         this.appLink = appLink
-        this.lastAccessed = lastAccessed
+        this.lastAccessed = lastAccessed ?: ""
         dataIndex = 2
     }
 
     @Suppress("unused")
     @JsonAnySetter
     fun updates(name: String, value: Any) {
+        println(name)
+        println(value)
         val result = value as LinkedHashMap<*, *>
         versions[name] = Version(result["downloaded_flag"] as String,
                 result["eelo_download_link"] as String,
-                result["min_android"] as String,
-                result["apk_file_sha1"] as String,
+                result["min_android"] as String?,
+                result["apk_file_sha1"] as String?,
                 result["created_on"] as String,
                 result["version"] as String,
                 result["signature"] as String,
