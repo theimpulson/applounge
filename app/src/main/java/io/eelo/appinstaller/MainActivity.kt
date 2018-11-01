@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private val searchFragment = SearchFragment()
     private val updatesFragment = UpdatesFragment()
     private val settingsFragment = SettingsFragment()
+    private lateinit var serviceConnection: ServiceConnection
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         startService(Intent(this, InstallManagerService::class.java))
         val blocker = Object()
         var installManager: InstallManager? = null
-        bindService(Intent(this, InstallManagerService::class.java), object : ServiceConnection {
+        serviceConnection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName, service: IBinder) {
                 Messenger(service).send(Message.obtain(null, 0, { result: InstallManager ->
                     installManager = result
@@ -72,7 +73,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
 
             override fun onServiceDisconnected(name: ComponentName) {}
-        }, Context.BIND_AUTO_CREATE)
+        }
+        bindService(Intent(this, InstallManagerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         synchronized(blocker) {
             blocker.wait()
         }
@@ -138,5 +140,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         if (requestCode == STORAGE_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
             Toast.makeText(this, resources.getString(R.string.error_storage_permission_denied), Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(serviceConnection)
     }
 }
