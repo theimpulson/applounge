@@ -1,7 +1,8 @@
 package io.eelo.appinstaller.home.model
 
-interface HomeModelInterface {
-    fun loadCarouselImages()
+import android.content.Context
+import io.eelo.appinstaller.application.model.InstallManager
 
-    fun loadApplications()
+interface HomeModelInterface {
+    fun load(onLoad: () -> Unit, context: Context, installManager: InstallManager)
 }

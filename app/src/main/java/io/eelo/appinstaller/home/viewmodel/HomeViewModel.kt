@@ -1,32 +1,41 @@
 package io.eelo.appinstaller.home.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.content.Context
 import android.graphics.Bitmap
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.categories.model.Category
+import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.home.model.HomeModel
 
 class HomeViewModel : ViewModel(), HomeViewModelInterface {
     private val homeModel = HomeModel()
+    private var isLoaded = false
 
-    override fun getCarouselImages(): MutableLiveData<ArrayList<Bitmap>> {
-        return homeModel.imagesList
-    }
-
-    override fun getApplications(): MutableLiveData<HashMap<Category, ArrayList<Application>>> {
-        val applicationList = homeModel.applicationHashMap
-        applicationList.value!!.forEach {
-            it.key.title = it.key.id.replace("_", " ").capitalize()
+    @Synchronized
+    override fun load(onLoad: () -> Unit, context: Context, installManager: InstallManager) {
+        if (!isLoaded) {
+            isLoaded = true
+            homeModel.load(onLoad, context, installManager)
+        } else {
+            onLoad.invoke()
         }
-        return applicationList
     }
 
-    override fun loadCarouselImages() {
-        homeModel.loadCarouselImages()
+    override fun getApplications(): Map<String, List<Application>> {
+        val applications = homeModel.applications
+        val result = HashMap<String, List<Application>>()
+        applications.forEach {
+            val name = nameForCategory(it.key)
+            result[name] = it.value
+        }
+        return result
     }
 
-    override fun loadApplications() {
-        homeModel.loadApplications()
+    override fun getCarouselImages(): List<Pair<Application, Bitmap>> {
+        return homeModel.carouselImages
+    }
+
+    private fun nameForCategory(category: String): String {
+        return category.replace('_', ' ').capitalize()
     }
 }
