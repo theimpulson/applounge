@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.home.model.HomeModel
+import io.eelo.appinstaller.utlis.Common
 
 class HomeViewModel : ViewModel(), HomeViewModelInterface {
     private val homeModel = HomeModel()
@@ -25,7 +26,7 @@ class HomeViewModel : ViewModel(), HomeViewModelInterface {
         val applications = homeModel.applications
         val result = HashMap<String, List<Application>>()
         applications.forEach {
-            val name = nameForCategory(it.key)
+            val name = Common.getCategoryTitle(it.key)
             result[name] = it.value
         }
         return result
@@ -33,9 +34,5 @@ class HomeViewModel : ViewModel(), HomeViewModelInterface {
 
     override fun getCarouselImages(): List<Pair<Application, Bitmap>> {
         return homeModel.carouselImages
-    }
-
-    private fun nameForCategory(category: String): String {
-        return category.replace('_', ' ').capitalize()
     }
 }

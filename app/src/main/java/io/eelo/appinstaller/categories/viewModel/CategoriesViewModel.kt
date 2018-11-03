@@ -8,6 +8,7 @@ import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.categories.CategoryActivity
 import io.eelo.appinstaller.categories.model.CategoriesModel
 import io.eelo.appinstaller.categories.model.Category
+import io.eelo.appinstaller.utlis.Common
 import io.eelo.appinstaller.utlis.Constants
 
 class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
@@ -16,7 +17,7 @@ class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
     override fun getApplicationsCategories(): MutableLiveData<ArrayList<Category>> {
         val applicationsCategories = categoriesModel.applicationsCategoriesList
         applicationsCategories.value!!.forEach {
-            it.title = it.id.replace("_", " ").capitalize()
+            it.title = Common.getCategoryTitle(it.id)
         }
         return applicationsCategories
     }
@@ -24,7 +25,7 @@ class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
     override fun getGamesCategories(): MutableLiveData<ArrayList<Category>> {
         val gamesCategories = categoriesModel.gamesCategoriesList
         gamesCategories.value!!.forEach {
-            it.title = it.id.replace("_", " ").capitalize()
+            it.title = Common.getCategoryTitle(it.id)
         }
         return gamesCategories
     }

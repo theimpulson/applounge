@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.*
+import io.eelo.appinstaller.utlis.Common
 import io.eelo.appinstaller.utlis.Constants
 import io.eelo.appinstaller.utlis.Constants.APPLICATION_DESCRIPTION_KEY
 import io.eelo.appinstaller.utlis.Constants.APPLICATION_PACKAGE_NAME_KEY
@@ -67,7 +68,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         app_icon.setImageBitmap(application.data.iconImage?.getBitmap())
         app_title.text = application.data.name
         app_author.text = application.data.author
-        app_category.text = application.data.category.replace("_", " ").capitalize()
+        app_category.text = Common.getCategoryTitle(application.data.category)
         app_description.text = Html.fromHtml(application.data.description)
         app_description_container.setOnClickListener {
             val intent = Intent(this, ApplicationDescriptionActivity::class.java)
