@@ -115,8 +115,6 @@ class ApplicationData {
     @Suppress("unused")
     @JsonAnySetter
     fun updates(name: String, value: Any) {
-        println(name)
-        println(value)
         val result = value as LinkedHashMap<*, *>
         versions[name] = Version(result["downloaded_flag"] as String?,
                 result["eelo_download_link"] as String,
