@@ -8,8 +8,8 @@ import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.categories.CategoryActivity
 import io.eelo.appinstaller.categories.model.CategoriesModel
 import io.eelo.appinstaller.categories.model.Category
-import io.eelo.appinstaller.utlis.Common
-import io.eelo.appinstaller.utlis.Constants
+import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Constants
 
 class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
     private val categoriesModel = CategoriesModel()

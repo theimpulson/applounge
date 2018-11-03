@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.eelo.appinstaller.application.ImageDownloader
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
-import io.eelo.appinstaller.utlis.Constants
+import io.eelo.appinstaller.utils.Constants
 import java.net.URL
 import java.util.*
 import java.util.concurrent.LinkedBlockingQueue

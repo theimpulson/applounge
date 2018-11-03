@@ -3,7 +3,7 @@ package io.eelo.appinstaller.application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
-import io.eelo.appinstaller.utlis.Constants
+import io.eelo.appinstaller.utils.Constants
 
 import java.io.IOException
 import java.net.URL

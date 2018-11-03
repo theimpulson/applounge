@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.ApplicationData
 import io.eelo.appinstaller.application.model.InstallManager
-import io.eelo.appinstaller.utlis.ApplicationParser.Companion.parseToApps
+import io.eelo.appinstaller.utils.ApplicationParser.Companion.parseToApps
 
 class HomeResult @JsonCreator
 constructor(@JsonProperty("success") val success: Boolean,

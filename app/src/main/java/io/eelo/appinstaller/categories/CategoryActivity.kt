@@ -15,7 +15,7 @@ import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.categories.viewModel.CategoriesViewModel
 import io.eelo.appinstaller.common.ApplicationListAdapter
-import io.eelo.appinstaller.utlis.Constants.CATEGORY_KEY
+import io.eelo.appinstaller.utils.Constants.CATEGORY_KEY
 
 class CategoryActivity : AppCompatActivity() {
 

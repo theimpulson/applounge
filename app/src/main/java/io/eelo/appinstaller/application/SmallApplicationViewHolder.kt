@@ -17,7 +17,7 @@ import io.eelo.appinstaller.application.model.Downloader
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
 import io.eelo.appinstaller.common.ProxyBitmap
-import io.eelo.appinstaller.utlis.Constants
+import io.eelo.appinstaller.utils.Constants
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import kotlin.math.roundToInt
 

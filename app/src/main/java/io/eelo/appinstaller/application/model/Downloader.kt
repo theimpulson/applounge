@@ -1,6 +1,6 @@
 package io.eelo.appinstaller.application.model
 
-import io.eelo.appinstaller.utlis.Constants
+import io.eelo.appinstaller.utils.Constants
 import java.io.*
 import java.net.URL
 import java.net.URLConnection

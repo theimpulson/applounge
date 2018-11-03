@@ -18,7 +18,7 @@ import io.eelo.appinstaller.application.model.Downloader
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
 import io.eelo.appinstaller.common.ProxyBitmap
-import io.eelo.appinstaller.utlis.Constants.STORAGE_PERMISSION_REQUEST_CODE
+import io.eelo.appinstaller.utils.Constants.STORAGE_PERMISSION_REQUEST_CODE
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import java.text.DecimalFormat
 import kotlin.math.roundToInt

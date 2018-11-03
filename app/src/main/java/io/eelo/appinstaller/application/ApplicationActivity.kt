@@ -16,10 +16,10 @@ import android.view.MenuItem
 import android.widget.Toast
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.*
-import io.eelo.appinstaller.utlis.Common
-import io.eelo.appinstaller.utlis.Constants
-import io.eelo.appinstaller.utlis.Constants.APPLICATION_DESCRIPTION_KEY
-import io.eelo.appinstaller.utlis.Constants.APPLICATION_PACKAGE_NAME_KEY
+import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Constants
+import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
+import io.eelo.appinstaller.utils.Constants.APPLICATION_PACKAGE_NAME_KEY
 import kotlinx.android.synthetic.main.activity_application.*
 import kotlin.math.roundToInt
 

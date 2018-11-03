@@ -6,7 +6,7 @@ import android.graphics.Bitmap
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.home.model.HomeModel
-import io.eelo.appinstaller.utlis.Common
+import io.eelo.appinstaller.utils.Common
 
 class HomeViewModel : ViewModel(), HomeViewModelInterface {
     private val homeModel = HomeModel()

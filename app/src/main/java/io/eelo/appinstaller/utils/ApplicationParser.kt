@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.utlis
+package io.eelo.appinstaller.utils
 
 import android.content.Context
 import io.eelo.appinstaller.application.model.Application

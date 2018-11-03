@@ -24,7 +24,7 @@ import io.eelo.appinstaller.home.HomeFragment
 import io.eelo.appinstaller.search.SearchFragment
 import io.eelo.appinstaller.settings.SettingsFragment
 import io.eelo.appinstaller.updates.UpdatesFragment
-import io.eelo.appinstaller.utlis.Constants.STORAGE_PERMISSION_REQUEST_CODE
+import io.eelo.appinstaller.utils.Constants.STORAGE_PERMISSION_REQUEST_CODE
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {

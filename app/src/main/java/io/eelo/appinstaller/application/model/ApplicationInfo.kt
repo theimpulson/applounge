@@ -3,7 +3,7 @@ package io.eelo.appinstaller.application.model
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Environment.getExternalStorageDirectory
-import io.eelo.appinstaller.utlis.Constants.APK_FOLDER
+import io.eelo.appinstaller.utils.Constants.APK_FOLDER
 import java.io.File
 
 class ApplicationInfo(private val data: ApplicationData) {

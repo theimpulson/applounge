@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.utlis
+package io.eelo.appinstaller.utils
 
 object Constants {
 

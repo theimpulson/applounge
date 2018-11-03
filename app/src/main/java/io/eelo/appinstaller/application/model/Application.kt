@@ -3,7 +3,7 @@ package io.eelo.appinstaller.application.model
 import android.content.Context
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.eelo.appinstaller.application.model.State.*
-import io.eelo.appinstaller.utlis.Constants
+import io.eelo.appinstaller.utils.Constants
 import java.io.IOException
 import java.net.URL
 import java.util.concurrent.atomic.AtomicInteger

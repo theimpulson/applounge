@@ -7,7 +7,7 @@ import android.text.Html
 import android.text.util.Linkify
 import android.view.MenuItem
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.utlis.Constants.APPLICATION_DESCRIPTION_KEY
+import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
 import kotlinx.android.synthetic.main.activity_application_description.*
 
 class ApplicationDescriptionActivity : AppCompatActivity() {
