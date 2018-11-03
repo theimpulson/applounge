@@ -13,6 +13,7 @@ object Constants {
     // Application
     const val APK_FOLDER = "/AppInstaller/"
     const val APPLICATION_PACKAGE_NAME_KEY = "application_package_name"
+    const val APPLICATION_DESCRIPTION_KEY = "application_description"
 
     // Categories
     const val CATEGORY_KEY = "category_key"

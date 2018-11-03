@@ -17,7 +17,9 @@
     <string name="app_privacy_score">Privacy</string>
     <string name="app_rating">Rating</string>
     <string name="app_energy_score">Energy</string>
-    <string name="error_storage_permission_denied">Storage access is required for downloading apps</string>
+
+    <!-- Application Description Activity -->
+    <string name="application_description_activity_title">Description</string>
 
     <!-- Bottom Navigation Bar -->
     <string name="menu_home">Home</string>
@@ -45,5 +47,8 @@
         updates in the background</string>
     <string name="preference_update_notify_available_title">Show available updates</string>
     <string name="preference_update_notify_available_description">Show a notification when app updates are available</string>
+
+    <!-- Errors -->
+    <string name="error_storage_permission_denied">Storage access is required for downloading apps</string>
 
 </resources>
