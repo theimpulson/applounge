@@ -1,16 +1,14 @@
 package io.eelo.appinstaller.home.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
+import android.content.Context
 import android.graphics.Bitmap
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.categories.model.Category
+import io.eelo.appinstaller.application.model.InstallManager
 
 interface HomeViewModelInterface {
-    fun getCarouselImages(): MutableLiveData<ArrayList<Bitmap>>
 
-    fun getApplications(): MutableLiveData<HashMap<Category, ArrayList<Application>>>
+    fun getApplications(): Map<String, List<Application>>
+    fun getCarouselImages(): List<Pair<Application, Bitmap>>
 
-    fun loadCarouselImages()
-
-    fun loadApplications()
+    fun load(onLoad: () -> Unit, context: Context, installManager: InstallManager)
 }
