@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.home.viewmodel.HomeViewModel
@@ -18,6 +19,7 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var imageCarousel: ViewPager
     lateinit var installManager: InstallManager
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
@@ -25,7 +27,9 @@ class HomeFragment : Fragment() {
         homeViewModel = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
         imageCarousel = view.findViewById(R.id.image_carousel)
         imageCarousel.visibility = View.GONE
-        reduceCarouselsScrollingAnimationSpeed()
+        setCustomScroller()
+        progressBar = view.findViewById(R.id.progress_bar)
+        progressBar.visibility = View.VISIBLE
 
         val categoryList = view.findViewById<RecyclerView>(R.id.category_list)
         categoryList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -37,7 +41,7 @@ class HomeFragment : Fragment() {
         return view
     }
 
-    private fun reduceCarouselsScrollingAnimationSpeed() {
+    private fun setCustomScroller() {
         val scroller = ViewPager::class.java.getDeclaredField("mScroller")
         scroller.isAccessible = true
         scroller.set(imageCarousel, ImageCarouselScroller(context!!))
@@ -55,6 +59,7 @@ class HomeFragment : Fragment() {
     private fun createCategoryList(categoryList: RecyclerView) {
         val apps = homeViewModel.getApplications()
         categoryList.adapter = HomeCategoryAdapter(activity!!, apps)
+        progressBar.visibility = View.GONE
     }
 
 }

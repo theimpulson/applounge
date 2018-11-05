@@ -1,33 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scrollbars="none">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:scrollbars="none">
 
-        <ImageView
-            android:id="@+id/app_store_banner"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:contentDescription="@string/app_store_banner_content_description"
-            android:src="@drawable/app_store_banner" />
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/image_carousel"
-            android:layout_width="match_parent"
-            android:layout_height="168dp" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/category_list"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:scrollbars="none" />
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/app_store_banner"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:contentDescription="@string/app_store_banner_content_description"
+                android:src="@drawable/app_store_banner" />
 
-</android.support.v4.widget.NestedScrollView>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/image_carousel"
+                android:layout_width="match_parent"
+                android:layout_height="168dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:scrollbars="none" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
