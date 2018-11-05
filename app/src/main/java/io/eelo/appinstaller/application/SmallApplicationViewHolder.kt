@@ -17,6 +17,7 @@ import io.eelo.appinstaller.application.model.Downloader
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
 import io.eelo.appinstaller.common.ProxyBitmap
+import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import kotlin.math.roundToInt
@@ -60,7 +61,7 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
                 icon.setImageBitmap(it)
                 app.data.iconImage = ProxyBitmap(it)
 
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, app.data.icon)
+            }.executeOnExecutor(Common.EXECUTOR, app.data.icon)
         }
         this.application?.removeListener(this)
         this.application = app
@@ -118,7 +119,7 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
                 installButton.text = view.context.resources.getString(installButtonText)
                 installButton.isEnabled = isInstallButtonEnabled
             }
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+        }.executeOnExecutor(Common.EXECUTOR)
     }
 
     @SuppressLint("SetTextI18n")

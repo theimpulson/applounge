@@ -1,5 +1,6 @@
 package io.eelo.appinstaller.home
 
+import android.arch.lifecycle.Observer
 import  android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,7 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import io.eelo.appinstaller.R
+import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.home.model.BannerApp
 import io.eelo.appinstaller.home.viewmodel.HomeViewModel
 
 class HomeFragment : Fragment() {
@@ -33,11 +36,17 @@ class HomeFragment : Fragment() {
 
         val categoryList = view.findViewById<RecyclerView>(R.id.category_list)
         categoryList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        homeViewModel.load({
-            createImageCarousel()
-            createCategoryList(categoryList)
-        }, context!!, installManager)
 
+
+        homeViewModel.getBannerApps().observe(this, Observer {
+            createImageCarousel(it!!)
+        })
+
+        homeViewModel.getApplications().observe(this, Observer {
+            createCategoryList(categoryList, it!!)
+        })
+        homeViewModel.load(context!!, installManager)
+        homeViewModel.load(context!!, installManager)
         return view
     }
 
@@ -47,17 +56,14 @@ class HomeFragment : Fragment() {
         scroller.set(imageCarousel, ImageCarouselScroller(context!!))
     }
 
-    private fun createImageCarousel() {
-        val bannerImages = homeViewModel.getCarouselImages()
-
+    private fun createImageCarousel(bannerApps: List<BannerApp>) {
         imageCarousel.visibility = View.VISIBLE
-        imageCarousel.adapter = ImageCarouselAdapter(context!!, bannerImages)
+        imageCarousel.adapter = ImageCarouselAdapter(context!!, bannerApps)
         imageCarousel.setCurrentItem(0, false)
-        ImageCarouselSwitcher(bannerImages.size, imageCarousel).start()
+        ImageCarouselSwitcher(bannerApps.size, imageCarousel).start()
     }
 
-    private fun createCategoryList(categoryList: RecyclerView) {
-        val apps = homeViewModel.getApplications()
+    private fun createCategoryList(categoryList: RecyclerView, apps: HashMap<String, List<Application>>) {
         categoryList.adapter = HomeCategoryAdapter(activity!!, apps)
         progressBar.visibility = View.GONE
     }

@@ -1,6 +1,7 @@
 package io.eelo.appinstaller.application.model
 
 import android.os.AsyncTask
+import io.eelo.appinstaller.utils.Common
 
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -28,7 +29,7 @@ class ThreadedListeners(private val action: () -> Unit) {
 
     private fun execSynchronized() {
         synchronized(waiter) {
-            SyncTask(this).execute()
+            SyncTask(this).executeOnExecutor(Common.EXECUTOR)
             waiter.wait()
         }
     }

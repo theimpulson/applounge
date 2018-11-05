@@ -1,14 +1,12 @@
 package io.eelo.appinstaller.application.model
 
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import io.eelo.appinstaller.common.ProxyBitmap
 
 class ApplicationData {
 
     //minimal data
-    var packageName: String
+    lateinit var packageName: String
     var id = ""
     val lastVersion: String
         get() = lastVersionObj.version
@@ -70,64 +68,51 @@ class ApplicationData {
         dataIndex = 1
     }
 
-    @Suppress("unused")
-    @JsonCreator
-    constructor(@JsonProperty("_id") id: String,
-                @JsonProperty("icon_image_path") icon: String,
-                @JsonProperty("package_name") packageName: String,
-                @JsonProperty("created_on") createdOn: String,
-                @JsonProperty("category") category: String,
-                @JsonProperty("author") author: String,
-                @JsonProperty("source") source: String,
-                @JsonProperty("description") description: String,
-                @JsonProperty("other_images_path") images: Array<String>,
-                @JsonProperty("last_modified") lastModified: String,
-                @JsonProperty("licence") licence: String?,
-                @JsonProperty("license") license: String?,
-                @JsonProperty("name") name: String,
-                @JsonProperty("latest_version") lastVersionName: String,
-                @JsonProperty("app_link") appLink: String,
-                @JsonProperty("last_accessed") lastAccessed: String?,
-                @JsonProperty("appType") appType: String?,
-                @JsonProperty("differenceInDownloads") differenceInDownloads: Int,
-                @JsonProperty("number_of_downloads") numberOfDownloads: Int) {
-        this.id = id
-        this.icon = icon
-        this.packageName = packageName
-        this.createdOn = createdOn
-        this.category = category
-        this.author = author
-        this.source = source
-        this.description = description
-        this.images = images
-        this.lastModified = lastModified
-        this.licence = licence ?: (license ?: "")
-        this.name = name
-        this.lastVersionName = lastVersionName
-        this.appLink = appLink
-        this.lastAccessed = lastAccessed ?: ""
-        this.appType = appType ?: ""
-        this.differenceInDownloads = differenceInDownloads
-        this.numberOfDownloads = numberOfDownloads
+    constructor() {
         dataIndex = 2
     }
 
     @Suppress("unused")
     @JsonAnySetter
-    fun updates(name: String, value: Any) {
-        val result = value as LinkedHashMap<*, *>
-        versions[name] = Version(result["downloaded_flag"] as String?,
-                result["eelo_download_link"] as String,
-                result["min_android"] as String?,
-                result["apk_file_sha1"] as String?,
-                result["created_on"] as String,
-                result["version"] as String,
-                result["signature"] as String,
-                result["apk_file_size"] as String,
-                result["update_on"] as String,
-                result["source_apk_download"] as String,
-                result["whats_new"] as String?,
-                name)
+    fun jsonCreator(name: String, value: Any) {
+        when (name) {
+            "_id" -> id = value as String
+            "icon_image_path" -> icon = value as String
+            "package_name" -> packageName = value as String
+            "created_on" -> createdOn = value as String
+            "category" -> category = value as String
+            "author" -> author = value as String
+            "source" -> source = value as String
+            "description" -> description = value as String
+            "other_images_path" -> images = (value as List<String>).toTypedArray()
+            "last_modified" -> lastModified = value as String
+            "licence" -> licence = value as String
+            "license" -> licence = value as String
+            "name" -> this.name = value as String
+            "latest_version" -> lastVersionName = value as String
+            "app_link" -> appLink = value as String
+            "last_accessed" -> lastAccessed = value as String
+            "appType" -> appType = value as String
+            "differenceInDownloads" -> differenceInDownloads = value as Int
+            "number_of_downloads" -> numberOfDownloads = value as Int
+            else -> {
+                if (name.startsWith("update_")) {
+                    val result = value as LinkedHashMap<*, *>
+                    versions[name] = Version(result["downloaded_flag"] as String?,
+                            result["eelo_download_link"] as String,
+                            result["min_android"] as String?,
+                            result["apk_file_sha1"] as String?,
+                            result["created_on"] as String,
+                            result["version"] as String,
+                            result["signature"] as String,
+                            result["apk_file_size"] as String,
+                            result["update_on"] as String,
+                            result["source_apk_download"] as String,
+                            result["whats_new"] as String?,
+                            name)
+                }
+            }
+        }
     }
 
     fun update(data: ApplicationData) {

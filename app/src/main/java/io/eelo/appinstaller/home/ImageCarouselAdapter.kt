@@ -1,18 +1,17 @@
 package io.eelo.appinstaller.home
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
+import io.eelo.appinstaller.home.model.BannerApp
 import kotlinx.android.synthetic.main.image_carousel_item.view.*
 
-class ImageCarouselAdapter(context: Context, private val bannerApps: List<Pair<Application, Bitmap>>) : PagerAdapter() {
+class ImageCarouselAdapter(context: Context, private val bannerApps: List<BannerApp>) : PagerAdapter() {
 
     private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private val applicationViewModel = ApplicationViewModel()
@@ -29,9 +28,9 @@ class ImageCarouselAdapter(context: Context, private val bannerApps: List<Pair<A
         val view = layoutInflater.inflate(R.layout.image_carousel_item, container, false)
         val wideImage = view.image
 
-        wideImage.setImageBitmap(bannerApps[position].second)
+        wideImage.setImageBitmap(bannerApps[position].image)
         wideImage.setOnClickListener {
-            applicationViewModel.onApplicationClick(view.context, bannerApps[position].first)
+            applicationViewModel.onApplicationClick(view.context, bannerApps[position].application)
         }
 
         container.addView(view)

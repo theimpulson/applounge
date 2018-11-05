@@ -5,6 +5,7 @@ import android.os.AsyncTask
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
 import java.net.URL
 
@@ -18,7 +19,7 @@ class SearchElement(private val query: String, private val installManager: Insta
     }
 
     fun loadMoreInBackground(context: Context) {
-        execute(context)
+        executeOnExecutor(Common.EXECUTOR, context)
     }
 
     override fun doInBackground(vararg params: Context): Void? {

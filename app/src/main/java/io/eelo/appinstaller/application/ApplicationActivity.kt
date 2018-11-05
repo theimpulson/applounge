@@ -39,8 +39,8 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         // Get application package name from intent
         val applicationPackageName: String? = intent.getStringExtra(APPLICATION_PACKAGE_NAME_KEY)
         if (!applicationPackageName.isNullOrEmpty()) {
-            // Bind to the InstallManagerService and initialise application
-            InitialiseTask().execute(applicationPackageName)
+            // Bind to the InstallManagerService and initialise applicationF
+            InitialiseTask().executeOnExecutor(Common.EXECUTOR, applicationPackageName)
         }
     }
 
@@ -132,7 +132,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
                 app_install.text = resources.getString(installButtonText)
                 app_install.isEnabled = isInstallButtonEnabled
             }
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+        }.executeOnExecutor(Common.EXECUTOR)
     }
 
     @SuppressLint("SetTextI18n")
