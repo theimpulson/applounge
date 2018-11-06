@@ -10,6 +10,8 @@ import java.net.URL
 
 class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, Any, LinkedHashMap<String, ArrayList<Application>>>() {
 
+    private lateinit var bannerApps: ArrayList<Application>
+
     companion object {
         private val homeResultReader = ObjectMapper().readerFor(HomeResult::class.java)
     }
@@ -17,11 +19,12 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
     override fun doInBackground(vararg params: Context): LinkedHashMap<String, ArrayList<Application>> {
         val context = params[0]
         val result = loadResult()
-        BannerApplicationLoader(homeModel, result).executeOnExecutor(THREAD_POOL_EXECUTOR, context)
+        bannerApps = result.bannerApps(homeModel.getInstallManager(), context)
         return loadApplications(result, context)
     }
 
     override fun onPostExecute(result: LinkedHashMap<String, ArrayList<Application>>) {
+        BannerApplicationLoader(bannerApps, homeModel).executeOnExecutor(THREAD_POOL_EXECUTOR)
         homeModel.applications.value = result
     }
 
