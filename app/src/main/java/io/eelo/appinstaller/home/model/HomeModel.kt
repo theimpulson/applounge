@@ -7,22 +7,28 @@ import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.utils.Common
 
 class HomeModel : HomeModelInterface {
-
-    val applications = MutableLiveData<HashMap<String, List<Application>>>()
-    val bannerApps = MutableLiveData<List<BannerApp>>()
-    lateinit var installManager: InstallManager
+    val applications = MutableLiveData<LinkedHashMap<String, ArrayList<Application>>>()
+    val bannerApplications = MutableLiveData<ArrayList<BannerApplication>>()
+    private var installManager: InstallManager? = null
 
     init {
         if (applications.value == null) {
-            applications.value = HashMap()
+            applications.value = LinkedHashMap()
         }
-        if (bannerApps.value == null) {
-            bannerApps.value = ArrayList()
+        if (bannerApplications.value == null) {
+            bannerApplications.value = ArrayList()
         }
     }
 
-    override fun load(context: Context, installManager: InstallManager) {
+    override fun initialise(installManager: InstallManager) {
         this.installManager = installManager
+    }
+
+    override fun getInstallManager(): InstallManager {
+        return installManager!!
+    }
+
+    override fun loadCategories(context: Context) {
         ApplicationsLoader(this).executeOnExecutor(Common.EXECUTOR, context)
     }
 

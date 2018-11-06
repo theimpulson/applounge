@@ -17,8 +17,8 @@ constructor(@JsonProperty("success") val success: Boolean,
         return parseToApps(installManager, context, child.bannerApps)
     }
 
-    fun parseApplications(installManager: InstallManager, context: Context): HashMap<String, List<Application>> {
-        val result = HashMap<String, List<Application>>()
+    fun parseApplications(installManager: InstallManager, context: Context): LinkedHashMap<String, ArrayList<Application>> {
+        val result = LinkedHashMap<String, ArrayList<Application>>()
         child.apps.forEach {
             result[it.key] = parseToApps(installManager, context, it.value.toTypedArray())
         }
@@ -28,7 +28,7 @@ constructor(@JsonProperty("success") val success: Boolean,
     class SubHomeResult @JsonCreator
     constructor(@JsonProperty("banner_apps") val bannerApps: Array<ApplicationData>) {
 
-        val apps = HashMap<String, List<ApplicationData>>()
+        val apps = LinkedHashMap<String, ArrayList<ApplicationData>>()
 
         @JsonAnySetter
         fun applications(key: String, value: Any) {
@@ -37,8 +37,8 @@ constructor(@JsonProperty("success") val success: Boolean,
             apps.forEach {
                 val data = it as LinkedHashMap<*, *>
                 val appData = ApplicationData()
-                data.forEach { name, value ->
-                    appData.jsonCreator(name as String, value)
+                for (pair in data) {
+                    appData.jsonCreator(pair.key as String, pair.value)
                 }
                 appsData.add(appData)
             }
@@ -46,6 +46,4 @@ constructor(@JsonProperty("success") val success: Boolean,
         }
 
     }
-
-
 }

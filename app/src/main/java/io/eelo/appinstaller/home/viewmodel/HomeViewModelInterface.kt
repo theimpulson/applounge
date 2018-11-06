@@ -4,11 +4,14 @@ import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
-import io.eelo.appinstaller.home.model.BannerApp
+import io.eelo.appinstaller.home.model.BannerApplication
 
 interface HomeViewModelInterface {
+    fun initialise(installManager: InstallManager)
 
-    fun getApplications(): MutableLiveData<HashMap<String, List<Application>>>
-    fun getBannerApps(): MutableLiveData<List<BannerApp>>
-    fun load(context: Context, installManager: InstallManager)
+    fun getBannerApplications(): MutableLiveData<ArrayList<BannerApplication>>
+
+    fun getCategories(): MutableLiveData<LinkedHashMap<String, ArrayList<Application>>>
+
+    fun loadCategories(context: Context)
 }

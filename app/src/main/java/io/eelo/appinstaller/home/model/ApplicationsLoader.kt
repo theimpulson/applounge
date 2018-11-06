@@ -8,20 +8,20 @@ import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
 import java.net.URL
 
-class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, Any, HashMap<String, List<Application>>>() {
+class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, Any, LinkedHashMap<String, ArrayList<Application>>>() {
 
     companion object {
         private val homeResultReader = ObjectMapper().readerFor(HomeResult::class.java)
     }
 
-    override fun doInBackground(vararg params: Context): HashMap<String, List<Application>> {
+    override fun doInBackground(vararg params: Context): LinkedHashMap<String, ArrayList<Application>> {
         val context = params[0]
         val result = loadResult()
-        BannerAppsLoader(homeModel, result).executeOnExecutor(THREAD_POOL_EXECUTOR, context)
+        BannerApplicationLoader(homeModel, result).executeOnExecutor(THREAD_POOL_EXECUTOR, context)
         return loadApplications(result, context)
     }
 
-    override fun onPostExecute(result: HashMap<String, List<Application>>) {
+    override fun onPostExecute(result: LinkedHashMap<String, ArrayList<Application>>) {
         homeModel.applications.value = result
     }
 
@@ -30,13 +30,12 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
         return homeResultReader.readValue<HomeResult>(url)
     }
 
-    private fun loadApplications(result: HomeResult, context: Context): HashMap<String, List<Application>> {
-        val parsedApplications = result.parseApplications(homeModel.installManager, context)
-        val applications = HashMap<String, List<Application>>()
-        parsedApplications.forEach { category, apps ->
-            applications[Common.getCategoryTitle(category)] = apps
+    private fun loadApplications(result: HomeResult, context: Context): LinkedHashMap<String, ArrayList<Application>> {
+        val parsedApplications = result.parseApplications(homeModel.getInstallManager(), context)
+        val applications = LinkedHashMap<String, ArrayList<Application>>()
+        for (parsedApplication in parsedApplications) {
+            applications[Common.getCategoryTitle(parsedApplication.key)] = parsedApplication.value
         }
         return applications
     }
-
 }

@@ -15,9 +15,9 @@ import io.eelo.appinstaller.common.SmallApplicationListAdapter
 import io.eelo.appinstaller.home.HomeCategoryAdapter.HomeCategoryViewHolder
 import kotlinx.android.synthetic.main.home_category_list_item.view.*
 
-class HomeCategoryAdapter(private val activity: Activity, private val applicationsByCategories: Map<String, List<Application>>) : Adapter<HomeCategoryViewHolder>() {
+class HomeCategoryAdapter(private val activity: Activity, private val categoriesMap: LinkedHashMap<String, ArrayList<Application>>) : Adapter<HomeCategoryViewHolder>() {
 
-    private val categories = applicationsByCategories.keys.toList()
+    private val categories = categoriesMap.keys.toList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeCategoryViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.home_category_list_item, parent, false)
@@ -26,11 +26,11 @@ class HomeCategoryAdapter(private val activity: Activity, private val applicatio
 
     override fun onBindViewHolder(holder: HomeCategoryViewHolder, position: Int) {
         val category = categories[position]
-        val apps = applicationsByCategories[category]!!.toList()
-        holder.bindTo(category, apps, activity)
+        val apps = categoriesMap[category]!!
+        holder.bind(category, apps, activity)
     }
 
-    override fun getItemCount() = applicationsByCategories.size
+    override fun getItemCount() = categoriesMap.size
 
     class HomeCategoryViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         private val titleView: TextView = view.category_title
@@ -40,7 +40,7 @@ class HomeCategoryAdapter(private val activity: Activity, private val applicatio
             applicationList.layoutManager = LinearLayoutManager(view.context, HORIZONTAL, false)
         }
 
-        fun bindTo(title:String, apps: List<Application>, activity: Activity) {
+        fun bind(title: String, apps: ArrayList<Application>, activity: Activity) {
             titleView.text = title
             applicationList.adapter = SmallApplicationListAdapter(activity, apps)
         }
