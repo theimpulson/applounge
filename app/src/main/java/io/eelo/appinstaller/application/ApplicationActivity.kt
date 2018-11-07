@@ -2,12 +2,10 @@ package io.eelo.appinstaller.application
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.os.*
+import android.os.AsyncTask
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.Html
@@ -25,7 +23,7 @@ import kotlin.math.roundToInt
 
 class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     private lateinit var application: Application
-    private lateinit var serviceConnection: ServiceConnection
+    private val installManagerGetter = InstallManagerGetter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,46 +149,24 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         // TODO alert the user of the error (while downloading)
     }
 
-    private fun createInstallManager(): InstallManager {
-        startService(Intent(this, InstallManagerService::class.java))
-        val blocker = Object()
-        var installManager: InstallManager? = null
-        serviceConnection = object : ServiceConnection {
-            override fun onServiceConnected(name: ComponentName, service: IBinder) {
-                Messenger(service).send(Message.obtain(null, 0, { result: InstallManager ->
-                    installManager = result
-                    synchronized(blocker) {
-                        blocker.notify()
-                    }
-                }))
-            }
-
-            override fun onServiceDisconnected(name: ComponentName) {}
-        }
-        bindService(Intent(this, InstallManagerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
-        synchronized(blocker) {
-            blocker.wait()
-        }
-        return installManager!!
-    }
-
-    inner class InitialiseTask : AsyncTask<String, Void, Void>() {
-        override fun doInBackground(vararg params: String): Void? {
-            val installManager = createInstallManager()
-            application = installManager.findOrCreateApp(this@ApplicationActivity, ApplicationData(params[0]))
+    private inner class InitialiseTask : AsyncTask<String, Any, Any>() {
+        override fun doInBackground(vararg params: String): Any? {
+            val context = this@ApplicationActivity
+            val installManager = installManagerGetter.connectAndGet(context)
+            application = installManager.findOrCreateApp(context, ApplicationData(params[0]))
             if (application.data.fullnessLevel != 2) {
                 application.searchFullData()
             }
             return null
         }
 
-        override fun onPostExecute(result: Void?) {
+        override fun onPostExecute(result: Any?) {
             onApplicationInfoLoaded()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unbindService(serviceConnection)
+        installManagerGetter.disconnect(this)
     }
 }

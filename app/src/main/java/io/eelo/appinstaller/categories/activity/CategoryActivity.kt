@@ -12,10 +12,11 @@ import android.view.View
 import android.widget.ProgressBar
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.application.model.InstallManagerGetter
 import io.eelo.appinstaller.categories.activity.viewModel.CategoryViewModel
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.ApplicationListAdapter
+import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants.CATEGORY_KEY
 
 class CategoryActivity : AppCompatActivity() {
@@ -25,6 +26,7 @@ class CategoryActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private var applicationList = ArrayList<Application>()
+    private val installManagerGetter = InstallManagerGetter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,11 +37,15 @@ class CategoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         category = intent.getSerializableExtra(CATEGORY_KEY) as Category
-        supportActionBar?.setTitle(category.title)
+        supportActionBar?.title = category.title
 
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
-        // TODO categoryViewModel.initialise(installManager, category.id)
-        categoryViewModel.loadApplications(this)
+
+        Common.EXECUTOR.submit {
+            val installManager = installManagerGetter.connectAndGet(this)
+            categoryViewModel.initialise(installManager, category.id)
+            categoryViewModel.loadApplications(this)
+        }
 
         recyclerView = findViewById(R.id.app_list)
         recyclerView.visibility = View.GONE
@@ -68,5 +74,10 @@ class CategoryActivity : AppCompatActivity() {
                 finish()
         }
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        installManagerGetter.disconnect(this)
     }
 }

@@ -1,15 +1,8 @@
 package io.eelo.appinstaller
 
 import android.annotation.SuppressLint
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.IBinder
-import android.os.Message
-import android.os.Messenger
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
@@ -18,12 +11,13 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.Toast
 import io.eelo.appinstaller.application.model.InstallManager
-import io.eelo.appinstaller.application.model.InstallManagerService
+import io.eelo.appinstaller.application.model.InstallManagerGetter
 import io.eelo.appinstaller.categories.CategoriesFragment
 import io.eelo.appinstaller.home.HomeFragment
 import io.eelo.appinstaller.search.SearchFragment
 import io.eelo.appinstaller.settings.SettingsFragment
 import io.eelo.appinstaller.updates.UpdatesFragment
+import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants.STORAGE_PERMISSION_REQUEST_CODE
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -34,23 +28,21 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private val searchFragment = SearchFragment()
     private val updatesFragment = UpdatesFragment()
     private val settingsFragment = SettingsFragment()
-    private lateinit var serviceConnection: ServiceConnection
+    private val installManagerGetter = InstallManagerGetter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Thread {
-            val installManager = createInstallManager()
+        Common.EXECUTOR.submit {
+            val installManager = installManagerGetter.connectAndGet(this)
             initialiseFragments(installManager)
             // Show the home fragment by default
             showFragment(homeFragment)
-        }.start()
+        }
 
         bottom_navigation_view.setOnNavigationItemSelectedListener(this)
-
-        // Disable shifting of nav bar items
-        removeShiftMode(bottom_navigation_view)
+        disableShiftingOfNabBarItems()
     }
 
     private fun initialiseFragments(installManager: InstallManager) {
@@ -58,29 +50,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         categoriesFragment.initialise(installManager)
         searchFragment.initialise(installManager)
         updatesFragment.initialise(installManager)
-    }
-
-    private fun createInstallManager(): InstallManager {
-        startService(Intent(this, InstallManagerService::class.java))
-        val blocker = Object()
-        var installManager: InstallManager? = null
-        serviceConnection = object : ServiceConnection {
-            override fun onServiceConnected(name: ComponentName, service: IBinder) {
-                Messenger(service).send(Message.obtain(null, 0, { result: InstallManager ->
-                    installManager = result
-                    synchronized(blocker) {
-                        blocker.notify()
-                    }
-                }))
-            }
-
-            override fun onServiceDisconnected(name: ComponentName) {}
-        }
-        bindService(Intent(this, InstallManagerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
-        synchronized(blocker) {
-            blocker.wait()
-        }
-        return installManager!!
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -118,8 +87,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     @SuppressLint("RestrictedApi")
-    private fun removeShiftMode(bottomNavigationView: BottomNavigationView) {
-        val menuView = bottomNavigationView.getChildAt(0) as BottomNavigationMenuView
+    private fun disableShiftingOfNabBarItems() {
+        val menuView = bottom_navigation_view.getChildAt(0) as BottomNavigationMenuView
         try {
             val mShiftingMode = menuView.javaClass.getDeclaredField("mShiftingMode")
             mShiftingMode.isAccessible = true
@@ -146,6 +115,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onDestroy() {
         super.onDestroy()
-        unbindService(serviceConnection)
+        installManagerGetter.disconnect(this)
     }
 }
