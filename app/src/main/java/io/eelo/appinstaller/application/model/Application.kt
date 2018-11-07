@@ -15,7 +15,7 @@ class Application(val data: ApplicationData, context: Context, private val insta
     private val stateManager = StateManager(info, this)
 
     init {
-        if (data.id != "") {
+        if (data.id != "" && data.dataIndex != 2) {
             searchFullData()
             stateManager.find(context)
         }
