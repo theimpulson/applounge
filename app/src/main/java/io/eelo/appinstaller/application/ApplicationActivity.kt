@@ -178,7 +178,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         override fun doInBackground(vararg params: String): Void? {
             val installManager = createInstallManager()
             application = installManager.findOrCreateApp(this@ApplicationActivity, ApplicationData(params[0]))
-            if (application.data.dataIndex != 2) {
+            if (application.data.fullness_level != 2) {
                 application.searchFullData()
             }
             return null
