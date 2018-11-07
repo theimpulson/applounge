@@ -35,7 +35,6 @@ class CategoriesFragment : Fragment() {
         gamesCategoriesList = view.findViewById(R.id.games_categories_list)
 
         categoriesViewModel = ViewModelProviders.of(activity!!).get(CategoriesViewModel::class.java)
-        categoriesViewModel.initialise(installManager!!)
         categoriesViewModel.loadCategories()
 
         categoriesContainer = view.findViewById(R.id.categories_container)

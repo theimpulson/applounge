@@ -42,11 +42,11 @@ class ApplicationData {
     var privacyScore = 0
     var energyScore = 0
 
-    var fullness_level = 0
+    var fullnessLevel = 0
 
     constructor(packageName: String) {
         this.packageName = packageName
-        fullness_level = 0
+        fullnessLevel = 0
     }
 
     constructor(packageName: String,
@@ -65,11 +65,11 @@ class ApplicationData {
         this.author = author
         this.icon = icon
         this.images = images
-        fullness_level = 1
+        fullnessLevel = 1
     }
 
     constructor() {
-        fullness_level = 2
+        fullnessLevel = 2
     }
 
     @Suppress("unused")
@@ -116,13 +116,13 @@ class ApplicationData {
     }
 
     fun update(data: ApplicationData) {
-        when (data.fullness_level) {
+        when (data.fullnessLevel) {
             0 -> {
                 packageName = data.packageName
             }
             1 -> {
-                if (fullness_level < 1) {
-                    fullness_level = 1
+                if (fullnessLevel < 1) {
+                    fullnessLevel = 1
                 }
                 packageName = data.packageName
                 lastModified = data.lastModified
@@ -134,7 +134,7 @@ class ApplicationData {
                 images = data.images
             }
             2 -> {
-                fullness_level = 2
+                fullnessLevel = 2
                 id = data.id
                 icon = data.icon
                 packageName = data.packageName

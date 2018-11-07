@@ -1,15 +1,17 @@
 package io.eelo.appinstaller.categories.model
 
 import android.arch.lifecycle.MutableLiveData
-import android.content.Context
-import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import android.os.AsyncTask
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.eelo.appinstaller.utils.Common.EXECUTOR
+import io.eelo.appinstaller.utils.Constants
+import java.net.URL
 
-class CategoriesModel : CategoriesModelInterface {
+class CategoriesModel : CategoriesModelInterface, AsyncTask<Any, Any, CategoriesModel.ListCategoriesResult>() {
     val applicationsCategoriesList = MutableLiveData<ArrayList<Category>>()
     val gamesCategoriesList = MutableLiveData<ArrayList<Category>>()
-    val categoryApplicationsList = MutableLiveData<ArrayList<Application>>()
-    private var installManager: InstallManager? = null
 
     init {
         if (applicationsCategoriesList.value == null) {
@@ -18,20 +20,34 @@ class CategoriesModel : CategoriesModelInterface {
         if (gamesCategoriesList.value == null) {
             gamesCategoriesList.value = ArrayList()
         }
-        if (categoryApplicationsList.value == null) {
-            categoryApplicationsList.value = ArrayList()
-        }
-    }
-
-    override fun initialise(installManager: InstallManager) {
-        this.installManager = installManager
     }
 
     override fun loadCategories() {
-        // TODO Load categories
+        executeOnExecutor(EXECUTOR)
     }
 
-    override fun loadApplicationsInCategory(context: Context, category: Category) {
-        // TODO Load applications in a category
+    companion object {
+        private val jsonReader = ObjectMapper().readerFor(ListCategoriesResult::class.java)
     }
+
+    override fun doInBackground(vararg params: Any): ListCategoriesResult {
+        return jsonReader.readValue<ListCategoriesResult>(URL(Constants.BASE_URL + "apps?action=list_cat"))
+    }
+
+    override fun onPostExecute(result: ListCategoriesResult) {
+        val applicationsCategoriesList = ArrayList<Category>()
+        val gamesCategoriesList = ArrayList<Category>()
+        result.appsCategories.forEach { id ->
+            applicationsCategoriesList.add(Category(null, id))
+        }
+        result.gamesCategories.forEach { id ->
+            gamesCategoriesList.add(Category(null, id))
+        }
+        this.applicationsCategoriesList.value = applicationsCategoriesList
+        this.gamesCategoriesList.value = gamesCategoriesList
+    }
+
+    class ListCategoriesResult @JsonCreator
+    constructor(@JsonProperty("apps") val appsCategories: Array<String>,
+                @JsonProperty("games") val gamesCategories: Array<String>)
 }
