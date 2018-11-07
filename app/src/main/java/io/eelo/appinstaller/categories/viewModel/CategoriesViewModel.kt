@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.content.Intent
 import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.categories.CategoryActivity
 import io.eelo.appinstaller.categories.model.CategoriesModel
 import io.eelo.appinstaller.categories.model.Category
@@ -13,6 +14,10 @@ import io.eelo.appinstaller.utils.Constants
 
 class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
     private val categoriesModel = CategoriesModel()
+
+    override fun initialise(installManager: InstallManager) {
+        categoriesModel.initialise(installManager)
+    }
 
     override fun getApplicationsCategories(): MutableLiveData<ArrayList<Category>> {
         val applicationsCategories = categoriesModel.applicationsCategoriesList
@@ -34,12 +39,8 @@ class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
         return categoriesModel.categoryApplicationsList
     }
 
-    override fun loadApplicationsCategories() {
-        categoriesModel.loadApplicationsCategories()
-    }
-
-    override fun loadGamesCategories() {
-        categoriesModel.loadGamesCategories()
+    override fun loadCategories() {
+        categoriesModel.loadCategories()
     }
 
     override fun onCategoryClick(context: Context, category: Category) {
@@ -48,7 +49,7 @@ class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
         context.startActivity(intent)
     }
 
-    override fun loadApplicationsInCategory(category: Category) {
-        categoriesModel.loadApplicationsInCategory(category)
+    override fun loadApplicationsInCategory(context: Context, category: Category) {
+        categoriesModel.loadApplicationsInCategory(context, category)
     }
 }

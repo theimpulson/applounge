@@ -39,7 +39,7 @@ class CategoryActivity : AppCompatActivity() {
         }
 
         categoriesViewModel = ViewModelProviders.of(this).get(CategoriesViewModel::class.java)
-        categoriesViewModel.loadApplicationsInCategory(category)
+        categoriesViewModel.loadApplicationsInCategory(this, category)
 
         recyclerView = findViewById(R.id.app_list)
         recyclerView.visibility = View.GONE

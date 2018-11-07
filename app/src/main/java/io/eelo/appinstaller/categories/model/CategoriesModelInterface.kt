@@ -1,9 +1,12 @@
 package io.eelo.appinstaller.categories.model
 
+import android.content.Context
+import io.eelo.appinstaller.application.model.InstallManager
+
 interface CategoriesModelInterface {
-    fun loadApplicationsCategories()
+    fun initialise(installManager: InstallManager)
 
-    fun loadGamesCategories()
+    fun loadCategories()
 
-    fun loadApplicationsInCategory(category: Category)
+    fun loadApplicationsInCategory(context: Context, category: Category)
 }

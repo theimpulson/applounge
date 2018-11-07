@@ -13,6 +13,7 @@ import io.eelo.appinstaller.R
 import io.eelo.appinstaller.categories.viewModel.CategoriesViewModel
 import android.util.TypedValue
 import android.widget.ProgressBar
+import io.eelo.appinstaller.application.model.InstallManager
 
 class CategoriesFragment : Fragment() {
 
@@ -21,6 +22,11 @@ class CategoriesFragment : Fragment() {
     private lateinit var gamesCategoriesList: LinearLayout
     private lateinit var categoriesContainer: LinearLayout
     private lateinit var progressBar: ProgressBar
+    private var installManager: InstallManager? = null
+
+    fun initialise(installManager: InstallManager) {
+        this.installManager = installManager
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
@@ -29,8 +35,8 @@ class CategoriesFragment : Fragment() {
         gamesCategoriesList = view.findViewById(R.id.games_categories_list)
 
         categoriesViewModel = ViewModelProviders.of(activity!!).get(CategoriesViewModel::class.java)
-        categoriesViewModel.loadApplicationsCategories()
-        categoriesViewModel.loadGamesCategories()
+        categoriesViewModel.initialise(installManager!!)
+        categoriesViewModel.loadCategories()
 
         categoriesContainer = view.findViewById(R.id.categories_container)
         categoriesContainer.visibility = View.GONE
