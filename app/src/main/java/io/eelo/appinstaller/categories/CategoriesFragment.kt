@@ -4,16 +4,16 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.categories.viewModel.CategoriesViewModel
-import android.util.TypedValue
-import android.widget.ProgressBar
 import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.categories.viewModel.CategoriesViewModel
 
 class CategoriesFragment : Fragment() {
 
@@ -71,7 +71,7 @@ class CategoriesFragment : Fragment() {
             textView.setBackgroundResource(outValue.resourceId)
             applicationsCategoriesList.addView(textView)
             textView.setOnClickListener { _ ->
-                categoriesViewModel.onCategoryClick(context!!, it)
+                categoriesViewModel.onCategoryClick(context!!, it, false)
             }
             categoriesContainer.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
@@ -94,7 +94,7 @@ class CategoriesFragment : Fragment() {
             textView.setBackgroundResource(outValue.resourceId)
             gamesCategoriesList.addView(textView)
             textView.setOnClickListener { _ ->
-                categoriesViewModel.onCategoryClick(context!!, it)
+                categoriesViewModel.onCategoryClick(context!!, it, true)
             }
             categoriesContainer.visibility = View.VISIBLE
             progressBar.visibility = View.GONE

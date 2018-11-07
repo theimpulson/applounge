@@ -33,9 +33,14 @@ class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
         categoriesModel.loadCategories()
     }
 
-    override fun onCategoryClick(context: Context, category: Category) {
+    override fun onCategoryClick(context: Context, category: Category, isGame: Boolean) {
         val intent = Intent(context, CategoryActivity::class.java)
-        intent.putExtra(Constants.CATEGORY_KEY, category)
+        if (isGame) {
+            val gameCategory = Category("Game " + category.title, "game_" + category.id)
+            intent.putExtra(Constants.CATEGORY_KEY, gameCategory)
+        } else {
+            intent.putExtra(Constants.CATEGORY_KEY, category)
+        }
         context.startActivity(intent)
     }
 }
