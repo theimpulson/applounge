@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.categories.viewModel
+package io.eelo.appinstaller.categories.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context

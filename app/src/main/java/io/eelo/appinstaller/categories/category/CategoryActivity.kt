@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.categories.activity
+package io.eelo.appinstaller.categories.category
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -13,7 +13,7 @@ import android.widget.ProgressBar
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManagerGetter
-import io.eelo.appinstaller.categories.activity.viewModel.CategoryViewModel
+import io.eelo.appinstaller.categories.category.viewmodel.CategoryViewModel
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.utils.Common
@@ -59,12 +59,14 @@ class CategoryActivity : AppCompatActivity() {
 
         // Bind to the list of applications in this activity's category
         categoryViewModel.getApplications().observe(this, Observer {
-            applicationList.clear()
-            applicationList.addAll(it!!)
-            progressBar.visibility = View.GONE
-            recyclerView.adapter.notifyDataSetChanged()
-            recyclerView.visibility = View.VISIBLE
-            recyclerView.scrollToPosition(0)
+            if (it!!.isNotEmpty()) {
+                applicationList.clear()
+                applicationList.addAll(it)
+                progressBar.visibility = View.GONE
+                recyclerView.adapter.notifyDataSetChanged()
+                recyclerView.visibility = View.VISIBLE
+                recyclerView.scrollToPosition(0)
+            }
         })
     }
 
