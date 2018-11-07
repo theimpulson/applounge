@@ -17,12 +17,14 @@ class BannerApplicationLoader(private val apps: ArrayList<Application>, private 
     private fun loadBannerImages(): ArrayList<BannerApplication> {
         val imagesUris = ArrayList<String>()
         apps.forEach {
-            imagesUris.add(it.data.images[0])
+            if (it.data.images.isNotEmpty()) {
+                imagesUris.add(it.data.images[0])
+            }
         }
         val images = ImagesLoader(imagesUris).loadImages()
         val bannerApps = ArrayList<BannerApplication>()
-        apps.forEachIndexed { index, application ->
-            bannerApps.add(BannerApplication(application, images[index]!!))
+        imagesUris.forEachIndexed { index, uri ->
+            bannerApps.add(BannerApplication(apps[index], images[index]!!))
         }
         return bannerApps
     }
