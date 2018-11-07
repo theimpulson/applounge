@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".application.ApplicationActivity"/>
-        <activity android:name=".categories.activity.CategoryActivity"/>
+        <activity android:name=".categories.category.CategoryActivity"/>
 
         <service android:name=".application.model.InstallManagerService"/>
 

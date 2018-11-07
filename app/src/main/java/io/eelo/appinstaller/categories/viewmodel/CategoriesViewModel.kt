@@ -1,10 +1,10 @@
-package io.eelo.appinstaller.categories.viewModel
+package io.eelo.appinstaller.categories.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.content.Intent
-import io.eelo.appinstaller.categories.activity.CategoryActivity
+import io.eelo.appinstaller.categories.category.CategoryActivity
 import io.eelo.appinstaller.categories.model.CategoriesModel
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.utils.Common
@@ -17,6 +17,9 @@ class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
         val applicationsCategories = categoriesModel.applicationsCategoriesList
         applicationsCategories.value!!.forEach {
             it.title = Common.getCategoryTitle(it.id)
+            if (it.id == "") {
+                it.title = "F-Droid"
+            }
         }
         return applicationsCategories
     }

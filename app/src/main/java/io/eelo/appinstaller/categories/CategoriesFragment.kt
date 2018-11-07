@@ -13,7 +13,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.InstallManager
-import io.eelo.appinstaller.categories.viewModel.CategoriesViewModel
+import io.eelo.appinstaller.categories.viewmodel.CategoriesViewModel
 
 class CategoriesFragment : Fragment() {
 

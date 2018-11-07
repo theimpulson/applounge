@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.categories.activity.model
+package io.eelo.appinstaller.categories.category.model
 
 import android.content.Context
 import io.eelo.appinstaller.application.model.InstallManager
