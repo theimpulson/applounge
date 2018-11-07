@@ -20,7 +20,7 @@ class HomeFragment : Fragment() {
     private lateinit var imageCarousel: ViewPager
     private lateinit var categoryList: RecyclerView
     private lateinit var progressBar: ProgressBar
-    private var installManager: InstallManager? = null
+    private lateinit var installManager: InstallManager
 
     fun initialise(installManager: InstallManager) {
         this.installManager = installManager
@@ -30,7 +30,7 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         homeViewModel = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
-        homeViewModel.initialise(installManager!!)
+        homeViewModel.initialise(installManager)
         imageCarousel = view.findViewById(R.id.image_carousel)
         categoryList = view.findViewById(R.id.category_list)
         progressBar = view.findViewById(R.id.progress_bar)

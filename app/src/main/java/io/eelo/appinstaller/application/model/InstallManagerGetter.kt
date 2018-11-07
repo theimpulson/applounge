@@ -27,7 +27,6 @@ class InstallManagerGetter : ServiceConnection {
 
     fun connectAndGet(context: Context): InstallManager {
         context.startService(Intent(context, InstallManagerService::class.java))
-        val blocker = Object()
         context.bindService(Intent(context, InstallManagerService::class.java), this, Context.BIND_AUTO_CREATE)
         synchronized(blocker) {
             blocker.wait()
