@@ -12,7 +12,6 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.categories.viewmodel.CategoriesViewModel
 
 class CategoriesFragment : Fragment() {
@@ -22,11 +21,6 @@ class CategoriesFragment : Fragment() {
     private lateinit var gamesCategoriesList: LinearLayout
     private lateinit var categoriesContainer: LinearLayout
     private lateinit var progressBar: ProgressBar
-    private var installManager: InstallManager? = null
-
-    fun initialise(installManager: InstallManager) {
-        this.installManager = installManager
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)

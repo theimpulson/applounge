@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     private fun initialiseFragments(installManager: InstallManager) {
         homeFragment.initialise(installManager)
-        categoriesFragment.initialise(installManager)
         searchFragment.initialise(installManager)
         updatesFragment.initialise(installManager)
     }
