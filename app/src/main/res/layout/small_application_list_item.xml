@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/app_icon"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/app_icon_content_description"

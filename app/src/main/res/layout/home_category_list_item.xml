@@ -5,6 +5,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_divider_height"
+        android:layout_marginStart="@dimen/layout_margin_medium"
+        android:layout_marginEnd="@dimen/layout_margin_medium"
+        android:background="@color/colorDivider" />
+
     <TextView
         android:id="@+id/category_title"
         android:layout_width="wrap_content"
@@ -23,6 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/layout_margin_medium"
+        android:layout_marginBottom="@dimen/layout_margin_large"
         android:scrollbars="none" />
 
 </LinearLayout>

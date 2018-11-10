@@ -42,7 +42,9 @@ class HomeFragment : Fragment() {
         categoryList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         progressBar.visibility = View.VISIBLE
 
-        homeViewModel.loadCategories(context!!)
+        if (homeViewModel.getBannerApplications().value!!.isEmpty() && homeViewModel.getCategories().value!!.isEmpty()) {
+            homeViewModel.loadCategories(context!!)
+        }
 
         // Bind image carousel adapter to banner images in view model
         homeViewModel.getBannerApplications().observe(this, Observer {
