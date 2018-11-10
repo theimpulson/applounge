@@ -86,7 +86,9 @@ class CategoriesFragment : Fragment() {
             textView.maxLines = 1
             textView.ellipsize = TextUtils.TruncateAt.END
             textView.isClickable = true
-            textView.foreground = activity!!.getDrawable(R.drawable.app_category_border)
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                textView.foreground = activity!!.getDrawable(R.drawable.app_category_border)
+            }
             val outValue = TypedValue()
             context!!.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
             textView.setBackgroundResource(outValue.resourceId)
@@ -112,7 +114,9 @@ class CategoriesFragment : Fragment() {
             textView.maxLines = 1
             textView.ellipsize = TextUtils.TruncateAt.END
             textView.isClickable = true
-            textView.foreground = activity!!.getDrawable(R.drawable.app_category_border)
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                textView.foreground = activity!!.getDrawable(R.drawable.app_category_border)
+            }
             val outValue = TypedValue()
             context!!.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
             textView.setBackgroundResource(outValue.resourceId)
