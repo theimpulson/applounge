@@ -1,6 +1,5 @@
 package io.eelo.appinstaller.application
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -15,11 +14,12 @@ import android.widget.Toast
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.*
 import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Common.toMiB
 import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
 import io.eelo.appinstaller.utils.Constants.APPLICATION_PACKAGE_NAME_KEY
+import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.activity_application.*
-import kotlin.math.roundToInt
 
 class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     private lateinit var application: Application
@@ -63,7 +63,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     }
 
     private fun onApplicationInfoLoaded() {
-        app_icon.setImageBitmap(application.data.iconImage?.getBitmap())
+        application.loadIcon(app_icon)
         app_title.text = application.data.name
         app_author.text = application.data.author
         app_category.text = Common.getCategoryTitle(application.data.category)
@@ -77,16 +77,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         app_privacy_score.text = application.data.privacyScore.toString() + "/10"
         app_energy_score.text = application.data.energyScore.toString() + "/10"
         app_install.setOnClickListener {
-            if (android.os.Build.VERSION.SDK_INT >= 23) {
-                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), Constants.STORAGE_PERMISSION_REQUEST_CODE)
-                } else {
-                    application.buttonClicked(this)
-                }
-            } else {
-                application.buttonClicked(this)
-            }
+            application.buttonClicked(this, this)
         }
         application.addListener(this)
         stateChanged(application.state)
@@ -95,7 +86,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                application.buttonClicked(this)
+                application.buttonClicked(this, this)
             } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Toast.makeText(this, resources.getString(R.string.error_storage_permission_denied), Toast.LENGTH_LONG).show()
             }
@@ -103,34 +94,10 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     }
 
     override fun stateChanged(state: State) {
-        var installButtonText = R.string.action_install
-        var isInstallButtonEnabled = true
-        when (state) {
-            State.DOWNLOADING -> {
-                installButtonText = R.string.state_downloading
-                isInstallButtonEnabled = false
-            }
-            State.INSTALLING -> {
-                installButtonText = R.string.state_installing
-                isInstallButtonEnabled = false
-            }
-            State.INSTALLED -> {
-                installButtonText = R.string.action_launch
-            }
-            State.NOT_UPDATED -> {
-                installButtonText = R.string.action_update
-            }
-        }
-        object : AsyncTask<Void, Void, Void>() {
-            override fun doInBackground(vararg params: Void?): Void? {
-                return null
-            }
-
-            override fun onPostExecute(result: Void?) {
-                app_install.text = resources.getString(installButtonText)
-                app_install.isEnabled = isInstallButtonEnabled
-            }
-        }.executeOnExecutor(Common.EXECUTOR)
+        Execute({}, {
+            app_install.text = resources.getString(state.installButtonTextId)
+            app_install.isEnabled = state.isInstallButtonEnabled
+        })
     }
 
     @SuppressLint("SetTextI18n")
@@ -138,11 +105,6 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         downloader.addListener { count, total ->
             app_install.text = "${toMiB(count)}/${toMiB(total)} MiB"
         }
-    }
-
-    private fun toMiB(length: Int): Double {
-        val inMiB = length.div(1048576)
-        return inMiB.times(100.0).roundToInt().div(100.0)
     }
 
     override fun anErrorHasOccurred() {

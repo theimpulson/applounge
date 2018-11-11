@@ -1,10 +1,7 @@
 package io.eelo.appinstaller.application
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.pm.PackageManager
-import android.os.AsyncTask
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
@@ -17,9 +14,7 @@ import io.eelo.appinstaller.application.model.ApplicationStateListener
 import io.eelo.appinstaller.application.model.Downloader
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
-import io.eelo.appinstaller.common.ProxyBitmap
-import io.eelo.appinstaller.utils.Common
-import io.eelo.appinstaller.utils.Constants.STORAGE_PERMISSION_REQUEST_CODE
+import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
@@ -43,30 +38,13 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
             }
         }
         installButton.setOnClickListener {
-            if (android.os.Build.VERSION.SDK_INT >= 23) {
-                if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    activity.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE_PERMISSION_REQUEST_CODE)
-                } else {
-                    application?.buttonClicked(view.context)
-                }
-            } else {
-                application?.buttonClicked(view.context)
-            }
+            application?.buttonClicked(view.context, activity)
         }
     }
 
     fun createApplicationView(app: Application) {
-        if (app.data.iconImage != null) {
-            icon.setImageBitmap(app.data.iconImage!!.getBitmap())
-        } else {
-            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
-            ImageDownloader {
-                icon.setImageBitmap(it)
-                app.data.iconImage = ProxyBitmap(it)
-
-            }.executeOnExecutor(Common.EXECUTOR, app.data.icon)
-        }
+        icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+        app.loadIcon(icon)
         this.application?.removeListener(this)
         this.application = app
         app.addListener(this)
@@ -98,34 +76,10 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
     }
 
     override fun stateChanged(state: State) {
-        var installButtonText = R.string.action_install
-        var isInstallButtonEnabled = true
-        when (state) {
-            State.DOWNLOADING -> {
-                installButtonText = R.string.state_downloading
-                isInstallButtonEnabled = false
-            }
-            State.INSTALLING -> {
-                installButtonText = R.string.state_installing
-                isInstallButtonEnabled = false
-            }
-            State.INSTALLED -> {
-                installButtonText = R.string.action_launch
-            }
-            State.NOT_UPDATED -> {
-                installButtonText = R.string.action_update
-            }
-        }
-        object : AsyncTask<Void, Void, Void>() {
-            override fun doInBackground(vararg params: Void?): Void? {
-                return null
-            }
-
-            override fun onPostExecute(result: Void?) {
-                installButton.text = view.context.resources.getString(installButtonText)
-                installButton.isEnabled = isInstallButtonEnabled
-            }
-        }.executeOnExecutor(Common.EXECUTOR)
+        Execute({}, {
+            installButton.text = view.context.resources.getString(state.installButtonTextId)
+            installButton.isEnabled = state.isInstallButtonEnabled
+        })
     }
 
     @SuppressLint("SetTextI18n")

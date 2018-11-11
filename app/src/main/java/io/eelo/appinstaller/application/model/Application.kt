@@ -1,11 +1,16 @@
 package io.eelo.appinstaller.application.model
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.widget.ImageView
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.eelo.appinstaller.application.model.State.*
 import io.eelo.appinstaller.utils.Constants
+import io.eelo.appinstaller.utils.Execute
 import java.io.IOException
-import java.net.URL
 import java.util.concurrent.atomic.AtomicInteger
 
 class Application(val data: ApplicationData, context: Context, private val installManager: InstallManager) {
@@ -15,10 +20,8 @@ class Application(val data: ApplicationData, context: Context, private val insta
     private val stateManager = StateManager(info, this)
 
     init {
-        if (data.id != "" && data.fullnessLevel != 2) {
-            searchFullData()
-            stateManager.find(context)
-        }
+        data.assertFullData()// TODO must remove this line, when API give the application's version
+        stateManager.find(context)
     }
 
     fun addListener(listener: ApplicationStateListener) {
@@ -43,7 +46,7 @@ class Application(val data: ApplicationData, context: Context, private val insta
     }
 
     @Synchronized
-    fun buttonClicked(context: Context) {
+    fun buttonClicked(context: Context, activity: Activity?) {
         when (stateManager.state) {
             INSTALLED -> info.launch(context)
             DOWNLOADED -> {
@@ -51,14 +54,29 @@ class Application(val data: ApplicationData, context: Context, private val insta
                 installManager.install(data.packageName)
             }
             NOT_UPDATED, NOT_DOWNLOADED -> {
-                stateManager.changeState(DOWNLOADING)
-                installManager.download(data.packageName)
+                if (canWriteStorage(activity)) {
+                    stateManager.changeState(DOWNLOADING)
+                    installManager.download(data.packageName)
+                }
             }
             DOWNLOADING -> {
 
             }
             INSTALLING -> {
             }
+        }
+    }
+
+    private fun canWriteStorage(activity: Activity?): Boolean {
+        return if (android.os.Build.VERSION.SDK_INT >= 23) {
+            if (activity!!.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                activity.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), Constants.STORAGE_PERMISSION_REQUEST_CODE)
+                false
+            } else {
+                true
+            }
+        } else {
+            true
         }
     }
 
@@ -92,7 +110,15 @@ class Application(val data: ApplicationData, context: Context, private val insta
     }
 
     fun searchFullData() {
-        val newData = dataReader.readValue<ApplicationData>(URL(Constants.BASE_URL + "apps?action=app_detail&id=" + data.id))
-        data.update(newData)
+        data.assertFullData()
+    }
+
+    fun loadIcon(view: ImageView) {
+        var iconBitmap: Bitmap? = null
+        Execute({
+            iconBitmap = data.loadIcon()
+        }, {
+            view.setImageBitmap(iconBitmap)
+        })
     }
 }

@@ -19,7 +19,7 @@ class Downloader(private val data: ApplicationData, private val apkFile: File) {
     @Throws(IOException::class)
     fun download() {
         createApkFile()
-        val url = URL(Constants.DOWNLOAD_URL + data.lastVersionObj.downloadLink)
+        val url = URL(Constants.DOWNLOAD_URL + data.loadLatestVersion().downloadLink)
         val connection = url.openConnection()
         total = connection.contentLength
         transferBytes(connection)
