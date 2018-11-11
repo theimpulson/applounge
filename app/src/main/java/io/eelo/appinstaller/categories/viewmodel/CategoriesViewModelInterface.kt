@@ -12,5 +12,5 @@ interface CategoriesViewModelInterface {
 
     fun loadCategories()
 
-    fun onCategoryClick(context: Context, category: Category, isGame: Boolean)
+    fun onCategoryClick(context: Context, category: Category)
 }

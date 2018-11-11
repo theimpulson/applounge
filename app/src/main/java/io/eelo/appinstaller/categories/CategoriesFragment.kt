@@ -94,7 +94,7 @@ class CategoriesFragment : Fragment() {
             textView.setBackgroundResource(outValue.resourceId)
             applicationsCategoriesList.addView(textView)
             textView.setOnClickListener { _ ->
-                categoriesViewModel.onCategoryClick(context!!, it, false)
+                categoriesViewModel.onCategoryClick(context!!, it)
             }
             categoriesContainer.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
@@ -122,7 +122,7 @@ class CategoriesFragment : Fragment() {
             textView.setBackgroundResource(outValue.resourceId)
             gamesCategoriesList.addView(textView)
             textView.setOnClickListener { _ ->
-                categoriesViewModel.onCategoryClick(context!!, it, true)
+                categoriesViewModel.onCategoryClick(context!!, it)
             }
             categoriesContainer.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
