@@ -31,9 +31,17 @@ class ImagesLoader(private val images: List<String>) {
     }
 
     private fun sortByKey(images: List<Image>): List<Bitmap> {
-        val result = ArrayList<Bitmap>()
+        val result = kotlin.arrayOfNulls<Bitmap>(images.size)
         images.forEach {
             result[it.key] = it.image
+        }
+        return makeNonNull(result)
+    }
+
+    private fun makeNonNull(images: Array<Bitmap?>):List<Bitmap> {
+        val result = ArrayList<Bitmap>()
+        images.forEach {
+            result.add(it!!)
         }
         return result
     }
