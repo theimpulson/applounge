@@ -37,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/layout_margin_medium"
-                android:columnCount="2"
                 app:layout_constraintTop_toBottomOf="@id/applications_categories_title" />
 
             <TextView
@@ -59,7 +58,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/layout_margin_medium"
-                android:columnCount="2"
                 app:layout_constraintTop_toBottomOf="@id/games_categories_title" />
 
         </LinearLayout>

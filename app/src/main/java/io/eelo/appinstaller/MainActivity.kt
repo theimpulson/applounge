@@ -18,11 +18,12 @@ import io.eelo.appinstaller.search.SearchFragment
 import io.eelo.appinstaller.settings.SettingsFragment
 import io.eelo.appinstaller.updates.UpdatesFragment
 import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Constants.CURRENTLY_SELECTED_FRAGMENT_KEY
 import io.eelo.appinstaller.utils.Constants.STORAGE_PERMISSION_REQUEST_CODE
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
-    private var currentFragment: Fragment? = null
+    private var currentFragmentId = 0
     private val homeFragment = HomeFragment()
     private val categoriesFragment = CategoriesFragment()
     private val searchFragment = SearchFragment()
@@ -38,7 +39,15 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             val installManager = installManagerGetter.connectAndGet(this)
             initialiseFragments(installManager)
             // Show the home fragment by default
-            showFragment(homeFragment)
+            if (savedInstanceState != null) {
+                if (selectFragment(savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY))) {
+                    currentFragmentId = savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY)
+                }
+            } else {
+                if (selectFragment(R.id.menu_home)) {
+                    currentFragmentId = R.id.menu_home
+                }
+            }
         }
 
         bottom_navigation_view.setOnNavigationItemSelectedListener(this)
@@ -52,24 +61,32 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when {
-            item.itemId == R.id.menu_home -> {
+        if (selectFragment(item.itemId)) {
+            currentFragmentId = item.itemId
+            return true
+        }
+        return false
+    }
+
+    private fun selectFragment(fragmentId: Int): Boolean {
+        when (fragmentId) {
+            R.id.menu_home -> {
                 showFragment(homeFragment)
                 return true
             }
-            item.itemId == R.id.menu_categories -> {
+            R.id.menu_categories -> {
                 showFragment(categoriesFragment)
                 return true
             }
-            item.itemId == R.id.menu_search -> {
+            R.id.menu_search -> {
                 showFragment(searchFragment)
                 return true
             }
-            item.itemId == R.id.menu_updates -> {
+            R.id.menu_updates -> {
                 showFragment(updatesFragment)
                 return true
             }
-            item.itemId == R.id.menu_settings -> {
+            R.id.menu_settings -> {
                 showFragment(settingsFragment)
                 return true
             }
@@ -82,7 +99,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment)
                 .commit()
-        currentFragment = fragment
     }
 
     @SuppressLint("RestrictedApi")
@@ -110,6 +126,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         if (requestCode == STORAGE_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
             Toast.makeText(this, resources.getString(R.string.error_storage_permission_denied), Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putInt(CURRENTLY_SELECTED_FRAGMENT_KEY, currentFragmentId)
     }
 
     override fun onDestroy() {

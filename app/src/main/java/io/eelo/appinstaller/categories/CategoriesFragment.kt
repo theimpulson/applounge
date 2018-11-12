@@ -2,6 +2,7 @@ package io.eelo.appinstaller.categories
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.TextUtils
@@ -60,6 +61,18 @@ class CategoriesFragment : Fragment() {
         itemParams.marginStart = itemPadding
         itemParams.marginEnd = itemPadding
 
+        // Check device orientation and increase/decrease number of columns
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // In landscape
+            applicationsCategoriesList.columnCount = 3
+            gamesCategoriesList.columnCount = 3
+        } else {
+            // In portrait
+            applicationsCategoriesList.columnCount = 2
+            gamesCategoriesList.columnCount = 2
+        }
+
         // Bind to the list of applications categories
         categoriesViewModel.getApplicationsCategories().observe(this, Observer {
             showApplicationsCategories()
@@ -94,7 +107,7 @@ class CategoriesFragment : Fragment() {
             textView.setBackgroundResource(outValue.resourceId)
             applicationsCategoriesList.addView(textView)
             textView.setOnClickListener { _ ->
-                categoriesViewModel.onCategoryClick(context!!, it, false)
+                categoriesViewModel.onCategoryClick(context!!, it)
             }
             categoriesContainer.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
@@ -122,7 +135,7 @@ class CategoriesFragment : Fragment() {
             textView.setBackgroundResource(outValue.resourceId)
             gamesCategoriesList.addView(textView)
             textView.setOnClickListener { _ ->
-                categoriesViewModel.onCategoryClick(context!!, it, true)
+                categoriesViewModel.onCategoryClick(context!!, it)
             }
             categoriesContainer.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
