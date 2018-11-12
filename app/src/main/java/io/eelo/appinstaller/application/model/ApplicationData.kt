@@ -1,28 +1,28 @@
 package io.eelo.appinstaller.application.model
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import io.eelo.appinstaller.common.ProxyBitmap
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.eelo.appinstaller.utils.Constants
+import io.eelo.appinstaller.utils.ImagesLoader
+import java.net.URL
 
 class ApplicationData {
 
     //minimal data
     lateinit var packageName: String
-    var id = ""
-    val lastVersion: String
-        get() = lastVersionObj.version
-    val lastVersionObj: Version
-        get() {
-            return versions[lastVersionName]!!
-        }
 
     //util data
-    var lastModified = ""
-    var name = ""
-    var lastVersionName = ""
-    var author = ""
-    var icon = ""
-    var iconImage: ProxyBitmap? = null
-    var images = arrayOf<String>()
+    lateinit var lastModified: String
+    private var id: String? = null
+    lateinit var name: String
+    lateinit var lastVersionName: String
+    lateinit var author: String
+    private lateinit var icon: String
+    private var iconImage: Bitmap? = null
+    lateinit var images: Array<String>
+    private var imagesBitmaps: List<Bitmap>? = null
 
     //full data
     var description = ""
@@ -31,7 +31,7 @@ class ApplicationData {
     var source = ""
     var licence = ""
     var appLink = ""
-    var versions = HashMap<String, Version>()
+    private var versions = HashMap<String, Version>()
     var lastAccessed = ""
     var appType = ""
     var differenceInDownloads = 0
@@ -56,7 +56,8 @@ class ApplicationData {
                 lastVersionName: String,
                 author: String,
                 icon: String,
-                images: Array<String>) {
+                images: Array<String>,
+                score: Float) {
         this.packageName = packageName
         this.lastModified = lastModified
         this.id = id
@@ -65,6 +66,7 @@ class ApplicationData {
         this.author = author
         this.icon = icon
         this.images = images
+        this.stars = score
         fullnessLevel = 1
     }
 
@@ -155,6 +157,44 @@ class ApplicationData {
         }
         if (data.iconImage != null) {
             iconImage = data.iconImage
+        }
+    }
+
+    fun loadIcon(): Bitmap {
+        assertFullData()
+        if (iconImage == null) {
+            val url = URL(Constants.BASE_URL + "media/" + icon)
+            iconImage = BitmapFactory.decodeStream(url.openStream())
+        }
+        return iconImage!!
+    }
+
+    fun loadImages(): List<Bitmap> {
+        assertFullData()
+        if (imagesBitmaps == null) {
+            imagesBitmaps = ImagesLoader(images.toList()).loadImages()
+        }
+        return imagesBitmaps!!
+    }
+
+    fun loadLatestVersion(): Version {
+        assertFullData()
+        return versions[lastVersionName]!!
+    }
+
+    companion object {
+        private val reader = ObjectMapper().readerFor(ApplicationData::class.java)!!
+    }
+
+    fun assertFullData() {
+        when (fullnessLevel) {
+            1 -> {
+                val newData = reader.readValue<ApplicationData>(URL(Constants.BASE_URL + "apps?action=app_detail&id=" + id))
+                update(newData)
+            }
+            0 -> {
+                TODO()
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ class ApplicationInfo(private val data: ApplicationData) {
     fun isLastVersionInstalled(context: Context): Boolean {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(data.packageName, 0)
-            packageInfo.versionName == data.lastVersion
+            packageInfo.versionName == data.loadLatestVersion().version
         } catch (ignored: PackageManager.NameNotFoundException) {
             false
         }

@@ -8,7 +8,7 @@ class ApplicationResult @JsonCreator
 constructor(@param:JsonProperty("_id") private val packageName: String,
             @param:JsonProperty("id") private val id: String,
             @param:JsonProperty("name") private val name: String,
-            @param:JsonProperty("textScore") private val textScore: Float,
+            @param:JsonProperty("textScore") private val score: Float,
             @param:JsonProperty("last_modified") private val lastModified: String,
             @param:JsonProperty("latest_version") private val lastVersion: String,
             @param:JsonProperty("author") private val author: String,
@@ -17,7 +17,7 @@ constructor(@param:JsonProperty("_id") private val packageName: String,
 
 
     fun createApplicationData(): ApplicationData {
-        return ApplicationData(packageName, lastModified, id, name, lastVersion, author, icon, images)
+        return ApplicationData(packageName, lastModified, id, name, lastVersion, author, icon, images, score)
     }
 
 }
