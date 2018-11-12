@@ -2,6 +2,7 @@ package io.eelo.appinstaller.categories
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.TextUtils
@@ -59,6 +60,18 @@ class CategoriesFragment : Fragment() {
         itemParams.bottomMargin = itemPadding
         itemParams.marginStart = itemPadding
         itemParams.marginEnd = itemPadding
+
+        // Check device orientation and increase/decrease number of columns
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // In landscape
+            applicationsCategoriesList.columnCount = 3
+            gamesCategoriesList.columnCount = 3
+        } else {
+            // In portrait
+            applicationsCategoriesList.columnCount = 2
+            gamesCategoriesList.columnCount = 2
+        }
 
         // Bind to the list of applications categories
         categoriesViewModel.getApplicationsCategories().observe(this, Observer {

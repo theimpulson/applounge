@@ -17,4 +17,7 @@ object Constants {
 
     // Categories
     const val CATEGORY_KEY = "category_key"
+
+    // Home
+    const val CURRENTLY_SELECTED_FRAGMENT_KEY = "currently_selected_fragment"
 }
