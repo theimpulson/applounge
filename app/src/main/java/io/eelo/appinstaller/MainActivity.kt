@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             val installManager = installManagerGetter.connectAndGet(this)
             initialiseFragments(installManager)
             // Show the home fragment by default
-            if (savedInstanceState != null) {
+            if (savedInstanceState != null && savedInstanceState.containsKey(CURRENTLY_SELECTED_FRAGMENT_KEY)) {
                 if (selectFragment(savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY))) {
                     currentFragmentId = savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY)
                 }
