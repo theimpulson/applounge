@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
@@ -27,13 +28,18 @@ class UpdatesFragment : Fragment() {
 
         updatesViewModel = ViewModelProviders.of(activity!!).get(UpdatesViewModel::class.java)
         val recyclerView = view.findViewById<RecyclerView>(R.id.app_list)
+        val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
 
-        initializeRecyclerView(recyclerView)
         updatesViewModel.initialise(installManager!!)
+        initializeRecyclerView(recyclerView)
+        progressBar.visibility = View.VISIBLE
 
         // Bind recycler view adapter to search results list in view model
         updatesViewModel.getApplications().observe(this, Observer {
-            recyclerView.adapter.notifyDataSetChanged()
+            if (it!!.isNotEmpty()) {
+                recyclerView.adapter.notifyDataSetChanged()
+                progressBar.visibility = View.GONE
+            }
         })
 
         updatesViewModel.loadApplicationList(context!!)
