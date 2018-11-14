@@ -7,7 +7,6 @@ import io.eelo.appinstaller.utils.Constants.APK_FOLDER
 import java.io.File
 
 class ApplicationInfo(private val data: ApplicationData) {
-    private val apkFile = File(getExternalStorageDirectory(), APK_FOLDER + data.packageName + "-" + data.lastVersionName + ".apk")
 
     fun isLastVersionInstalled(context: Context): Boolean {
         return try {
@@ -28,8 +27,12 @@ class ApplicationInfo(private val data: ApplicationData) {
 
     }
 
+    private fun getApkFile() : File {
+        return File(getExternalStorageDirectory(), APK_FOLDER + data.packageName + "-" + data.lastVersionName + ".apk")
+    }
+
     val isDownloaded: Boolean
-        get() = apkFile.exists()
+        get() = getApkFile().exists()
 
 
     fun launch(context: Context) {
@@ -37,10 +40,10 @@ class ApplicationInfo(private val data: ApplicationData) {
     }
 
     fun install(context: Context) {
-        Installer(apkFile).install(context)
+        Installer(getApkFile()).install(context)
     }
 
     fun createDownloader(): Downloader {
-        return Downloader(data, apkFile)
+        return Downloader(data, getApkFile())
     }
 }

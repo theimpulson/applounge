@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.widget.ImageView
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.eelo.appinstaller.application.model.State.*
 import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Execute
@@ -20,8 +19,10 @@ class Application(val data: ApplicationData, context: Context, private val insta
     private val stateManager = StateManager(info, this)
 
     init {
-        data.assertFullData()// TODO must remove this line, when API give the application's version
-        stateManager.find(context)
+        // TODO must change these lines, when API give the application's version
+//        if (data.assertFullData()) {
+//            stateManager.find(context)
+//        }
     }
 
     fun addListener(listener: ApplicationStateListener) {
@@ -81,7 +82,7 @@ class Application(val data: ApplicationData, context: Context, private val insta
     }
 
     fun download(context: Context) {
-        searchFullData()
+        searchFullData(context)
         downloader = info.createDownloader()
         stateManager.notifyDownloading(downloader!!)
         try {
@@ -105,12 +106,12 @@ class Application(val data: ApplicationData, context: Context, private val insta
         return uses.get() != 0
     }
 
-    companion object {
-        private val dataReader = ObjectMapper().readerFor(ApplicationData::class.java)
-    }
-
-    fun searchFullData() {
-        data.assertFullData()
+    fun searchFullData(context: Context): Boolean {
+        val assertFullData = data.assertFullData()
+        if (assertFullData && state == INSTALLED) {
+            stateManager.find(context)
+        }
+        return assertFullData
     }
 
     fun loadIcon(view: ImageView) {

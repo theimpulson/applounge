@@ -117,7 +117,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             val installManager = installManagerGetter.connectAndGet(context)
             application = installManager.findOrCreateApp(context, ApplicationData(params[0]))
             if (application.data.fullnessLevel != 2) {
-                application.searchFullData()
+                application.searchFullData(context)
             }
             return null
         }

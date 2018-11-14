@@ -186,15 +186,20 @@ class ApplicationData {
         private val reader = ObjectMapper().readerFor(ApplicationData::class.java)!!
     }
 
-    fun assertFullData() {
+    fun assertFullData(): Boolean {
         when (fullnessLevel) {
             1 -> {
                 val newData = reader.readValue<ApplicationData>(URL(Constants.BASE_URL + "apps?action=app_detail&id=" + id))
                 update(newData)
             }
             0 -> {
-                TODO()
+                val data = PackageNameFinder.find(packageName)
+                if (data != null) {
+                    update(data)
+                }
+                return false
             }
         }
+        return true
     }
 }
