@@ -12,12 +12,10 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.categories.viewmodel.CategoriesViewModel
+import io.eelo.appinstaller.utils.Common
 import kotlin.math.roundToInt
 
 class CategoriesFragment : Fragment() {
@@ -39,12 +37,20 @@ class CategoriesFragment : Fragment() {
         gamesCategoriesList = view.findViewById(R.id.games_categories_list)
 
         categoriesViewModel = ViewModelProviders.of(activity!!).get(CategoriesViewModel::class.java)
-        categoriesViewModel.loadCategories()
 
         categoriesContainer = view.findViewById(R.id.categories_container)
         categoriesContainer.visibility = View.GONE
         progressBar = view.findViewById(R.id.progress_bar)
         progressBar.visibility = View.VISIBLE
+        val errorContainer = view.findViewById<RelativeLayout>(R.id.error_container)
+        errorContainer.visibility = View.GONE
+        val errorDescription = view.findViewById<TextView>(R.id.error_description)
+        view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            categoriesViewModel.loadCategories(context!!)
+        }
+
+        categoriesViewModel.loadCategories(context!!)
 
         // Do some math and figure out item width, padding and margin
         val metrics = DisplayMetrics()
@@ -81,6 +87,17 @@ class CategoriesFragment : Fragment() {
         // Bind to the list of games categories
         categoriesViewModel.getGamesCategories().observe(this, Observer {
             showGamesCategories()
+        })
+
+        // Bind to the screen error
+        categoriesViewModel.getScreenError().observe(this, Observer {
+            if (it != null) {
+                errorDescription.text = activity!!.getString(Common.getErrorDescription(it))
+                errorContainer.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
+            } else {
+                errorContainer.visibility = View.GONE
+            }
         })
 
         return view

@@ -32,8 +32,13 @@ class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
         return gamesCategories
     }
 
-    override fun loadCategories() {
-        categoriesModel.loadCategories()
+    override fun getScreenError(): MutableLiveData<Int> {
+        return categoriesModel.screenError
+    }
+
+    override fun loadCategories(context: Context) {
+        categoriesModel.screenError.value = null
+        categoriesModel.loadCategories(context)
     }
 
     override fun onCategoryClick(context: Context, category: Category) {

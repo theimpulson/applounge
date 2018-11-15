@@ -10,7 +10,9 @@ interface CategoriesViewModelInterface {
 
     fun getGamesCategories(): MutableLiveData<ArrayList<Category>>
 
-    fun loadCategories()
+    fun getScreenError(): MutableLiveData<Int>
+
+    fun loadCategories(context: Context)
 
     fun onCategoryClick(context: Context, category: Category)
 }
