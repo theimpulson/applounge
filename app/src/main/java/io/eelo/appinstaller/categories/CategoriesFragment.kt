@@ -50,33 +50,11 @@ class CategoriesFragment : Fragment() {
             categoriesViewModel.loadCategories(context!!)
         }
 
-        categoriesViewModel.loadCategories(context!!)
-
-        // Do some math and figure out item width, padding and margin
-        val metrics = DisplayMetrics()
-        activity!!.windowManager.defaultDisplay.getMetrics(metrics)
-        val logicalDensity = metrics.density
-
-        itemWidth = Math.ceil(160 * logicalDensity.toDouble()).roundToInt()
-        itemPadding = Math.ceil(8 * logicalDensity.toDouble()).roundToInt()
-        itemMargin = Math.ceil(4 * logicalDensity.toDouble()).roundToInt()
-
-        itemParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        itemParams.topMargin = itemPadding
-        itemParams.bottomMargin = itemPadding
-        itemParams.marginStart = itemPadding
-        itemParams.marginEnd = itemPadding
-
-        // Check device orientation and increase/decrease number of columns
-        val orientation = resources.configuration.orientation
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // In landscape
-            applicationsCategoriesList.columnCount = 3
-            gamesCategoriesList.columnCount = 3
-        } else {
-            // In portrait
-            applicationsCategoriesList.columnCount = 2
-            gamesCategoriesList.columnCount = 2
+        initialiseDimensions()
+        handleDeviceOrientation()
+        if (categoriesViewModel.getApplicationsCategories().value!!.isEmpty() ||
+                categoriesViewModel.getGamesCategories().value!!.isEmpty()) {
+            categoriesViewModel.loadCategories(context!!)
         }
 
         // Bind to the list of applications categories
@@ -101,6 +79,37 @@ class CategoriesFragment : Fragment() {
         })
 
         return view
+    }
+
+    private fun initialiseDimensions() {
+        // Do some math and figure out item width, padding and margin
+        val metrics = DisplayMetrics()
+        activity!!.windowManager.defaultDisplay.getMetrics(metrics)
+        val logicalDensity = metrics.density
+
+        itemWidth = Math.ceil(160 * logicalDensity.toDouble()).roundToInt()
+        itemPadding = Math.ceil(8 * logicalDensity.toDouble()).roundToInt()
+        itemMargin = Math.ceil(4 * logicalDensity.toDouble()).roundToInt()
+
+        itemParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        itemParams.topMargin = itemPadding
+        itemParams.bottomMargin = itemPadding
+        itemParams.marginStart = itemPadding
+        itemParams.marginEnd = itemPadding
+    }
+
+    private fun handleDeviceOrientation() {
+        // Check device orientation and increase/decrease number of columns
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // In landscape
+            applicationsCategoriesList.columnCount = 3
+            gamesCategoriesList.columnCount = 3
+        } else {
+            // In portrait
+            applicationsCategoriesList.columnCount = 2
+            gamesCategoriesList.columnCount = 2
+        }
     }
 
     private fun showApplicationsCategories() {
