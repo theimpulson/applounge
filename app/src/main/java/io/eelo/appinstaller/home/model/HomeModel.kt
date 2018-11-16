@@ -5,11 +5,13 @@ import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Constants
 
 class HomeModel : HomeModelInterface {
     val applications = MutableLiveData<LinkedHashMap<String, ArrayList<Application>>>()
     val bannerApplications = MutableLiveData<ArrayList<BannerApplication>>()
     private var installManager: InstallManager? = null
+    var screenError = MutableLiveData<Int>()
 
     init {
         if (applications.value == null) {
@@ -29,7 +31,10 @@ class HomeModel : HomeModelInterface {
     }
 
     override fun loadCategories(context: Context) {
-        ApplicationsLoader(this).executeOnExecutor(Common.EXECUTOR, context)
+        if (Common.isNetworkAvailable(context)) {
+            ApplicationsLoader(this).executeOnExecutor(Common.EXECUTOR, context)
+        } else {
+            screenError.value = Constants.ERROR_NO_INTERNET
+        }
     }
-
 }

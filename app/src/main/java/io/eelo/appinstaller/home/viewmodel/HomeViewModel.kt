@@ -23,8 +23,13 @@ class HomeViewModel : ViewModel(), HomeViewModelInterface {
         return homeModel.applications
     }
 
+    override fun getScreenError(): MutableLiveData<Int> {
+        return homeModel.screenError
+    }
+
     @Synchronized
     override fun loadCategories(context: Context) {
+        homeModel.screenError.value = null
         homeModel.loadCategories(context)
     }
 }

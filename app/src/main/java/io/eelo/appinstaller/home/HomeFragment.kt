@@ -11,9 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
+import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.home.viewmodel.HomeViewModel
+import io.eelo.appinstaller.utils.Common
 
 class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
@@ -41,8 +44,16 @@ class HomeFragment : Fragment() {
         categoryList.visibility = View.GONE
         categoryList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         progressBar.visibility = View.VISIBLE
+        val errorContainer = view.findViewById<RelativeLayout>(R.id.error_container)
+        errorContainer.visibility = View.GONE
+        val errorDescription = view.findViewById<TextView>(R.id.error_description)
+        view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            homeViewModel.loadCategories(context!!)
+        }
 
-        if (homeViewModel.getBannerApplications().value!!.isEmpty() && homeViewModel.getCategories().value!!.isEmpty()) {
+        if (homeViewModel.getBannerApplications().value!!.isEmpty() ||
+                homeViewModel.getCategories().value!!.isEmpty()) {
             homeViewModel.loadCategories(context!!)
         }
 
@@ -63,6 +74,17 @@ class HomeFragment : Fragment() {
                 categoryList.adapter = HomeCategoryAdapter(activity!!, homeViewModel.getCategories().value!!)
                 categoryList.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
+            }
+        })
+
+        // Bind to the screen error
+        homeViewModel.getScreenError().observe(this, Observer {
+            if (it != null) {
+                errorDescription.text = activity!!.getString(Common.getErrorDescription(it))
+                errorContainer.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
+            } else {
+                errorContainer.visibility = View.GONE
             }
         })
 

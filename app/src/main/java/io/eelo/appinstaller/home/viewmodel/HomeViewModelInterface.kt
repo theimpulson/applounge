@@ -13,5 +13,7 @@ interface HomeViewModelInterface {
 
     fun getCategories(): MutableLiveData<LinkedHashMap<String, ArrayList<Application>>>
 
+    fun getScreenError(): MutableLiveData<Int>
+
     fun loadCategories(context: Context)
 }
