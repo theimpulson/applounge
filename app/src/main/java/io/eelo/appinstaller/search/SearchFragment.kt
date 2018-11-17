@@ -1,8 +1,11 @@
 package io.eelo.appinstaller.search
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.database.MatrixCursor
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.support.v4.app.Fragment
 import android.support.v4.widget.CursorAdapter
 import android.support.v4.widget.SimpleCursorAdapter
@@ -12,39 +15,39 @@ import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.eelo.appinstaller.R
-import android.provider.BaseColumns
-import android.database.MatrixCursor
+import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
+import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.search.viewModel.SearchViewModel
-import android.app.Activity
-import android.view.inputmethod.InputMethodManager
-import io.eelo.appinstaller.application.model.InstallManager
 
 
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
     private lateinit var searchViewModel: SearchViewModel
-    private lateinit var focusView: View
+    private var focusView: View? = null
     private lateinit var searchView: SearchView
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private val SUGGESTION_KEY = "suggestion"
     private var applicationList = ArrayList<Application>()
-    private var installManager:InstallManager? = null
+    private var installManager: InstallManager? = null
 
     fun initialise(installManager: InstallManager) {
         this.installManager = installManager
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        if (installManager == null) {
+            return null
+        }
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
         searchViewModel = ViewModelProviders.of(activity!!).get(SearchViewModel::class.java)
         searchViewModel.initialise(installManager!!)
         focusView = view.findViewById(R.id.view)
-        focusView.requestFocus()
+        focusView!!.requestFocus()
         searchView = view.findViewById(R.id.search_view)
         recyclerView = view.findViewById(R.id.app_list)
         recyclerView.visibility = View.VISIBLE
@@ -91,7 +94,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {
             hideKeyboard(activity as Activity)
-            focusView.requestFocus()
+            focusView!!.requestFocus()
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             searchViewModel.onSearchQuerySubmitted(context!!, it)
@@ -135,7 +138,9 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     }
 
     override fun onResume() {
-        focusView.requestFocus()
+        focusView?.let {
+            focusView!!.requestFocus()
+        }
         super.onResume()
     }
 }
