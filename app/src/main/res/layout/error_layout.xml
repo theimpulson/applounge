@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/error_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/layout_padding_large">
 
     <ImageView
         android:id="@+id/error_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_above="@id/error_description"
-        android:layout_centerHorizontal="true"
         android:src="@drawable/ic_error" />
 
     <TextView
         android:id="@+id/error_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="@dimen/layout_margin_large"
         android:layout_marginTop="@dimen/layout_margin_large"
-        android:layout_marginEnd="@dimen/layout_margin_large"
         android:maxLines="2"
         android:textAlignment="center"
         android:textColor="@android:color/black"
@@ -29,8 +28,6 @@
         android:id="@+id/error_resolve"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/error_description"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/layout_margin_large"
         android:background="?android:selectableItemBackground"
         android:clickable="true"
@@ -43,4 +40,4 @@
         android:textColor="@android:color/black"
         android:textSize="@dimen/text_size_large" />
 
-</RelativeLayout>
+</LinearLayout>

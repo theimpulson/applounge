@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -44,7 +45,7 @@ class HomeFragment : Fragment() {
         categoryList.visibility = View.GONE
         categoryList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         progressBar.visibility = View.VISIBLE
-        val errorContainer = view.findViewById<RelativeLayout>(R.id.error_container)
+        val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         errorContainer.visibility = View.GONE
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {

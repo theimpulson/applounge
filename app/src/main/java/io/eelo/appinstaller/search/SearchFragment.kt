@@ -21,18 +21,20 @@ import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.search.viewModel.SearchViewModel
 import android.app.Activity
 import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import io.eelo.appinstaller.application.model.InstallManager
-
 
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var focusView: View
     private lateinit var searchView: SearchView
     private lateinit var recyclerView: RecyclerView
+    private lateinit var splashScreen: LinearLayout
     private lateinit var progressBar: ProgressBar
     private val SUGGESTION_KEY = "suggestion"
     private var applicationList = ArrayList<Application>()
-    private var installManager:InstallManager? = null
+    private var installManager: InstallManager? = null
 
     fun initialise(installManager: InstallManager) {
         this.installManager = installManager
@@ -47,7 +49,13 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         focusView.requestFocus()
         searchView = view.findViewById(R.id.search_view)
         recyclerView = view.findViewById(R.id.app_list)
-        recyclerView.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
+        splashScreen = view.findViewById(R.id.search_splash)
+        if (applicationList.isEmpty()) {
+            splashScreen.visibility = View.VISIBLE
+        } else {
+            splashScreen.visibility = View.GONE
+        }
         progressBar = view.findViewById(R.id.progress_bar)
         progressBar.visibility = View.GONE
 
@@ -92,6 +100,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         query?.let {
             hideKeyboard(activity as Activity)
             focusView.requestFocus()
+            splashScreen.visibility = View.GONE
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             searchViewModel.onSearchQuerySubmitted(context!!, it)

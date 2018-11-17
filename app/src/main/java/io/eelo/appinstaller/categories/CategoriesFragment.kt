@@ -42,7 +42,7 @@ class CategoriesFragment : Fragment() {
         categoriesContainer.visibility = View.GONE
         progressBar = view.findViewById(R.id.progress_bar)
         progressBar.visibility = View.VISIBLE
-        val errorContainer = view.findViewById<RelativeLayout>(R.id.error_container)
+        val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         errorContainer.visibility = View.GONE
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {

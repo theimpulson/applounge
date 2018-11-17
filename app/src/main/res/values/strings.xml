@@ -35,6 +35,9 @@
     <string name="applications_categories_title">Apps</string>
     <string name="games_categories_title">Games</string>
 
+    <!-- Search Fragment -->
+    <string name="search_description">Search for an app</string>
+
     <!-- Settings Fragment -->
     <string name="preference_updates_title">Updates</string>
     <string name="preference_update_interval_default">24</string>
