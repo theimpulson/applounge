@@ -22,11 +22,16 @@ class SearchViewModel : ViewModel(), SearchViewModelInterface {
         return searchModel.applicationList
     }
 
+    override fun getScreenError(): MutableLiveData<Int> {
+        return searchModel.screenError
+    }
+
     override fun onSearchQueryChanged(searchQuery: String) {
         searchModel.searchSuggestions(searchQuery)
     }
 
     override fun onSearchQuerySubmitted(context: Context, searchQuery: String) {
+        searchModel.screenError.value = null
         searchModel.search(context, searchQuery)
     }
 }

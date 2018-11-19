@@ -22,8 +22,9 @@ import io.eelo.appinstaller.search.viewModel.SearchViewModel
 import android.app.Activity
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
+import android.widget.TextView
 import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.utils.Common
 
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
     private lateinit var searchViewModel: SearchViewModel
@@ -51,13 +52,20 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         recyclerView = view.findViewById(R.id.app_list)
         recyclerView.visibility = View.GONE
         splashScreen = view.findViewById(R.id.search_splash)
-        if (applicationList.isEmpty()) {
+        if (searchViewModel.getScreenError().value == null && applicationList.isEmpty()) {
             splashScreen.visibility = View.VISIBLE
         } else {
             splashScreen.visibility = View.GONE
         }
         progressBar = view.findViewById(R.id.progress_bar)
         progressBar.visibility = View.GONE
+        val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
+        errorContainer.visibility = View.GONE
+        val errorDescription = view.findViewById<TextView>(R.id.error_description)
+        view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            onQueryTextSubmit(searchView.query.toString())
+        }
 
         // Initialise search view
         val from = arrayOf(SUGGESTION_KEY)
@@ -85,6 +93,17 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             recyclerView.adapter.notifyDataSetChanged()
             recyclerView.visibility = View.VISIBLE
             recyclerView.scrollToPosition(0)
+        })
+
+        // Bind to the screen error
+        searchViewModel.getScreenError().observe(this, Observer {
+            if (it != null) {
+                errorDescription.text = activity!!.getString(Common.getErrorDescription(it))
+                errorContainer.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
+            } else {
+                errorContainer.visibility = View.GONE
+            }
         })
 
         // Handle suggestion clicks

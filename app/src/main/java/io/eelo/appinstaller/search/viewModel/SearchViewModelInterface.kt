@@ -12,6 +12,8 @@ interface SearchViewModelInterface {
 
     fun getApplications(): MutableLiveData<ArrayList<Application>>
 
+    fun getScreenError(): MutableLiveData<Int>
+
     fun onSearchQueryChanged(searchQuery: String)
 
     fun onSearchQuerySubmitted(context: Context, searchQuery: String)
