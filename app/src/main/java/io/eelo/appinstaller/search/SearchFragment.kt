@@ -29,7 +29,7 @@ import io.eelo.appinstaller.utils.Constants.SUGGESTION_KEY
 
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
     private lateinit var searchViewModel: SearchViewModel
-    private lateinit var focusView: View
+    private var focusView: View? = null
     private lateinit var searchView: SearchView
     private lateinit var recyclerView: RecyclerView
     private lateinit var splashScreen: LinearLayout
@@ -42,12 +42,16 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        if (installManager == null) {
+            return null
+        }
+
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
         searchViewModel = ViewModelProviders.of(activity!!).get(SearchViewModel::class.java)
         searchViewModel.initialise(installManager!!)
         focusView = view.findViewById(R.id.view)
-        focusView.requestFocus()
+        focusView!!.requestFocus()
         searchView = view.findViewById(R.id.search_view)
         recyclerView = view.findViewById(R.id.app_list)
         recyclerView.visibility = View.GONE
@@ -61,7 +65,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             onQueryTextSubmit(searchView.query.toString())
         }
 
-        handleSplashScreen()
+        handleSplashScreen(view)
 
         // Initialise search view
         val from = arrayOf(SUGGESTION_KEY)
@@ -111,8 +115,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         return view
     }
 
-    private fun handleSplashScreen() {
-        splashScreen = view!!.findViewById(R.id.search_splash)
+    private fun handleSplashScreen(view: View) {
+        splashScreen = view.findViewById(R.id.search_splash)
         if (searchViewModel.getScreenError().value == null && applicationList.isEmpty()) {
             splashScreen.visibility = View.VISIBLE
         } else {
@@ -123,7 +127,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {
             hideKeyboard(activity as Activity)
-            focusView.requestFocus()
+            focusView!!.requestFocus()
             splashScreen.visibility = View.GONE
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
@@ -168,7 +172,9 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     }
 
     override fun onResume() {
-        focusView.requestFocus()
+        focusView?.let {
+            focusView!!.requestFocus()
+        }
         super.onResume()
     }
 }
