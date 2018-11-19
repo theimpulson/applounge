@@ -24,9 +24,6 @@ class UpdatesFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (installManager == null) {
-            return null
-        }
         val view = inflater.inflate(R.layout.fragment_updates, container, false)
 
         updatesViewModel = ViewModelProviders.of(activity!!).get(UpdatesViewModel::class.java)
