@@ -51,12 +51,6 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         searchView = view.findViewById(R.id.search_view)
         recyclerView = view.findViewById(R.id.app_list)
         recyclerView.visibility = View.GONE
-        splashScreen = view.findViewById(R.id.search_splash)
-        if (searchViewModel.getScreenError().value == null && applicationList.isEmpty()) {
-            splashScreen.visibility = View.VISIBLE
-        } else {
-            splashScreen.visibility = View.GONE
-        }
         progressBar = view.findViewById(R.id.progress_bar)
         progressBar.visibility = View.GONE
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
@@ -66,6 +60,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             progressBar.visibility = View.VISIBLE
             onQueryTextSubmit(searchView.query.toString())
         }
+
+        handleSplashScreen()
 
         // Initialise search view
         val from = arrayOf(SUGGESTION_KEY)
@@ -113,6 +109,15 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         searchView.setOnQueryTextListener(this)
 
         return view
+    }
+
+    private fun handleSplashScreen() {
+        splashScreen = view!!.findViewById(R.id.search_splash)
+        if (searchViewModel.getScreenError().value == null && applicationList.isEmpty()) {
+            splashScreen.visibility = View.VISIBLE
+        } else {
+            splashScreen.visibility = View.GONE
+        }
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
