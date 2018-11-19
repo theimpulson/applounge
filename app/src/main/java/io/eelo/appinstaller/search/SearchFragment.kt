@@ -61,7 +61,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             onQueryTextSubmit(searchView.query.toString())
         }
 
-        handleSplashScreen()
+        handleSplashScreen(view)
 
         // Initialise search view
         val from = arrayOf(SUGGESTION_KEY)
@@ -111,8 +111,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         return view
     }
 
-    private fun handleSplashScreen() {
-        splashScreen = view!!.findViewById(R.id.search_splash)
+    private fun handleSplashScreen(view: View) {
+        splashScreen = view.findViewById(R.id.search_splash)
         if (searchViewModel.getScreenError().value == null && applicationList.isEmpty()) {
             splashScreen.visibility = View.VISIBLE
         } else {
