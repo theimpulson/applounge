@@ -25,17 +25,14 @@ object Common {
         return inMiB.times(100.0).roundToInt().div(100.0)
     }
 
-    fun getErrorDescription(errorCode: Int): Int {
-        when (errorCode) {
-            Constants.ERROR_NO_INTERNET ->
-                return R.string.error_no_internet
-            Constants.ERROR_SERVER_UNAVAILABLE ->
-                return R.string.error_server_unavailable
-            Constants.ERROR_REQUEST_TIMEOUT ->
-                return R.string.error_request_timeout
-            Constants.ERROR_UNKNOWN ->
-                return R.string.error_unknown
-        }
-        return R.string.error_unknown
+    fun getScreenErrorDescriptionId(screenError: ScreenError) = when (screenError) {
+        ScreenError.NO_INTERNET ->
+            R.string.error_no_internet
+        ScreenError.SERVER_UNAVAILABLE ->
+            R.string.error_server_unavailable
+        ScreenError.REQUEST_TIMEOUT ->
+            R.string.error_request_timeout
+        ScreenError.UNKNOWN ->
+            R.string.error_unknown
     }
 }

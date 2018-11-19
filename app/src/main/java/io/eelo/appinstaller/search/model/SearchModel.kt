@@ -5,13 +5,13 @@ import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.utils.Common
-import io.eelo.appinstaller.utils.Constants
+import io.eelo.appinstaller.utils.ScreenError
 
 class SearchModel : SearchModelInterface {
 
     val suggestionList = MutableLiveData<ArrayList<String>>()
     val applicationList = MutableLiveData<ArrayList<Application>>()
-    var screenError = MutableLiveData<Int>()
+    var screenError = MutableLiveData<ScreenError>()
     private var element: SearchElement? = null
     private var installManager: InstallManager? = null
 
@@ -45,7 +45,7 @@ class SearchModel : SearchModelInterface {
             element = SearchElement(searchQuery, installManager!!, this)
             loadMore(context)
         } else {
-            screenError.value = Constants.ERROR_NO_INTERNET
+            screenError.value = ScreenError.NO_INTERNET
         }
     }
 

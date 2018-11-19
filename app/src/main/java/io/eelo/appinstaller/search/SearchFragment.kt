@@ -25,6 +25,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Constants.SUGGESTION_KEY
 
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
     private lateinit var searchViewModel: SearchViewModel
@@ -33,7 +34,6 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     private lateinit var recyclerView: RecyclerView
     private lateinit var splashScreen: LinearLayout
     private lateinit var progressBar: ProgressBar
-    private val SUGGESTION_KEY = "suggestion"
     private var applicationList = ArrayList<Application>()
     private var installManager: InstallManager? = null
 
@@ -98,7 +98,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         // Bind to the screen error
         searchViewModel.getScreenError().observe(this, Observer {
             if (it != null) {
-                errorDescription.text = activity!!.getString(Common.getErrorDescription(it))
+                errorDescription.text = activity!!.getString(Common.getScreenErrorDescriptionId(it))
                 errorContainer.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
             } else {

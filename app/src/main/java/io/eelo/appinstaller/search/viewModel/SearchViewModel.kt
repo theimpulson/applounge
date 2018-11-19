@@ -6,6 +6,7 @@ import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.search.model.SearchModel
+import io.eelo.appinstaller.utils.ScreenError
 
 class SearchViewModel : ViewModel(), SearchViewModelInterface {
     private val searchModel = SearchModel()
@@ -22,7 +23,7 @@ class SearchViewModel : ViewModel(), SearchViewModelInterface {
         return searchModel.applicationList
     }
 
-    override fun getScreenError(): MutableLiveData<Int> {
+    override fun getScreenError(): MutableLiveData<ScreenError> {
         return searchModel.screenError
     }
 

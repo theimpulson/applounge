@@ -7,6 +7,7 @@ import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.home.model.BannerApplication
 import io.eelo.appinstaller.home.model.HomeModel
+import io.eelo.appinstaller.utils.ScreenError
 
 class HomeViewModel : ViewModel(), HomeViewModelInterface {
     private val homeModel = HomeModel()
@@ -23,7 +24,7 @@ class HomeViewModel : ViewModel(), HomeViewModelInterface {
         return homeModel.applications
     }
 
-    override fun getScreenError(): MutableLiveData<Int> {
+    override fun getScreenError(): MutableLiveData<ScreenError> {
         return homeModel.screenError
     }
 

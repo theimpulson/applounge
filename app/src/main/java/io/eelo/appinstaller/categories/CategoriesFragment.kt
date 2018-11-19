@@ -70,7 +70,7 @@ class CategoriesFragment : Fragment() {
         // Bind to the screen error
         categoriesViewModel.getScreenError().observe(this, Observer {
             if (it != null) {
-                errorDescription.text = activity!!.getString(Common.getErrorDescription(it))
+                errorDescription.text = activity!!.getString(Common.getScreenErrorDescriptionId(it))
                 errorContainer.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
             } else {

@@ -4,12 +4,12 @@ import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.EXECUTOR
-import io.eelo.appinstaller.utils.Constants
+import io.eelo.appinstaller.utils.ScreenError
 
 class CategoriesModel : CategoriesModelInterface {
     val applicationsCategoriesList = MutableLiveData<ArrayList<Category>>()
     val gamesCategoriesList = MutableLiveData<ArrayList<Category>>()
-    var screenError = MutableLiveData<Int>()
+    var screenError = MutableLiveData<ScreenError>()
 
     init {
         if (applicationsCategoriesList.value == null) {
@@ -24,7 +24,7 @@ class CategoriesModel : CategoriesModelInterface {
         if (Common.isNetworkAvailable(context)) {
             Loader(this).executeOnExecutor(EXECUTOR)
         } else {
-            screenError.value = Constants.ERROR_NO_INTERNET
+            screenError.value = ScreenError.NO_INTERNET
         }
     }
 }

@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.RelativeLayout
 import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.InstallManager
@@ -81,7 +80,7 @@ class HomeFragment : Fragment() {
         // Bind to the screen error
         homeViewModel.getScreenError().observe(this, Observer {
             if (it != null) {
-                errorDescription.text = activity!!.getString(Common.getErrorDescription(it))
+                errorDescription.text = activity!!.getString(Common.getScreenErrorDescriptionId(it))
                 errorContainer.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
             } else {
