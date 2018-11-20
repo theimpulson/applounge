@@ -39,8 +39,8 @@ class ApplicationData {
 
     //unsupported data
     var stars = 0f
-    var privacyScore = 0
-    var energyScore = 0
+    var privacyScore = 0f
+    var energyScore = 0f
 
     var fullnessLevel = 0
 

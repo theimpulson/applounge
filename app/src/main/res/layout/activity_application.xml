@@ -113,7 +113,9 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/layout_margin_medium"
                     android:background="@drawable/app_install_border"
+                    android:ellipsize="end"
                     android:foreground="?android:selectableItemBackground"
+                    android:maxLines="1"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:padding="@dimen/layout_padding_medium"
@@ -321,6 +323,20 @@
                 android:layout_height="@dimen/default_divider_height"
                 android:layout_marginTop="@dimen/layout_margin_large"
                 android:background="@color/colorDivider" />
+
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_margin_large"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/app_images_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+
+            </HorizontalScrollView>
 
         </LinearLayout>
 

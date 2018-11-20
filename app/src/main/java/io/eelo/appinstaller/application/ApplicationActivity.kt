@@ -10,7 +10,8 @@ import android.support.v7.widget.Toolbar
 import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.*
 import io.eelo.appinstaller.utils.Common
@@ -63,41 +64,71 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     }
 
     private fun onApplicationInfoLoaded() {
-        application.loadIcon(app_icon)
-        app_title.text = application.data.name
-        app_author.text = application.data.author
-        app_category.text = Common.getCategoryTitle(application.data.category)
-        app_description.text = Html.fromHtml(application.data.description)
-        app_description_container.setOnClickListener {
+        val appIcon = findViewById<ImageView>(R.id.app_icon)
+        val appTitle = findViewById<TextView>(R.id.app_title)
+        val appAuthor = findViewById<TextView>(R.id.app_author)
+        val appCategory = findViewById<TextView>(R.id.app_category)
+        val appSize = findViewById<TextView>(R.id.app_size)
+        val appInstall = findViewById<Button>(R.id.app_install)
+        val appDescriptionContainer = findViewById<RelativeLayout>(R.id.app_description_container)
+        val appDescription = findViewById<TextView>(R.id.app_description)
+        val appRating = findViewById<TextView>(R.id.app_rating)
+        val appPrivacyScore = findViewById<TextView>(R.id.app_privacy_score)
+        val appEnergyScore = findViewById<TextView>(R.id.app_energy_score)
+        val appImagesContainer = findViewById<LinearLayout>(R.id.app_images_container)
+
+        appTitle.visibility = View.GONE
+        appAuthor.visibility = View.GONE
+        appCategory.visibility = View.GONE
+        appSize.visibility = View.GONE
+        appDescriptionContainer.visibility = View.GONE
+        appImagesContainer.visibility = View.GONE
+
+        application.loadIcon(appIcon)
+
+        if (application.data.name.isNotEmpty()) {
+            appTitle.text = application.data.name
+            appTitle.visibility = View.VISIBLE
+        }
+
+        if (application.data.author.isNotEmpty()) {
+            appAuthor.text = application.data.author
+            appAuthor.visibility = View.VISIBLE
+        }
+
+        if (application.data.category.isNotEmpty()) {
+            appCategory.text = Common.getCategoryTitle(application.data.category)
+            appCategory.visibility = View.VISIBLE
+        }
+
+        // TODO Show app size
+
+        appInstall.setOnClickListener {
+            application.buttonClicked(this, this)
+        }
+
+        if (application.data.description.isNotEmpty()) {
+            appDescription.text = Html.fromHtml(application.data.description)
+            appDescriptionContainer.visibility = View.VISIBLE
+        }
+
+        appDescriptionContainer.setOnClickListener {
             val intent = Intent(this, ApplicationDescriptionActivity::class.java)
             intent.putExtra(APPLICATION_DESCRIPTION_KEY, application.data.description)
             startActivity(intent)
         }
-        app_rating.text = application.data.stars.toString() + "/5"
-        app_privacy_score.text = application.data.privacyScore.toString() + "/10"
-        app_energy_score.text = application.data.energyScore.toString() + "/10"
-        app_install.setOnClickListener {
-            application.buttonClicked(this, this)
+
+        appRating.text = application.data.stars.toString()
+        appPrivacyScore.text = application.data.privacyScore.toString()
+        appEnergyScore.text = application.data.energyScore.toString()
+
+        if (application.data.images.isNotEmpty()) {
+            // TODO Load app images/screenshots
+            appImagesContainer.visibility = View.VISIBLE
         }
+
         application.addListener(this)
         stateChanged(application.state)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                application.buttonClicked(this, this)
-            } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(this, resources.getString(R.string.error_storage_permission_denied), Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
-    override fun stateChanged(state: State) {
-        Execute({}, {
-            app_install.text = resources.getString(state.installButtonTextId)
-            app_install.isEnabled = state.isInstallButtonEnabled
-        })
     }
 
     @SuppressLint("SetTextI18n")
@@ -109,6 +140,23 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
 
     override fun anErrorHasOccurred() {
         // TODO alert the user of the error (while downloading)
+    }
+
+    override fun stateChanged(state: State) {
+        Execute({}, {
+            app_install.text = resources.getString(state.installButtonTextId)
+            app_install.isEnabled = state.isInstallButtonEnabled
+        })
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                application.buttonClicked(this, this)
+            } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Toast.makeText(this, resources.getString(R.string.error_storage_permission_denied), Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private inner class InitialiseTask : AsyncTask<String, Any, Any>() {

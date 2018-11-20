@@ -67,10 +67,10 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         })
     }
 
-    private fun findPrivacyColor(privacyScore: Int): Int {
+    private fun findPrivacyColor(privacyScore: Float): Int {
         return view.context.resources.getColor(when {
-            privacyScore >= 7 -> R.color.colorRatingGood
-            privacyScore >= 4 -> R.color.colorRatingNeutral
+            privacyScore >= 7.0f -> R.color.colorRatingGood
+            privacyScore >= 4.0f -> R.color.colorRatingNeutral
             else -> R.color.colorRatingBad
         })
     }
