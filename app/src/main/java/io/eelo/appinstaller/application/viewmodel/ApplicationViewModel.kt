@@ -9,7 +9,7 @@ import io.eelo.appinstaller.utils.Constants.APPLICATION_PACKAGE_NAME_KEY
 class ApplicationViewModel : ApplicationViewModelInterface {
     override fun onApplicationClick(context: Context, application: Application) {
         val intent = Intent(context, ApplicationActivity::class.java)
-        intent.putExtra(APPLICATION_PACKAGE_NAME_KEY, application.data.packageName)
+        intent.putExtra(APPLICATION_PACKAGE_NAME_KEY, application.packageName)
         context.startActivity(intent)
     }
 }

@@ -3,15 +3,16 @@ package io.eelo.appinstaller.application.model
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Environment.getExternalStorageDirectory
+import io.eelo.appinstaller.application.model.data.BasicData
 import io.eelo.appinstaller.utils.Constants.APK_FOLDER
 import java.io.File
 
-class ApplicationInfo(private val data: ApplicationData) {
+class ApplicationInfo(private val packageName: String) {
 
-    fun isLastVersionInstalled(context: Context): Boolean {
+    fun isLastVersionInstalled(context: Context, data: BasicData): Boolean {
         return try {
-            val packageInfo = context.packageManager.getPackageInfo(data.packageName, 0)
-            packageInfo.versionName == data.loadLatestVersion().version
+            val packageInfo = context.packageManager.getPackageInfo(packageName, 0)
+            packageInfo.versionName == data.lastVersionNumber
         } catch (ignored: PackageManager.NameNotFoundException) {
             false
         }
@@ -19,7 +20,7 @@ class ApplicationInfo(private val data: ApplicationData) {
 
     fun isInstalled(context: Context): Boolean {
         return try {
-            context.packageManager.getPackageInfo(data.packageName, 0)
+            context.packageManager.getPackageInfo(packageName, 0)
             true
         } catch (ignored: PackageManager.NameNotFoundException) {
             false
@@ -27,23 +28,20 @@ class ApplicationInfo(private val data: ApplicationData) {
 
     }
 
-    private fun getApkFile() : File {
-        return File(getExternalStorageDirectory(), APK_FOLDER + data.packageName + "-" + data.lastVersionName + ".apk")
+    fun getApkFile(data: BasicData): File {
+        return File(getExternalStorageDirectory(), APK_FOLDER + packageName + "-" + data.lastVersionNumber + ".apk")
     }
 
-    val isDownloaded: Boolean
-        get() = getApkFile().exists()
+    fun isDownloaded(data: BasicData): Boolean {
+        return getApkFile(data).exists()
+    }
 
 
     fun launch(context: Context) {
-        context.startActivity(context.packageManager.getLaunchIntentForPackage(data.packageName))
+        context.startActivity(context.packageManager.getLaunchIntentForPackage(packageName))
     }
 
-    fun install(context: Context) {
-        Installer(getApkFile()).install(context)
-    }
-
-    fun createDownloader(): Downloader {
-        return Downloader(data, getApkFile())
+    fun install(context: Context, data: BasicData) {
+        Installer(getApkFile(data)).install(context)
     }
 }

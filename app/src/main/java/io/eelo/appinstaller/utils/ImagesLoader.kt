@@ -7,7 +7,7 @@ import java.net.URL
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
-class ImagesLoader(private val images: List<String>) {
+class ImagesLoader(private val imagesUri: Array<String>) {
 
     fun loadImages(): List<Bitmap> {
         val queue = LinkedBlockingQueue<Image>()
@@ -17,14 +17,14 @@ class ImagesLoader(private val images: List<String>) {
     }
 
     private fun startLoading(queue: BlockingQueue<Image>) {
-        images.forEachIndexed { i, uri ->
+        imagesUri.forEachIndexed { i, uri ->
             Image(uri, i).executeOnExecutor(Common.EXECUTOR, queue)
         }
     }
 
     private fun waitResults(queue: BlockingQueue<Image>): List<Image> {
         val result = ArrayList<Image>()
-        images.forEach {
+        imagesUri.forEach {
             result.add(queue.take())
         }
         return result

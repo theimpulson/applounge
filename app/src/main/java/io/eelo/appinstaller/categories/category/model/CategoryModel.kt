@@ -2,9 +2,11 @@ package io.eelo.appinstaller.categories.category.model
 
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import io.eelo.appinstaller.api.ListApplicationsRequest
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
-import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Constants
+import io.eelo.appinstaller.utils.Execute
 
 class CategoryModel : CategoryModelInterface {
 
@@ -25,8 +27,18 @@ class CategoryModel : CategoryModelInterface {
     }
 
     override fun loadApplications(context: Context) {
-        Loader(page, this).executeOnExecutor(Common.EXECUTOR, context)
+        lateinit var apps: ArrayList<Application>
+        Execute({
+            apps = loadApplicationsSynced(context)
+        }, {
+            categoryApplicationsList.value = apps
+        })
         page++
+    }
+    
+    private fun loadApplicationsSynced(context: Context): ArrayList<Application> {
+        val listApplications = ListApplicationsRequest(category, page, Constants.RESULTS_PER_PAGE).request()
+        return listApplications.getApplications(installManager, context)
     }
 
 

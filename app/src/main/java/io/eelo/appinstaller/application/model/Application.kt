@@ -4,26 +4,24 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.widget.ImageView
+import io.eelo.appinstaller.api.AppDetailRequest
+import io.eelo.appinstaller.api.PackageNameSearchRequest
 import io.eelo.appinstaller.application.model.State.*
+import io.eelo.appinstaller.application.model.data.BasicData
+import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.utils.Constants
-import io.eelo.appinstaller.utils.Execute
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
 
-class Application(val data: ApplicationData, context: Context, private val installManager: InstallManager) {
+class Application(val packageName: String, private val installManager: InstallManager) {
 
     private val uses = AtomicInteger(0)
-    private val info = ApplicationInfo(data)
+    private val info = ApplicationInfo(packageName)
     private val stateManager = StateManager(info, this)
 
-    init {
-        // TODO must change these lines, when API give the application's version
-//        if (data.assertFullData()) {
-//            stateManager.find(context)
-//        }
-    }
+    var basicData: BasicData? = null
+    var fullData: FullData? = null
 
     fun addListener(listener: ApplicationStateListener) {
         stateManager.addListener(listener)
@@ -47,30 +45,28 @@ class Application(val data: ApplicationData, context: Context, private val insta
     }
 
     @Synchronized
-    fun buttonClicked(context: Context, activity: Activity?) {
+    fun buttonClicked(activity: Activity) {
         when (stateManager.state) {
-            INSTALLED -> info.launch(context)
+            INSTALLED -> info.launch(activity)
             DOWNLOADED -> {
-                stateManager.changeState(INSTALLING)
-                installManager.install(data.packageName)
+                prepareInstall()
             }
             NOT_UPDATED, NOT_DOWNLOADED -> {
                 if (canWriteStorage(activity)) {
                     stateManager.changeState(DOWNLOADING)
-                    installManager.download(data.packageName)
+                    installManager.download(packageName)
                 }
             }
             DOWNLOADING -> {
-
             }
             INSTALLING -> {
             }
         }
     }
 
-    private fun canWriteStorage(activity: Activity?): Boolean {
+    private fun canWriteStorage(activity: Activity): Boolean {
         return if (android.os.Build.VERSION.SDK_INT >= 23) {
-            if (activity!!.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 activity.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), Constants.STORAGE_PERMISSION_REQUEST_CODE)
                 false
             } else {
@@ -82,44 +78,92 @@ class Application(val data: ApplicationData, context: Context, private val insta
     }
 
     fun download(context: Context) {
-        searchFullData(context)
-        downloader = info.createDownloader()
+        assertFullData(context)
+        downloader = Downloader()
         stateManager.notifyDownloading(downloader!!)
         try {
-            downloader!!.download()
-            stateManager.changeState(INSTALLING)
-            installManager.install(data.packageName)
-            stateManager.find(context)
+            downloader!!.download(fullData!!, info.getApkFile(basicData!!))
+            downloader = null
+            prepareInstall()
         } catch (e: IOException) {
             e.printStackTrace()
-            stateManager.find(context)
+            stateManager.find(context, basicData!!)
             stateManager.notifyError()
         }
     }
 
+    private fun prepareInstall() {
+        stateManager.changeState(INSTALLING)
+        installManager.install(packageName)
+    }
+
     fun install(context: Context) {
-        info.install(context)
-        stateManager.find(context)
+        info.install(context, basicData!!)
+        stateManager.find(context, basicData!!)
     }
 
     fun isUsed(): Boolean {
         return uses.get() != 0
     }
 
-    fun searchFullData(context: Context): Boolean {
-        val assertFullData = data.assertFullData()
-        if (assertFullData && state == INSTALLED) {
-            stateManager.find(context)
+    fun getBasicData(context: Context): BasicData? {
+        if (basicData == null) {
+            val found = findFullData(context)
+            if (!found) {
+                return null
+            }
         }
-        return assertFullData
+        return basicData!!
+    }
+
+    fun getFullData(context: Context): FullData? {
+        if (fullData == null) {
+            val found = findFullData(context)
+            if (!found) {
+                return null
+            }
+        }
+        return fullData!!
+    }
+
+    private fun assertBasicData(context: Context): Boolean {
+        return basicData != null || findFullData(context)
+    }
+
+    fun assertFullData(context: Context): Boolean {
+        return fullData != null || findFullData(context)
+    }
+
+    private fun findFullData(context: Context): Boolean {
+        if (basicData == null) {
+            val fullData = PackageNameSearchRequest(packageName).request().findOneAppData(packageName)
+            fullData?.let {
+                update(it, context)
+                return true
+            }
+            return false
+        } else {
+            val fullData = AppDetailRequest(basicData!!.id).request()
+            update(fullData, context)
+            return true
+        }
     }
 
     fun loadIcon(view: ImageView) {
-        var iconBitmap: Bitmap? = null
-        Execute({
-            iconBitmap = data.loadIcon()
-        }, {
-            view.setImageBitmap(iconBitmap)
-        })
+        basicData?.loadIconAsync {
+            view.setImageBitmap(it)
+        }
+    }
+
+    fun update(basicData: BasicData, context: Context) {
+        this.basicData?.let { basicData.updateLoadedImages(it) }
+        this.basicData = basicData
+        stateManager.find(context, basicData)
+    }
+
+    fun update(fullData: FullData, context: Context) {
+        this.fullData = fullData
+        update(fullData.basicData, context)
+        fullData.basicData = basicData!!
     }
 }
