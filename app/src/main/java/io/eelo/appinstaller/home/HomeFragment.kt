@@ -37,27 +37,22 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         homeViewModel = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
-        homeViewModel.initialise(installManager!!)
         imageCarousel = view.findViewById(R.id.image_carousel)
         categoryList = view.findViewById(R.id.category_list)
         progressBar = view.findViewById(R.id.progress_bar)
+        val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
+        val errorDescription = view.findViewById<TextView>(R.id.error_description)
 
         // Initialise UI elements
-        imageCarousel.visibility = View.GONE
+        homeViewModel.initialise(installManager!!)
         setCustomScroller()
+        imageCarousel.visibility = View.GONE
         categoryList.visibility = View.GONE
         categoryList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         progressBar.visibility = View.VISIBLE
-        val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         errorContainer.visibility = View.GONE
-        val errorDescription = view.findViewById<TextView>(R.id.error_description)
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
             progressBar.visibility = View.VISIBLE
-            homeViewModel.loadCategories(context!!)
-        }
-
-        if (homeViewModel.getBannerApplications().value!!.isEmpty() ||
-                homeViewModel.getCategories().value!!.isEmpty()) {
             homeViewModel.loadCategories(context!!)
         }
 
@@ -92,6 +87,10 @@ class HomeFragment : Fragment() {
             }
         })
 
+        if (homeViewModel.getBannerApplications().value!!.isEmpty() ||
+                homeViewModel.getCategories().value!!.isEmpty()) {
+            homeViewModel.loadCategories(context!!)
+        }
         return view
     }
 

@@ -33,27 +33,22 @@ class CategoriesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
 
+        categoriesViewModel = ViewModelProviders.of(activity!!).get(CategoriesViewModel::class.java)
         applicationsCategoriesList = view.findViewById(R.id.applications_categories_list)
         gamesCategoriesList = view.findViewById(R.id.games_categories_list)
-
-        categoriesViewModel = ViewModelProviders.of(activity!!).get(CategoriesViewModel::class.java)
-
         categoriesContainer = view.findViewById(R.id.categories_container)
-        categoriesContainer.visibility = View.GONE
         progressBar = view.findViewById(R.id.progress_bar)
-        progressBar.visibility = View.VISIBLE
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
-        errorContainer.visibility = View.GONE
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
-        view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
-            progressBar.visibility = View.VISIBLE
-            categoriesViewModel.loadCategories(context!!)
-        }
 
+        // Initialise UI elements
         initialiseDimensions()
         handleDeviceOrientation()
-        if (categoriesViewModel.getApplicationsCategories().value!!.isEmpty() ||
-                categoriesViewModel.getGamesCategories().value!!.isEmpty()) {
+        categoriesContainer.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+        errorContainer.visibility = View.GONE
+        view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
+            progressBar.visibility = View.VISIBLE
             categoriesViewModel.loadCategories(context!!)
         }
 
@@ -78,6 +73,10 @@ class CategoriesFragment : Fragment() {
             }
         })
 
+        if (categoriesViewModel.getApplicationsCategories().value!!.isEmpty() ||
+                categoriesViewModel.getGamesCategories().value!!.isEmpty()) {
+            categoriesViewModel.loadCategories(context!!)
+        }
         return view
     }
 
