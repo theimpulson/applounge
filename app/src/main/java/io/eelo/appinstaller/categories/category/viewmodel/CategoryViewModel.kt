@@ -6,6 +6,7 @@ import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.categories.category.model.CategoryModel
+import io.eelo.appinstaller.utils.ScreenError
 
 class CategoryViewModel : ViewModel(), CategoryViewModelInterface {
     private val categoryModel = CategoryModel()
@@ -18,8 +19,12 @@ class CategoryViewModel : ViewModel(), CategoryViewModelInterface {
         return categoryModel.categoryApplicationsList
     }
 
-    override fun loadApplications(context: Context) {
-        categoryModel.loadApplications(context)
+    override fun getScreenError(): MutableLiveData<ScreenError> {
+        return categoryModel.screenError
     }
 
+    override fun loadApplications(context: Context) {
+        categoryModel.screenError.value = null
+        categoryModel.loadApplications(context)
+    }
 }

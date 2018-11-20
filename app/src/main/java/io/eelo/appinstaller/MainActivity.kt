@@ -2,6 +2,7 @@ package io.eelo.appinstaller
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
@@ -35,23 +36,30 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Common.EXECUTOR.submit {
-            val installManager = installManagerGetter.connectAndGet(this)
-            initialiseFragments(installManager)
-            // Show the home fragment by default
-            if (savedInstanceState != null && savedInstanceState.containsKey(CURRENTLY_SELECTED_FRAGMENT_KEY)) {
-                if (selectFragment(savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY))) {
-                    currentFragmentId = savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY)
-                }
-            } else {
-                if (selectFragment(R.id.menu_home)) {
-                    currentFragmentId = R.id.menu_home
-                }
-            }
-        }
-
         bottom_navigation_view.setOnNavigationItemSelectedListener(this)
         disableShiftingOfNabBarItems()
+
+        object : AsyncTask<Void, Void, Void>() {
+
+            override fun doInBackground(vararg p0: Void?): Void? {
+                val installManager = installManagerGetter.connectAndGet(this@MainActivity)
+                initialiseFragments(installManager)
+                return null
+            }
+
+            override fun onPostExecute(result: Void?) {
+                // Show the home fragment by default
+                if (savedInstanceState != null && savedInstanceState.containsKey(CURRENTLY_SELECTED_FRAGMENT_KEY)) {
+                    if (selectFragment(savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY))) {
+                        currentFragmentId = savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY)
+                    }
+                } else {
+                    if (selectFragment(R.id.menu_home)) {
+                        currentFragmentId = R.id.menu_home
+                    }
+                }
+            }
+        }.executeOnExecutor(Common.EXECUTOR)
     }
 
     private fun initialiseFragments(installManager: InstallManager) {

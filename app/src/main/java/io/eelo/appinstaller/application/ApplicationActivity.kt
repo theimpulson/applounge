@@ -73,7 +73,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             intent.putExtra(APPLICATION_DESCRIPTION_KEY, application.data.description)
             startActivity(intent)
         }
-        app_rating.text = application.data.stars.toString() + "/10"
+        app_rating.text = application.data.stars.toString() + "/5"
         app_privacy_score.text = application.data.privacyScore.toString() + "/10"
         app_energy_score.text = application.data.energyScore.toString() + "/10"
         app_install.setOnClickListener {
