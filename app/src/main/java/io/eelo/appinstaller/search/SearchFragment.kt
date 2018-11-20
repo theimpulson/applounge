@@ -32,7 +32,6 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     private var focusView: View? = null
     private lateinit var searchView: SearchView
     private lateinit var recyclerView: RecyclerView
-    private lateinit var splashScreen: LinearLayout
     private lateinit var progressBar: ProgressBar
     private var applicationList = ArrayList<Application>()
     private var installManager: InstallManager? = null
@@ -49,23 +48,21 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
         searchViewModel = ViewModelProviders.of(activity!!).get(SearchViewModel::class.java)
-        searchViewModel.initialise(installManager!!)
         focusView = view.findViewById(R.id.view)
-        focusView!!.requestFocus()
         searchView = view.findViewById(R.id.search_view)
         recyclerView = view.findViewById(R.id.app_list)
-        recyclerView.visibility = View.GONE
         progressBar = view.findViewById(R.id.progress_bar)
-        progressBar.visibility = View.GONE
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
-        errorContainer.visibility = View.GONE
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
+
+        searchViewModel.initialise(installManager!!)
+        recyclerView.visibility = View.GONE
+        progressBar.visibility = View.GONE
+        errorContainer.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
             progressBar.visibility = View.VISIBLE
             onQueryTextSubmit(searchView.query.toString())
         }
-
-        handleSplashScreen(view)
 
         // Initialise search view
         val from = arrayOf(SUGGESTION_KEY)
@@ -115,20 +112,10 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         return view
     }
 
-    private fun handleSplashScreen(view: View) {
-        splashScreen = view.findViewById(R.id.search_splash)
-        if (searchViewModel.getScreenError().value == null && applicationList.isEmpty()) {
-            splashScreen.visibility = View.VISIBLE
-        } else {
-            splashScreen.visibility = View.GONE
-        }
-    }
-
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {
             hideKeyboard(activity as Activity)
             focusView!!.requestFocus()
-            splashScreen.visibility = View.GONE
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             searchViewModel.onSearchQuerySubmitted(context!!, it)
