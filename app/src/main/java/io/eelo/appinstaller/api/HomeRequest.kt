@@ -32,8 +32,8 @@ class HomeRequest {
 
         fun getApps(installManager: InstallManager, context: Context): HashMap<String, ArrayList<Application>> {
             val apps = HashMap<String, ArrayList<Application>>()
-            home.apps.forEach { category, appsData ->
-                apps[category] = ApplicationParser.parseToApps(installManager, context, appsData.toTypedArray())
+            for (pair in home.apps) {
+                apps[pair.key] = ApplicationParser.parseToApps(installManager, context, pair.value.toTypedArray())
             }
             return apps
         }
