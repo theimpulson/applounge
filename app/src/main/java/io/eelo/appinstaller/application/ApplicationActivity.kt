@@ -60,8 +60,10 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         return true
     }
 
-    @SuppressLint("SetTextI18n")
     private fun onApplicationInfoLoaded() {
+        val basicData = application.basicData!!
+        val fullData = application.fullData!!
+
         val appIcon = findViewById<ImageView>(R.id.app_icon)
         val appTitle = findViewById<TextView>(R.id.app_title)
         val appAuthor = findViewById<TextView>(R.id.app_author)
@@ -84,29 +86,29 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
 
         application.loadIcon(appIcon)
 
-        if (application.data.name.isNotEmpty()) {
-            appTitle.text = application.data.name
+        if (basicData.name.isNotEmpty()) {
+            appTitle.text = basicData.name
             appTitle.visibility = View.VISIBLE
         }
 
-        if (application.data.author.isNotEmpty()) {
-            appAuthor.text = application.data.author
+        if (basicData.author.isNotEmpty()) {
+            appAuthor.text = basicData.author
             appAuthor.visibility = View.VISIBLE
         }
 
-        if (application.data.category.isNotEmpty()) {
-            appCategory.text = Common.getCategoryTitle(application.data.category)
+        if (fullData.category.isNotEmpty()) {
+            appCategory.text = Common.getCategoryTitle(fullData.category)
             appCategory.visibility = View.VISIBLE
         }
 
         // TODO Show app size
 
         appInstall.setOnClickListener {
-            application.buttonClicked(this, this)
+            application.buttonClicked(this)
         }
 
-        if (application.data.description.isNotEmpty()) {
-            appDescription.text = Html.fromHtml(application.data.description)
+        if (fullData.description.isNotEmpty()) {
+            appDescription.text = Html.fromHtml(fullData.description)
             appDescriptionContainer.visibility = View.VISIBLE
         }
 
@@ -116,14 +118,14 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             startActivity(intent)
         }
 
-        appRating.text = application.data.stars.toString()
-        appPrivacyScore.text = application.data.privacyScore.toString()
-        appEnergyScore.text = application.data.energyScore.toString()
+        appRating.text = basicData.score.toString()
+        appPrivacyScore.text = fullData.privacyScore.toString()
+        appEnergyScore.text = fullData.energyScore.toString()
 
-        if (application.data.images.isNotEmpty()) {
+        /*if (application.data.images.isNotEmpty()) {
             // TODO Load app images/screenshots
             appImagesContainer.visibility = View.VISIBLE
-        }
+        }*/
 
         application.addListener(this)
         stateChanged(application.state)
@@ -150,7 +152,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                application.buttonClicked(this, this)
+                application.buttonClicked(this)
             } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Toast.makeText(this, resources.getString(R.string.error_storage_permission_denied), Toast.LENGTH_LONG).show()
             }

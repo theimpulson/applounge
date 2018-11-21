@@ -29,7 +29,7 @@ constructor(
     private val versions = HashMap<String, Version>()
     val packageName: String
         get() = basicData.packageName
-    val privacyScore = -1
+    val privacyScore = -1f
     val energyScore = -1f
 
 

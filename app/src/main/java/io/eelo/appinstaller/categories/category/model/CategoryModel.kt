@@ -6,6 +6,8 @@ import io.eelo.appinstaller.api.ListApplicationsRequest
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Constants
+import io.eelo.appinstaller.utils.Execute
 import io.eelo.appinstaller.utils.ScreenError
 
 class CategoryModel : CategoryModelInterface {

@@ -22,11 +22,8 @@ import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.search.viewModel.SearchViewModel
-import android.app.Activity
-import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TextView
-import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants.SUGGESTION_KEY
 
