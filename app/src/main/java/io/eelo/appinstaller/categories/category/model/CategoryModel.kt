@@ -2,6 +2,7 @@ package io.eelo.appinstaller.categories.category.model
 
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import io.eelo.appinstaller.api.ListApplicationsRequest
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.utils.Common
@@ -27,11 +28,23 @@ class CategoryModel : CategoryModelInterface {
     }
 
     override fun loadApplications(context: Context) {
+        lateinit var apps: ArrayList<Application>
         if (Common.isNetworkAvailable(context)) {
-            Loader(page, this).executeOnExecutor(Common.EXECUTOR, context)
+            Execute({
+                apps = loadApplicationsSynced(context)
+            }, {
+                categoryApplicationsList.value = apps
+            })
             page++
         } else {
             screenError.value = ScreenError.NO_INTERNET
         }
     }
+
+    private fun loadApplicationsSynced(context: Context): ArrayList<Application> {
+        val listApplications = ListApplicationsRequest(category, page, Constants.RESULTS_PER_PAGE).request()
+        return listApplications.getApplications(installManager, context)
+    }
+
+
 }

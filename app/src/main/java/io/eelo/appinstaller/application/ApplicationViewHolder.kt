@@ -38,7 +38,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
             }
         }
         installButton.setOnClickListener {
-            application?.buttonClicked(view.context, activity)
+            application?.buttonClicked(activity)
         }
     }
 
@@ -48,14 +48,18 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         this.application?.removeListener(this)
         this.application = app
         app.addListener(this)
-        title.text = app.data.name
-        author.text = app.data.author
-        ratingBar.rating = app.data.stars
+        title.text = app.basicData!!.name
+        author.text = app.basicData!!.author
+        ratingBar.rating = app.basicData!!.score
         val decimalFormat = DecimalFormat("##.0")
-        rating.text = decimalFormat.format(app.data.stars).toString()
-        rating.setTextColor(findStarsColor(app.data.stars))
-        privacyScore.text = app.data.privacyScore.toString()
-        privacyScore.setTextColor(findPrivacyColor(app.data.privacyScore))
+        rating.text = decimalFormat.format(app.basicData!!.score).toString()
+        rating.setTextColor(findStarsColor(app.basicData!!.score))
+        Execute({
+            app.assertFullData(view.context)
+        }, {
+            privacyScore.text = app.fullData!!.privacyScore.toString()
+            privacyScore.setTextColor(findPrivacyColor(app.fullData!!.privacyScore))
+        })
         stateChanged(app.state)
     }
 

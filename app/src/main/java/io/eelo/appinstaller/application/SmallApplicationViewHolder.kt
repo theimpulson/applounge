@@ -32,7 +32,7 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
             }
         }
         installButton.setOnClickListener {
-            application?.buttonClicked(view.context, activity)
+            application?.buttonClicked(activity)
         }
     }
 
@@ -42,7 +42,7 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
         this.application?.removeListener(this)
         this.application = app
         app.addListener(this)
-        title.text = app.data.name
+        title.text = app.basicData!!.name
         stateChanged(app.state)
     }
 

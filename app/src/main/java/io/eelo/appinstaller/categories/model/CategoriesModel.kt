@@ -5,6 +5,8 @@ import android.content.Context
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.EXECUTOR
 import io.eelo.appinstaller.utils.ScreenError
+import io.eelo.appinstaller.api.ListCategoriesRequest
+import io.eelo.appinstaller.utils.Execute
 
 class CategoriesModel : CategoriesModelInterface {
     val applicationsCategoriesList = MutableLiveData<ArrayList<Category>>()
@@ -21,10 +23,28 @@ class CategoriesModel : CategoriesModelInterface {
     }
 
     override fun loadCategories(context: Context) {
+        lateinit var result: ListCategoriesRequest.ListCategoriesResult
         if (Common.isNetworkAvailable(context)) {
-            Loader(this).executeOnExecutor(EXECUTOR)
+            Execute({
+                result = ListCategoriesRequest().request()
+            }, {
+                parseResult(result)
+            })
         } else {
             screenError.value = ScreenError.NO_INTERNET
         }
+    }
+
+    private fun parseResult(result: ListCategoriesRequest.ListCategoriesResult) {
+        val appsCategories = ArrayList<Category>()
+        val gamesCategories = ArrayList<Category>()
+        result.appsCategories.forEach { id ->
+            appsCategories.add(Category(null, id))
+        }
+        result.gamesCategories.forEach { id ->
+            gamesCategories.add(Category(null, id))
+        }
+        applicationsCategoriesList.value = appsCategories
+        gamesCategoriesList.value = gamesCategories
     }
 }

@@ -1,8 +1,11 @@
 package io.eelo.appinstaller.search
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.database.MatrixCursor
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.support.v4.app.Fragment
 import android.support.v4.widget.CursorAdapter
 import android.support.v4.widget.SimpleCursorAdapter
@@ -12,11 +15,11 @@ import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.eelo.appinstaller.R
-import android.provider.BaseColumns
-import android.database.MatrixCursor
+import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
+import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.search.viewModel.SearchViewModel
 import android.app.Activity

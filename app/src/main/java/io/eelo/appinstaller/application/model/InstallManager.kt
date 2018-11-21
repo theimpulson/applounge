@@ -7,17 +7,15 @@ import java.util.concurrent.ArrayBlockingQueue
 class InstallManager {
 
     private val apps = HashMap<String, Application>()
-    private val downloading = ArrayBlockingQueue<String>(1000)
-    private val installing = ArrayBlockingQueue<String>(1000)
+    private val downloading = ArrayBlockingQueue<String>(100)
+    private val installing = ArrayBlockingQueue<String>(100)
 
     @Synchronized
-    fun findOrCreateApp(context: Context, data: ApplicationData): Application {
-        if (!apps.containsKey(data.packageName)) {
-            apps[data.packageName] = Application(data, context, this)
-        } else {
-            apps[data.packageName]!!.data.update(data)
+    fun findOrCreateApp(packageName: String): Application {
+        if (!apps.containsKey(packageName)) {
+            apps[packageName] = Application(packageName, this)
         }
-        val app = apps[data.packageName]!!
+        val app = apps[packageName]!!
         app.incrementUses()
         return app
     }
@@ -62,9 +60,8 @@ class InstallManager {
     }
 
     fun tryRemove(app: Application) {
-        val packageName = app.data.packageName
-        if (!app.isUsed() && !installing.contains(packageName) && !downloading.contains(packageName)) {
-            apps.remove(packageName)
+        if (!app.isUsed() && !installing.contains(app.packageName) && !downloading.contains(app.packageName)) {
+            apps.remove(app.packageName)
         }
     }
 }

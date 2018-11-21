@@ -1,11 +1,12 @@
 package io.eelo.appinstaller.application.model
 
+import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.utils.Constants
 import java.io.*
 import java.net.URL
 import java.net.URLConnection
 
-class Downloader(private val data: ApplicationData, private val apkFile: File) {
+class Downloader {
     var count = 0
         private set
     var total = 0
@@ -17,15 +18,15 @@ class Downloader(private val data: ApplicationData, private val apkFile: File) {
     }
 
     @Throws(IOException::class)
-    fun download() {
-        createApkFile()
-        val url = URL(Constants.DOWNLOAD_URL + data.loadLatestVersion().downloadLink)
+    fun download(data: FullData, apkFile: File) {
+        createApkFile(apkFile)
+        val url = URL(Constants.DOWNLOAD_URL + data.getLastVersion().downloadLink)
         val connection = url.openConnection()
         total = connection.contentLength
-        transferBytes(connection)
+        transferBytes(connection, apkFile)
     }
 
-    private fun createApkFile() {
+    private fun createApkFile(apkFile: File) {
         if (apkFile.exists()) {
             apkFile.delete()
         }
@@ -35,7 +36,7 @@ class Downloader(private val data: ApplicationData, private val apkFile: File) {
     }
 
     @Throws(IOException::class)
-    private fun transferBytes(connection: URLConnection) {
+    private fun transferBytes(connection: URLConnection, apkFile: File) {
         connection.getInputStream().use { input ->
             FileOutputStream(apkFile).use { output ->
                 notifier.start()

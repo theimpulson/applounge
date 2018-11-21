@@ -3,7 +3,6 @@ package io.eelo.appinstaller.application
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -35,11 +34,9 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        // Get application package name from intent
         val applicationPackageName: String? = intent.getStringExtra(APPLICATION_PACKAGE_NAME_KEY)
         if (!applicationPackageName.isNullOrEmpty()) {
-            // Bind to the InstallManagerService and initialise applicationF
-            InitialiseTask().executeOnExecutor(Common.EXECUTOR, applicationPackageName)
+            initialise(applicationPackageName!!)
         }
     }
 
@@ -63,6 +60,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         return true
     }
 
+    @SuppressLint("SetTextI18n")
     private fun onApplicationInfoLoaded() {
         val appIcon = findViewById<ImageView>(R.id.app_icon)
         val appTitle = findViewById<TextView>(R.id.app_title)
@@ -114,7 +112,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
 
         appDescriptionContainer.setOnClickListener {
             val intent = Intent(this, ApplicationDescriptionActivity::class.java)
-            intent.putExtra(APPLICATION_DESCRIPTION_KEY, application.data.description)
+            intent.putExtra(APPLICATION_DESCRIPTION_KEY, application.fullData!!.description)
             startActivity(intent)
         }
 
@@ -159,20 +157,14 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         }
     }
 
-    private inner class InitialiseTask : AsyncTask<String, Any, Any>() {
-        override fun doInBackground(vararg params: String): Any? {
-            val context = this@ApplicationActivity
-            val installManager = installManagerGetter.connectAndGet(context)
-            application = installManager.findOrCreateApp(context, ApplicationData(params[0]))
-            if (application.data.fullnessLevel != 2) {
-                application.searchFullData(context)
-            }
-            return null
-        }
-
-        override fun onPostExecute(result: Any?) {
+    private fun initialise(packageName: String) {
+        Execute({
+            val installManager = installManagerGetter.connectAndGet(this)
+            application = installManager.findOrCreateApp(packageName)
+            application.assertFullData(this)
+        }, {
             onApplicationInfoLoaded()
-        }
+        })
     }
 
     override fun onDestroy() {
