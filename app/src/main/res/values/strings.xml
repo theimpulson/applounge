@@ -35,6 +35,9 @@
     <string name="applications_categories_title">Apps</string>
     <string name="games_categories_title">Games</string>
 
+    <!-- Search fragment -->
+    <string name="search_splash_title">Search for an app</string>
+
     <!-- Search Fragment -->
     <string name="search_description">Search for an app</string>
 

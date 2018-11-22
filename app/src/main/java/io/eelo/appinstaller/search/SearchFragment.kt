@@ -33,6 +33,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     private lateinit var searchView: SearchView
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
+    private lateinit var splashContainer: LinearLayout
     private var applicationList = ArrayList<Application>()
     private var installManager: InstallManager? = null
 
@@ -52,12 +53,18 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         searchView = view.findViewById(R.id.search_view)
         recyclerView = view.findViewById(R.id.app_list)
         progressBar = view.findViewById(R.id.progress_bar)
+        splashContainer = view.findViewById(R.id.splash_container)
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
 
         searchViewModel.initialise(installManager!!)
         recyclerView.visibility = View.GONE
         progressBar.visibility = View.GONE
+        if (searchViewModel.getScreenError().value == null && searchViewModel.getApplications().value!!.isEmpty()) {
+            splashContainer.visibility = View.VISIBLE
+        } else {
+            splashContainer.visibility = View.GONE
+        }
         errorContainer.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
             progressBar.visibility = View.VISIBLE
@@ -118,6 +125,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             focusView!!.requestFocus()
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
+            splashContainer.visibility = View.GONE
             searchViewModel.onSearchQuerySubmitted(context!!, it)
         }
         return false
