@@ -45,6 +45,7 @@ class SearchModel : SearchModelInterface {
             element = SearchElement(searchQuery, installManager!!, this)
             loadMore(context)
         } else {
+            applicationList.value = ArrayList()
             screenError.value = ScreenError.NO_INTERNET
         }
     }
@@ -55,5 +56,8 @@ class SearchModel : SearchModelInterface {
 
     override fun onSearchComplete(applicationList: ArrayList<Application>) {
         this.applicationList.value = applicationList
+        if (applicationList.isEmpty()) {
+            screenError.value = ScreenError.SEARCH_NO_RESULTS
+        }
     }
 }

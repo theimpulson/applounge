@@ -34,5 +34,7 @@ object Common {
             R.string.error_request_timeout
         ScreenError.UNKNOWN ->
             R.string.error_unknown
+        ScreenError.SEARCH_NO_RESULTS ->
+            R.string.error_search_no_results
     }
 }

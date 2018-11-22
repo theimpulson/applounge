@@ -88,8 +88,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             applicationList.addAll(searchViewModel.getApplications().value!!)
             progressBar.visibility = View.GONE
             recyclerView.adapter.notifyDataSetChanged()
-            recyclerView.visibility = View.VISIBLE
             recyclerView.scrollToPosition(0)
+            if (applicationList.isEmpty()) recyclerView.visibility = View.GONE else recyclerView.visibility = View.VISIBLE
         })
 
         // Bind to the screen error

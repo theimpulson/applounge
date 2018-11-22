@@ -4,5 +4,6 @@ enum class ScreenError {
     NO_INTERNET,
     SERVER_UNAVAILABLE,
     REQUEST_TIMEOUT,
-    UNKNOWN
+    UNKNOWN,
+    SEARCH_NO_RESULTS
 }

@@ -57,6 +57,7 @@
     <string name="error_server_unavailable">Server unavailable! Please try again later.</string>
     <string name="error_request_timeout">Server took too long to respond! Please try again later.</string>
     <string name="error_unknown">Something went wrong! Please try again later.</string>
+    <string name="error_search_no_results">No apps found.</string>
     <string name="error_resolve">Retry</string>
 
 </resources>
