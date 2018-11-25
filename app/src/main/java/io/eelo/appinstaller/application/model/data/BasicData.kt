@@ -10,8 +10,8 @@ import io.eelo.appinstaller.utils.ImagesLoader
 import java.net.URL
 
 class BasicData @JsonCreator
-constructor(@param:JsonProperty("_id") val packageName: String,
-            @param:JsonProperty("id") val id: String,
+constructor(@param:JsonProperty("package_name") val packageName: String,
+            @param:JsonProperty("_id") val id: String,
             @param:JsonProperty("name") val name: String,
             @param:JsonProperty("textScore") val score: Float,
             @param:JsonProperty("last_modified") val lastModified: String,

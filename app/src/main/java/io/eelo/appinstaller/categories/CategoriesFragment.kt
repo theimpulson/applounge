@@ -119,6 +119,7 @@ class CategoriesFragment : Fragment() {
             textView.width = itemWidth
             textView.setPadding(itemPadding, itemPadding, itemPadding, itemPadding)
             textView.text = it.title
+            textView.setTextColor(resources.getColor(android.R.color.black))
             textView.textSize = 16.0f
             textView.gravity = Gravity.CENTER
             textView.maxLines = 1
@@ -147,6 +148,7 @@ class CategoriesFragment : Fragment() {
             textView.width = itemWidth
             textView.setPadding(itemPadding, itemPadding, itemPadding, itemPadding)
             textView.text = it.title
+            textView.setTextColor(resources.getColor(android.R.color.black))
             textView.textSize = 16.0f
             textView.gravity = Gravity.CENTER
             textView.maxLines = 1
