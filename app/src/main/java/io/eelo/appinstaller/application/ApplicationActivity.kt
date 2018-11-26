@@ -3,10 +3,12 @@ package io.eelo.appinstaller.application
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.Html
+import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,10 +22,15 @@ import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
 import io.eelo.appinstaller.utils.Constants.APPLICATION_PACKAGE_NAME_KEY
 import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.activity_application.*
+import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
 class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     private lateinit var application: Application
     private val installManagerGetter = InstallManagerGetter()
+    private var imageWidth = 0
+    private var imageHeight = 0
+    private var imageMargin = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +40,8 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        initialiseDimensions()
 
         val applicationPackageName: String? = intent.getStringExtra(APPLICATION_PACKAGE_NAME_KEY)
         if (!applicationPackageName.isNullOrEmpty()) {
@@ -58,6 +67,17 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             }
         }
         return true
+    }
+
+    private fun initialiseDimensions() {
+        // Do some math and figure out item width, padding and margin
+        val metrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(metrics)
+        val logicalDensity = metrics.density
+
+        imageWidth = Math.ceil(120 * logicalDensity.toDouble()).roundToInt()
+        imageHeight = Math.ceil(210 * logicalDensity.toDouble()).roundToInt()
+        imageMargin = Math.ceil(4 * logicalDensity.toDouble()).roundToInt()
     }
 
     private fun onApplicationInfoLoaded() {
@@ -118,14 +138,14 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             startActivity(intent)
         }
 
-        appRating.text = basicData.score.toString()
+        val decimalFormat = DecimalFormat("##.0")
+        appRating.text = decimalFormat.format(basicData.score).toString()
         appPrivacyScore.text = fullData.privacyScore.toString()
         appEnergyScore.text = fullData.energyScore.toString()
 
-        /*if (application.data.images.isNotEmpty()) {
-            // TODO Load app images/screenshots
-            appImagesContainer.visibility = View.VISIBLE
-        }*/
+        basicData.loadImagesAsyncly {
+            showImages(it)
+        }
 
         application.addListener(this)
         stateChanged(application.state)
@@ -167,6 +187,22 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         }, {
             onApplicationInfoLoaded()
         })
+    }
+
+    // TODO Handle landscape images better
+    private fun showImages(images: List<Bitmap>) {
+        val imagesContainer = app_images_container
+        imagesContainer.removeAllViews()
+        images.forEach {
+            val imageView = ImageView(this)
+            val layoutParams = LinearLayout.LayoutParams(imageWidth, imageHeight)
+            layoutParams.leftMargin = imageMargin
+            layoutParams.rightMargin = imageMargin
+            imageView.layoutParams = layoutParams
+            imageView.setImageBitmap(it)
+            imagesContainer.addView(imageView)
+        }
+        imagesContainer.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {
