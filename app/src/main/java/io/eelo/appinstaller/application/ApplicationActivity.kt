@@ -189,13 +189,17 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         })
     }
 
-    // TODO Handle landscape images better
     private fun showImages(images: List<Bitmap>) {
         val imagesContainer = app_images_container
         imagesContainer.removeAllViews()
         images.forEach {
             val imageView = ImageView(this)
-            val layoutParams = LinearLayout.LayoutParams(imageWidth, imageHeight)
+            val layoutParams =
+                    if (it.height < it.width) {
+                        LinearLayout.LayoutParams(imageHeight, imageWidth)
+                    } else {
+                        LinearLayout.LayoutParams(imageWidth, imageHeight)
+                    }
             layoutParams.leftMargin = imageMargin
             layoutParams.rightMargin = imageMargin
             imageView.layoutParams = layoutParams
