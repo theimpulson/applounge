@@ -99,4 +99,11 @@ class HomeFragment : Fragment() {
         scroller.isAccessible = true
         scroller.set(imageCarousel, ImageCarouselScroller(context!!))
     }
+
+    override fun onDestroy() {
+        if (::categoryList.isInitialized) {
+            (categoryList.adapter as HomeCategoryAdapter).removeApplicationUses()
+        }
+        super.onDestroy()
+    }
 }

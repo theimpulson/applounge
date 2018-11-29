@@ -20,4 +20,10 @@ class ApplicationListAdapter(private val activity: Activity, private val applica
     }
 
     override fun getItemCount() = applicationList.size
+
+    fun removeApplicationUses() {
+        applicationList.forEach {
+            it.decrementUses()
+        }
+    }
 }

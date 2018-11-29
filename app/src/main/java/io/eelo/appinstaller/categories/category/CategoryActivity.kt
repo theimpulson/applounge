@@ -108,6 +108,9 @@ class CategoryActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        if (::recyclerView.isInitialized) {
+            (recyclerView.adapter as ApplicationListAdapter).removeApplicationUses()
+        }
         installManagerGetter.disconnect(this)
     }
 }

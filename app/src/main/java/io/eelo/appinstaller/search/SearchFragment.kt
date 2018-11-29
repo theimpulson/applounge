@@ -172,4 +172,11 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         }
         super.onResume()
     }
+
+    override fun onDestroy() {
+        if (::recyclerView.isInitialized) {
+            (recyclerView.adapter as ApplicationListAdapter).removeApplicationUses()
+        }
+        super.onDestroy()
+    }
 }

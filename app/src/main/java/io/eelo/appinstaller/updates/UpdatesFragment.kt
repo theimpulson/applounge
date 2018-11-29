@@ -21,6 +21,7 @@ import io.eelo.appinstaller.utils.Common
 class UpdatesFragment : Fragment() {
     private lateinit var updatesViewModel: UpdatesViewModel
     private var installManager: InstallManager? = null
+    private lateinit var recyclerView: RecyclerView
 
     fun initialise(installManager: InstallManager) {
         this.installManager = installManager
@@ -34,14 +35,14 @@ class UpdatesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_updates, container, false)
 
         updatesViewModel = ViewModelProviders.of(activity!!).get(UpdatesViewModel::class.java)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.app_list)
+        recyclerView = view.findViewById(R.id.app_list)
         val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
 
         // Initialise UI elements
         updatesViewModel.initialise(installManager!!)
-        initializeRecyclerView(recyclerView)
+        initializeRecyclerView()
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
@@ -73,9 +74,16 @@ class UpdatesFragment : Fragment() {
         return view
     }
 
-    private fun initializeRecyclerView(recyclerView: RecyclerView) {
+    private fun initializeRecyclerView() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = ApplicationListAdapter(activity!!, updatesViewModel.getApplications().value!!)
+    }
+
+    override fun onDestroy() {
+        if (::recyclerView.isInitialized) {
+            (recyclerView.adapter as ApplicationListAdapter).removeApplicationUses()
+        }
+        super.onDestroy()
     }
 }

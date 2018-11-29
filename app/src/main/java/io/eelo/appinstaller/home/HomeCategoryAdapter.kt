@@ -45,4 +45,12 @@ class HomeCategoryAdapter(private val activity: Activity, private val categories
             applicationList.adapter = SmallApplicationListAdapter(activity, apps)
         }
     }
+
+    fun removeApplicationUses() {
+        categoriesMap.forEach {
+            it.value.forEach { application ->
+                application.decrementUses()
+            }
+        }
+    }
 }
