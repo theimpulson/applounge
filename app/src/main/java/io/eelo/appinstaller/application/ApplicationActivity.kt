@@ -211,6 +211,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        application.decrementUses()
         installManagerGetter.disconnect(this)
     }
 }
