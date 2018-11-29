@@ -12,6 +12,7 @@ object Constants {
     const val SUGGESTION_KEY = "suggestion"
 
     // Application
+    const val WEB_STORE_URL = "https://cleanapk.org/#/app/"
     const val APK_FOLDER = "/AppInstaller/"
     const val APPLICATION_PACKAGE_NAME_KEY = "application_package_name"
     const val APPLICATION_DESCRIPTION_KEY = "application_description"

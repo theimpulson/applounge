@@ -20,6 +20,7 @@ import io.eelo.appinstaller.utils.Common.toMiB
 import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
 import io.eelo.appinstaller.utils.Constants.APPLICATION_PACKAGE_NAME_KEY
+import io.eelo.appinstaller.utils.Constants.WEB_STORE_URL
 import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.activity_application.*
 import java.text.DecimalFormat
@@ -57,7 +58,12 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when {
             item?.itemId == R.id.action_share -> {
-                // TODO Show sharing menu
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, WEB_STORE_URL + application.basicData!!.id)
+                    type = "text/plain"
+                }
+                startActivity(shareIntent)
             }
             item?.itemId == android.R.id.home -> {
                 finish()
