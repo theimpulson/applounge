@@ -101,7 +101,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        if (::categoryList.isInitialized) {
+        if (::categoryList.isInitialized && categoryList.adapter != null) {
             (categoryList.adapter as HomeCategoryAdapter).removeApplicationUses()
         }
         super.onDestroy()

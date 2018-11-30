@@ -81,7 +81,7 @@ class UpdatesFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        if (::recyclerView.isInitialized) {
+        if (::recyclerView.isInitialized && recyclerView.adapter != null) {
             (recyclerView.adapter as ApplicationListAdapter).removeApplicationUses()
         }
         super.onDestroy()
