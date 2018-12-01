@@ -133,7 +133,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
     override fun onQueryTextChange(newText: String?): Boolean {
         searchView.query?.let {
-            searchViewModel.onSearchQueryChanged(it.toString())
+            searchViewModel.onSearchQueryChanged(context!!, it.toString())
         }
         return true
     }

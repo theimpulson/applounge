@@ -28,9 +28,11 @@ class SearchModel : SearchModelInterface {
         this.installManager = installManager
     }
 
-    override fun searchSuggestions(searchQuery: String) {
-        val suggestions = arrayListOf(searchQuery, searchQuery + "a", searchQuery + "b", searchQuery + "c")
-        onSearchSuggestionsRetrieved(suggestions)
+    override fun searchSuggestions(context: Context, searchQuery: String) {
+        if (Common.isNetworkAvailable(context)) {
+            SearchSuggestionsTask(searchQuery, installManager!!, this)
+                    .executeOnExecutor(Common.EXECUTOR, context)
+        }
     }
 
     override fun onSearchSuggestionsRetrieved(suggestionsList: ArrayList<String>) {

@@ -7,7 +7,7 @@ import io.eelo.appinstaller.application.model.InstallManager
 interface SearchModelInterface {
     fun initialise(installManager: InstallManager)
 
-    fun searchSuggestions(searchQuery: String)
+    fun searchSuggestions(context: Context, searchQuery: String)
 
     fun onSearchSuggestionsRetrieved(suggestionsList: ArrayList<String>)
 

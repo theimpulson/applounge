@@ -15,7 +15,7 @@ interface SearchViewModelInterface {
 
     fun getScreenError(): MutableLiveData<ScreenError>
 
-    fun onSearchQueryChanged(searchQuery: String)
+    fun onSearchQueryChanged(context: Context, searchQuery: String)
 
     fun onSearchQuerySubmitted(context: Context, searchQuery: String)
 }

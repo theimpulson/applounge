@@ -27,8 +27,8 @@ class SearchViewModel : ViewModel(), SearchViewModelInterface {
         return searchModel.screenError
     }
 
-    override fun onSearchQueryChanged(searchQuery: String) {
-        searchModel.searchSuggestions(searchQuery)
+    override fun onSearchQueryChanged(context: Context, searchQuery: String) {
+        searchModel.searchSuggestions(context, searchQuery)
     }
 
     override fun onSearchQuerySubmitted(context: Context, searchQuery: String) {

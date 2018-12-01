@@ -10,6 +10,7 @@ object Constants {
     // Search
     const val RESULTS_PER_PAGE = 20
     const val SUGGESTION_KEY = "suggestion"
+    const val SUGGESTIONS_RESULTS = 5
 
     // Application
     const val WEB_STORE_URL = "https://cleanapk.org/#/app/"
