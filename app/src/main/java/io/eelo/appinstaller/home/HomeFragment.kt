@@ -14,14 +14,16 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
+import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.common.SmallApplicationListAdapter
 import io.eelo.appinstaller.home.viewmodel.HomeViewModel
 import io.eelo.appinstaller.utils.Common
 
 class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var imageCarousel: ViewPager
-    private lateinit var categoryList: RecyclerView
+    private lateinit var categoryList: LinearLayout
     private lateinit var progressBar: ProgressBar
     private var installManager: InstallManager? = null
 
@@ -48,7 +50,6 @@ class HomeFragment : Fragment() {
         setCustomScroller()
         imageCarousel.visibility = View.GONE
         categoryList.visibility = View.GONE
-        categoryList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
@@ -70,7 +71,7 @@ class HomeFragment : Fragment() {
         // Bind categories adapter to categories in view model
         homeViewModel.getCategories().observe(this, Observer {
             if (homeViewModel.getCategories().value!!.isNotEmpty()) {
-                categoryList.adapter = HomeCategoryAdapter(activity!!, homeViewModel.getCategories().value!!)
+                showCategories(it!!)
                 categoryList.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
             }
@@ -100,9 +101,24 @@ class HomeFragment : Fragment() {
         scroller.set(imageCarousel, ImageCarouselScroller(context!!))
     }
 
+    private fun showCategories(categories: LinkedHashMap<String, ArrayList<Application>>) {
+        categoryList.removeAllViews()
+        categories.forEach {
+            val homeCategory = HomeCategory(context!!, it.key)
+            val applicationList = homeCategory.findViewById<RecyclerView>(R.id.application_list)
+            applicationList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            applicationList.adapter = SmallApplicationListAdapter(activity!!, it.value)
+            categoryList.addView(homeCategory)
+        }
+    }
+
     override fun onDestroy() {
-        if (::categoryList.isInitialized && categoryList.adapter != null) {
-            (categoryList.adapter as HomeCategoryAdapter).removeApplicationUses()
+        if (::categoryList.isInitialized) {
+            homeViewModel.getCategories().value!!.forEach {
+                it.value.forEach { application ->
+                    application.decrementUses()
+                }
+            }
         }
         super.onDestroy()
     }

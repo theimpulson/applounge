@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
+    <io.eelo.appinstaller.utils.CustomNestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none">
@@ -20,17 +20,16 @@
                 android:layout_height="160dp"
                 android:layout_marginTop="@dimen/layout_margin_large" />
 
-            <android.support.v7.widget.RecyclerView
+            <LinearLayout
                 android:id="@+id/category_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/layout_margin_large"
-                android:nestedScrollingEnabled="false"
-                android:scrollbars="none" />
+                android:orientation="vertical" />
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </io.eelo.appinstaller.utils.CustomNestedScrollView>
 
     <include
         layout="@layout/error_layout"
