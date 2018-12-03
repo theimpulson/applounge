@@ -13,7 +13,7 @@ class BasicData @JsonCreator
 constructor(@param:JsonProperty("package_name") val packageName: String,
             @param:JsonProperty("_id") val id: String,
             @param:JsonProperty("name") val name: String,
-            @param:JsonProperty("textScore") val score: Float,
+            @param:JsonProperty("search_score") val score: Float,
             @param:JsonProperty("last_modified") val lastModified: String,
             @param:JsonProperty("latest_version") val lastVersion: String,
             @param:JsonProperty("latest_version_number") var lastVersionNumber_a: String?,
