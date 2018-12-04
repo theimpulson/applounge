@@ -61,12 +61,14 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when {
             item?.itemId == R.id.action_share -> {
-                val shareIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, WEB_STORE_URL + application.basicData!!.id)
-                    type = "text/plain"
+                if (::application.isInitialized) {
+                    val shareIntent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, WEB_STORE_URL + application.basicData!!.id)
+                        type = "text/plain"
+                    }
+                    startActivity(shareIntent)
                 }
-                startActivity(shareIntent)
             }
             item?.itemId == android.R.id.home -> {
                 finish()

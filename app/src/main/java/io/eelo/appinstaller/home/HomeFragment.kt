@@ -48,7 +48,7 @@ class HomeFragment : Fragment() {
         // Initialise UI elements
         homeViewModel.initialise(installManager!!)
         setCustomScroller()
-        imageCarousel.visibility = View.GONE
+        imageCarousel.visibility = View.INVISIBLE
         categoryList.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
