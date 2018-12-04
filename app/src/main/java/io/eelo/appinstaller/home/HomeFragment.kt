@@ -23,6 +23,7 @@ import io.eelo.appinstaller.utils.Common
 class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var imageCarousel: ViewPager
+    private lateinit var divider: View
     private lateinit var categoryList: LinearLayout
     private lateinit var progressBar: ProgressBar
     private var installManager: InstallManager? = null
@@ -40,6 +41,7 @@ class HomeFragment : Fragment() {
 
         homeViewModel = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
         imageCarousel = view.findViewById(R.id.image_carousel)
+        divider = view.findViewById(R.id.divider)
         categoryList = view.findViewById(R.id.category_list)
         progressBar = view.findViewById(R.id.progress_bar)
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
@@ -49,6 +51,7 @@ class HomeFragment : Fragment() {
         homeViewModel.initialise(installManager!!)
         setCustomScroller()
         imageCarousel.visibility = View.INVISIBLE
+        divider.visibility = View.INVISIBLE
         categoryList.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
@@ -73,6 +76,7 @@ class HomeFragment : Fragment() {
             if (homeViewModel.getCategories().value!!.isNotEmpty()) {
                 showCategories(it!!)
                 categoryList.visibility = View.VISIBLE
+                divider.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
             }
         })
