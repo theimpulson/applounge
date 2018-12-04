@@ -38,17 +38,19 @@ class ImagesLoader(private val imagesUri: Array<String>) {
         return makeNonNull(result)
     }
 
-    private fun makeNonNull(images: Array<Bitmap?>):List<Bitmap> {
+    private fun makeNonNull(images: Array<Bitmap?>): List<Bitmap> {
         val result = ArrayList<Bitmap>()
         images.forEach {
-            result.add(it!!)
+            if (it != null) {
+                result.add(it)
+            }
         }
         return result
     }
 
     private class Image(private val uri: String, val key: Int) : AsyncTask<BlockingQueue<Image>, Any, Any>() {
 
-        lateinit var image: Bitmap
+        var image: Bitmap? = null
 
         override fun doInBackground(vararg params: BlockingQueue<Image>): Any? {
             val queue = params[0]

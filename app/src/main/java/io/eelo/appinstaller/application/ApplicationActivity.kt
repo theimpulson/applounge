@@ -9,17 +9,20 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.Html
 import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import io.eelo.appinstaller.R
+import io.eelo.appinstaller.ScreenshotsActivity
 import io.eelo.appinstaller.application.model.*
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.toMiB
 import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
 import io.eelo.appinstaller.utils.Constants.APPLICATION_PACKAGE_NAME_KEY
+import io.eelo.appinstaller.utils.Constants.SELECTED_APPLICATION_SCREENSHOT_KEY
 import io.eelo.appinstaller.utils.Constants.WEB_STORE_URL
 import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.activity_application.*
@@ -209,8 +212,20 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             layoutParams.leftMargin = imageMargin
             layoutParams.rightMargin = imageMargin
             imageView.layoutParams = layoutParams
+            imageView.isClickable = true
             imageView.setImageBitmap(it)
+            val outValue = TypedValue()
+            theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                imageView.foreground = getDrawable(outValue.resourceId)
+            }
             imagesContainer.addView(imageView)
+            imageView.setOnClickListener { _ ->
+                val intent = Intent(this, ScreenshotsActivity::class.java)
+                intent.putExtra(APPLICATION_PACKAGE_NAME_KEY, application.packageName)
+                intent.putExtra(SELECTED_APPLICATION_SCREENSHOT_KEY, images.indexOf(it))
+                startActivity(intent)
+            }
         }
         imagesContainer.visibility = View.VISIBLE
     }

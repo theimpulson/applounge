@@ -37,7 +37,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
         <activity android:name=".application.ApplicationDescriptionActivity" />
+        <activity
+            android:name=".ScreenshotsActivity"
+            android:theme="@style/FullScreenTheme" />
     </application>
 
 </manifest>
