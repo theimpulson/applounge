@@ -42,12 +42,15 @@
     <string name="search_description">Search for an app</string>
 
     <!-- Settings Fragment -->
+    <string name="preference_theme_title">Theme</string>
+    <string name="preference_theme_dark_title">Dark theme</string>
+    <string name="preference_theme_dark_description">Use a dark theme throughout the app</string>
     <string name="preference_updates_title">Updates</string>
     <string name="preference_update_interval_default">24</string>
     <string name="preference_update_interval_title">Automatic update interval</string>
     <string name="preference_update_wifi_only_title">Only on Wi-Fi</string>
     <string name="preference_update_wifi_only_description">Update apps automatically only on
-        un-metered networks like Wi-Fi</string>
+        un-metered networks such as Wi-Fi</string>
     <string name="preference_update_install_automatically_title">Automatically install updates</string>
     <string name="preference_update_install_automatically_description">Download and install app
         updates in the background</string>

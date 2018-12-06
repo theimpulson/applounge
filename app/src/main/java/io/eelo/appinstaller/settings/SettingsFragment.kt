@@ -6,14 +6,8 @@ import io.eelo.appinstaller.R
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         // Create preferences
         addPreferencesFromResource(R.xml.preferences)
-    }
-
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        // Empty
     }
 }

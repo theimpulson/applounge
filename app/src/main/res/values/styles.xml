@@ -1,17 +1,19 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorAccent</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
 
         <item name="autoCompleteTextViewStyle">@style/SearchSuggestionTheme</item>
         <item name="textAppearanceSearchResultTitle">@style/SearchSuggestionTextTheme</item>
     </style>
+
+    <style name="AppTheme" parent="BaseTheme" />
 
     <style name="SearchSuggestionTheme" parent="Widget.AppCompat.Light.AutoCompleteTextView">
         <item name="android:popupBackground">#FAFAFA</item>
@@ -24,6 +26,10 @@
     <style name="FullScreenTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="BottomNavigationViewTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/colorAccent</item>
     </style>
 
 </resources>
