@@ -18,4 +18,6 @@
     <dimen name="default_radius">4dp</dimen>
     <dimen name="category_radius">16dp</dimen>
 
+    <dimen name="install_button_width">72dp</dimen>
+
 </resources>

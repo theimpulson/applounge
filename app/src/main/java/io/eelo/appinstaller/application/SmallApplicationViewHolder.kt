@@ -16,6 +16,7 @@ import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
 import io.eelo.appinstaller.utils.Common.toMiB
 import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.application_list_item.view.*
+import kotlinx.android.synthetic.main.install_button_layout.view.*
 
 class SmallApplicationViewHolder(private val activity: Activity, private val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
 

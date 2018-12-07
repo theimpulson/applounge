@@ -26,6 +26,7 @@ import io.eelo.appinstaller.utils.Constants.SELECTED_APPLICATION_SCREENSHOT_KEY
 import io.eelo.appinstaller.utils.Constants.WEB_STORE_URL
 import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.activity_application.*
+import kotlinx.android.synthetic.main.install_button_layout.*
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 

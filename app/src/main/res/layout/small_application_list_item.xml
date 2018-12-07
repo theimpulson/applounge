@@ -36,22 +36,12 @@
         android:textSize="@dimen/text_size_small"
         tools:text="App title" />
 
-    <Button
-        android:id="@+id/app_install"
-        android:layout_width="wrap_content"
+    <include
+        layout="@layout/install_button_layout"
+        android:layout_width="@dimen/install_button_width"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_title"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/layout_margin_small"
-        android:background="@drawable/app_install_border"
-        android:ellipsize="end"
-        android:foreground="?android:selectableItemBackground"
-        android:maxLines="1"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:padding="@dimen/layout_padding_medium"
-        android:text="@string/action_install"
-        android:textSize="@dimen/text_size_small" />
+        android:layout_marginTop="@dimen/layout_margin_small" />
 
 </RelativeLayout>

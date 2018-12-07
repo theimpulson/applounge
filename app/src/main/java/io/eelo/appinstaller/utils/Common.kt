@@ -22,7 +22,7 @@ object Common {
 
     fun toMiB(bytes: Int): Double {
         val inMiB = bytes.div(1048576.0)
-        return inMiB.times(100.0).roundToInt().div(100.0)
+        return inMiB.times(10.0).roundToInt().div(10.0)
     }
 
     fun getScreenErrorDescriptionId(screenError: ScreenError) = when (screenError) {

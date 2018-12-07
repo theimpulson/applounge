@@ -14,8 +14,10 @@ import io.eelo.appinstaller.application.model.ApplicationStateListener
 import io.eelo.appinstaller.application.model.Downloader
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
+import io.eelo.appinstaller.utils.Common.toMiB
 import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.application_list_item.view.*
+import kotlinx.android.synthetic.main.install_button_layout.view.*
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
@@ -91,11 +93,6 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         downloader.addListener { count, total ->
             installButton.text = "${toMiB(count)}/${toMiB(total)} MiB"
         }
-    }
-
-    private fun toMiB(length: Int): Double {
-        val inMiB = length.div(1048576)
-        return inMiB.times(100.0).roundToInt().div(100.0)
     }
 
     override fun anErrorHasOccurred() {
