@@ -2,7 +2,7 @@ package io.eelo.appinstaller.application.model
 
 class Version(val downloadFlag: String?,
               val downloadLink: String,
-              val minAndroid: String?,
+              val minAndroid: String,
               val apkSHA: String?,
               val createdOn: String,
               val version: String,

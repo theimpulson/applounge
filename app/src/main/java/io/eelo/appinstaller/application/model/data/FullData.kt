@@ -44,7 +44,7 @@ constructor(
             val result = value as LinkedHashMap<*, *>
             versions[name] = Version(result["downloaded_flag"] as String?,
                     result["eelo_download_link"] as String,
-                    result["min_android"] as String?,
+                    result["min_android"] as String,
                     result["apk_file_sha1"] as String?,
                     result["created_on"] as String,
                     result["version"] as String,

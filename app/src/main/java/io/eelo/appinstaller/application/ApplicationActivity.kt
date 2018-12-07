@@ -107,13 +107,21 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         val appPrivacyScore = findViewById<TextView>(R.id.app_privacy_score)
         val appEnergyScore = findViewById<TextView>(R.id.app_energy_score)
         val appImagesContainer = findViewById<LinearLayout>(R.id.app_images_container)
+        val appImagesDivider = findViewById<View>(R.id.app_images_divider)
+        val appVersion = findViewById<TextView>(R.id.app_version)
+        val appUpdatedOn = findViewById<TextView>(R.id.app_updated_on)
+        val appMinAndroid = findViewById<TextView>(R.id.app_min_android)
+        val appSource = findViewById<TextView>(R.id.app_source)
+        val appLicence = findViewById<TextView>(R.id.app_licence)
 
         appTitle.visibility = View.GONE
         appAuthor.visibility = View.GONE
         appCategory.visibility = View.GONE
         appSize.visibility = View.GONE
         appDescriptionContainer.visibility = View.GONE
+        app_images_scroll_view.visibility = View.GONE
         appImagesContainer.visibility = View.GONE
+        appImagesDivider.visibility = View.GONE
 
         application.loadIcon(appIcon)
 
@@ -132,7 +140,10 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             appCategory.visibility = View.VISIBLE
         }
 
-        // TODO Show app size
+        if (fullData.getLastVersion().fileSize.isNotEmpty()) {
+            appSize.text = fullData.getLastVersion().fileSize
+            appSize.visibility = View.VISIBLE
+        }
 
         appInstall.setOnClickListener {
             application.buttonClicked(this)
@@ -156,6 +167,36 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
 
         basicData.loadImagesAsyncly {
             showImages(it)
+        }
+
+        if (fullData.getLastVersion().version.isNotEmpty()) {
+            appVersion.text = fullData.getLastVersion().version
+        } else {
+            appVersion.text = getString(R.string.not_available)
+        }
+
+        if (fullData.getLastVersion().createdOn.isNotEmpty()) {
+            appUpdatedOn.text = fullData.getLastVersion().createdOn
+        } else {
+            appUpdatedOn.text = getString(R.string.not_available)
+        }
+
+        if (fullData.getLastVersion().minAndroid.isNotEmpty()) {
+            appMinAndroid.text = fullData.getLastVersion().minAndroid
+        } else {
+            appMinAndroid.text = getString(R.string.not_available)
+        }
+
+        if (fullData.source.isNotEmpty()) {
+            appSource.text = fullData.source
+        } else {
+            appSource.text = getString(R.string.not_available)
+        }
+
+        if (fullData.licence.isNotEmpty()) {
+            appLicence.text = fullData.licence
+        } else {
+            appLicence.text = getString(R.string.not_available)
         }
 
         application.addListener(this)
@@ -228,8 +269,10 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
                 intent.putExtra(SELECTED_APPLICATION_SCREENSHOT_KEY, images.indexOf(it))
                 startActivity(intent)
             }
+            app_images_scroll_view.visibility = View.VISIBLE
+            imagesContainer.visibility = View.VISIBLE
+            app_images_divider.visibility = View.VISIBLE
         }
-        imagesContainer.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {

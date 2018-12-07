@@ -213,7 +213,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/layout_margin_small"
+                            android:layout_marginStart="@dimen/layout_margin_medium"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/app_rating"
@@ -260,7 +260,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/layout_margin_small"
+                            android:layout_marginStart="@dimen/layout_margin_medium"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/app_privacy_score"
@@ -306,7 +306,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/layout_margin_small"
+                            android:layout_marginStart="@dimen/layout_margin_medium"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/app_energy_score"
@@ -329,6 +329,7 @@
                 android:background="@color/colorDivider" />
 
             <HorizontalScrollView
+                android:id="@+id/app_images_scroll_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/layout_margin_large"
@@ -344,8 +345,242 @@
 
             </HorizontalScrollView>
 
+            <View
+                android:id="@+id/app_images_divider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_divider_height"
+                android:layout_marginStart="@dimen/layout_margin_medium"
+                android:layout_marginTop="@dimen/layout_margin_large"
+                android:layout_marginEnd="@dimen/layout_margin_medium"
+                android:background="@color/colorDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/layout_padding_large"
+                android:paddingTop="@dimen/layout_padding_large"
+                android:paddingEnd="@dimen/layout_padding_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_app_version" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/layout_margin_medium"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/app_version"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/text_size_large"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/app_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/layout_margin_medium"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_large" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_margin_medium"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_app_updated_on" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/layout_margin_medium"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/app_updated_on"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/text_size_large"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/app_updated_on"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/layout_margin_medium"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_large" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_margin_medium"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_app_min_android" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/layout_margin_medium"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/app_min_android"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/text_size_large"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/app_min_android"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/layout_margin_medium"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_large" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_margin_medium"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_app_source" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/layout_margin_medium"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/app_source"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/text_size_large"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/app_source"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/layout_margin_medium"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_large" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_margin_medium"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_app_licence" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/layout_margin_medium"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:text="@string/app_licence"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/text_size_large"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/app_licence"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/layout_margin_medium"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_large" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_divider_height"
+        android:background="@color/colorDivider"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
