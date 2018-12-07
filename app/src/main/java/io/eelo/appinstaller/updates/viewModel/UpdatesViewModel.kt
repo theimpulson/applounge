@@ -6,7 +6,7 @@ import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.updates.model.UpdatesModel
-import io.eelo.appinstaller.utils.ScreenError
+import io.eelo.appinstaller.utils.Error
 
 class UpdatesViewModel : ViewModel(), UpdatesViewModelInterface {
 
@@ -20,7 +20,7 @@ class UpdatesViewModel : ViewModel(), UpdatesViewModelInterface {
         return updatesModel.applicationList
     }
 
-    override fun getScreenError(): MutableLiveData<ScreenError> {
+    override fun getScreenError(): MutableLiveData<Error> {
         return updatesModel.screenError
     }
 

@@ -5,6 +5,7 @@ import android.os.AsyncTask
 import io.eelo.appinstaller.api.SearchRequest
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
 
@@ -28,7 +29,24 @@ class SearchElement(private val query: String, private val installManager: Insta
     }
 
     private fun loadMore(context: Context) {
-        val request = SearchRequest(query, nextPage, Constants.RESULTS_PER_PAGE).request()
-        apps.addAll(request.getApplications(installManager, context))
+        SearchRequest(query, nextPage, Constants.RESULTS_PER_PAGE).request { applicationError, searchResult ->
+            when (applicationError) {
+                null -> {
+                    apps.addAll(searchResult!!.getApplications(installManager, context))
+                }
+                Error.SERVER_UNAVAILABLE -> {
+                    // TODO Handle error
+                }
+                Error.REQUEST_TIMEOUT -> {
+                    // TODO Handle error
+                }
+                Error.UNKNOWN -> {
+                    // TODO Handle error
+                }
+                else -> {
+                    // TODO Handle error
+                }
+            }
+        }
     }
 }

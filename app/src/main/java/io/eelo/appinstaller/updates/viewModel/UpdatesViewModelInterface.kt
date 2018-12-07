@@ -4,7 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
-import io.eelo.appinstaller.utils.ScreenError
+import io.eelo.appinstaller.utils.Error
 
 interface UpdatesViewModelInterface {
 
@@ -12,7 +12,7 @@ interface UpdatesViewModelInterface {
 
     fun getApplications(): MutableLiveData<ArrayList<Application>>
 
-    fun getScreenError(): MutableLiveData<ScreenError>
+    fun getScreenError(): MutableLiveData<Error>
 
     fun loadApplicationList(context: Context)
 }

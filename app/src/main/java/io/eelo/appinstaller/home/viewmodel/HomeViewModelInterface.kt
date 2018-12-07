@@ -5,7 +5,7 @@ import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.home.model.BannerApplication
-import io.eelo.appinstaller.utils.ScreenError
+import io.eelo.appinstaller.utils.Error
 
 interface HomeViewModelInterface {
     fun initialise(installManager: InstallManager)
@@ -14,7 +14,7 @@ interface HomeViewModelInterface {
 
     fun getCategories(): MutableLiveData<LinkedHashMap<String, ArrayList<Application>>>
 
-    fun getScreenError(): MutableLiveData<ScreenError>
+    fun getScreenError(): MutableLiveData<Error>
 
     fun loadCategories(context: Context)
 }

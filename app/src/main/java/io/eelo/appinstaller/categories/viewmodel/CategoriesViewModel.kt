@@ -9,7 +9,7 @@ import io.eelo.appinstaller.categories.model.CategoriesModel
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
-import io.eelo.appinstaller.utils.ScreenError
+import io.eelo.appinstaller.utils.Error
 
 class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
     private val categoriesModel = CategoriesModel()
@@ -33,7 +33,7 @@ class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
         return gamesCategories
     }
 
-    override fun getScreenError(): MutableLiveData<ScreenError> {
+    override fun getScreenError(): MutableLiveData<Error> {
         return categoriesModel.screenError
     }
 

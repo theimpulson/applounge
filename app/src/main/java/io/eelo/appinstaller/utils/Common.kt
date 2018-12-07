@@ -25,16 +25,20 @@ object Common {
         return inMiB.times(10.0).roundToInt().div(10.0)
     }
 
-    fun getScreenErrorDescriptionId(screenError: ScreenError) = when (screenError) {
-        ScreenError.NO_INTERNET ->
+    fun getScreenErrorDescriptionId(screenError: Error) = when (screenError) {
+        Error.NO_INTERNET ->
             R.string.error_no_internet
-        ScreenError.SERVER_UNAVAILABLE ->
+        Error.SERVER_UNAVAILABLE ->
             R.string.error_server_unavailable
-        ScreenError.REQUEST_TIMEOUT ->
+        Error.REQUEST_TIMEOUT ->
             R.string.error_request_timeout
-        ScreenError.UNKNOWN ->
+        Error.UNKNOWN ->
             R.string.error_unknown
-        ScreenError.SEARCH_NO_RESULTS ->
-            R.string.error_search_no_results
+        Error.NO_RESULTS ->
+            R.string.error_no_results
+        Error.APK_CORRUPT ->
+            R.string.error_apk_corrupt
+        Error.INSTALL_FAILED ->
+            R.string.error_install_failed
     }
 }

@@ -12,13 +12,21 @@ class SearchSuggestionsTask(private val searchQuery: String,
     : AsyncTask<Context, Void, ArrayList<String>>() {
 
     override fun doInBackground(vararg context: Context): ArrayList<String> {
-        val searchRequest = SearchRequest(searchQuery, 1, Constants.SUGGESTIONS_RESULTS)
-                .request()
-        val applications = searchRequest.getApplications(installManager, context[0])
         val searchSuggestions = ArrayList<String>()
-        applications.forEach {
-            searchSuggestions.add(it.basicData!!.name)
-        }
+        SearchRequest(searchQuery, 1, Constants.SUGGESTIONS_RESULTS)
+                .request { applicationError, searchResult ->
+                    when (applicationError) {
+                        null -> {
+                            val applications = searchResult!!.getApplications(installManager, context[0])
+                            applications.forEach {
+                                searchSuggestions.add(it.basicData!!.name)
+                            }
+                        }
+                        else -> {
+                            // TODO Handle error
+                        }
+                    }
+                }
         return searchSuggestions
     }
 

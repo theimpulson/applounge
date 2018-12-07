@@ -5,13 +5,13 @@ import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.utils.Common
-import io.eelo.appinstaller.utils.ScreenError
+import io.eelo.appinstaller.utils.Error
 
 class HomeModel : HomeModelInterface {
     val applications = MutableLiveData<LinkedHashMap<String, ArrayList<Application>>>()
     val bannerApplications = MutableLiveData<ArrayList<BannerApplication>>()
     private var installManager: InstallManager? = null
-    var screenError = MutableLiveData<ScreenError>()
+    var screenError = MutableLiveData<Error>()
 
     init {
         if (applications.value == null) {
@@ -34,7 +34,7 @@ class HomeModel : HomeModelInterface {
         if (Common.isNetworkAvailable(context)) {
             ApplicationsLoader(this).executeOnExecutor(Common.EXECUTOR, context)
         } else {
-            screenError.value = ScreenError.NO_INTERNET
+            screenError.value = Error.NO_INTERNET
         }
     }
 }

@@ -5,11 +5,11 @@ import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.utils.Common
-import io.eelo.appinstaller.utils.ScreenError
+import io.eelo.appinstaller.utils.Error
 
 class UpdatesModel : UpdatesModelInterface {
     val applicationList = MutableLiveData<ArrayList<Application>>()
-    var screenError = MutableLiveData<ScreenError>()
+    var screenError = MutableLiveData<Error>()
 
     init {
         if (applicationList.value == null) {
@@ -23,7 +23,7 @@ class UpdatesModel : UpdatesModelInterface {
         if (Common.isNetworkAvailable(context)) {
             UnUpdatedAppsFinder(context.packageManager, this, installManager!!).execute(context)
         } else {
-            screenError.value = ScreenError.NO_INTERNET
+            screenError.value = Error.NO_INTERNET
         }
     }
 

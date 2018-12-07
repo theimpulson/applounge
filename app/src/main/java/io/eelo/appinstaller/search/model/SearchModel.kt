@@ -5,13 +5,13 @@ import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.utils.Common
-import io.eelo.appinstaller.utils.ScreenError
+import io.eelo.appinstaller.utils.Error
 
 class SearchModel : SearchModelInterface {
 
     val suggestionList = MutableLiveData<ArrayList<String>>()
     val applicationList = MutableLiveData<ArrayList<Application>>()
-    var screenError = MutableLiveData<ScreenError>()
+    var screenError = MutableLiveData<Error>()
     private var element: SearchElement? = null
     private var installManager: InstallManager? = null
 
@@ -48,7 +48,7 @@ class SearchModel : SearchModelInterface {
             loadMore(context)
         } else {
             applicationList.value = ArrayList()
-            screenError.value = ScreenError.NO_INTERNET
+            screenError.value = Error.NO_INTERNET
         }
     }
 
@@ -59,7 +59,7 @@ class SearchModel : SearchModelInterface {
     override fun onSearchComplete(applicationList: ArrayList<Application>) {
         this.applicationList.value = applicationList
         if (applicationList.isEmpty()) {
-            screenError.value = ScreenError.SEARCH_NO_RESULTS
+            screenError.value = Error.NO_RESULTS
         }
     }
 }

@@ -5,10 +5,7 @@ import android.content.Context
 import io.eelo.appinstaller.api.ListApplicationsRequest
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
-import io.eelo.appinstaller.utils.Common
-import io.eelo.appinstaller.utils.Constants
-import io.eelo.appinstaller.utils.Execute
-import io.eelo.appinstaller.utils.ScreenError
+import io.eelo.appinstaller.utils.*
 
 class CategoryModel : CategoryModelInterface {
 
@@ -16,7 +13,7 @@ class CategoryModel : CategoryModelInterface {
     lateinit var category: String
     private var page = 1
     val categoryApplicationsList = MutableLiveData<ArrayList<Application>>()
-    var screenError = MutableLiveData<ScreenError>()
+    var screenError = MutableLiveData<Error>()
 
     init {
         if (categoryApplicationsList.value == null) {
@@ -39,13 +36,33 @@ class CategoryModel : CategoryModelInterface {
             })
             page++
         } else {
-            screenError.value = ScreenError.NO_INTERNET
+            screenError.value = Error.NO_INTERNET
         }
     }
 
     private fun loadApplicationsSynced(context: Context): ArrayList<Application> {
-        val listApplications = ListApplicationsRequest(category, page, Constants.RESULTS_PER_PAGE).request()
-        return listApplications.getApplications(installManager, context)
+        var listApplications: ListApplicationsRequest.ListApplicationsResult? = null
+        ListApplicationsRequest(category, page, Constants.RESULTS_PER_PAGE)
+                .request { applicationError, listApplicationsResult ->
+                    when (applicationError) {
+                        null -> {
+                            listApplications = listApplicationsResult!!
+                        }
+                        Error.SERVER_UNAVAILABLE -> {
+                            // TODO Handle error
+                        }
+                        Error.REQUEST_TIMEOUT -> {
+                            // TODO Handle error
+                        }
+                        Error.UNKNOWN -> {
+                            // TODO Handle error
+                        }
+                        else -> {
+                            // TODO Handle error
+                        }
+                    }
+                }
+        return listApplications!!.getApplications(installManager, context)
     }
 
 

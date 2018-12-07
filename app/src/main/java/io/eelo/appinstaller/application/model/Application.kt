@@ -10,6 +10,7 @@ import io.eelo.appinstaller.api.PackageNameSearchRequest
 import io.eelo.appinstaller.application.model.State.*
 import io.eelo.appinstaller.application.model.data.BasicData
 import io.eelo.appinstaller.application.model.data.FullData
+import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.Constants
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
@@ -136,15 +137,51 @@ class Application(val packageName: String, private val installManager: InstallMa
 
     private fun findFullData(context: Context): Boolean {
         if (basicData == null) {
-            val fullData = PackageNameSearchRequest(packageName).request().findOneAppData(packageName)
+            var fullData: FullData? = null
+            PackageNameSearchRequest(packageName).request { applicationError, searchResult ->
+                when (applicationError) {
+                    null -> {
+                        fullData = searchResult!!.findOneAppData(packageName)
+                    }
+                    Error.SERVER_UNAVAILABLE -> {
+                        // TODO Handle error
+                    }
+                    Error.REQUEST_TIMEOUT -> {
+                        // TODO Handle error
+                    }
+                    Error.UNKNOWN -> {
+                        // TODO Handle error
+                    }
+                    else -> {
+                        // TODO Handle error
+                    }
+                }
+            }
             fullData?.let {
                 update(it, context)
                 return true
             }
             return false
         } else {
-            val fullData = AppDetailRequest(basicData!!.id).request()
-            update(fullData, context)
+            AppDetailRequest(basicData!!.id).request { applicationError, fullData ->
+                when (applicationError) {
+                    null -> {
+                        update(fullData!!, context)
+                    }
+                    Error.SERVER_UNAVAILABLE -> {
+                        // TODO Handle error
+                    }
+                    Error.REQUEST_TIMEOUT -> {
+                        // TODO Handle error
+                    }
+                    Error.UNKNOWN -> {
+                        // TODO Handle error
+                    }
+                    else -> {
+                        // TODO Handle error
+                    }
+                }
+            }
             return true
         }
     }
