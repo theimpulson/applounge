@@ -19,6 +19,8 @@ class BannerApplicationLoader(private val apps: ArrayList<Application>, private 
         apps.forEach {
             if (it.basicData!!.imagesUri.isNotEmpty()) {
                 imagesUris.add(it.basicData!!.imagesUri[0])
+            } else {
+                it.decrementUses()
             }
         }
         val images = ImagesLoader(imagesUris.toTypedArray()).loadImages()

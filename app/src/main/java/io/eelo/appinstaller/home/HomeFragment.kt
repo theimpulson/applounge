@@ -123,6 +123,9 @@ class HomeFragment : Fragment() {
                     application.decrementUses()
                 }
             }
+            homeViewModel.getBannerApplications().value!!.forEach {
+                it.application.decrementUses()
+            }
         }
         super.onDestroy()
     }
