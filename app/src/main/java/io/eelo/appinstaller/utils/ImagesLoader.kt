@@ -6,6 +6,7 @@ import android.os.AsyncTask
 import java.net.URL
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
+import javax.net.ssl.HttpsURLConnection
 
 class ImagesLoader(private val imagesUri: Array<String>) {
 
@@ -54,8 +55,18 @@ class ImagesLoader(private val imagesUri: Array<String>) {
 
         override fun doInBackground(vararg params: BlockingQueue<Image>): Any? {
             val queue = params[0]
-            val url = URL(Constants.BASE_URL + "media/" + uri)
-            image = BitmapFactory.decodeStream(url.openStream())
+            try {
+                val url = URL(Constants.BASE_URL + "media/" + uri)
+                val urlConnection = url.openConnection() as HttpsURLConnection
+                urlConnection.requestMethod = Constants.REQUEST_METHOD
+                urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT
+                urlConnection.readTimeout = Constants.READ_TIMEOUT
+                image = BitmapFactory.decodeStream(urlConnection.inputStream)
+                urlConnection.disconnect()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return null
+            }
             queue.put(this)
             return null
         }

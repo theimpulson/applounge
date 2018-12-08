@@ -168,10 +168,21 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             startActivity(intent)
         }
 
-        val decimalFormat = DecimalFormat("##.0")
-        appRating.text = decimalFormat.format(basicData.score).toString()
-        appPrivacyScore.text = fullData.privacyScore.toString()
-        appEnergyScore.text = fullData.energyScore.toString()
+        if (basicData.score != -1f) {
+            appRating.text = basicData.score.toString()
+        } else {
+            appRating.text = getString(R.string.not_available)
+        }
+        if (basicData.score != -1f) {
+            appPrivacyScore.text = fullData.privacyScore.toString()
+        } else {
+            appPrivacyScore.text = getString(R.string.not_available)
+        }
+        if (basicData.score != -1f) {
+            appEnergyScore.text = fullData.energyScore.toString()
+        } else {
+            appEnergyScore.text = getString(R.string.not_available)
+        }
 
         basicData.loadImagesAsyncly {
             showImages(it)

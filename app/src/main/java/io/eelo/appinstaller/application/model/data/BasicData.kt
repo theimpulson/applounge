@@ -4,10 +4,13 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.BASE_URL
+import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.Execute
 import io.eelo.appinstaller.utils.ImagesLoader
 import java.net.URL
+import javax.net.ssl.HttpsURLConnection
 
 class BasicData @JsonCreator
 constructor(@param:JsonProperty("package_name") val packageName: String,
@@ -46,10 +49,15 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
 
     fun loadIconAsync(getter: (Bitmap) -> Unit) {
         if (icon == null) {
+            var error: Error? = null
             Execute({
-                loadIconSynced()
+                error = loadIconSynced()
             }, {
-                icon?.let { getter.invoke(it) }
+                if (error == null) {
+                    icon?.let {
+                        getter.invoke(it)
+                    }
+                }
             })
         } else {
             getter.invoke(icon!!)
@@ -57,11 +65,22 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
     }
 
     @Synchronized
-    private fun loadIconSynced() {
+    private fun loadIconSynced(): io.eelo.appinstaller.utils.Error? {
         if (icon == null) {
-            val url = URL(BASE_URL + "media/" + iconUri)
-            icon = BitmapFactory.decodeStream(url.openStream())
+            try {
+                val url = URL(BASE_URL + "media/" + iconUri)
+                val urlConnection = url.openConnection() as HttpsURLConnection
+                urlConnection.requestMethod = Constants.REQUEST_METHOD
+                urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT
+                urlConnection.readTimeout = Constants.READ_TIMEOUT
+                icon = BitmapFactory.decodeStream(urlConnection.inputStream)
+                urlConnection.disconnect()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return io.eelo.appinstaller.utils.Error.UNKNOWN
+            }
         }
+        return null
     }
 
     fun updateLoadedImages(other: BasicData) {

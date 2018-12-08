@@ -53,29 +53,14 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         title.text = app.basicData!!.name
         author.text = app.basicData!!.author
         ratingBar.rating = app.basicData!!.score
-        val decimalFormat = DecimalFormat("##.0")
-        rating.text = decimalFormat.format(app.basicData!!.score).toString()
-        rating.setTextColor(findStarsColor(app.basicData!!.score))
+        if (app.basicData!!.score != -1f) {
+            rating.text = app.basicData!!.score.toString()
+        } else {
+            rating.text = activity.getString(R.string.not_available)
+        }
         // TODO Use exodus rating from basic data
         //privacyScore.text = app.fullData!!.privacyScore.toString()
-        //privacyScore.setTextColor(findPrivacyColor(app.fullData!!.privacyScore))
         stateChanged(app.state)
-    }
-
-    private fun findStarsColor(stars: Float): Int {
-        return view.context.resources.getColor(when {
-            stars >= 4.0f -> R.color.colorRatingGood
-            stars >= 3.0f -> R.color.colorRatingNeutral
-            else -> R.color.colorRatingBad
-        })
-    }
-
-    private fun findPrivacyColor(privacyScore: Float): Int {
-        return view.context.resources.getColor(when {
-            privacyScore >= 7.0f -> R.color.colorRatingGood
-            privacyScore >= 4.0f -> R.color.colorRatingNeutral
-            else -> R.color.colorRatingBad
-        })
     }
 
     override fun stateChanged(state: State) {
