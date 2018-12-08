@@ -24,6 +24,7 @@ import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
 import io.eelo.appinstaller.utils.Constants.APPLICATION_PACKAGE_NAME_KEY
 import io.eelo.appinstaller.utils.Constants.SELECTED_APPLICATION_SCREENSHOT_KEY
 import io.eelo.appinstaller.utils.Constants.WEB_STORE_URL
+import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.activity_application.*
 import kotlinx.android.synthetic.main.install_button_layout.*
@@ -95,6 +96,12 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     private fun onApplicationInfoLoaded() {
         val basicData = application.basicData!!
         val fullData = application.fullData!!
+
+        if (basicData.lastVersion == "update_-1") {
+            Toast.makeText(this, getString(Common.getScreenErrorDescriptionId(Error.APK_UNAVAILABLE)), Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
 
         val appIcon = findViewById<ImageView>(R.id.app_icon)
         val appTitle = findViewById<TextView>(R.id.app_title)
@@ -233,12 +240,18 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     }
 
     private fun initialise(packageName: String) {
+        var error: Error? = null
         Execute({
             val installManager = installManagerGetter.connectAndGet(this)
             application = installManager.findOrCreateApp(packageName)
-            application.assertFullData(this)
+            error = application.assertFullData(this)
         }, {
-            onApplicationInfoLoaded()
+            if (error == null) {
+                onApplicationInfoLoaded()
+            } else {
+                Toast.makeText(this, getString(Common.getScreenErrorDescriptionId(error!!)), Toast.LENGTH_LONG).show()
+                finish()
+            }
         })
     }
 

@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.application.model.data;
+package io.eelo.appinstaller.application.model.data
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

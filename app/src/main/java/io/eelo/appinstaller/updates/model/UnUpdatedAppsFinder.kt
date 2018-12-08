@@ -42,7 +42,8 @@ class UnUpdatedAppsFinder(private val packageManager: PackageManager, private va
     }
 
     private fun verifyApplication(application: Application, waitingTasks: AtomicInteger, blocker: Object, apps: ArrayList<Application>, context: Context) {
-        if (application.assertFullData(context) && application.state == State.NOT_UPDATED) {
+        val error = application.assertFullData(context)
+        if (error == null && application.state == State.NOT_UPDATED) {
             apps.add(application)
         } else {
             application.decrementUses()

@@ -107,83 +107,55 @@ class Application(val packageName: String, private val installManager: InstallMa
         return uses.get() != 0
     }
 
-    fun getBasicData(context: Context): BasicData? {
-        if (basicData == null) {
-            val found = findFullData(context)
-            if (!found) {
-                return null
-            }
+    fun assertFullData(context: Context): Error? {
+        if (fullData != null) {
+            return null
         }
-        return basicData!!
+        return findFullData(context)
     }
 
-    fun getFullData(context: Context): FullData? {
-        if (fullData == null) {
-            val found = findFullData(context)
-            if (!found) {
-                return null
-            }
-        }
-        return fullData!!
-    }
-
-    private fun assertBasicData(context: Context): Boolean {
-        return basicData != null || findFullData(context)
-    }
-
-    fun assertFullData(context: Context): Boolean {
-        return fullData != null || findFullData(context)
-    }
-
-    private fun findFullData(context: Context): Boolean {
-        if (basicData == null) {
-            var fullData: FullData? = null
-            PackageNameSearchRequest(packageName).request { applicationError, searchResult ->
-                when (applicationError) {
-                    null -> {
-                        fullData = searchResult!!.findOneAppData(packageName)
-                    }
-                    Error.SERVER_UNAVAILABLE -> {
-                        // TODO Handle error
-                    }
-                    Error.REQUEST_TIMEOUT -> {
-                        // TODO Handle error
-                    }
-                    Error.UNKNOWN -> {
-                        // TODO Handle error
-                    }
-                    else -> {
-                        // TODO Handle error
+    private fun findBasicData(context: Context): Error? {
+        var error: Error? = null
+        PackageNameSearchRequest(packageName).request { applicationError, searchResult ->
+            when (applicationError) {
+                null -> {
+                    error = Error.NO_RESULTS
+                    searchResult!!.findOneAppData(packageName)?.let {
+                        update(it, context)
+                        error = null
                     }
                 }
-            }
-            fullData?.let {
-                update(it, context)
-                return true
-            }
-            return false
-        } else {
-            AppDetailRequest(basicData!!.id).request { applicationError, fullData ->
-                when (applicationError) {
-                    null -> {
-                        update(fullData!!, context)
-                    }
-                    Error.SERVER_UNAVAILABLE -> {
-                        // TODO Handle error
-                    }
-                    Error.REQUEST_TIMEOUT -> {
-                        // TODO Handle error
-                    }
-                    Error.UNKNOWN -> {
-                        // TODO Handle error
-                    }
-                    else -> {
-                        // TODO Handle error
-                    }
+                else -> {
+                    error = applicationError
                 }
             }
-            return true
         }
+        return error
+    }
+
+    private fun findFullData(context: Context): Error? {
+        if (basicData == null) {
+            val error = findBasicData(context)
+            if (error != null) {
+                return error
+            }
+        }
+        var error: Error? = null
+        AppDetailRequest(basicData!!.id).request { applicationError, fullData ->
+            when (applicationError) {
+                null -> {
+                    error = Error.NO_RESULTS
+                    fullData!!.let {
+                        update(fullData, context)
+                        error = null
+                    }
+                }
+                else -> {
+                    error = applicationError
+                }
+            }
+        }
+        return error
     }
 
     fun loadIcon(view: ImageView) {

@@ -70,6 +70,7 @@
     <string name="error_request_timeout">Server took too long to respond! Please try again later.</string>
     <string name="error_unknown">Something went wrong! Please try again later.</string>
     <string name="error_no_results">No apps found.</string>
+    <string name="error_apk_unavailable">This app is currently unavailable! Please try again later.</string>
     <string name="error_apk_corrupt">Download was interrupted! Please try again later.</string>
     <string name="error_install_failed">App couldn\'t be installed! Please try again later.</string>
     <string name="error_resolve">Retry</string>

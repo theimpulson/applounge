@@ -56,12 +56,9 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         val decimalFormat = DecimalFormat("##.0")
         rating.text = decimalFormat.format(app.basicData!!.score).toString()
         rating.setTextColor(findStarsColor(app.basicData!!.score))
-        Execute({
-            app.assertFullData(view.context)
-        }, {
-            privacyScore.text = app.fullData!!.privacyScore.toString()
-            privacyScore.setTextColor(findPrivacyColor(app.fullData!!.privacyScore))
-        })
+        // TODO Use exodus rating from basic data
+        //privacyScore.text = app.fullData!!.privacyScore.toString()
+        //privacyScore.setTextColor(findPrivacyColor(app.fullData!!.privacyScore))
         stateChanged(app.state)
     }
 

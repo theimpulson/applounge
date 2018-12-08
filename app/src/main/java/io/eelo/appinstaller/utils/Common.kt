@@ -36,6 +36,8 @@ object Common {
             R.string.error_unknown
         Error.NO_RESULTS ->
             R.string.error_no_results
+        Error.APK_UNAVAILABLE ->
+            R.string.error_apk_unavailable
         Error.APK_CORRUPT ->
             R.string.error_apk_corrupt
         Error.INSTALL_FAILED ->
