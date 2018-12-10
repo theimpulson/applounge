@@ -175,15 +175,48 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         } else {
             appRating.text = getString(R.string.not_available)
         }
+        app_rating_container.setOnClickListener {
+            val alertDialog = AlertDialog.Builder(this).create()
+            alertDialog.setIcon(R.drawable.ic_dialog_info)
+            alertDialog.setTitle(R.string.app_rating)
+            alertDialog.setMessage(getString(R.string.app_rating_description))
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
+            { _, _ ->
+                alertDialog.dismiss()
+            }
+            alertDialog.show()
+        }
         if (basicData.score != -1f) {
             appPrivacyScore.text = fullData.privacyScore.toString()
         } else {
             appPrivacyScore.text = getString(R.string.not_available)
         }
+        app_privacy_container.setOnClickListener {
+            val alertDialog = AlertDialog.Builder(this).create()
+            alertDialog.setIcon(R.drawable.ic_dialog_info)
+            alertDialog.setTitle(R.string.app_privacy_score)
+            alertDialog.setMessage(getString(R.string.app_privacy_description))
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
+            { _, _ ->
+                alertDialog.dismiss()
+            }
+            alertDialog.show()
+        }
         if (basicData.score != -1f) {
             appEnergyScore.text = fullData.energyScore.toString()
         } else {
             appEnergyScore.text = getString(R.string.not_available)
+        }
+        app_energy_container.setOnClickListener {
+            val alertDialog = AlertDialog.Builder(this).create()
+            alertDialog.setIcon(R.drawable.ic_dialog_info)
+            alertDialog.setTitle(R.string.app_energy_score)
+            alertDialog.setMessage(getString(R.string.app_energy_description))
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
+            { _, _ ->
+                alertDialog.dismiss()
+            }
+            alertDialog.show()
         }
 
         basicData.loadImagesAsyncly {

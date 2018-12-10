@@ -18,8 +18,11 @@
     <string name="action_share">Share</string>
     <string name="app_ratings_title">Ratings</string>
     <string name="app_privacy_score">Privacy</string>
+    <string name="app_privacy_description">Score out of 10. Computed using Exodus privacy analyses, based on permissions and trackers used in the app.</string>
     <string name="app_rating">Rating</string>
+    <string name="app_rating_description">Score out of 5. Computed using users\' ratings of the app.</string>
     <string name="app_energy_score">Energy</string>
+    <string name="app_energy_description">Score out of 10. Computed using the apps\' battery usage behavior.</string>
     <string name="app_privacy_title">Privacy analyses - powered by Exodus</string>
     <string name="app_permissions_title">Permissions</string>
     <string name="app_trackers_title">Trackers</string>
