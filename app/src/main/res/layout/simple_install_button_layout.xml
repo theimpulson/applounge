@@ -4,7 +4,7 @@
     android:layout_width="@dimen/install_button_width"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/app_install_border"
+    android:background="@drawable/app_install_border_simple"
     android:ellipsize="end"
     android:foreground="?android:selectableItemBackground"
     android:maxWidth="@dimen/install_button_width"
@@ -13,5 +13,5 @@
     android:minHeight="0dp"
     android:padding="@dimen/layout_padding_medium"
     android:text="@string/action_install"
-    android:textColor="?android:textColorPrimaryInverse"
+    android:textColor="?android:textColorPrimary"
     android:textSize="@dimen/text_size_medium" />

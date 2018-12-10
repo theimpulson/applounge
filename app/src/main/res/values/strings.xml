@@ -4,6 +4,7 @@
 
     <!-- Application -->
     <string name="app_icon_content_description">App icon</string>
+    <string name="app_description_title">Description</string>
     <string name="app_description_content_description">App description</string>
     <string name="app_privacy_score_content_description">App privacy score</string>
     <string name="app_energy_score_content_description">App energy score</string>
@@ -15,14 +16,19 @@
     <string name="action_update">Update</string>
     <string name="action_launch">Open</string>
     <string name="action_share">Share</string>
+    <string name="app_ratings_title">Ratings</string>
     <string name="app_privacy_score">Privacy</string>
     <string name="app_rating">Rating</string>
     <string name="app_energy_score">Energy</string>
+    <string name="app_privacy_title">Privacy analyses - powered by Exodus</string>
+    <string name="app_permissions_title">Permissions</string>
+    <string name="app_trackers_title">Trackers</string>
+    <string name="app_information_title">Information</string>
     <string name="app_version">Version</string>
     <string name="app_updated_on">Updated on</string>
     <string name="app_min_android">Requires</string>
-    <string name="app_source">Source</string>
     <string name="app_licence">Licence</string>
+    <string name="app_screenshots_title">Screenshots</string>
 
     <!-- Application Description Activity -->
     <string name="application_description_activity_title">Description</string>

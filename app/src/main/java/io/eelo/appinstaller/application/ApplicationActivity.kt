@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.Html
@@ -28,7 +29,6 @@ import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.activity_application.*
 import kotlinx.android.synthetic.main.install_button_layout.*
-import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
@@ -37,6 +37,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     private var imageWidth = 0
     private var imageHeight = 0
     private var imageMargin = 0
+    private var defaultElevation = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,6 +92,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         imageWidth = Math.ceil(120 * logicalDensity.toDouble()).roundToInt()
         imageHeight = Math.ceil(210 * logicalDensity.toDouble()).roundToInt()
         imageMargin = Math.ceil(4 * logicalDensity.toDouble()).roundToInt()
+        defaultElevation = Math.ceil(resources.getDimension(R.dimen.default_elevation) * logicalDensity.toDouble()).toFloat()
     }
 
     private fun onApplicationInfoLoaded() {
@@ -119,7 +121,6 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         val appVersion = findViewById<TextView>(R.id.app_version)
         val appUpdatedOn = findViewById<TextView>(R.id.app_updated_on)
         val appMinAndroid = findViewById<TextView>(R.id.app_min_android)
-        val appSource = findViewById<TextView>(R.id.app_source)
         val appLicence = findViewById<TextView>(R.id.app_licence)
 
         appTitle.visibility = View.GONE
@@ -127,6 +128,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         appCategory.visibility = View.GONE
         appSize.visibility = View.GONE
         appDescriptionContainer.visibility = View.GONE
+        app_screenshots_container.visibility = View.GONE
         app_images_scroll_view.visibility = View.GONE
         appImagesContainer.visibility = View.GONE
         appImagesDivider.visibility = View.GONE
@@ -206,12 +208,6 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             appMinAndroid.text = getString(R.string.not_available)
         }
 
-        if (fullData.source.isNotEmpty()) {
-            appSource.text = fullData.source
-        } else {
-            appSource.text = getString(R.string.not_available)
-        }
-
         if (fullData.licence.isNotEmpty()) {
             appLicence.text = fullData.licence
         } else {
@@ -220,6 +216,39 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
 
         application.addListener(this)
         stateChanged(application.state)
+
+        toolbar.elevation = 0f
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            scroll_view.setOnScrollChangeListener { view, ia, ib, ic, id ->
+                if (view.scrollY == 0) {
+                    toolbar.elevation = 0f
+                } else {
+                    toolbar.elevation = defaultElevation
+                }
+            }
+        }
+
+        app_permissions_container.setOnClickListener {
+            val alertDialog = AlertDialog.Builder(this).create()
+            alertDialog.setTitle(R.string.app_permissions_title)
+            // TODO Set content
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
+            { _, _ ->
+                alertDialog.dismiss()
+            }
+            alertDialog.show()
+        }
+
+        app_trackers_container.setOnClickListener {
+            val alertDialog = AlertDialog.Builder(this).create()
+            alertDialog.setTitle(R.string.app_trackers_title)
+            // TODO Set content
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
+            { _, _ ->
+                alertDialog.dismiss()
+            }
+            alertDialog.show()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -294,6 +323,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
                 intent.putExtra(SELECTED_APPLICATION_SCREENSHOT_KEY, images.indexOf(it))
                 startActivity(intent)
             }
+            app_screenshots_container.visibility = View.VISIBLE
             app_images_scroll_view.visibility = View.VISIBLE
             imagesContainer.visibility = View.VISIBLE
             app_images_divider.visibility = View.VISIBLE

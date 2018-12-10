@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/error_icon"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="@dimen/app_icon_size"
+        android:layout_height="@dimen/app_icon_size"
         android:src="@drawable/ic_error" />
 
     <TextView
@@ -24,20 +24,22 @@
         android:textColor="@android:color/black"
         android:textSize="@dimen/text_size_large" />
 
-    <TextView
+    <Button
         android:id="@+id/error_resolve"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/install_button_width"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="@dimen/layout_margin_large"
-        android:background="?android:selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="@drawable/app_install_border"
+        android:background="@drawable/app_install_border"
+        android:ellipsize="end"
+        android:foreground="?android:selectableItemBackground"
+        android:maxWidth="@dimen/install_button_width"
         android:maxLines="1"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
         android:padding="@dimen/layout_padding_medium"
         android:text="@string/error_resolve"
-        android:textAllCaps="true"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_size_large" />
+        android:textColor="?android:textColorPrimaryInverse"
+        android:textSize="@dimen/text_size_medium" />
 
 </LinearLayout>
