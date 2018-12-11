@@ -23,7 +23,7 @@ class SearchSuggestionsTask(private val searchQuery: String,
                             }
                         }
                         else -> {
-                            // TODO Handle error
+                            // Do nothing
                         }
                     }
                 }

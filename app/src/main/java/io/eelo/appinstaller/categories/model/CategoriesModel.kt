@@ -23,6 +23,7 @@ class CategoriesModel : CategoriesModelInterface {
 
     override fun loadCategories(context: Context) {
         lateinit var result: ListCategoriesRequest.ListCategoriesResult
+        var error: Error? = null
         if (Common.isNetworkAvailable(context)) {
             Execute({
                 ListCategoriesRequest().request { applicationError, listCategoriesResult ->
@@ -30,22 +31,16 @@ class CategoriesModel : CategoriesModelInterface {
                         null -> {
                             result = listCategoriesResult!!
                         }
-                        Error.SERVER_UNAVAILABLE -> {
-                            // TODO Handle error
-                        }
-                        Error.REQUEST_TIMEOUT -> {
-                            // TODO Handle error
-                        }
-                        Error.UNKNOWN -> {
-                            // TODO Handle error
-                        }
                         else -> {
-                            // TODO Handle error
+                            error = applicationError
                         }
                     }
                 }
             }, {
-                parseResult(result)
+                if (error == null) {
+                    parseResult(result)
+                }
+                screenError.value = error
             })
         } else {
             screenError.value = Error.NO_INTERNET

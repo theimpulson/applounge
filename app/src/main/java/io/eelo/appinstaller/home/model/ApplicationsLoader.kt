@@ -10,6 +10,7 @@ import io.eelo.appinstaller.utils.Common
 class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, Any, LinkedHashMap<String, ArrayList<Application>>>() {
 
     private lateinit var bannerApps: ArrayList<Application>
+    private var error: Error? = null
 
     override fun doInBackground(vararg params: Context): LinkedHashMap<String, ArrayList<Application>> {
         val context = params[0]
@@ -20,17 +21,8 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
                     bannerApps = homeResult!!.getBannerApps(homeModel.getInstallManager(), context)
                     applications = loadApplications(homeResult, context)
                 }
-                Error.SERVER_UNAVAILABLE -> {
-                    // TODO Handle error
-                }
-                Error.REQUEST_TIMEOUT -> {
-                    // TODO Handle error
-                }
-                Error.UNKNOWN -> {
-                    // TODO Handle error
-                }
                 else -> {
-                    // TODO Handle error
+                    error = applicationError
                 }
             }
         }
@@ -38,8 +30,12 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
     }
 
     override fun onPostExecute(result: LinkedHashMap<String, ArrayList<Application>>) {
-        BannerApplicationLoader(bannerApps, homeModel).executeOnExecutor(THREAD_POOL_EXECUTOR)
-        homeModel.applications.value = result
+        if (error == null) {
+            BannerApplicationLoader(bannerApps, homeModel).executeOnExecutor(THREAD_POOL_EXECUTOR)
+            homeModel.applications.value = result
+        } else {
+            homeModel.screenError.value = error
+        }
     }
 
     private fun loadApplications(result: HomeRequest.HomeResult, context: Context): LinkedHashMap<String, ArrayList<Application>> {

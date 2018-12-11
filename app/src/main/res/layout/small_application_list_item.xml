@@ -7,8 +7,7 @@
     android:layout_marginEnd="@dimen/layout_margin_small"
     android:background="?android:selectableItemBackground"
     android:foreground="@drawable/app_category_border"
-    android:paddingTop="@dimen/layout_padding_small"
-    android:paddingBottom="@dimen/layout_padding_small">
+    android:padding="@dimen/layout_padding_small">
 
     <ImageView
         android:id="@+id/app_icon"

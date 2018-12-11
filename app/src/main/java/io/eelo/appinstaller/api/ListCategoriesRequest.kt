@@ -37,7 +37,8 @@ class ListCategoriesRequest {
     }
 
     class ListCategoriesResult @JsonCreator
-    constructor(@JsonProperty("apps") val appsCategories: Array<String>,
+    constructor(@JsonProperty("success") success: Boolean,
+                @JsonProperty("apps") val appsCategories: Array<String>,
                 @JsonProperty("games") val gamesCategories: Array<String>)
 
 }

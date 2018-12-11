@@ -35,7 +35,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_medium"
             tools:text="App title" />
 
         <TextView
@@ -45,7 +45,7 @@
             android:layout_marginTop="@dimen/layout_margin_medium"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="@dimen/text_size_medium"
+            android:textSize="@dimen/text_size_small"
             tools:text="App author" />
 
         <LinearLayout
@@ -123,7 +123,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_divider_height"
-        android:layout_below="@id/app_icon"
+        android:layout_below="@id/app_data_container"
         android:layout_marginTop="@dimen/layout_margin_medium"
         android:background="@color/colorDivider" />
 

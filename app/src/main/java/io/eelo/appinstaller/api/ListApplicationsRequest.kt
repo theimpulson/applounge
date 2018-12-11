@@ -42,7 +42,8 @@ class ListApplicationsRequest(private val category: String, private val page: In
     }
 
     class ListApplicationsResult @JsonCreator
-    constructor(@JsonProperty("pages") val pages: Int,
+    constructor(@JsonProperty("success") success: Boolean,
+                @JsonProperty("pages") val pages: Int,
                 @JsonProperty("apps") private val apps: Array<FullData>) {
 
         fun getApplications(installManager: InstallManager, context: Context): ArrayList<Application> {

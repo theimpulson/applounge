@@ -42,7 +42,8 @@ class SearchRequest(private val keyword: String, private val page: Int, private 
     }
 
     class SearchResult @JsonCreator
-    constructor(@param:JsonProperty("pages") val pages: Int,
+    constructor(@JsonProperty("success") success: Boolean,
+                @param:JsonProperty("pages") val pages: Int,
                 @param:JsonProperty("numberOfResults") val resultsNumber: Int,
                 @param:JsonProperty("apps") val appResults: Array<BasicData>) {
 

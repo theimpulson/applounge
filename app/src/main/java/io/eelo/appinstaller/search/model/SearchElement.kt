@@ -13,6 +13,7 @@ class SearchElement(private val query: String, private val installManager: Insta
 
     val apps = ArrayList<Application>()
     private var nextPage = 1
+    private var error: Error? = null
 
     fun loadMoreInBackground(context: Context) {
         executeOnExecutor(Common.EXECUTOR, context)
@@ -25,7 +26,7 @@ class SearchElement(private val query: String, private val installManager: Insta
     }
 
     override fun onPostExecute(result: Void?) {
-        callback.onSearchComplete(apps)
+        callback.onSearchComplete(error, apps)
     }
 
     private fun loadMore(context: Context) {
@@ -34,17 +35,8 @@ class SearchElement(private val query: String, private val installManager: Insta
                 null -> {
                     apps.addAll(searchResult!!.getApplications(installManager, context))
                 }
-                Error.SERVER_UNAVAILABLE -> {
-                    // TODO Handle error
-                }
-                Error.REQUEST_TIMEOUT -> {
-                    // TODO Handle error
-                }
-                Error.UNKNOWN -> {
-                    // TODO Handle error
-                }
                 else -> {
-                    // TODO Handle error
+                    error = applicationError
                 }
             }
         }

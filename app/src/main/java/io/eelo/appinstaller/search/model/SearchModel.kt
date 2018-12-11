@@ -56,10 +56,14 @@ class SearchModel : SearchModelInterface {
         element!!.loadMoreInBackground(context)
     }
 
-    override fun onSearchComplete(applicationList: ArrayList<Application>) {
-        this.applicationList.value = applicationList
-        if (applicationList.isEmpty()) {
-            screenError.value = Error.NO_RESULTS
+    override fun onSearchComplete(error: Error?, applicationList: ArrayList<Application>) {
+        if (error == null) {
+            this.applicationList.value = applicationList
+            if (applicationList.isEmpty()) {
+                screenError.value = Error.NO_RESULTS
+            }
+        } else {
+            screenError.value = error
         }
     }
 }

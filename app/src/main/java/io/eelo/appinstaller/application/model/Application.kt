@@ -86,7 +86,7 @@ class Application(val packageName: String, private val installManager: InstallMa
             downloader!!.download(fullData!!, info.getApkFile(basicData!!))
             downloader = null
             prepareInstall()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
             stateManager.find(context, basicData!!)
             stateManager.notifyError()

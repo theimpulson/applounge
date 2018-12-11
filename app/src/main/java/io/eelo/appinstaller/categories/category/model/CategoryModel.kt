@@ -14,6 +14,7 @@ class CategoryModel : CategoryModelInterface {
     private var page = 1
     val categoryApplicationsList = MutableLiveData<ArrayList<Application>>()
     var screenError = MutableLiveData<Error>()
+    private var error: Error? = null
 
     init {
         if (categoryApplicationsList.value == null) {
@@ -27,12 +28,16 @@ class CategoryModel : CategoryModelInterface {
     }
 
     override fun loadApplications(context: Context) {
-        lateinit var apps: ArrayList<Application>
+        var apps: ArrayList<Application>? = null
         if (Common.isNetworkAvailable(context)) {
             Execute({
                 apps = loadApplicationsSynced(context)
             }, {
-                categoryApplicationsList.value = apps
+                if (error == null && apps != null) {
+                    categoryApplicationsList.value = apps
+                } else {
+                    screenError.value = error
+                }
             })
             page++
         } else {
@@ -40,7 +45,7 @@ class CategoryModel : CategoryModelInterface {
         }
     }
 
-    private fun loadApplicationsSynced(context: Context): ArrayList<Application> {
+    private fun loadApplicationsSynced(context: Context): ArrayList<Application>? {
         var listApplications: ListApplicationsRequest.ListApplicationsResult? = null
         ListApplicationsRequest(category, page, Constants.RESULTS_PER_PAGE)
                 .request { applicationError, listApplicationsResult ->
@@ -48,21 +53,16 @@ class CategoryModel : CategoryModelInterface {
                         null -> {
                             listApplications = listApplicationsResult!!
                         }
-                        Error.SERVER_UNAVAILABLE -> {
-                            // TODO Handle error
-                        }
-                        Error.REQUEST_TIMEOUT -> {
-                            // TODO Handle error
-                        }
-                        Error.UNKNOWN -> {
-                            // TODO Handle error
-                        }
                         else -> {
-                            // TODO Handle error
+                            error = applicationError
                         }
                     }
                 }
-        return listApplications!!.getApplications(installManager, context)
+        if (listApplications != null) {
+            return listApplications!!.getApplications(installManager, context)
+        } else {
+            return null
+        }
     }
 
 

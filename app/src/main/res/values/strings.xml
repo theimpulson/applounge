@@ -82,6 +82,7 @@
     <string name="error_apk_unavailable">This app is currently unavailable! Please try again later.</string>
     <string name="error_apk_corrupt">Download was interrupted! Please try again later.</string>
     <string name="error_install_failed">App couldn\'t be installed! Please try again later.</string>
+    <string name="error_apk_download_failed">App couldn\'t be downloaded! Please try again later.</string>
     <string name="error_resolve">Retry</string>
 
 </resources>
