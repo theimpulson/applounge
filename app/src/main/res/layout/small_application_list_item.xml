@@ -7,10 +7,8 @@
     android:layout_marginEnd="@dimen/layout_margin_small"
     android:background="?android:selectableItemBackground"
     android:foreground="@drawable/app_category_border"
-    android:paddingStart="@dimen/layout_padding_large"
-    android:paddingTop="@dimen/layout_padding_medium"
-    android:paddingEnd="@dimen/layout_padding_large"
-    android:paddingBottom="@dimen/layout_padding_medium">
+    android:paddingTop="@dimen/layout_padding_small"
+    android:paddingBottom="@dimen/layout_padding_small">
 
     <ImageView
         android:id="@+id/app_icon"
@@ -33,12 +31,12 @@
         android:maxLines="2"
         android:minLines="2"
         android:textColor="@android:color/black"
-        android:textSize="@dimen/text_size_medium"
+        android:textSize="@dimen/text_size_small"
         tools:text="App title" />
 
     <include
         layout="@layout/simple_install_button_layout"
-        android:layout_width="@dimen/install_button_width"
+        android:layout_width="@dimen/simple_install_button_width"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_title"
         android:layout_centerHorizontal="true"
