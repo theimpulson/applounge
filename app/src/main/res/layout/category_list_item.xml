@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/category_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingStart="@dimen/layout_padding_medium"
+    android:paddingTop="@dimen/layout_padding_medium"
+    android:paddingEnd="@dimen/layout_padding_medium">
+
+    <ImageView
+        android:id="@+id/category_icon"
+        android:layout_width="@dimen/category_icon_size"
+        android:layout_height="@dimen/category_icon_size"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_category_default" />
+
+    <TextView
+        android:id="@+id/category_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/layout_margin_medium"
+        android:layout_toEndOf="@id/category_icon"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="@dimen/text_size_large" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_divider_height"
+        android:layout_below="@id/category_icon"
+        android:layout_marginStart="@dimen/layout_margin_medium"
+        android:layout_marginTop="@dimen/layout_margin_medium"
+        android:layout_marginEnd="@dimen/layout_margin_medium"
+        android:background="@color/colorDivider" />
+
+</RelativeLayout>

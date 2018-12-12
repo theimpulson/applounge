@@ -26,10 +26,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     private var currentFragmentId = 0
     private val homeFragment = HomeFragment()
-    private val categoriesFragment = CategoriesFragment()
     private val searchFragment = SearchFragment()
     private val updatesFragment = UpdatesFragment()
-    private val settingsFragment = SettingsFragment()
     private val installManagerGetter = InstallManagerGetter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +81,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.menu_categories -> {
-                showFragment(categoriesFragment)
+                showFragment(CategoriesFragment())
                 return true
             }
             R.id.menu_search -> {
@@ -95,7 +93,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.menu_settings -> {
-                showFragment(settingsFragment)
+                showFragment(SettingsFragment())
                 return true
             }
         }
