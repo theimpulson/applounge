@@ -13,7 +13,7 @@ import io.eelo.appinstaller.R
 import io.eelo.appinstaller.categories.viewmodel.CategoriesViewModel
 import io.eelo.appinstaller.utils.Common
 import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.fragment_application_categories.view.*
+import kotlinx.android.synthetic.main.fragment_games_categories.view.*
 
 class GamesFragment : Fragment() {
     private lateinit var categoriesViewModel: CategoriesViewModel
