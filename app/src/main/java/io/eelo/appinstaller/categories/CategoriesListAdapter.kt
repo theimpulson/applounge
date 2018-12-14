@@ -12,9 +12,15 @@ import io.eelo.appinstaller.categories.category.CategoryActivity
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
+import kotlin.collections.ArrayList
 
-class CategoriesListAdapter(private val categories: ArrayList<Category>)
+class CategoriesListAdapter(private var categories: ArrayList<Category>)
     : RecyclerView.Adapter<CategoriesListAdapter.CategoryViewHolder>() {
+
+    init {
+        generateTitles()
+        categories = ArrayList(categories.sortedWith(compareBy({ it.title }, { it.title })))
+    }
 
     class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val categoryContainer: RelativeLayout = view.findViewById(R.id.category_container)
@@ -32,15 +38,19 @@ class CategoriesListAdapter(private val categories: ArrayList<Category>)
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        if (categories[position].title.isNullOrEmpty()) {
-            categories[position].title = Common.getCategoryTitle(categories[position].id)
-        }
-
         holder.categoryTitle.text = categories[position].title
         holder.categoryContainer.setOnClickListener {
             val intent = Intent(holder.categoryContainer.context, CategoryActivity::class.java)
             intent.putExtra(Constants.CATEGORY_KEY, categories[position])
             holder.categoryContainer.context.startActivity(intent)
+        }
+    }
+
+    private fun generateTitles() {
+        categories.forEach {
+            if (it.title.isNullOrEmpty()) {
+                it.title = Common.getCategoryTitle(it.id)
+            }
         }
     }
 }

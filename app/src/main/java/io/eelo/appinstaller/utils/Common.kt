@@ -17,7 +17,11 @@ object Common {
     }
 
     fun getCategoryTitle(categoryId: String): String {
-        return categoryId.replace("_", " ").capitalize()
+        val title = categoryId.replace("_", " ")
+        if (title.contains("game ")) {
+            return title.removePrefix("game ").capitalize()
+        }
+        return title.capitalize()
     }
 
     fun toMiB(bytes: Int): Double {
