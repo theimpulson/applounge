@@ -85,7 +85,8 @@ class HomeRequest {
                         data["source"] as String,
                         data["description"] as String,
                         data["app_link"] as String,
-                        data["licence"] as String)
+                        data["licence"] as String,
+                        null)
                 for (pair in data) {
                     appData.jsonCreator(pair.key as String, pair.value)
                 }

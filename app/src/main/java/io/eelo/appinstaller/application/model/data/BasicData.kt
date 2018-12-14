@@ -22,7 +22,8 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
             @param:JsonProperty("latest_version_number") var lastVersionNumber_a: String?,
             @param:JsonProperty("author") val author: String,
             @param:JsonProperty("icon_image_path") private val iconUri: String,
-            @param:JsonProperty("other_images_path") val imagesUri: Array<String>) {
+            @param:JsonProperty("other_images_path") val imagesUri: Array<String>,
+            @param:JsonProperty("ratings") val ratings: Ratings) {
 
     private var icon: Bitmap? = null
     private var images: List<Bitmap>? = null
@@ -91,4 +92,7 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
             images = other.images
         }
     }
+
+    class Ratings(@param:JsonProperty("usageQualityScore") val rating: Float,
+                  @param:JsonProperty("privacyScore") val privacyRating: Float)
 }

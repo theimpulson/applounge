@@ -20,18 +20,23 @@ constructor(
         @JsonProperty("source") val source: String,
         @JsonProperty("description") val description: String,
         @JsonProperty("app_link") val appLink: String,
-        @JsonProperty("licence") val licence: String) {
-//        @JsonProperty("textScore") score: Float,
-//        @JsonProperty("privScore") val privacyScore: Float,
-//        @JsonProperty("enerScore") val energyScore: Float) {
+        @JsonProperty("licence") val licence: String,
+        @JsonProperty("ratings") ratings: BasicData.Ratings?) {
 
-    var basicData = BasicData(packageName, id, name, -1f, lastModified, lastVersion, "", author, iconUri, imagesUri)
+    var basicData = if (ratings == null) {
+        BasicData(packageName, id, name, -1f, lastModified, lastVersion,
+                "", author, iconUri, imagesUri,
+                BasicData.Ratings(-1f, -1f))
+    } else {
+        BasicData(packageName, id, name, -1f, lastModified, lastVersion,
+                "", author, iconUri, imagesUri,
+                ratings)
+    }
     private val versions = HashMap<String, Version>()
     val packageName: String
         get() = basicData.packageName
     val privacyScore = -1f
     val energyScore = -1f
-
 
     fun getLastVersion(): Version {
         return versions[basicData.lastVersion]!!

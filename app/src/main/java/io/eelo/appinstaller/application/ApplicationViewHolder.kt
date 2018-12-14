@@ -52,9 +52,9 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         app.addListener(this)
         title.text = app.basicData!!.name
         author.text = app.basicData!!.author
-        ratingBar.rating = app.basicData!!.score
-        if (app.basicData!!.score != -1f) {
-            rating.text = app.basicData!!.score.toString()
+        ratingBar.rating = app.basicData!!.ratings.rating
+        if (app.basicData!!.ratings.rating != -1f) {
+            rating.text = app.basicData!!.ratings.rating.toString()
         } else {
             rating.text = activity.getString(R.string.not_available)
         }

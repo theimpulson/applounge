@@ -170,8 +170,8 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             startActivity(intent)
         }
 
-        if (basicData.score != -1f) {
-            appRating.text = basicData.score.toString()
+        if (basicData.ratings.rating != -1f) {
+            appRating.text = basicData.ratings.rating.toString()
         } else {
             appRating.text = getString(R.string.not_available)
         }
