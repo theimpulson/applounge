@@ -11,4 +11,7 @@ class Version(val downloadFlag: String?,
               val updateDate: String,
               val sourceDownload: String,
               val whatsNew: String?,
-              val updateName: String)
+              val updateName: String,
+              val privacyRating: Int?,
+              val exodusPermissions: ArrayList<String>,
+              val exodusTrackers: ArrayList<String>)

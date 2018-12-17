@@ -58,8 +58,8 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         } else {
             rating.text = activity.getString(R.string.not_available)
         }
-        // TODO Use exodus rating from basic data
-        //privacyScore.text = app.fullData!!.privacyScore.toString()
+        // TODO Show actual privacy rating
+        privacyScore.text = activity.getString(R.string.not_available)
         stateChanged(app.state)
     }
 

@@ -35,8 +35,6 @@ constructor(
     private val versions = HashMap<String, Version>()
     val packageName: String
         get() = basicData.packageName
-    val privacyScore = -1f
-    val energyScore = -1f
 
     fun getLastVersion(): Version {
         return versions[basicData.lastVersion]!!
@@ -58,10 +56,29 @@ constructor(
                     result["update_on"] as String,
                     result["source_apk_download"] as String,
                     result["whats_new"] as String?,
-                    name)
+                    name,
+                    result["exodus_score"] as Int?,
+                    getPermissions(result["exodus_perms"] as ArrayList<String>?),
+                    getTrackers(result["exodus_trackers"] as ArrayList<LinkedHashMap<String, String>>?))
             if (name == basicData.lastVersion) {
                 basicData.lastVersionNumber = result["version"] as String
             }
         }
+    }
+
+    private fun getPermissions(rawPermissions: ArrayList<String>?): ArrayList<String> {
+        val permissions = ArrayList<String>()
+        rawPermissions?.forEach {
+            permissions.add(it.substring(it.lastIndexOf(".") + 1))
+        }
+        return permissions
+    }
+
+    private fun getTrackers(rawTrackers: ArrayList<LinkedHashMap<String, String>>?): ArrayList<String> {
+        val trackers = ArrayList<String>()
+        rawTrackers?.forEach {
+            trackers.add(it["name"]!!)
+        }
+        return trackers
     }
 }

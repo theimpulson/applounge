@@ -171,10 +171,11 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         }
 
         if (basicData.ratings.rating != -1f) {
-            appRating.text = basicData.ratings.rating.toString()
+            appRating.text = basicData.ratings.rating.toString() + "/5"
         } else {
             appRating.text = getString(R.string.not_available)
         }
+        setRatingBorder(basicData.ratings.rating, appRating)
         app_rating_container.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setIcon(R.drawable.ic_dialog_info)
@@ -186,10 +187,13 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             }
             alertDialog.show()
         }
-        if (basicData.score != -1f) {
-            appPrivacyScore.text = fullData.privacyScore.toString()
+        if (fullData.getLastVersion().privacyRating != null &&
+                fullData.getLastVersion().privacyRating != -1) {
+            appPrivacyScore.text = fullData.getLastVersion().privacyRating.toString() + "/10"
+            setPrivacyRatingBorder(fullData.getLastVersion().privacyRating!!, appPrivacyScore)
         } else {
             appPrivacyScore.text = getString(R.string.not_available)
+            setPrivacyRatingBorder(-1, appPrivacyScore)
         }
         app_privacy_container.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this).create()
@@ -202,11 +206,11 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             }
             alertDialog.show()
         }
-        if (basicData.score != -1f) {
+        /*if (basicData.score != -1f) {
             appEnergyScore.text = fullData.energyScore.toString()
-        } else {
-            appEnergyScore.text = getString(R.string.not_available)
-        }
+        } else {*/
+        appEnergyScore.text = getString(R.string.not_available)
+        //}
         app_energy_container.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setIcon(R.drawable.ic_dialog_info)
@@ -250,7 +254,9 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         application.addListener(this)
         stateChanged(application.state)
 
-        toolbar.elevation = 0f
+        if (scroll_view.scrollY == 0) {
+            toolbar.elevation = 0f
+        }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             scroll_view.setOnScrollChangeListener { view, ia, ib, ic, id ->
                 if (view.scrollY == 0) {
@@ -264,7 +270,15 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         app_permissions_container.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setTitle(R.string.app_permissions_title)
-            // TODO Set content
+            if (fullData.getLastVersion().exodusPermissions.isNotEmpty()) {
+                var message = ""
+                fullData.getLastVersion().exodusPermissions.forEach { permission ->
+                    message = message + "\n" + permission
+                }
+                alertDialog.setMessage(message)
+            } else {
+                alertDialog.setMessage(getString(R.string.not_available_full))
+            }
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
             { _, _ ->
                 alertDialog.dismiss()
@@ -275,7 +289,15 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         app_trackers_container.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setTitle(R.string.app_trackers_title)
-            // TODO Set content
+            if (fullData.getLastVersion().exodusTrackers.isNotEmpty()) {
+                var message = ""
+                fullData.getLastVersion().exodusTrackers.forEach { tracker ->
+                    message = message + "\n" + tracker
+                }
+                alertDialog.setMessage(message)
+            } else {
+                alertDialog.setMessage(getString(R.string.not_available_full))
+            }
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
             { _, _ ->
                 alertDialog.dismiss()
@@ -326,6 +348,34 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
                 finish()
             }
         })
+    }
+
+    private fun setRatingBorder(rating: Float, textView: TextView) {
+        when {
+            rating >= 7f -> {
+                textView.setBackgroundResource(R.drawable.app_border_good)
+            }
+            rating >= 4f -> {
+                textView.setBackgroundResource(R.drawable.app_border_neutral)
+            }
+            else -> {
+                textView.setBackgroundResource(R.drawable.app_border_bad)
+            }
+        }
+    }
+
+    private fun setPrivacyRatingBorder(rating: Int, textView: TextView) {
+        when {
+            rating >= 7 -> {
+                textView.setBackgroundResource(R.drawable.app_border_good)
+            }
+            rating >= 4 -> {
+                textView.setBackgroundResource(R.drawable.app_border_neutral)
+            }
+            else -> {
+                textView.setBackgroundResource(R.drawable.app_border_bad)
+            }
+        }
     }
 
     private fun showImages(images: List<Bitmap>) {
