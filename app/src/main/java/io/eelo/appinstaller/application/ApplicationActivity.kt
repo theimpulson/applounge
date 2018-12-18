@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.text.Html
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Menu
@@ -160,7 +159,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         }
 
         if (fullData.description.isNotEmpty()) {
-            appDescription.text = Html.fromHtml(fullData.description)
+            appDescription.text = fullData.description
             appDescriptionContainer.visibility = View.VISIBLE
         }
 
@@ -272,8 +271,13 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             alertDialog.setTitle(R.string.app_permissions_title)
             if (fullData.getLastVersion().exodusPermissions.isNotEmpty()) {
                 var message = ""
+                var index = 0
                 fullData.getLastVersion().exodusPermissions.forEach { permission ->
-                    message = message + "\n" + permission
+                    message += permission
+                    if (index != fullData.getLastVersion().exodusPermissions.size - 1) {
+                        message += "\n"
+                    }
+                    index++
                 }
                 alertDialog.setMessage(message)
             } else {
@@ -291,8 +295,13 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             alertDialog.setTitle(R.string.app_trackers_title)
             if (fullData.getLastVersion().exodusTrackers.isNotEmpty()) {
                 var message = ""
+                var index = 0
                 fullData.getLastVersion().exodusTrackers.forEach { tracker ->
-                    message = message + "\n" + tracker
+                    message += tracker
+                    if (index != fullData.getLastVersion().exodusTrackers.size - 1) {
+                        message += "\n"
+                    }
+                    index++
                 }
                 alertDialog.setMessage(message)
             } else {

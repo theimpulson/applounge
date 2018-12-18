@@ -3,7 +3,6 @@ package io.eelo.appinstaller.application
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
-import android.text.Html
 import android.text.util.Linkify
 import android.view.MenuItem
 import io.eelo.appinstaller.R
@@ -22,7 +21,7 @@ class ApplicationDescriptionActivity : AppCompatActivity() {
         supportActionBar?.setTitle(R.string.application_description_activity_title)
 
         if (intent != null) {
-            app_description.text = Html.fromHtml(intent.getStringExtra(APPLICATION_DESCRIPTION_KEY))
+            app_description.text = intent.getStringExtra(APPLICATION_DESCRIPTION_KEY)
             Linkify.addLinks(app_description, Linkify.ALL)
         }
     }
