@@ -144,9 +144,10 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             appAuthor.visibility = View.VISIBLE
         }
 
-
-        appCategory.text = fullData.category.getTitle()
-        appCategory.visibility = View.VISIBLE
+        if (fullData.category.getTitle().isNotEmpty()) {
+            appCategory.text = fullData.category.getTitle()
+            appCategory.visibility = View.VISIBLE
+        }
 
         if (fullData.getLastVersion().fileSize.isNotEmpty()) {
             appSize.text = fullData.getLastVersion().fileSize

@@ -19,11 +19,12 @@
         android:icon="@drawable/ic_menu_search"
         android:orderInCategory="1"/>
 
-    <item
+    <!-- TODO Enable once updates screen is implemented -->
+    <!--<item
         android:title="@string/menu_updates"
         android:id="@+id/menu_updates"
         android:icon="@drawable/ic_menu_updates"
-        android:orderInCategory="1"/>
+        android:orderInCategory="1"/>-->
 
     <item
         android:title="@string/menu_settings"
