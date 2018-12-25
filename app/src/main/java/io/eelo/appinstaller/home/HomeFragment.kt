@@ -16,6 +16,7 @@ import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.SmallApplicationListAdapter
 import io.eelo.appinstaller.home.viewmodel.HomeViewModel
 import io.eelo.appinstaller.utils.Common
@@ -105,7 +106,7 @@ class HomeFragment : Fragment() {
         scroller.set(imageCarousel, ImageCarouselScroller(context!!))
     }
 
-    private fun showCategories(categories: LinkedHashMap<String, ArrayList<Application>>) {
+    private fun showCategories(categories: LinkedHashMap<Category, ArrayList<Application>>) {
         categoryList.removeAllViews()
         categories.forEach {
             val homeCategory = HomeCategory(context!!, it.key)

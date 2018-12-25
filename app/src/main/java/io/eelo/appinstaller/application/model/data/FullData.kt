@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.eelo.appinstaller.application.model.Version
+import io.eelo.appinstaller.categories.model.Category
 
 class FullData @JsonCreator
 constructor(
@@ -15,7 +16,7 @@ constructor(
         @JsonProperty("author") author: String,
         @JsonProperty("icon_image_path") iconUri: String,
         @JsonProperty("other_images_path") imagesUri: Array<String>,
-        @JsonProperty("category") val category: String,
+        @JsonProperty("category") category_id: String,
         @JsonProperty("created_on") val createdOn: String,
         @JsonProperty("source") val source: String,
         @JsonProperty("description") val description: String,
@@ -32,12 +33,19 @@ constructor(
                 "", author, iconUri, imagesUri,
                 ratings)
     }
+
     private val versions = HashMap<String, Version>()
     val packageName: String
         get() = basicData.packageName
 
     fun getLastVersion(): Version {
         return versions[basicData.lastVersion]!!
+    }
+
+    val category: Category
+
+    init {
+        this.category = Category(category_id)
     }
 
     @Suppress("unused")

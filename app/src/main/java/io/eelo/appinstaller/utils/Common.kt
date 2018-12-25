@@ -16,14 +16,6 @@ object Common {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected
     }
 
-    fun getCategoryTitle(categoryId: String): String {
-        val title = categoryId.replace("_", " ")
-        if (title.contains("game ")) {
-            return title.removePrefix("game ").capitalize()
-        }
-        return title.capitalize()
-    }
-
     fun toMiB(bytes: Int): Double {
         val inMiB = bytes.div(1048576.0)
         return inMiB.times(10.0).roundToInt().div(10.0)

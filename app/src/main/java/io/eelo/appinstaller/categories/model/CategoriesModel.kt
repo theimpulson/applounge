@@ -51,10 +51,10 @@ class CategoriesModel : CategoriesModelInterface {
         val appsCategories = ArrayList<Category>()
         val gamesCategories = ArrayList<Category>()
         result.appsCategories.forEach { id ->
-            appsCategories.add(Category(null, id))
+            appsCategories.add(Category(id))
         }
         result.gamesCategories.forEach { id ->
-            gamesCategories.add(Category(null, id))
+            gamesCategories.add(Category(id))
         }
         applicationsCategoriesList.value = appsCategories
         gamesCategoriesList.value = gamesCategories

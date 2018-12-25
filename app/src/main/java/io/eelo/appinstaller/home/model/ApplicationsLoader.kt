@@ -4,17 +4,17 @@ import android.content.Context
 import android.os.AsyncTask
 import io.eelo.appinstaller.api.HomeRequest
 import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.utils.Error
-import io.eelo.appinstaller.utils.Common
 
-class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, Any, LinkedHashMap<String, ArrayList<Application>>>() {
+class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, Any, LinkedHashMap<Category, ArrayList<Application>>>() {
 
     private lateinit var bannerApps: ArrayList<Application>
     private var error: Error? = null
 
-    override fun doInBackground(vararg params: Context): LinkedHashMap<String, ArrayList<Application>> {
+    override fun doInBackground(vararg params: Context): LinkedHashMap<Category, ArrayList<Application>> {
         val context = params[0]
-        var applications = LinkedHashMap<String, ArrayList<Application>>()
+        var applications = LinkedHashMap<Category, ArrayList<Application>>()
         HomeRequest().request { applicationError, homeResult ->
             when (applicationError) {
                 null -> {
@@ -29,7 +29,7 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
         return applications
     }
 
-    override fun onPostExecute(result: LinkedHashMap<String, ArrayList<Application>>) {
+    override fun onPostExecute(result: LinkedHashMap<Category, ArrayList<Application>>) {
         if (error == null) {
             BannerApplicationLoader(bannerApps, homeModel).executeOnExecutor(THREAD_POOL_EXECUTOR)
             homeModel.applications.value = result
@@ -38,11 +38,11 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
         }
     }
 
-    private fun loadApplications(result: HomeRequest.HomeResult, context: Context): LinkedHashMap<String, ArrayList<Application>> {
+    private fun loadApplications(result: HomeRequest.HomeResult, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
         val parsedApplications = result.getApps(homeModel.getInstallManager(), context)
-        val applications = LinkedHashMap<String, ArrayList<Application>>()
+        val applications = LinkedHashMap<Category, ArrayList<Application>>()
         for (parsedApplication in parsedApplications) {
-            applications[Common.getCategoryTitle(parsedApplication.key)] = parsedApplication.value
+            applications[parsedApplication.key] = parsedApplication.value
         }
         return applications
     }

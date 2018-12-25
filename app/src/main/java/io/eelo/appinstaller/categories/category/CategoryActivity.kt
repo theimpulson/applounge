@@ -39,7 +39,7 @@ class CategoryActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         category = intent.getSerializableExtra(CATEGORY_KEY) as Category
-        supportActionBar?.title = category.title
+        supportActionBar?.title = category.getTitle()
 
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
         recyclerView = findViewById(R.id.app_list)

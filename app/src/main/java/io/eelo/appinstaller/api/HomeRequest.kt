@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
 import io.eelo.appinstaller.application.model.data.FullData
+import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.ApplicationParser
 import io.eelo.appinstaller.utils.Constants
@@ -50,8 +51,8 @@ class HomeRequest {
             return ApplicationParser.parseToApps(installManager, context, home.bannerApps)
         }
 
-        fun getApps(installManager: InstallManager, context: Context): HashMap<String, ArrayList<Application>> {
-            val apps = HashMap<String, ArrayList<Application>>()
+        fun getApps(installManager: InstallManager, context: Context): HashMap<Category, ArrayList<Application>> {
+            val apps = HashMap<Category, ArrayList<Application>>()
             for (pair in home.apps) {
                 apps[pair.key] = ApplicationParser.parseToApps(installManager, context, pair.value.toTypedArray())
             }
@@ -63,7 +64,7 @@ class HomeRequest {
     class SubHomeResult @JsonCreator
     constructor(@JsonProperty("banner_apps") val bannerApps: Array<FullData>) {
 
-        val apps = HashMap<String, ArrayList<FullData>>()
+        val apps = HashMap<Category, ArrayList<FullData>>()
 
         @JsonAnySetter
         fun append(key: String, value: Any) {
@@ -92,7 +93,7 @@ class HomeRequest {
                 }
                 appsData.add(appData)
             }
-            this.apps[key] = appsData
+            this.apps[Category(key)] = appsData
         }
 
     }

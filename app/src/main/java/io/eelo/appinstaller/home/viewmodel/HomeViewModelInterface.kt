@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.home.model.BannerApplication
 import io.eelo.appinstaller.utils.Error
 
@@ -12,7 +13,7 @@ interface HomeViewModelInterface {
 
     fun getBannerApplications(): MutableLiveData<ArrayList<BannerApplication>>
 
-    fun getCategories(): MutableLiveData<LinkedHashMap<String, ArrayList<Application>>>
+    fun getCategories(): MutableLiveData<LinkedHashMap<Category, ArrayList<Application>>>
 
     fun getScreenError(): MutableLiveData<Error>
 

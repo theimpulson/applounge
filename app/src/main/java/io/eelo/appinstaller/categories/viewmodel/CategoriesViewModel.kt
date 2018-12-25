@@ -7,7 +7,6 @@ import android.content.Intent
 import io.eelo.appinstaller.categories.category.CategoryActivity
 import io.eelo.appinstaller.categories.model.CategoriesModel
 import io.eelo.appinstaller.categories.model.Category
-import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Error
 
@@ -15,22 +14,11 @@ class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
     private val categoriesModel = CategoriesModel()
 
     override fun getApplicationsCategories(): MutableLiveData<ArrayList<Category>> {
-        val applicationsCategories = categoriesModel.applicationsCategoriesList
-        applicationsCategories.value!!.forEach {
-            it.title = Common.getCategoryTitle(it.id)
-            if (it.id == "") {
-                it.title = "F-Droid"
-            }
-        }
-        return applicationsCategories
+        return categoriesModel.applicationsCategoriesList
     }
 
     override fun getGamesCategories(): MutableLiveData<ArrayList<Category>> {
-        val gamesCategories = categoriesModel.gamesCategoriesList
-        gamesCategories.value!!.forEach {
-            it.title = Common.getCategoryTitle(it.id)
-        }
-        return gamesCategories
+        return categoriesModel.gamesCategoriesList
     }
 
     override fun getScreenError(): MutableLiveData<Error> {

@@ -4,11 +4,12 @@ import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Error
 
 class HomeModel : HomeModelInterface {
-    val applications = MutableLiveData<LinkedHashMap<String, ArrayList<Application>>>()
+    val applications = MutableLiveData<LinkedHashMap<Category, ArrayList<Application>>>()
     val bannerApplications = MutableLiveData<ArrayList<BannerApplication>>()
     private var installManager: InstallManager? = null
     var screenError = MutableLiveData<Error>()
