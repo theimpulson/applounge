@@ -18,8 +18,6 @@ import io.eelo.appinstaller.utils.Common.toMiB
 import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import kotlinx.android.synthetic.main.install_button_layout.view.*
-import java.text.DecimalFormat
-import kotlin.math.roundToInt
 
 class ApplicationViewHolder(private val activity: Activity, private val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
 
@@ -65,8 +63,15 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
 
     override fun stateChanged(state: State) {
         Execute({}, {
-            installButton.text = view.context.resources.getString(state.installButtonTextId)
-            installButton.isEnabled = state.isInstallButtonEnabled
+            installButton.text = activity.getString(state.installButtonTextId)
+            when (state) {
+                State.INSTALLING -> {
+                    installButton.isEnabled = false
+                }
+                else -> {
+                    installButton.isEnabled = true
+                }
+            }
         })
     }
 

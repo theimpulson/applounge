@@ -91,19 +91,69 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/app_install_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_margin_medium"
-                android:gravity="center_vertical|end"
-                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/layout_margin_large"
                 android:paddingStart="@dimen/layout_padding_large"
                 android:paddingEnd="@dimen/layout_padding_large">
+
+                <LinearLayout
+                    android:id="@+id/app_download_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/app_size"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/app_download_mb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/state_installing"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="@dimen/text_size_small"
+                            tools:text="10.1 MB/20.6 MB" />
+
+                        <TextView
+                            android:id="@+id/app_download_percentage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/layout_margin_medium"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="?android:textColorPrimary"
+                            android:textSize="@dimen/text_size_small"
+                            tools:text="54%" />
+
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/app_download_progress"
+                        style="?android:progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/layout_margin_small" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/app_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/layout_margin_medium"
+                    android:layout_toStartOf="@id/app_install"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textSize="@dimen/text_size_small"
@@ -113,9 +163,11 @@
                     layout="@layout/install_button_layout"
                     android:layout_width="@dimen/install_button_width"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/layout_margin_medium" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"

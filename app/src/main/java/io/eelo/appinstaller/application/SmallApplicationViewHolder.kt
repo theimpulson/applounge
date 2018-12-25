@@ -49,8 +49,15 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
 
     override fun stateChanged(state: State) {
         Execute({}, {
-            installButton.text = view.context.resources.getString(state.installButtonTextId)
-            installButton.isEnabled = state.isInstallButtonEnabled
+            installButton.text = activity.getString(state.installButtonTextId)
+            when (state) {
+                State.INSTALLING -> {
+                    installButton.isEnabled = false
+                }
+                else -> {
+                    installButton.isEnabled = true
+                }
+            }
         })
     }
 

@@ -59,6 +59,7 @@ class Application(val packageName: String, private val installManager: InstallMa
                 }
             }
             DOWNLOADING -> {
+                // TODO Cancel APK download
             }
             INSTALLING -> {
             }
