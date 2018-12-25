@@ -12,7 +12,6 @@ import io.eelo.appinstaller.application.model.data.BasicData
 import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.Constants
-import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
 
 class Application(val packageName: String, private val installManager: InstallManager) {
@@ -59,7 +58,9 @@ class Application(val packageName: String, private val installManager: InstallMa
                 }
             }
             DOWNLOADING -> {
-                // TODO Cancel APK download
+                stateManager.changeState(NOT_DOWNLOADED)
+                installManager.removeDownload(packageName)
+                cancelDownload()
             }
             INSTALLING -> {
             }
@@ -76,6 +77,12 @@ class Application(val packageName: String, private val installManager: InstallMa
             }
         } else {
             true
+        }
+    }
+
+    private fun cancelDownload() {
+        if (downloader != null) {
+            downloader!!.cancel()
         }
     }
 
