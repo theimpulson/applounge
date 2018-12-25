@@ -6,9 +6,7 @@
     android:background="?android:selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:paddingStart="@dimen/layout_padding_medium"
-    android:paddingTop="@dimen/layout_padding_medium"
-    android:paddingEnd="@dimen/layout_padding_medium">
+    android:paddingTop="@dimen/layout_padding_medium">
 
     <ImageView
         android:id="@+id/category_icon"
@@ -16,14 +14,17 @@
         android:layout_height="@dimen/category_icon_size"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_category_default" />
+        android:layout_marginStart="@dimen/layout_margin_medium"
+        android:src="@drawable/ic_category_default"
+        android:tint="@color/color_category_icon" />
 
     <TextView
         android:id="@+id/category_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/layout_margin_medium"
+        android:layout_marginStart="@dimen/layout_margin_large"
+        android:layout_marginEnd="@dimen/layout_margin_medium"
         android:layout_toEndOf="@id/category_icon"
         android:ellipsize="end"
         android:maxLines="1"
