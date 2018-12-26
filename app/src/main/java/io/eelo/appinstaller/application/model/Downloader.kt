@@ -4,7 +4,7 @@ import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.utils.Constants
 import java.io.*
 import java.net.URL
-import javax.net.ssl.HttpsURLConnection
+import java.net.URLConnection
 
 class Downloader {
     var count = 0
@@ -17,21 +17,13 @@ class Downloader {
         listeners.forEach { it.invoke(count, total) }
     }
 
-    private lateinit var connection: HttpsURLConnection
-    private var isCancelled = false
-
     @Throws(IOException::class)
     fun download(data: FullData, apkFile: File) {
         createApkFile(apkFile)
         val url = URL(Constants.DOWNLOAD_URL + data.getLastVersion().downloadLink)
-        connection = url.openConnection() as HttpsURLConnection
+        val connection = url.openConnection()
         total = connection.contentLength
-        transferBytes(apkFile)
-    }
-
-    fun cancel() {
-        isCancelled = true
-        connection.disconnect()
+        transferBytes(connection, apkFile)
     }
 
     private fun createApkFile(apkFile: File) {
@@ -44,12 +36,12 @@ class Downloader {
     }
 
     @Throws(IOException::class)
-    private fun transferBytes(apkFile: File) {
-        connection.inputStream.use { input ->
+    private fun transferBytes(connection: URLConnection, apkFile: File) {
+        connection.getInputStream().use { input ->
             FileOutputStream(apkFile).use { output ->
                 notifier.start()
                 val buffer = ByteArray(1024)
-                while (!isCancelled && readAndWrite(input, output, buffer)) {
+                while (readAndWrite(input, output, buffer)) {
                 }
             }
         }

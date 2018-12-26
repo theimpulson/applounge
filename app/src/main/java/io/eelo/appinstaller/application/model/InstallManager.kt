@@ -28,13 +28,6 @@ class InstallManager {
     }
 
     @Synchronized
-    fun removeDownload(packageName: String) {
-        if (downloading.contains(packageName)) {
-            downloading.remove(packageName)
-        }
-    }
-
-    @Synchronized
     fun install(packageName: String) {
         if (!installing.contains(packageName)) {
             installing.put(packageName)
