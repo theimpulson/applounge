@@ -13,6 +13,8 @@ constructor(
         @JsonProperty("name") name: String,
         @JsonProperty("last_modified") lastModified: String,
         @JsonProperty("latest_version") lastVersion: String,
+        @JsonProperty("latest_version_number") latestVersionNumber: String,
+        @JsonProperty("latest_downloaded_version") latestDownloadableUpdate: String,
         @JsonProperty("author") author: String,
         @JsonProperty("icon_image_path") iconUri: String,
         @JsonProperty("other_images_path") imagesUri: Array<String>,
@@ -26,11 +28,11 @@ constructor(
 
     var basicData = if (ratings == null) {
         BasicData(packageName, id, name, -1f, lastModified, lastVersion,
-                "", author, iconUri, imagesUri,
+                latestVersionNumber, latestDownloadableUpdate, author, iconUri, imagesUri,
                 BasicData.Ratings(-1f, -1f))
     } else {
         BasicData(packageName, id, name, -1f, lastModified, lastVersion,
-                "", author, iconUri, imagesUri,
+                latestVersionNumber, latestDownloadableUpdate, author, iconUri, imagesUri,
                 ratings)
     }
 
@@ -39,7 +41,7 @@ constructor(
         get() = basicData.packageName
 
     fun getLastVersion(): Version {
-        return versions[basicData.lastVersion]!!
+        return versions[basicData.latestDownloadableUpdate]!!
     }
 
     val category: Category
@@ -68,9 +70,6 @@ constructor(
                     result["exodus_score"] as Int?,
                     getPermissions(result["exodus_perms"] as ArrayList<String>?),
                     getTrackers(result["exodus_trackers"] as ArrayList<LinkedHashMap<String, String>>?))
-            if (name == basicData.lastVersion) {
-                basicData.lastVersionNumber = result["version"] as String
-            }
         }
     }
 

@@ -19,7 +19,8 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
             @param:JsonProperty("search_score") val score: Float,
             @param:JsonProperty("last_modified") val lastModified: String,
             @param:JsonProperty("latest_version") val lastVersion: String,
-            @param:JsonProperty("latest_version_number") var lastVersionNumber_a: String?,
+            @param:JsonProperty("latest_version_number") var lastVersionNumber: String,
+            @param:JsonProperty("latest_downloaded_version") val latestDownloadableUpdate: String,
             @param:JsonProperty("author") val author: String,
             @param:JsonProperty("icon_image_path") private val iconUri: String,
             @param:JsonProperty("other_images_path") val imagesUri: Array<String>,
@@ -27,7 +28,6 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
 
     private var icon: Bitmap? = null
     private var images: List<Bitmap>? = null
-    var lastVersionNumber = ""
 
     fun loadImagesAsyncly(getter: (List<Bitmap>) -> Unit) {
         if (images == null) {

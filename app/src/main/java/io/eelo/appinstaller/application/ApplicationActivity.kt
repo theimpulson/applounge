@@ -98,7 +98,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         val basicData = application.basicData!!
         val fullData = application.fullData!!
 
-        if (basicData.lastVersion == "update_-1") {
+        if (basicData.latestDownloadableUpdate == "update_-1") {
             Toast.makeText(this, getString(Common.getScreenErrorDescriptionId(Error.APK_UNAVAILABLE)), Toast.LENGTH_LONG).show()
             finish()
             return
