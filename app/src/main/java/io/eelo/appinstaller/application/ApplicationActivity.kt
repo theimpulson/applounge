@@ -98,7 +98,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         val basicData = application.basicData!!
         val fullData = application.fullData!!
 
-        if (basicData.latestDownloadableUpdate == "update_-1") {
+        if (fullData.getLastVersion() == null) {
             Toast.makeText(this, getString(Common.getScreenErrorDescriptionId(Error.APK_UNAVAILABLE)), Toast.LENGTH_LONG).show()
             finish()
             return
@@ -150,8 +150,8 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             appCategory.visibility = View.VISIBLE
         }
 
-        if (fullData.getLastVersion().fileSize.isNotEmpty()) {
-            appSize.text = fullData.getLastVersion().fileSize
+        if (fullData.getLastVersion()!!.fileSize.isNotEmpty()) {
+            appSize.text = fullData.getLastVersion()!!.fileSize
             appSize.visibility = View.VISIBLE
         }
 
@@ -187,10 +187,10 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             }
             alertDialog.show()
         }
-        if (fullData.getLastVersion().privacyRating != null &&
-                fullData.getLastVersion().privacyRating != -1) {
-            appPrivacyScore.text = fullData.getLastVersion().privacyRating.toString() + "/10"
-            setPrivacyRatingBorder(fullData.getLastVersion().privacyRating!!, appPrivacyScore)
+        if (fullData.getLastVersion()!!.privacyRating != null &&
+                fullData.getLastVersion()!!.privacyRating != -1) {
+            appPrivacyScore.text = fullData.getLastVersion()!!.privacyRating.toString() + "/10"
+            setPrivacyRatingBorder(fullData.getLastVersion()!!.privacyRating!!, appPrivacyScore)
         } else {
             appPrivacyScore.text = getString(R.string.not_available)
             setPrivacyRatingBorder(-1, appPrivacyScore)
@@ -227,20 +227,20 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
             showImages(it)
         }
 
-        if (fullData.getLastVersion().version.isNotEmpty()) {
-            appVersion.text = fullData.getLastVersion().version
+        if (fullData.getLastVersion()!!.version.isNotEmpty()) {
+            appVersion.text = fullData.getLastVersion()!!.version
         } else {
             appVersion.text = getString(R.string.not_available)
         }
 
-        if (fullData.getLastVersion().createdOn.isNotEmpty()) {
-            appUpdatedOn.text = fullData.getLastVersion().createdOn
+        if (fullData.getLastVersion()!!.createdOn.isNotEmpty()) {
+            appUpdatedOn.text = fullData.getLastVersion()!!.createdOn
         } else {
             appUpdatedOn.text = getString(R.string.not_available)
         }
 
-        if (fullData.getLastVersion().minAndroid.isNotEmpty()) {
-            appMinAndroid.text = fullData.getLastVersion().minAndroid
+        if (fullData.getLastVersion()!!.minAndroid.isNotEmpty()) {
+            appMinAndroid.text = fullData.getLastVersion()!!.minAndroid
         } else {
             appMinAndroid.text = getString(R.string.not_available)
         }
@@ -270,12 +270,12 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         app_permissions_container.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setTitle(R.string.app_permissions_title)
-            if (fullData.getLastVersion().exodusPermissions.isNotEmpty()) {
+            if (fullData.getLastVersion()!!.exodusPermissions.isNotEmpty()) {
                 var message = ""
                 var index = 0
-                fullData.getLastVersion().exodusPermissions.forEach { permission ->
+                fullData.getLastVersion()!!.exodusPermissions.forEach { permission ->
                     message += permission
-                    if (index != fullData.getLastVersion().exodusPermissions.size - 1) {
+                    if (index != fullData.getLastVersion()!!.exodusPermissions.size - 1) {
                         message += "\n"
                     }
                     index++
@@ -294,12 +294,12 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         app_trackers_container.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setTitle(R.string.app_trackers_title)
-            if (fullData.getLastVersion().exodusTrackers.isNotEmpty()) {
+            if (fullData.getLastVersion()!!.exodusTrackers.isNotEmpty()) {
                 var message = ""
                 var index = 0
-                fullData.getLastVersion().exodusTrackers.forEach { tracker ->
+                fullData.getLastVersion()!!.exodusTrackers.forEach { tracker ->
                     message += tracker
-                    if (index != fullData.getLastVersion().exodusTrackers.size - 1) {
+                    if (index != fullData.getLastVersion()!!.exodusTrackers.size - 1) {
                         message += "\n"
                     }
                     index++

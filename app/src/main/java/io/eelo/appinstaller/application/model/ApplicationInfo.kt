@@ -12,10 +12,10 @@ class ApplicationInfo(private val packageName: String) {
     fun isLastVersionInstalled(context: Context, data: BasicData): Boolean {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(packageName, 0)
-            if (data.lastVersionNumber.isNotEmpty()) {
-                packageInfo.versionCode == data.lastVersionNumber
-                        .substring(data.lastVersionNumber.indexOf("(") + 1,
-                                data.lastVersionNumber.indexOf(")")).toInt()
+            if (!data.lastVersionNumber.isNullOrBlank()) {
+                packageInfo.versionCode == data.lastVersionNumber!!
+                        .substring(data.lastVersionNumber!!.indexOf("(") + 1,
+                                data.lastVersionNumber!!.indexOf(")")).toInt()
             } else {
                 false
             }

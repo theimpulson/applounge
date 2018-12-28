@@ -13,7 +13,7 @@ constructor(
         @JsonProperty("name") name: String,
         @JsonProperty("last_modified") lastModified: String,
         @JsonProperty("latest_version") lastVersion: String,
-        @JsonProperty("latest_version_number") latestVersionNumber: String,
+        @JsonProperty("latest_version_number") latestVersionNumber: String?,
         @JsonProperty("latest_downloaded_version") latestDownloadableUpdate: String,
         @JsonProperty("author") author: String,
         @JsonProperty("icon_image_path") iconUri: String,
@@ -40,8 +40,12 @@ constructor(
     val packageName: String
         get() = basicData.packageName
 
-    fun getLastVersion(): Version {
-        return versions[basicData.latestDownloadableUpdate]!!
+    fun getLastVersion(): Version? {
+        return if (basicData.latestDownloadableUpdate != "-1") {
+            versions[basicData.latestDownloadableUpdate]
+        } else {
+            null
+        }
     }
 
     val category: Category

@@ -18,11 +18,14 @@ class Downloader {
     @Throws(IOException::class)
     fun download(data: FullData, apkFile: File) {
         createApkFile(apkFile)
-        val url = URL(Constants.DOWNLOAD_URL + data.getLastVersion().downloadLink)
-        val connection = url.openConnection() as HttpsURLConnection
-        total = connection.contentLength
-        transferBytes(connection, apkFile)
-        connection.disconnect()
+        // TODO Handle this error better, ideally do not create the APK file
+        if (data.getLastVersion() != null) {
+            val url = URL(Constants.DOWNLOAD_URL + data.getLastVersion()!!.downloadLink)
+            val connection = url.openConnection() as HttpsURLConnection
+            total = connection.contentLength
+            transferBytes(connection, apkFile)
+            connection.disconnect()
+        }
     }
 
     private fun createApkFile(apkFile: File) {
