@@ -2,9 +2,7 @@ package io.eelo.appinstaller.application.model
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Environment.getExternalStorageDirectory
 import io.eelo.appinstaller.application.model.data.BasicData
-import io.eelo.appinstaller.utils.Constants.APK_FOLDER
 import java.io.File
 
 class ApplicationInfo(private val packageName: String) {
@@ -34,12 +32,12 @@ class ApplicationInfo(private val packageName: String) {
 
     }
 
-    fun getApkFile(data: BasicData): File {
-        return File(getExternalStorageDirectory(), APK_FOLDER + packageName + "-" + data.lastVersionNumber + ".apk")
+    fun getApkFile(context: Context, data: BasicData): File {
+        return File(context.filesDir, packageName + "-" + data.lastVersionNumber + ".apk")
     }
 
-    fun isDownloaded(data: BasicData): Boolean {
-        return getApkFile(data).exists()
+    fun isDownloaded(context: Context, data: BasicData): Boolean {
+        return getApkFile(context, data).exists()
     }
 
 
@@ -48,6 +46,6 @@ class ApplicationInfo(private val packageName: String) {
     }
 
     fun install(context: Context, data: BasicData) {
-        Installer(getApkFile(data)).install(context)
+        Installer(getApkFile(context, data)).install(context)
     }
 }

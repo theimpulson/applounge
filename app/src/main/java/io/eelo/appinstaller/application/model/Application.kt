@@ -1,9 +1,7 @@
 package io.eelo.appinstaller.application.model
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.pm.PackageManager
 import android.widget.ImageView
 import io.eelo.appinstaller.api.AppDetailRequest
 import io.eelo.appinstaller.api.PackageNameSearchRequest
@@ -11,8 +9,6 @@ import io.eelo.appinstaller.application.model.State.*
 import io.eelo.appinstaller.application.model.data.BasicData
 import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.utils.Error
-import io.eelo.appinstaller.utils.Constants
-import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
 
 class Application(val packageName: String, private val installManager: InstallManager) {
@@ -53,10 +49,8 @@ class Application(val packageName: String, private val installManager: InstallMa
                 prepareInstall()
             }
             NOT_UPDATED, NOT_DOWNLOADED -> {
-                if (canWriteStorage(activity)) {
-                    stateManager.changeState(DOWNLOADING)
-                    installManager.download(packageName)
-                }
+                stateManager.changeState(DOWNLOADING)
+                installManager.download(packageName)
             }
             DOWNLOADING -> {
                 // TODO Cancel APK download
@@ -66,25 +60,12 @@ class Application(val packageName: String, private val installManager: InstallMa
         }
     }
 
-    private fun canWriteStorage(activity: Activity): Boolean {
-        return if (android.os.Build.VERSION.SDK_INT >= 23) {
-            if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                activity.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), Constants.STORAGE_PERMISSION_REQUEST_CODE)
-                false
-            } else {
-                true
-            }
-        } else {
-            true
-        }
-    }
-
     fun download(context: Context) {
         assertFullData(context)
         downloader = Downloader()
         stateManager.notifyDownloading(downloader!!)
         try {
-            downloader!!.download(fullData!!, info.getApkFile(basicData!!))
+            downloader!!.download(fullData!!, info.getApkFile(context, basicData!!))
             downloader = null
             prepareInstall()
         } catch (e: Exception) {

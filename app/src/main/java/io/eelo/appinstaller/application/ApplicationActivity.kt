@@ -2,7 +2,6 @@ package io.eelo.appinstaller.application
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -19,7 +18,6 @@ import io.eelo.appinstaller.ScreenshotsActivity
 import io.eelo.appinstaller.application.model.*
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.toMiB
-import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
 import io.eelo.appinstaller.utils.Constants.APPLICATION_PACKAGE_NAME_KEY
 import io.eelo.appinstaller.utils.Constants.SELECTED_APPLICATION_SCREENSHOT_KEY
@@ -358,16 +356,6 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
                 }
             }
         })
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                application.buttonClicked(this)
-            } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(this, resources.getString(R.string.error_storage_permission_denied), Toast.LENGTH_LONG).show()
-            }
-        }
     }
 
     private fun initialise(packageName: String) {
