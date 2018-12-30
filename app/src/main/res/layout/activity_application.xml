@@ -423,8 +423,7 @@
                 android:background="@color/colorDivider" />
 
             <LinearLayout
-                android:id="@+id/app_screenshots_container"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/layout_margin_large"
                 android:orientation="vertical">
@@ -458,10 +457,29 @@
 
                 </HorizontalScrollView>
 
+                <TextView
+                    android:id="@+id/app_screenshots_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/layout_margin_large"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/error_no_screenshots_available"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="@dimen/text_size_medium"
+                    android:visibility="gone" />
+
+                <ProgressBar
+                    android:id="@+id/app_screenshots_progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/layout_margin_large" />
+
             </LinearLayout>
 
             <View
-                android:id="@+id/app_images_divider"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_divider_height"
                 android:layout_marginStart="@dimen/layout_margin_medium"

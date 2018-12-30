@@ -114,7 +114,6 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         val appPrivacyScore = findViewById<TextView>(R.id.app_privacy_score)
         val appEnergyScore = findViewById<TextView>(R.id.app_energy_score)
         val appImagesContainer = findViewById<LinearLayout>(R.id.app_images_container)
-        val appImagesDivider = findViewById<View>(R.id.app_images_divider)
         val appVersion = findViewById<TextView>(R.id.app_version)
         val appUpdatedOn = findViewById<TextView>(R.id.app_updated_on)
         val appMinAndroid = findViewById<TextView>(R.id.app_min_android)
@@ -126,10 +125,9 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         app_download_container.visibility = View.GONE
         appSize.visibility = View.GONE
         appDescriptionContainer.visibility = View.GONE
-        app_screenshots_container.visibility = View.GONE
+        app_screenshots_error.visibility = View.GONE
         app_images_scroll_view.visibility = View.GONE
         appImagesContainer.visibility = View.GONE
-        appImagesDivider.visibility = View.GONE
 
         application.loadIcon(appIcon)
 
@@ -403,6 +401,11 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     }
 
     private fun showImages(images: List<Bitmap>) {
+        app_screenshots_progress_bar.visibility = View.GONE
+        if (images.isEmpty()) {
+            app_screenshots_error.visibility = View.VISIBLE
+            return
+        }
         val imagesContainer = app_images_container
         imagesContainer.removeAllViews()
         images.forEach {
@@ -430,10 +433,8 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
                 intent.putExtra(SELECTED_APPLICATION_SCREENSHOT_KEY, images.indexOf(it))
                 startActivity(intent)
             }
-            app_screenshots_container.visibility = View.VISIBLE
             app_images_scroll_view.visibility = View.VISIBLE
             imagesContainer.visibility = View.VISIBLE
-            app_images_divider.visibility = View.VISIBLE
         }
     }
 
