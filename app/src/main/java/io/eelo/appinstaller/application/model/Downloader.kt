@@ -55,7 +55,7 @@ class Downloader {
             NotificationCompat.Builder(context)
         }
 
-        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher)
+        notificationBuilder.setSmallIcon(R.drawable.ic_notification_download)
                 .setContentTitle(fullData.basicData.name)
                 .setContentText(context.getString(R.string.download_notification_description))
                 .setProgress(total, count, false)
