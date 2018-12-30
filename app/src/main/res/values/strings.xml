@@ -2,6 +2,7 @@
     <string name="app_name">App Installer</string>
     <string name="not_available">N/A</string>
     <string name="not_available_full">Not available</string>
+    <string name="download_notification_channel_title">App downloads</string>
 
     <!-- Application -->
     <string name="app_icon_content_description">App icon</string>
@@ -33,6 +34,7 @@
     <string name="app_min_android">Requires</string>
     <string name="app_licence">Licence</string>
     <string name="app_screenshots_title">Screenshots</string>
+    <string name="download_notification_description">Downloading</string>
 
     <!-- Application Description Activity -->
     <string name="application_description_activity_title">Description</string>

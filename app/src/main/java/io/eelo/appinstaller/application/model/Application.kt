@@ -71,7 +71,7 @@ class Application(val packageName: String, private val installManager: InstallMa
         downloader = Downloader()
         stateManager.notifyDownloading(downloader!!)
         try {
-            downloader!!.download(fullData!!, info.getApkFile(context, basicData!!))
+            downloader!!.download(context, fullData!!, info.getApkFile(context, basicData!!))
             downloader = null
             prepareInstall()
         } catch (e: Exception) {
