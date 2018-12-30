@@ -16,6 +16,7 @@ import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManagerGetter
+import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.categories.category.viewmodel.CategoryViewModel
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.ApplicationListAdapter
@@ -104,6 +105,18 @@ class CategoryActivity : AppCompatActivity() {
                 finish()
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::categoryViewModel.isInitialized) {
+            categoryViewModel.getApplications().value!!.forEach { application ->
+                if (application.state == State.INSTALLING ||
+                        application.state == State.INSTALLED) {
+                    application.checkForStateUpdate(this)
+                }
+            }
+        }
     }
 
     override fun onDestroy() {

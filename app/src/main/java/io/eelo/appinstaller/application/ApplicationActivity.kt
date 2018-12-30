@@ -438,6 +438,14 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (::application.isInitialized && (application.state == State.INSTALLING ||
+                        application.state == State.INSTALLED)) {
+            application.checkForStateUpdate(this)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         application.decrementUses()

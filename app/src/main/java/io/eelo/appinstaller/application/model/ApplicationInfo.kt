@@ -4,22 +4,26 @@ import android.content.Context
 import android.content.pm.PackageManager
 import io.eelo.appinstaller.application.model.data.BasicData
 import java.io.File
+import java.lang.Exception
+import java.util.regex.Pattern
 
 class ApplicationInfo(private val packageName: String) {
 
     fun isLastVersionInstalled(context: Context, data: BasicData): Boolean {
-        return try {
-            val packageInfo = context.packageManager.getPackageInfo(packageName, 0)
+        try {
+            val installedVersionCode = context.packageManager.getPackageInfo(packageName, 0)
+                    .versionCode
             if (!data.lastVersionNumber.isNullOrBlank()) {
-                packageInfo.versionCode == data.lastVersionNumber!!
-                        .substring(data.lastVersionNumber!!.indexOf("(") + 1,
-                                data.lastVersionNumber!!.indexOf(")")).toInt()
-            } else {
-                false
+                val pattern = Pattern.compile("[(]$installedVersionCode[)]")
+                val matcher = pattern.matcher(data.lastVersionNumber)
+                if (matcher.find()) {
+                    return true
+                }
             }
-        } catch (ignored: PackageManager.NameNotFoundException) {
-            false
+        } catch (exception: Exception) {
+            exception.printStackTrace()
         }
+        return false
     }
 
     fun isInstalled(context: Context): Boolean {

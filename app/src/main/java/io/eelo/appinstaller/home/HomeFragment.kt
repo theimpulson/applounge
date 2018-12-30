@@ -16,6 +16,7 @@ import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.SmallApplicationListAdapter
 import io.eelo.appinstaller.home.viewmodel.HomeViewModel
@@ -114,6 +115,20 @@ class HomeFragment : Fragment() {
             applicationList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             applicationList.adapter = SmallApplicationListAdapter(activity!!, it.value)
             categoryList.addView(homeCategory)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::homeViewModel.isInitialized) {
+            homeViewModel.getCategories().value!!.values.forEach {
+                it.forEach { application ->
+                    if (application.state == State.INSTALLING ||
+                            application.state == State.INSTALLED) {
+                        application.checkForStateUpdate(context!!)
+                    }
+                }
+            }
         }
     }
 

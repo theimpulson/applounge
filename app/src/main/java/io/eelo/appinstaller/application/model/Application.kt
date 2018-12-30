@@ -41,6 +41,12 @@ class Application(val packageName: String, private val installManager: InstallMa
         installManager.tryRemove(this)
     }
 
+    fun checkForStateUpdate(context: Context) {
+        if (basicData != null) {
+            stateManager.find(context, basicData!!)
+        }
+    }
+
     @Synchronized
     fun buttonClicked(activity: Activity) {
         when (stateManager.state) {
@@ -82,7 +88,6 @@ class Application(val packageName: String, private val installManager: InstallMa
 
     fun install(context: Context) {
         info.install(context, basicData!!)
-        stateManager.find(context, basicData!!)
     }
 
     fun isUsed(): Boolean {

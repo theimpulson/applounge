@@ -24,6 +24,7 @@ import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.search.viewModel.SearchViewModel
 import android.widget.LinearLayout
 import android.widget.TextView
+import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants.SUGGESTION_KEY
 
@@ -169,6 +170,14 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     override fun onResume() {
         focusView?.let {
             focusView!!.requestFocus()
+        }
+        if (::searchViewModel.isInitialized) {
+            searchViewModel.getApplications().value!!.forEach { application ->
+                if (application.state == State.INSTALLING ||
+                        application.state == State.INSTALLED) {
+                    application.checkForStateUpdate(context!!)
+                }
+            }
         }
         super.onResume()
     }
