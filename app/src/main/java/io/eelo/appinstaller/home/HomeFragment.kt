@@ -132,8 +132,8 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        if (::categoryList.isInitialized) {
+    fun decrementApplicationUses() {
+        if (::homeViewModel.isInitialized) {
             homeViewModel.getCategories().value!!.forEach {
                 it.value.forEach { application ->
                     application.decrementUses()
@@ -143,6 +143,5 @@ class HomeFragment : Fragment() {
                 it.application.decrementUses()
             }
         }
-        super.onDestroy()
     }
 }

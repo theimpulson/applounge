@@ -133,6 +133,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onDestroy() {
         super.onDestroy()
+        homeFragment.decrementApplicationUses()
+        searchFragment.decrementApplicationUses()
+        updatesFragment.decrementApplicationUses()
         installManagerGetter.disconnect(this)
     }
 }

@@ -182,10 +182,9 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         super.onResume()
     }
 
-    override fun onDestroy() {
-        if (::recyclerView.isInitialized && recyclerView.adapter != null) {
-            (recyclerView.adapter as ApplicationListAdapter).removeApplicationUses()
+    fun decrementApplicationUses() {
+        applicationList.forEach {
+            it.decrementUses()
         }
-        super.onDestroy()
     }
 }
