@@ -17,20 +17,23 @@ import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.application.model.State
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
 import io.eelo.appinstaller.categories.category.viewmodel.CategoryViewModel
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants.CATEGORY_KEY
 
-class CategoryActivity : AppCompatActivity() {
+class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectionCallback {
 
     private lateinit var category: Category
     private lateinit var categoryViewModel: CategoryViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private var applicationList = ArrayList<Application>()
-    private val applicationManagerServiceConnection = ApplicationManagerServiceConnection()
+    private val applicationManagerServiceConnection =
+            ApplicationManagerServiceConnection(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,18 +88,12 @@ class CategoryActivity : AppCompatActivity() {
             }
         })
 
-        object : AsyncTask<Void, Void, Void>() {
+        applicationManagerServiceConnection.bindService(this)
+    }
 
-            override fun doInBackground(vararg p0: Void?): Void? {
-                val installManager = applicationManagerServiceConnection.connectAndGet(this@CategoryActivity)
-                categoryViewModel.initialise(installManager, category.id)
-                return null
-            }
-
-            override fun onPostExecute(result: Void?) {
-                categoryViewModel.loadApplications(this@CategoryActivity)
-            }
-        }.executeOnExecutor(Common.EXECUTOR)
+    override fun onServiceBind(applicationManager: ApplicationManager) {
+        categoryViewModel.initialise(applicationManager, category.id)
+        categoryViewModel.loadApplications(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -124,6 +121,6 @@ class CategoryActivity : AppCompatActivity() {
         applicationList.forEach {
             it.decrementUses()
         }
-        applicationManagerServiceConnection.disconnect(this)
+        applicationManagerServiceConnection.unbindService(this)
     }
 }

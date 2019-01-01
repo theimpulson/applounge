@@ -6,14 +6,17 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
+import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
 import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.SELECTED_APPLICATION_SCREENSHOT_KEY
-import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.activity_screenshots.*
 
-class ScreenshotsActivity : AppCompatActivity() {
-    private val applicationManagerServiceConnection = ApplicationManagerServiceConnection()
+class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnectionCallback {
+    private val applicationManagerServiceConnection =
+            ApplicationManagerServiceConnection(this)
+    private lateinit var applicationPackageName: String
     private lateinit var application: Application
     private lateinit var screenshotsCarousel: ViewPager
     private var lastSelectedScreenshotIndex = 0
@@ -35,17 +38,14 @@ class ScreenshotsActivity : AppCompatActivity() {
         val applicationPackageName: String? =
                 intent.getStringExtra(Constants.APPLICATION_PACKAGE_NAME_KEY)
         if (!applicationPackageName.isNullOrEmpty()) {
-            initialise(applicationPackageName!!)
+            this.applicationPackageName = applicationPackageName!!
+            applicationManagerServiceConnection.bindService(this)
         }
     }
 
-    private fun initialise(packageName: String) {
-        Execute({
-            val installManager = applicationManagerServiceConnection.connectAndGet(this)
-            application = installManager.findOrCreateApp(packageName)
-        }, {
-            onApplicationInfoLoaded()
-        })
+    override fun onServiceBind(applicationManager: ApplicationManager) {
+        application = applicationManager.findOrCreateApp(applicationPackageName)
+        onApplicationInfoLoaded()
     }
 
     private fun onApplicationInfoLoaded() {
@@ -73,6 +73,6 @@ class ScreenshotsActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         application.decrementUses()
-        applicationManagerServiceConnection.disconnect(this)
+        applicationManagerServiceConnection.unbindService(this)
     }
 }

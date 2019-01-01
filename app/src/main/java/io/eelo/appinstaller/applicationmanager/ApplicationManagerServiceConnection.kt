@@ -8,33 +8,24 @@ import android.os.IBinder
 import android.os.Message
 import android.os.Messenger
 
-class ApplicationManagerServiceConnection : ServiceConnection {
-
-    private lateinit var applicationManager: ApplicationManager
-    private val blocker = Object()
+class ApplicationManagerServiceConnection(
+        private val callback: ApplicationManagerServiceConnectionCallback) : ServiceConnection {
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         Messenger(service).send(Message.obtain(null, 0, { result: ApplicationManager ->
-            applicationManager = result
-            synchronized(blocker) {
-                blocker.notify()
-            }
+            callback.onServiceBind(result)
         }))
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
     }
 
-    fun connectAndGet(context: Context): ApplicationManager {
+    fun bindService(context: Context) {
         context.startService(Intent(context, ApplicationManagerService::class.java))
         context.bindService(Intent(context, ApplicationManagerService::class.java), this, Context.BIND_AUTO_CREATE)
-        synchronized(blocker) {
-            blocker.wait()
-        }
-        return applicationManager
     }
 
-    fun disconnect(context: Context) {
+    fun unbindService(context: Context) {
         context.unbindService(this)
     }
 

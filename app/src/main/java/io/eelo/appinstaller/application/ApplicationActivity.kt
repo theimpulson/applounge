@@ -15,7 +15,9 @@ import android.view.View
 import android.widget.*
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.*
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
+import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.toMiB
 import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
@@ -28,9 +30,12 @@ import kotlinx.android.synthetic.main.activity_application.*
 import kotlinx.android.synthetic.main.install_button_layout.*
 import kotlin.math.roundToInt
 
-class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
+class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
+        ApplicationManagerServiceConnectionCallback {
+    private lateinit var applicationPackageName: String
     private lateinit var application: Application
-    private val applicationManagerServiceConnection = ApplicationManagerServiceConnection()
+    private val applicationManagerServiceConnection =
+            ApplicationManagerServiceConnection(this)
     private var imageWidth = 0
     private var imageHeight = 0
     private var imageMargin = 0
@@ -49,8 +54,24 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
 
         val applicationPackageName: String? = intent.getStringExtra(APPLICATION_PACKAGE_NAME_KEY)
         if (!applicationPackageName.isNullOrEmpty()) {
-            initialise(applicationPackageName!!)
+            this.applicationPackageName = applicationPackageName!!
+            applicationManagerServiceConnection.bindService(this)
         }
+    }
+
+    override fun onServiceBind(applicationManager: ApplicationManager) {
+        application = applicationManager.findOrCreateApp(applicationPackageName)
+        var error: Error? = null
+        Execute({
+            error = application.assertFullData(this)
+        }, {
+            if (error == null) {
+                onApplicationInfoLoaded()
+            } else {
+                Toast.makeText(this, getString(Common.getScreenErrorDescriptionId(error!!)), Toast.LENGTH_LONG).show()
+                finish()
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -356,22 +377,6 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
         })
     }
 
-    private fun initialise(packageName: String) {
-        var error: Error? = null
-        Execute({
-            val installManager = applicationManagerServiceConnection.connectAndGet(this)
-            application = installManager.findOrCreateApp(packageName)
-            error = application.assertFullData(this)
-        }, {
-            if (error == null) {
-                onApplicationInfoLoaded()
-            } else {
-                Toast.makeText(this, getString(Common.getScreenErrorDescriptionId(error!!)), Toast.LENGTH_LONG).show()
-                finish()
-            }
-        })
-    }
-
     private fun setRatingBorder(rating: Float, textView: TextView) {
         when {
             rating >= 7f -> {
@@ -449,6 +454,6 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     override fun onDestroy() {
         super.onDestroy()
         application.decrementUses()
-        applicationManagerServiceConnection.disconnect(this)
+        applicationManagerServiceConnection.unbindService(this)
     }
 }

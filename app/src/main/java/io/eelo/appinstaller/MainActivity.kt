@@ -1,7 +1,6 @@
 package io.eelo.appinstaller
 
 import android.annotation.SuppressLint
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
@@ -11,21 +10,23 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
+import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
 import io.eelo.appinstaller.categories.CategoriesFragment
 import io.eelo.appinstaller.home.HomeFragment
 import io.eelo.appinstaller.search.SearchFragment
 import io.eelo.appinstaller.settings.SettingsFragment
 import io.eelo.appinstaller.updates.UpdatesFragment
-import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants.CURRENTLY_SELECTED_FRAGMENT_KEY
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
+        ApplicationManagerServiceConnectionCallback {
     private var currentFragmentId = 0
     private val homeFragment = HomeFragment()
     private val searchFragment = SearchFragment()
     private val updatesFragment = UpdatesFragment()
-    private val applicationManagerServiceConnection = ApplicationManagerServiceConnection()
+    private val applicationManagerServiceConnection =
+            ApplicationManagerServiceConnection(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,27 +35,20 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottom_navigation_view.setOnNavigationItemSelectedListener(this)
         disableShiftingOfNabBarItems()
 
-        object : AsyncTask<Void, Void, Void>() {
+        // Show the home fragment by default
+        currentFragmentId = if (savedInstanceState != null &&
+                savedInstanceState.containsKey(CURRENTLY_SELECTED_FRAGMENT_KEY)) {
+            savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY)
+        } else {
+            R.id.menu_home
+        }
 
-            override fun doInBackground(vararg p0: Void?): Void? {
-                val installManager = applicationManagerServiceConnection.connectAndGet(this@MainActivity)
-                initialiseFragments(installManager)
-                return null
-            }
+        applicationManagerServiceConnection.bindService(this)
+    }
 
-            override fun onPostExecute(result: Void?) {
-                // Show the home fragment by default
-                if (savedInstanceState != null && savedInstanceState.containsKey(CURRENTLY_SELECTED_FRAGMENT_KEY)) {
-                    if (selectFragment(savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY))) {
-                        currentFragmentId = savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY)
-                    }
-                } else {
-                    if (selectFragment(R.id.menu_home)) {
-                        currentFragmentId = R.id.menu_home
-                    }
-                }
-            }
-        }.executeOnExecutor(Common.EXECUTOR)
+    override fun onServiceBind(applicationManager: ApplicationManager) {
+        initialiseFragments(applicationManager)
+        selectFragment(currentFragmentId)
     }
 
     private fun initialiseFragments(applicationManager: ApplicationManager) {
@@ -136,6 +130,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         homeFragment.decrementApplicationUses()
         searchFragment.decrementApplicationUses()
         updatesFragment.decrementApplicationUses()
-        applicationManagerServiceConnection.disconnect(this)
+        applicationManagerServiceConnection.unbindService(this)
     }
 }
