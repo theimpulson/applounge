@@ -14,7 +14,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.*
+import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.ApplicationStateListener
+import io.eelo.appinstaller.application.model.Downloader
+import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
@@ -445,8 +448,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
 
     override fun onResume() {
         super.onResume()
-        if (::application.isInitialized && (application.state == State.INSTALLING ||
-                        application.state == State.INSTALLED)) {
+        if (::application.isInitialized) {
             application.checkForStateUpdate(this)
         }
     }

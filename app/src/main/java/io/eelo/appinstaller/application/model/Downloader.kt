@@ -5,37 +5,36 @@ import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.utils.Constants
 import java.io.*
 import java.net.URL
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.net.ssl.HttpsURLConnection
-import android.support.v4.app.NotificationCompat
-import io.eelo.appinstaller.R
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import io.eelo.appinstaller.utils.Common
 
 class Downloader {
     private var count = 0
     private var total = 0
     private val listeners = ArrayList<(Int, Int) -> Unit>()
 
+    private val isCanceled = AtomicBoolean(false)
+
     private val notifier = ThreadedListeners {
         listeners.forEach { it.invoke(count, total) }
     }
 
-    private lateinit var notificationBuilder: NotificationCompat.Builder
-    private lateinit var notificationManager: NotificationManager
+    private val downloadNotification = DownloadNotification()
 
     @Throws(IOException::class)
-    fun download(context: Context, data: FullData, apkFile: File) {
+    fun download(context: Context, data: FullData, apkFile: File):Boolean {
         createApkFile(apkFile)
         // TODO Handle this error better, ideally do not create the APK file
         if (data.getLastVersion() != null) {
+            downloadNotification.create(context, data.basicData.name)
             val url = URL(Constants.DOWNLOAD_URL + data.getLastVersion()!!.downloadLink)
             val connection = url.openConnection() as HttpsURLConnection
             total = connection.contentLength
-            initialiseNotification(context, data)
+            downloadNotification.show(total, count)
             transferBytes(connection, apkFile)
             connection.disconnect()
         }
+        return isCanceled.get()
     }
 
     private fun createApkFile(apkFile: File) {
@@ -47,33 +46,6 @@ class Downloader {
         apkFile.deleteOnExit()
     }
 
-    private fun initialiseNotification(context: Context, fullData: FullData) {
-        notificationBuilder = if (android.os.Build.VERSION.SDK_INT >=
-                android.os.Build.VERSION_CODES.O) {
-            NotificationCompat.Builder(context, Constants.DOWNLOAD_NOTIFICATION_CHANNEL_ID)
-        } else {
-            NotificationCompat.Builder(context)
-        }
-
-        notificationBuilder.setSmallIcon(R.drawable.ic_notification_download)
-                .setContentTitle(fullData.basicData.name)
-                .setContentText(context.getString(R.string.download_notification_description))
-                .setProgress(total, count, false)
-                .setChannelId(Constants.DOWNLOAD_NOTIFICATION_CHANNEL_ID)
-                .setOngoing(true)
-
-        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
-                as NotificationManager
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            val mChannel = NotificationChannel(Constants.DOWNLOAD_NOTIFICATION_CHANNEL_ID,
-                    context.getString(R.string.download_notification_channel_title),
-                    NotificationManager.IMPORTANCE_LOW)
-            notificationManager.createNotificationChannel(mChannel)
-        }
-
-        notificationManager.notify(Constants.DOWNLOAD_NOTIFICATION_ID, notificationBuilder.build())
-    }
 
     @Throws(IOException::class)
     private fun transferBytes(connection: HttpsURLConnection, apkFile: File) {
@@ -81,16 +53,12 @@ class Downloader {
             FileOutputStream(apkFile).use { output ->
                 notifier.start()
                 val buffer = ByteArray(1024)
-                while (readAndWrite(input, output, buffer)) {
-                    notificationBuilder.setProgress(total, count, false)
-                    notificationBuilder.setSubText(((Common.toMiB(count) / Common.toMiB(total))
-                            * 100).toInt().toString() + "%")
-                    notificationManager.notify(Constants.DOWNLOAD_NOTIFICATION_ID,
-                            notificationBuilder.build())
+                while (!isCanceled.get() && readAndWrite(input, output, buffer)) {
+                    downloadNotification.show(total, count)
                 }
             }
         }
-        notificationManager.cancel(Constants.DOWNLOAD_NOTIFICATION_ID)
+        downloadNotification.hide()
         notifier.stop()
     }
 
@@ -107,5 +75,9 @@ class Downloader {
 
     fun addListener(listener: (Int, Int) -> Unit) {
         listeners.add(listener)
+    }
+
+    fun cancel() {
+        isCanceled.set(true)
     }
 }

@@ -16,7 +16,7 @@ class Application(val packageName: String, private val applicationManager: Appli
 
     private val uses = AtomicInteger(0)
     private val info = ApplicationInfo(packageName)
-    private val stateManager = StateManager(info, this)
+    private val stateManager = StateManager(info, this, applicationManager)
 
     var basicData: BasicData? = null
     var fullData: FullData? = null
@@ -52,19 +52,16 @@ class Application(val packageName: String, private val applicationManager: Appli
     fun buttonClicked(activity: Activity) {
         when (stateManager.state) {
             INSTALLED -> info.launch(activity)
-            DOWNLOADED -> {
-                prepareInstall()
-            }
-            NOT_UPDATED, NOT_DOWNLOADED -> {
-                stateManager.changeState(DOWNLOADING)
-                applicationManager.download(this)
-            }
+            DOWNLOADED -> applicationManager.install(this)
+            NOT_UPDATED, NOT_DOWNLOADED -> applicationManager.download(this)
+            INSTALLING -> applicationManager.stopInstalling(this)
             DOWNLOADING -> {
-                // TODO Cancel APK download
-            }
-            INSTALLING -> {
+                applicationManager.stopDownloading(this)
+                downloader?.cancel()
+                downloader = null
             }
         }
+        stateManager.find(activity, basicData!!)
     }
 
     fun download(context: Context) {
@@ -72,19 +69,15 @@ class Application(val packageName: String, private val applicationManager: Appli
         downloader = Downloader()
         stateManager.notifyDownloading(downloader!!)
         try {
-            downloader!!.download(context, fullData!!, info.getApkFile(context, basicData!!))
+            val canceled = downloader!!.download(context, fullData!!, info.getApkFile(context, basicData!!))
             downloader = null
-            prepareInstall()
+            if (!canceled) {
+                applicationManager.install(this)
+            }
         } catch (e: Exception) {
-            e.printStackTrace()
-            stateManager.find(context, basicData!!)
             stateManager.notifyError()
         }
-    }
-
-    private fun prepareInstall() {
-        stateManager.changeState(INSTALLING)
-        applicationManager.install(this)
+        stateManager.find(context, basicData!!)
     }
 
     fun install(context: Context) {

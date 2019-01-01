@@ -1,39 +1,35 @@
 package io.eelo.appinstaller.application.model
 
 import android.content.Context
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import io.eelo.appinstaller.application.model.data.BasicData
 import java.io.File
-import java.lang.Exception
 import java.util.regex.Pattern
 
 class ApplicationInfo(private val packageName: String) {
 
-    fun isLastVersionInstalled(context: Context, data: BasicData): Boolean {
-        try {
-            val installedVersionCode = context.packageManager.getPackageInfo(packageName, 0)
-                    .versionCode
-            if (!data.lastVersionNumber.isNullOrBlank()) {
-                val pattern = Pattern.compile("[(]$installedVersionCode[)]")
-                val matcher = pattern.matcher(data.lastVersionNumber)
-                if (matcher.find()) {
-                    return true
-                }
-            }
-        } catch (exception: Exception) {
-            exception.printStackTrace()
+    fun isLastVersionInstalled(context: Context, lastVersionNumber: String): Boolean {
+        val packageInfo = getPackageInfo(context) ?: return false
+        if (lastVersionNumber.isEmpty()) {
+            return false
         }
-        return false
+        val installedVersionCode = packageInfo.versionCode
+        val pattern = Pattern.compile("[(]$installedVersionCode[)]")
+        val matcher = pattern.matcher(lastVersionNumber)
+        return matcher.find();
     }
 
     fun isInstalled(context: Context): Boolean {
+        return getPackageInfo(context) != null
+    }
+
+    private fun getPackageInfo(context: Context): PackageInfo? {
         return try {
             context.packageManager.getPackageInfo(packageName, 0)
-            true
         } catch (ignored: PackageManager.NameNotFoundException) {
-            false
+            null
         }
-
     }
 
     fun getApkFile(context: Context, data: BasicData): File {

@@ -1,7 +1,7 @@
 package io.eelo.appinstaller.home
 
 import android.arch.lifecycle.Observer
-import  android.arch.lifecycle.ViewModelProviders
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
@@ -16,7 +16,6 @@ import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
-import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.SmallApplicationListAdapter
 import io.eelo.appinstaller.home.viewmodel.HomeViewModel
@@ -123,10 +122,7 @@ class HomeFragment : Fragment() {
         if (::homeViewModel.isInitialized) {
             homeViewModel.getCategories().value!!.values.forEach {
                 it.forEach { application ->
-                    if (application.state == State.INSTALLING ||
-                            application.state == State.INSTALLED) {
-                        application.checkForStateUpdate(context!!)
-                    }
+                    application.checkForStateUpdate(context!!)
                 }
             }
         }

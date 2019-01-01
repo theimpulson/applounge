@@ -2,7 +2,6 @@ package io.eelo.appinstaller.categories.category
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -15,9 +14,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
-import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
 import io.eelo.appinstaller.categories.category.viewmodel.CategoryViewModel
 import io.eelo.appinstaller.categories.model.Category
@@ -108,10 +106,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         super.onResume()
         if (::categoryViewModel.isInitialized) {
             categoryViewModel.getApplications().value!!.forEach { application ->
-                if (application.state == State.INSTALLING ||
-                        application.state == State.INSTALLED) {
-                    application.checkForStateUpdate(this)
-                }
+                application.checkForStateUpdate(this)
             }
         }
     }
