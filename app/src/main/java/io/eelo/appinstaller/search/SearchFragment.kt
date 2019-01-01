@@ -19,7 +19,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.search.viewModel.SearchViewModel
 import android.widget.LinearLayout
@@ -36,14 +36,14 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     private lateinit var progressBar: ProgressBar
     private lateinit var splashContainer: LinearLayout
     private var applicationList = ArrayList<Application>()
-    private var installManager: InstallManager? = null
+    private var applicationManager: ApplicationManager? = null
 
-    fun initialise(installManager: InstallManager) {
-        this.installManager = installManager
+    fun initialise(applicationManager: ApplicationManager) {
+        this.applicationManager = applicationManager
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (installManager == null) {
+        if (applicationManager == null) {
             return null
         }
 
@@ -58,7 +58,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
 
-        searchViewModel.initialise(installManager!!)
+        searchViewModel.initialise(applicationManager!!)
         recyclerView.visibility = View.GONE
         progressBar.visibility = View.GONE
         if (searchViewModel.getScreenError().value == null && searchViewModel.getApplications().value!!.isEmpty()) {

@@ -4,7 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Context
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.home.model.BannerApplication
 import io.eelo.appinstaller.home.model.HomeModel
@@ -13,8 +13,8 @@ import io.eelo.appinstaller.utils.Error
 class HomeViewModel : ViewModel(), HomeViewModelInterface {
     private val homeModel = HomeModel()
 
-    override fun initialise(installManager: InstallManager) {
-        homeModel.initialise(installManager)
+    override fun initialise(applicationManager: ApplicationManager) {
+        homeModel.initialise(applicationManager)
     }
 
     override fun getBannerApplications(): MutableLiveData<ArrayList<BannerApplication>> {

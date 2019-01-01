@@ -3,11 +3,11 @@ package io.eelo.appinstaller.search.viewModel
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.utils.Error
 
 interface SearchViewModelInterface {
-    fun initialise(installManager: InstallManager)
+    fun initialise(applicationManager: ApplicationManager)
 
     fun getSuggestions(): MutableLiveData<ArrayList<String>>
 

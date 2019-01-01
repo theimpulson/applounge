@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.utils.Error
@@ -47,14 +47,14 @@ class HomeRequest {
     constructor(@JsonProperty("success") private val success: Boolean,
                 @JsonProperty("home") private val home: SubHomeResult) {
 
-        fun getBannerApps(installManager: InstallManager, context: Context): ArrayList<Application> {
-            return ApplicationParser.parseToApps(installManager, context, home.bannerApps)
+        fun getBannerApps(applicationManager: ApplicationManager, context: Context): ArrayList<Application> {
+            return ApplicationParser.parseToApps(applicationManager, context, home.bannerApps)
         }
 
-        fun getApps(installManager: InstallManager, context: Context): HashMap<Category, ArrayList<Application>> {
+        fun getApps(applicationManager: ApplicationManager, context: Context): HashMap<Category, ArrayList<Application>> {
             val apps = HashMap<Category, ArrayList<Application>>()
             for (pair in home.apps) {
-                apps[pair.key] = ApplicationParser.parseToApps(installManager, context, pair.value.toTypedArray())
+                apps[pair.key] = ApplicationParser.parseToApps(applicationManager, context, pair.value.toTypedArray())
             }
             return apps
         }

@@ -3,7 +3,7 @@ package io.eelo.appinstaller.search.model
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Error
 
@@ -13,7 +13,7 @@ class SearchModel : SearchModelInterface {
     val applicationList = MutableLiveData<ArrayList<Application>>()
     var screenError = MutableLiveData<Error>()
     private var element: SearchElement? = null
-    private var installManager: InstallManager? = null
+    private var applicationManager: ApplicationManager? = null
 
     init {
         if (suggestionList.value == null) {
@@ -24,13 +24,13 @@ class SearchModel : SearchModelInterface {
         }
     }
 
-    override fun initialise(installManager: InstallManager) {
-        this.installManager = installManager
+    override fun initialise(applicationManager: ApplicationManager) {
+        this.applicationManager = applicationManager
     }
 
     override fun searchSuggestions(context: Context, searchQuery: String) {
         if (Common.isNetworkAvailable(context)) {
-            SearchSuggestionsTask(searchQuery, installManager!!, this)
+            SearchSuggestionsTask(searchQuery, applicationManager!!, this)
                     .executeOnExecutor(Common.EXECUTOR, context)
         }
     }
@@ -44,7 +44,7 @@ class SearchModel : SearchModelInterface {
             element?.apps?.forEach { app ->
                 app.decrementUses()
             }
-            element = SearchElement(searchQuery, installManager!!, this)
+            element = SearchElement(searchQuery, applicationManager!!, this)
             loadMore(context)
         } else {
             applicationList.value = ArrayList()

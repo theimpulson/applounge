@@ -8,10 +8,11 @@ import io.eelo.appinstaller.api.PackageNameSearchRequest
 import io.eelo.appinstaller.application.model.State.*
 import io.eelo.appinstaller.application.model.data.BasicData
 import io.eelo.appinstaller.application.model.data.FullData
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.utils.Error
 import java.util.concurrent.atomic.AtomicInteger
 
-class Application(val packageName: String, private val installManager: InstallManager) {
+class Application(val packageName: String, private val applicationManager: ApplicationManager) {
 
     private val uses = AtomicInteger(0)
     private val info = ApplicationInfo(packageName)
@@ -38,7 +39,7 @@ class Application(val packageName: String, private val installManager: InstallMa
 
     fun decrementUses() {
         uses.decrementAndGet()
-        installManager.tryRemove(this)
+        applicationManager.tryRemove(this)
     }
 
     fun checkForStateUpdate(context: Context) {
@@ -56,7 +57,7 @@ class Application(val packageName: String, private val installManager: InstallMa
             }
             NOT_UPDATED, NOT_DOWNLOADED -> {
                 stateManager.changeState(DOWNLOADING)
-                installManager.download(packageName)
+                applicationManager.download(packageName)
             }
             DOWNLOADING -> {
                 // TODO Cancel APK download
@@ -83,7 +84,7 @@ class Application(val packageName: String, private val installManager: InstallMa
 
     private fun prepareInstall() {
         stateManager.changeState(INSTALLING)
-        installManager.install(packageName)
+        applicationManager.install(packageName)
     }
 
     fun install(context: Context) {

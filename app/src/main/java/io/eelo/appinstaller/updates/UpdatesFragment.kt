@@ -13,7 +13,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.updates.viewModel.UpdatesViewModel
@@ -21,15 +21,15 @@ import io.eelo.appinstaller.utils.Common
 
 class UpdatesFragment : Fragment() {
     private lateinit var updatesViewModel: UpdatesViewModel
-    private var installManager: InstallManager? = null
+    private var applicationManager: ApplicationManager? = null
     private lateinit var recyclerView: RecyclerView
 
-    fun initialise(installManager: InstallManager) {
-        this.installManager = installManager
+    fun initialise(applicationManager: ApplicationManager) {
+        this.applicationManager = applicationManager
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (installManager == null) {
+        if (applicationManager == null) {
             return null
         }
 
@@ -42,7 +42,7 @@ class UpdatesFragment : Fragment() {
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
 
         // Initialise UI elements
-        updatesViewModel.initialise(installManager!!)
+        updatesViewModel.initialise(applicationManager!!)
         initializeRecyclerView()
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE

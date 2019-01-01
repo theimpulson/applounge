@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.AsyncTask
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.utils.Execute
 import java.util.concurrent.atomic.AtomicInteger
 
-class UnUpdatedAppsFinder(private val packageManager: PackageManager, private val callback: UpdatesModelInterface, private val installManager: InstallManager) : AsyncTask<Context, Any, Any>() {
+class UnUpdatedAppsFinder(private val packageManager: PackageManager, private val callback: UpdatesModelInterface, private val applicationManager: ApplicationManager) : AsyncTask<Context, Any, Any>() {
 
     private var result: ArrayList<Application>? = null
 
@@ -31,7 +31,7 @@ class UnUpdatedAppsFinder(private val packageManager: PackageManager, private va
 
         synchronized(blocker) {
             installedApplications.forEach { packageName ->
-                val application = installManager.findOrCreateApp(packageName)
+                val application = applicationManager.findOrCreateApp(packageName)
                 Execute({
                     verifyApplication(application, waitingTasks, blocker, result, context)
                 }, {})

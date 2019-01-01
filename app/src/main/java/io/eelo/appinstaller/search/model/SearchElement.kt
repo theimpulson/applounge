@@ -4,12 +4,12 @@ import android.content.Context
 import android.os.AsyncTask
 import io.eelo.appinstaller.api.SearchRequest
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
 
-class SearchElement(private val query: String, private val installManager: InstallManager, private val callback: SearchModelInterface) : AsyncTask<Context, Void, Void>() {
+class SearchElement(private val query: String, private val applicationManager: ApplicationManager, private val callback: SearchModelInterface) : AsyncTask<Context, Void, Void>() {
 
     val apps = ArrayList<Application>()
     private var nextPage = 1
@@ -33,7 +33,7 @@ class SearchElement(private val query: String, private val installManager: Insta
         SearchRequest(query, nextPage, Constants.RESULTS_PER_PAGE).request { applicationError, searchResult ->
             when (applicationError) {
                 null -> {
-                    apps.addAll(searchResult!!.getApplications(installManager, context))
+                    apps.addAll(searchResult!!.getApplications(applicationManager, context))
                 }
                 else -> {
                     error = applicationError

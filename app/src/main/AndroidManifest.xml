@@ -25,7 +25,7 @@
         <activity android:name=".categories.category.CategoryActivity" />
 
         <service
-            android:name=".application.model.InstallManagerService"
+            android:name=".applicationmanager.ApplicationManagerService"
             android:description="@string/service_description"
             android:exported="false" />
 

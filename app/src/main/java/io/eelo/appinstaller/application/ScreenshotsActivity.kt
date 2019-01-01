@@ -6,14 +6,14 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManagerGetter
+import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.SELECTED_APPLICATION_SCREENSHOT_KEY
 import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.activity_screenshots.*
 
 class ScreenshotsActivity : AppCompatActivity() {
-    private val installManagerGetter = InstallManagerGetter()
+    private val applicationManagerServiceConnection = ApplicationManagerServiceConnection()
     private lateinit var application: Application
     private lateinit var screenshotsCarousel: ViewPager
     private var lastSelectedScreenshotIndex = 0
@@ -41,7 +41,7 @@ class ScreenshotsActivity : AppCompatActivity() {
 
     private fun initialise(packageName: String) {
         Execute({
-            val installManager = installManagerGetter.connectAndGet(this)
+            val installManager = applicationManagerServiceConnection.connectAndGet(this)
             application = installManager.findOrCreateApp(packageName)
         }, {
             onApplicationInfoLoaded()
@@ -73,6 +73,6 @@ class ScreenshotsActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         application.decrementUses()
-        installManagerGetter.disconnect(this)
+        applicationManagerServiceConnection.disconnect(this)
     }
 }

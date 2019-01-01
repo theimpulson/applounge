@@ -9,8 +9,8 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import io.eelo.appinstaller.application.model.InstallManager
-import io.eelo.appinstaller.application.model.InstallManagerGetter
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.categories.CategoriesFragment
 import io.eelo.appinstaller.home.HomeFragment
 import io.eelo.appinstaller.search.SearchFragment
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private val homeFragment = HomeFragment()
     private val searchFragment = SearchFragment()
     private val updatesFragment = UpdatesFragment()
-    private val installManagerGetter = InstallManagerGetter()
+    private val applicationManagerServiceConnection = ApplicationManagerServiceConnection()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         object : AsyncTask<Void, Void, Void>() {
 
             override fun doInBackground(vararg p0: Void?): Void? {
-                val installManager = installManagerGetter.connectAndGet(this@MainActivity)
+                val installManager = applicationManagerServiceConnection.connectAndGet(this@MainActivity)
                 initialiseFragments(installManager)
                 return null
             }
@@ -57,10 +57,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }.executeOnExecutor(Common.EXECUTOR)
     }
 
-    private fun initialiseFragments(installManager: InstallManager) {
-        homeFragment.initialise(installManager)
-        searchFragment.initialise(installManager)
-        updatesFragment.initialise(installManager)
+    private fun initialiseFragments(applicationManager: ApplicationManager) {
+        homeFragment.initialise(applicationManager)
+        searchFragment.initialise(applicationManager)
+        updatesFragment.initialise(applicationManager)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -136,6 +136,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         homeFragment.decrementApplicationUses()
         searchFragment.decrementApplicationUses()
         updatesFragment.decrementApplicationUses()
-        installManagerGetter.disconnect(this)
+        applicationManagerServiceConnection.disconnect(this)
     }
 }

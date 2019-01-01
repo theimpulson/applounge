@@ -4,12 +4,12 @@ import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import io.eelo.appinstaller.api.ListApplicationsRequest
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.utils.*
 
 class CategoryModel : CategoryModelInterface {
 
-    lateinit var installManager: InstallManager
+    lateinit var applicationManager: ApplicationManager
     lateinit var category: String
     private var page = 1
     val categoryApplicationsList = MutableLiveData<ArrayList<Application>>()
@@ -22,8 +22,8 @@ class CategoryModel : CategoryModelInterface {
         }
     }
 
-    override fun initialise(installManager: InstallManager, category: String) {
-        this.installManager = installManager
+    override fun initialise(applicationManager: ApplicationManager, category: String) {
+        this.applicationManager = applicationManager
         this.category = category
     }
 
@@ -59,7 +59,7 @@ class CategoryModel : CategoryModelInterface {
                     }
                 }
         if (listApplications != null) {
-            return listApplications!!.getApplications(installManager, context)
+            return listApplications!!.getApplications(applicationManager, context)
         } else {
             return null
         }

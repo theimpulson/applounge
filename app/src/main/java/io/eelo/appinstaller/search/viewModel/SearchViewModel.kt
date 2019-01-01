@@ -4,15 +4,15 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Context
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.search.model.SearchModel
 import io.eelo.appinstaller.utils.Error
 
 class SearchViewModel : ViewModel(), SearchViewModelInterface {
     private val searchModel = SearchModel()
 
-    override fun initialise(installManager: InstallManager) {
-        searchModel.initialise(installManager)
+    override fun initialise(applicationManager: ApplicationManager) {
+        searchModel.initialise(applicationManager)
     }
 
     override fun getSuggestions(): MutableLiveData<ArrayList<String>> {

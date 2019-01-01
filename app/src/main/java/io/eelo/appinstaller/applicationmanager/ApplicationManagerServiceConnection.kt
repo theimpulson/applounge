@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.application.model
+package io.eelo.appinstaller.applicationmanager
 
 import android.content.ComponentName
 import android.content.Context
@@ -8,14 +8,14 @@ import android.os.IBinder
 import android.os.Message
 import android.os.Messenger
 
-class InstallManagerGetter : ServiceConnection {
+class ApplicationManagerServiceConnection : ServiceConnection {
 
-    private lateinit var installManager: InstallManager
+    private lateinit var applicationManager: ApplicationManager
     private val blocker = Object()
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        Messenger(service).send(Message.obtain(null, 0, { result: InstallManager ->
-            installManager = result
+        Messenger(service).send(Message.obtain(null, 0, { result: ApplicationManager ->
+            applicationManager = result
             synchronized(blocker) {
                 blocker.notify()
             }
@@ -25,13 +25,13 @@ class InstallManagerGetter : ServiceConnection {
     override fun onServiceDisconnected(name: ComponentName?) {
     }
 
-    fun connectAndGet(context: Context): InstallManager {
-        context.startService(Intent(context, InstallManagerService::class.java))
-        context.bindService(Intent(context, InstallManagerService::class.java), this, Context.BIND_AUTO_CREATE)
+    fun connectAndGet(context: Context): ApplicationManager {
+        context.startService(Intent(context, ApplicationManagerService::class.java))
+        context.bindService(Intent(context, ApplicationManagerService::class.java), this, Context.BIND_AUTO_CREATE)
         synchronized(blocker) {
             blocker.wait()
         }
-        return installManager
+        return applicationManager
     }
 
     fun disconnect(context: Context) {

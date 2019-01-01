@@ -1,10 +1,11 @@
-package io.eelo.appinstaller.application.model
+package io.eelo.appinstaller.applicationmanager
 
 import android.content.Context
+import io.eelo.appinstaller.application.model.Application
 import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 
-class InstallManager {
+class ApplicationManager {
 
     private val apps = HashMap<String, Application>()
     private val downloading = ArrayBlockingQueue<String>(100)

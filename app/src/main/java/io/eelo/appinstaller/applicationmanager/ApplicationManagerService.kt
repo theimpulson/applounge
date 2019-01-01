@@ -1,4 +1,4 @@
-package io.eelo.appinstaller.application.model
+package io.eelo.appinstaller.applicationmanager
 
 import android.app.Service
 import android.content.Intent
@@ -7,9 +7,9 @@ import android.os.IBinder
 import android.os.Message
 import android.os.Messenger
 
-class InstallManagerService : Service() {
+class ApplicationManagerService : Service() {
 
-    private val installManager = InstallManager()
+    private val installManager = ApplicationManager()
     private val messenger = Messenger(SimpleHandler(installManager))
 
 
@@ -21,11 +21,11 @@ class InstallManagerService : Service() {
         return messenger.binder
     }
 
-    private class SimpleHandler(private val installManager: InstallManager) : Handler() {
+    private class SimpleHandler(private val applicationManager: ApplicationManager) : Handler() {
 
         @Suppress("UNCHECKED_CAST")
         override fun handleMessage(msg: Message) {
-            (msg.obj as (InstallManager) -> Unit).invoke(installManager)
+            (msg.obj as (ApplicationManager) -> Unit).invoke(applicationManager)
         }
     }
 }

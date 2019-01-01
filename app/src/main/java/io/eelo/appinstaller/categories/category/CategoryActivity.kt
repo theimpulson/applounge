@@ -15,7 +15,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManagerGetter
+import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.categories.category.viewmodel.CategoryViewModel
 import io.eelo.appinstaller.categories.model.Category
@@ -30,7 +30,7 @@ class CategoryActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private var applicationList = ArrayList<Application>()
-    private val installManagerGetter = InstallManagerGetter()
+    private val applicationManagerServiceConnection = ApplicationManagerServiceConnection()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +88,7 @@ class CategoryActivity : AppCompatActivity() {
         object : AsyncTask<Void, Void, Void>() {
 
             override fun doInBackground(vararg p0: Void?): Void? {
-                val installManager = installManagerGetter.connectAndGet(this@CategoryActivity)
+                val installManager = applicationManagerServiceConnection.connectAndGet(this@CategoryActivity)
                 categoryViewModel.initialise(installManager, category.id)
                 return null
             }
@@ -124,6 +124,6 @@ class CategoryActivity : AppCompatActivity() {
         applicationList.forEach {
             it.decrementUses()
         }
-        installManagerGetter.disconnect(this)
+        applicationManagerServiceConnection.disconnect(this)
     }
 }

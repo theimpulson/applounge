@@ -1,12 +1,12 @@
 package io.eelo.appinstaller.home.model
 
 import android.content.Context
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 
 interface HomeModelInterface {
-    fun initialise(installManager: InstallManager)
+    fun initialise(applicationManager: ApplicationManager)
 
-    fun getInstallManager(): InstallManager
+    fun getInstallManager(): ApplicationManager
 
     fun loadCategories(context: Context)
 }

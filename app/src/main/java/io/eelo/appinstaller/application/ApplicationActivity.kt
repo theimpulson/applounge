@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.*
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.*
+import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.toMiB
 import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
@@ -29,7 +30,7 @@ import kotlin.math.roundToInt
 
 class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     private lateinit var application: Application
-    private val installManagerGetter = InstallManagerGetter()
+    private val applicationManagerServiceConnection = ApplicationManagerServiceConnection()
     private var imageWidth = 0
     private var imageHeight = 0
     private var imageMargin = 0
@@ -358,7 +359,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     private fun initialise(packageName: String) {
         var error: Error? = null
         Execute({
-            val installManager = installManagerGetter.connectAndGet(this)
+            val installManager = applicationManagerServiceConnection.connectAndGet(this)
             application = installManager.findOrCreateApp(packageName)
             error = application.assertFullData(this)
         }, {
@@ -448,6 +449,6 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener {
     override fun onDestroy() {
         super.onDestroy()
         application.decrementUses()
-        installManagerGetter.disconnect(this)
+        applicationManagerServiceConnection.disconnect(this)
     }
 }

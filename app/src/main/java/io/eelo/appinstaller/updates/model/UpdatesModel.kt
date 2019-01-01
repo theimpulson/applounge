@@ -3,7 +3,7 @@ package io.eelo.appinstaller.updates.model
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Error
 
@@ -17,11 +17,11 @@ class UpdatesModel : UpdatesModelInterface {
         }
     }
 
-    var installManager: InstallManager? = null
+    var applicationManager: ApplicationManager? = null
 
     override fun loadApplicationList(context: Context) {
         if (Common.isNetworkAvailable(context)) {
-            UnUpdatedAppsFinder(context.packageManager, this, installManager!!).execute(context)
+            UnUpdatedAppsFinder(context.packageManager, this, applicationManager!!).execute(context)
         } else {
             screenError.value = Error.NO_INTERNET
         }

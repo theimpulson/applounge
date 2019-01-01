@@ -15,7 +15,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.SmallApplicationListAdapter
@@ -28,14 +28,14 @@ class HomeFragment : Fragment() {
     private lateinit var divider: View
     private lateinit var categoryList: LinearLayout
     private lateinit var progressBar: ProgressBar
-    private var installManager: InstallManager? = null
+    private var applicationManager: ApplicationManager? = null
 
-    fun initialise(installManager: InstallManager) {
-        this.installManager = installManager
+    fun initialise(applicationManager: ApplicationManager) {
+        this.applicationManager = applicationManager
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (installManager == null) {
+        if (applicationManager == null) {
             return null
         }
 
@@ -50,7 +50,7 @@ class HomeFragment : Fragment() {
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
 
         // Initialise UI elements
-        homeViewModel.initialise(installManager!!)
+        homeViewModel.initialise(applicationManager!!)
         setCustomScroller()
         imageCarousel.visibility = View.INVISIBLE
         divider.visibility = View.INVISIBLE

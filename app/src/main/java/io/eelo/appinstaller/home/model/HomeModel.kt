@@ -3,7 +3,7 @@ package io.eelo.appinstaller.home.model
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.InstallManager
+import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Error
@@ -11,7 +11,7 @@ import io.eelo.appinstaller.utils.Error
 class HomeModel : HomeModelInterface {
     val applications = MutableLiveData<LinkedHashMap<Category, ArrayList<Application>>>()
     val bannerApplications = MutableLiveData<ArrayList<BannerApplication>>()
-    private var installManager: InstallManager? = null
+    private var applicationManager: ApplicationManager? = null
     var screenError = MutableLiveData<Error>()
 
     init {
@@ -23,12 +23,12 @@ class HomeModel : HomeModelInterface {
         }
     }
 
-    override fun initialise(installManager: InstallManager) {
-        this.installManager = installManager
+    override fun initialise(applicationManager: ApplicationManager) {
+        this.applicationManager = applicationManager
     }
 
-    override fun getInstallManager(): InstallManager {
-        return installManager!!
+    override fun getInstallManager(): ApplicationManager {
+        return applicationManager!!
     }
 
     override fun loadCategories(context: Context) {
