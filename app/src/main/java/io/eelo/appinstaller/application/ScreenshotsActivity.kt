@@ -1,11 +1,10 @@
-package io.eelo.appinstaller
+package io.eelo.appinstaller.application
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v4.view.ViewPager
 import android.view.View
-import io.eelo.appinstaller.application.ScreenshotsCarouselAdapter
+import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.InstallManagerGetter
 import io.eelo.appinstaller.utils.Constants

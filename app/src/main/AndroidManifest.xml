@@ -24,7 +24,10 @@
         <activity android:name=".application.ApplicationActivity" />
         <activity android:name=".categories.category.CategoryActivity" />
 
-        <service android:name=".application.model.InstallManagerService" />
+        <service
+            android:name=".application.model.InstallManagerService"
+            android:description="@string/service_description"
+            android:exported="false" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -38,7 +41,7 @@
 
         <activity android:name=".application.ApplicationDescriptionActivity" />
         <activity
-            android:name=".ScreenshotsActivity"
+            android:name=".application.ScreenshotsActivity"
             android:theme="@style/FullScreenTheme" />
     </application>
 

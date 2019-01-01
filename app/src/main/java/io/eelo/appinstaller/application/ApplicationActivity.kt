@@ -14,7 +14,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.ScreenshotsActivity
 import io.eelo.appinstaller.application.model.*
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.toMiB
