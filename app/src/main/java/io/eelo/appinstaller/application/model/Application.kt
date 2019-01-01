@@ -57,7 +57,7 @@ class Application(val packageName: String, private val applicationManager: Appli
             }
             NOT_UPDATED, NOT_DOWNLOADED -> {
                 stateManager.changeState(DOWNLOADING)
-                applicationManager.download(packageName)
+                applicationManager.download(this)
             }
             DOWNLOADING -> {
                 // TODO Cancel APK download
@@ -84,7 +84,7 @@ class Application(val packageName: String, private val applicationManager: Appli
 
     private fun prepareInstall() {
         stateManager.changeState(INSTALLING)
-        applicationManager.install(packageName)
+        applicationManager.install(this)
     }
 
     fun install(context: Context) {
