@@ -371,7 +371,7 @@
                         android:orientation="vertical"
                         android:padding="@dimen/layout_padding_medium">
 
-                        <!-- TODO Don't set default background to red -->
+                        <!-- TODO Don't set default background to red and text to N/A-->
                         <TextView
                             android:id="@+id/app_energy_score"
                             android:layout_width="wrap_content"
@@ -379,6 +379,7 @@
                             android:background="@drawable/app_border_bad"
                             android:ellipsize="end"
                             android:maxLines="1"
+                            android:text="@string/not_available"
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/text_size_large"
                             tools:text="App energy" />
@@ -632,7 +633,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/layout_margin_medium"
                         android:ellipsize="end"
-                        android:maxLines="2"
+                        android:maxLines="1"
                         android:textSize="@dimen/text_size_large" />
 
                 </LinearLayout>
@@ -672,7 +673,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/layout_margin_medium"
                         android:ellipsize="end"
-                        android:maxLines="2"
+                        android:maxLines="1"
                         android:textSize="@dimen/text_size_large" />
 
                 </LinearLayout>
@@ -712,7 +713,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/layout_margin_medium"
                         android:ellipsize="end"
-                        android:maxLines="2"
+                        android:maxLines="1"
                         android:textSize="@dimen/text_size_large" />
 
                 </LinearLayout>
@@ -739,7 +740,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/layout_margin_medium"
                             android:ellipsize="end"
-                            android:maxLines="2"
+                            android:maxLines="1"
                             android:text="@string/app_licence"
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/text_size_large" />
@@ -752,7 +753,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/layout_margin_medium"
                         android:ellipsize="end"
-                        android:maxLines="2"
+                        android:maxLines="1"
                         android:textSize="@dimen/text_size_large" />
 
                 </LinearLayout>
