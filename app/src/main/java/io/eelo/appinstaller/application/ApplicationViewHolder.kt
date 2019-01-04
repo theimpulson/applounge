@@ -2,6 +2,7 @@ package io.eelo.appinstaller.application
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
@@ -39,9 +40,9 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         installButton.setOnClickListener {
             if (application?.fullData != null &&
                     application!!.fullData!!.getLastVersion() == null) {
-                Toast.makeText(activity, activity.getString(
+                Snackbar.make(view, activity.getString(
                         Common.getScreenErrorDescriptionId(Error.APK_UNAVAILABLE)),
-                        Toast.LENGTH_LONG).show()
+                        Snackbar.LENGTH_LONG).show()
             } else {
                 application?.buttonClicked(activity)
             }

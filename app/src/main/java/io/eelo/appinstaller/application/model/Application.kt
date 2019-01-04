@@ -9,6 +9,7 @@ import io.eelo.appinstaller.application.model.State.*
 import io.eelo.appinstaller.application.model.data.BasicData
 import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
+import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Error
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -97,19 +98,23 @@ class Application(val packageName: String, private val applicationManager: Appli
 
     private fun findBasicData(context: Context): Error? {
         var error: Error? = null
-        PackageNameSearchRequest(packageName).request { applicationError, searchResult ->
-            when (applicationError) {
-                null -> {
-                    error = Error.NO_RESULTS
-                    searchResult!!.findOneAppData(packageName)?.let {
-                        update(it, context)
-                        error = null
+        if (Common.isNetworkAvailable(context)) {
+            PackageNameSearchRequest(packageName).request { applicationError, searchResult ->
+                when (applicationError) {
+                    null -> {
+                        error = Error.NO_RESULTS
+                        searchResult!!.findOneAppData(packageName)?.let {
+                            update(it, context)
+                            error = null
+                        }
+                    }
+                    else -> {
+                        error = applicationError
                     }
                 }
-                else -> {
-                    error = applicationError
-                }
             }
+        } else {
+            error = Error.NO_INTERNET
         }
         return error
     }
@@ -122,19 +127,23 @@ class Application(val packageName: String, private val applicationManager: Appli
             }
         }
         var error: Error? = null
-        AppDetailRequest(basicData!!.id).request { applicationError, fullData ->
-            when (applicationError) {
-                null -> {
-                    error = Error.NO_RESULTS
-                    fullData!!.let {
-                        update(fullData, context)
-                        error = null
+        if (Common.isNetworkAvailable(context)) {
+            AppDetailRequest(basicData!!.id).request { applicationError, fullData ->
+                when (applicationError) {
+                    null -> {
+                        error = Error.NO_RESULTS
+                        fullData!!.let {
+                            update(fullData, context)
+                            error = null
+                        }
+                    }
+                    else -> {
+                        error = applicationError
                     }
                 }
-                else -> {
-                    error = applicationError
-                }
             }
+        } else {
+            error = Error.NO_INTERNET
         }
         return error
     }

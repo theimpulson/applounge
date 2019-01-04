@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -85,8 +87,20 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
             if (error == null) {
                 onApplicationInfoLoaded()
             } else {
-                Toast.makeText(this, getString(Common.getScreenErrorDescriptionId(error!!)), Toast.LENGTH_LONG).show()
-                finish()
+                Snackbar.make(container,
+                        getString(Common.getScreenErrorDescriptionId(error!!)),
+                        Snackbar.LENGTH_LONG).show()
+
+                // Close activity once snackbar has hidden
+                object : CountDownTimer(3500, 3500) {
+                    override fun onTick(p0: Long) {
+                        // Do nothing
+                    }
+
+                    override fun onFinish() {
+                        finish()
+                    }
+                }.start()
             }
         })
     }
@@ -366,8 +380,9 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
     private fun onInstallButtonClick(fullData: FullData) {
         // Make sure the APK is available for download
         if (fullData.getLastVersion() == null) {
-            Toast.makeText(this, getString(Common
-                    .getScreenErrorDescriptionId(Error.APK_UNAVAILABLE)), Toast.LENGTH_LONG).show()
+            Snackbar.make(container,
+                    getString(Common.getScreenErrorDescriptionId(Error.APK_UNAVAILABLE)),
+                    Snackbar.LENGTH_LONG).show()
             return
         }
         application.buttonClicked(this)
