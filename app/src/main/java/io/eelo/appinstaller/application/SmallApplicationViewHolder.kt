@@ -7,13 +7,16 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.ApplicationStateListener
 import io.eelo.appinstaller.application.model.Downloader
 import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
+import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.toMiB
+import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.Execute
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import kotlinx.android.synthetic.main.install_button_layout.view.*
@@ -33,7 +36,14 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
             }
         }
         installButton.setOnClickListener {
-            application?.buttonClicked(activity)
+            if (application?.fullData != null &&
+                    application!!.fullData!!.getLastVersion() == null) {
+                Toast.makeText(activity, activity.getString(
+                        Common.getScreenErrorDescriptionId(Error.APK_UNAVAILABLE)),
+                        Toast.LENGTH_LONG).show()
+            } else {
+                application?.buttonClicked(activity)
+            }
         }
     }
 
