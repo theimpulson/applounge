@@ -27,7 +27,7 @@ class DownloadNotification {
     }
 
     fun create(context: Context, appName: String) {
-        val builder = createBuilder(context)
+        builder = createBuilder(context)
 
         builder.setSmallIcon(R.drawable.ic_notification_download)
                 .setContentTitle(appName)
