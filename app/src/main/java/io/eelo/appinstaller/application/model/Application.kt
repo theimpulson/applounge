@@ -83,6 +83,7 @@ class Application(val packageName: String, private val applicationManager: Appli
 
     fun install(context: Context) {
         info.install(context, basicData!!)
+        stateManager.find(context, basicData!!)
     }
 
     fun isUsed(): Boolean {
