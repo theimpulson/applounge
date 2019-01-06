@@ -29,11 +29,11 @@ constructor(
     var basicData = if (ratings == null) {
         BasicData(packageName, id, name, -1f, lastModified, lastVersion,
                 latestVersionNumber, latestDownloadableUpdate, author, iconUri, imagesUri,
-                BasicData.Ratings(-1f, -1f))
+                null, BasicData.Ratings(-1f, -1f))
     } else {
         BasicData(packageName, id, name, -1f, lastModified, lastVersion,
                 latestVersionNumber, latestDownloadableUpdate, author, iconUri, imagesUri,
-                ratings)
+                ratings.privacyRating, ratings)
     }
 
     private val versions = HashMap<String, Version>()

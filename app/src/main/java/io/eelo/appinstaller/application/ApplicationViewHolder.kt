@@ -63,8 +63,11 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         } else {
             rating.text = activity.getString(R.string.not_available)
         }
-        // TODO Show actual privacy rating
-        privacyScore.text = activity.getString(R.string.not_available)
+        if (app.basicData!!.privacyRating != null && app.basicData!!.privacyRating != -1f) {
+            privacyScore.text = app.basicData!!.privacyRating.toString()
+        } else {
+            privacyScore.text = activity.getString(R.string.not_available)
+        }
         stateChanged(app.state)
     }
 
