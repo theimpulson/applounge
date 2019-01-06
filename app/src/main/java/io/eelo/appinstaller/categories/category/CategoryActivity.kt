@@ -14,7 +14,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
@@ -107,10 +106,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         super.onResume()
         if (::categoryViewModel.isInitialized) {
             categoryViewModel.getApplications().value!!.forEach { application ->
-                if (application.state == State.INSTALLING ||
-                        application.state == State.INSTALLED) {
-                    application.checkForStateUpdate(this)
-                }
+                application.checkForStateUpdate(this)
             }
         }
     }

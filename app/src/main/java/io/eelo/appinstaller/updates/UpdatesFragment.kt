@@ -13,7 +13,6 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.updates.viewModel.UpdatesViewModel
@@ -85,10 +84,7 @@ class UpdatesFragment : Fragment() {
         super.onResume()
         if (::updatesViewModel.isInitialized) {
             updatesViewModel.getApplications().value!!.forEach { application ->
-                if (application.state == State.INSTALLING ||
-                        application.state == State.INSTALLED) {
-                    application.checkForStateUpdate(context!!)
-                }
+                application.checkForStateUpdate(context!!)
             }
         }
     }

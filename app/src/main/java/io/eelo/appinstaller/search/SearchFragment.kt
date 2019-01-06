@@ -20,7 +20,6 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
@@ -173,10 +172,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         }
         if (::searchViewModel.isInitialized) {
             searchViewModel.getApplications().value!!.forEach { application ->
-                if (application.state == State.INSTALLING ||
-                        application.state == State.INSTALLED) {
-                    application.checkForStateUpdate(context!!)
-                }
+                application.checkForStateUpdate(context!!)
             }
         }
         super.onResume()
