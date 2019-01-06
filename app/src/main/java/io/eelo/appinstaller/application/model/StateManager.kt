@@ -11,21 +11,22 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
         private set
 
     fun find(context: Context, basicData: BasicData) {
-        changeState(if (appManager.isDownloading(app)) {
-            State.DOWNLOADING
-        } else if (appManager.isInstalling(app)) {
-            State.INSTALLING
-        } else if (info.isLastVersionInstalled(context, basicData.lastVersionNumber ?: "")) {
-            State.INSTALLED
-        } else if (info.isInstalled(context) && info.isDownloaded(context, basicData)) {
-            State.DOWNLOADED
-        } else if (info.isInstalled(context)) {
-            State.NOT_UPDATED
-        } else if (info.isDownloaded(context, basicData)) {
-            State.DOWNLOADED
-        } else {
-            State.NOT_DOWNLOADED
-        })
+        changeState(
+                if (appManager.isDownloading(app)) {
+                    State.DOWNLOADING
+                } else if (appManager.isInstalling(app)) {
+                    State.INSTALLING
+                } else if (info.isLastVersionInstalled(context,
+                                basicData.lastVersionNumber ?: "")) {
+                    State.INSTALLED
+                } else if (info.isInstalled(context) && !info.isLastVersionInstalled(context,
+                                basicData.lastVersionNumber ?: "")) {
+                    State.NOT_UPDATED
+                } else if (info.isDownloaded(context, basicData)) {
+                    State.DOWNLOADED
+                } else {
+                    State.NOT_DOWNLOADED
+                })
     }
 
     private fun changeState(state: State) {
