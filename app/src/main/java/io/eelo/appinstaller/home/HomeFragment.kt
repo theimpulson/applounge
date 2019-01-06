@@ -15,6 +15,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.SmallApplicationListAdapter
@@ -122,7 +123,10 @@ class HomeFragment : Fragment() {
         if (::homeViewModel.isInitialized) {
             homeViewModel.getCategories().value!!.values.forEach {
                 it.forEach { application ->
-                    application.checkForStateUpdate(context!!)
+                    if (application.state == State.INSTALLING ||
+                            application.state == State.INSTALLED) {
+                        application.checkForStateUpdate(context!!)
+                    }
                 }
             }
         }

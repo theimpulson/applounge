@@ -501,7 +501,8 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
 
     override fun onResume() {
         super.onResume()
-        if (::application.isInitialized) {
+        if (::application.isInitialized && (application.state == State.INSTALLING ||
+                        application.state == State.INSTALLED)) {
             application.checkForStateUpdate(this)
         }
     }
