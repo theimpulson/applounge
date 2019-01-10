@@ -42,4 +42,5 @@ dependencies {
     implementation files('libs/jackson-databind-2.9.7.jar')
     implementation files('libs/jackson-annotations-2.9.7.jar')
     implementation files('libs/jackson-core-2.9.7.jar')
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.11'
 }

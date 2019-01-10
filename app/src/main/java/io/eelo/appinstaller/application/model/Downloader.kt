@@ -4,9 +4,12 @@ import android.content.Context
 import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.utils.Constants
 import java.io.*
+import java.lang.Exception
 import java.net.URL
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.net.ssl.HttpsURLConnection
+import org.apache.commons.codec.binary.Hex
+import java.security.MessageDigest
 
 class Downloader {
     private var count = 0
@@ -22,7 +25,7 @@ class Downloader {
     private val downloadNotification = DownloadNotification()
 
     @Throws(IOException::class)
-    fun download(context: Context, data: FullData, apkFile: File):Boolean {
+    fun download(context: Context, data: FullData, apkFile: File): Boolean {
         createApkFile(apkFile)
         // TODO Handle this error better, ideally do not create the APK file
         if (data.getLastVersion() != null) {
@@ -33,6 +36,14 @@ class Downloader {
             downloadNotification.show(total, count)
             transferBytes(connection, apkFile)
             connection.disconnect()
+
+            try {
+                if (getApkFileSha1(apkFile) != data.getLastVersion()!!.apkSHA) {
+                    cancel()
+                }
+            } catch (exception: Exception) {
+                // TODO Show error
+            }
         }
         return isCanceled.get()
     }
@@ -45,7 +56,6 @@ class Downloader {
         apkFile.createNewFile()
         apkFile.deleteOnExit()
     }
-
 
     @Throws(IOException::class)
     private fun transferBytes(connection: HttpsURLConnection, apkFile: File) {
@@ -79,5 +89,20 @@ class Downloader {
 
     fun cancel() {
         isCanceled.set(true)
+    }
+
+    @Throws(Exception::class)
+    private fun getApkFileSha1(file: File): String {
+        val messageDigest = MessageDigest.getInstance("SHA-1")
+        val fileInputStream = FileInputStream(file)
+        var length = 0
+        val buffer = ByteArray(8192)
+        while (length != -1) {
+            length = fileInputStream.read(buffer)
+            if (length > 0) {
+                messageDigest.update(buffer, 0, length)
+            }
+        }
+        return String(Hex.encodeHex(messageDigest.digest()))
     }
 }

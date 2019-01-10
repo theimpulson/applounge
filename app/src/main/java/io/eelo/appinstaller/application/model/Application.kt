@@ -55,11 +55,15 @@ class Application(val packageName: String, private val applicationManager: Appli
             INSTALLED -> info.launch(activity)
             DOWNLOADED -> applicationManager.install(this)
             NOT_UPDATED, NOT_DOWNLOADED -> applicationManager.download(this)
-            INSTALLING -> applicationManager.stopInstalling(this)
+            INSTALLING -> {
+                applicationManager.stopInstalling(this)
+                return
+            }
             DOWNLOADING -> {
                 applicationManager.stopDownloading(this)
                 downloader?.cancel()
                 downloader = null
+                return
             }
         }
         stateManager.find(activity, basicData!!)
@@ -74,6 +78,9 @@ class Application(val packageName: String, private val applicationManager: Appli
             downloader = null
             if (!canceled) {
                 applicationManager.install(this)
+            }
+            else {
+                info.getApkFile(context, basicData!!).delete()
             }
         } catch (e: Exception) {
             stateManager.notifyError()

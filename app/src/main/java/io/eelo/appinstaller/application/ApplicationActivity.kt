@@ -412,6 +412,9 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
                     app_install.setTextColor(resources.getColor(android.R.color.primary_text_light))
                     app_install.isEnabled = true
                     app_size.visibility = View.GONE
+                    app_download_mb.text = getString(R.string.state_installing)
+                    app_download_percentage.text = ""
+                    app_download_progress.progress = 0
                     app_download_container.visibility = View.VISIBLE
                 }
                 State.INSTALLING -> {
