@@ -155,21 +155,21 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
         if (basicData.name.isNotEmpty()) {
             app_title.text = basicData.name
         } else {
-            app_title.text = getString(R.string.not_available_full)
+            app_title.visibility = View.GONE
         }
 
         // Set the app author
         if (basicData.author.isNotEmpty()) {
             app_author.text = basicData.author
         } else {
-            app_author.text = getString(R.string.not_available_full)
+            app_author.visibility = View.GONE
         }
 
         // Set the app category
         if (fullData.category.getTitle().isNotEmpty()) {
             app_category.text = fullData.category.getTitle()
         } else {
-            app_category.text = getString(R.string.not_available_full)
+            app_category.visibility = View.GONE
         }
 
         // Set the app description
@@ -237,7 +237,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
             if (fullData.getLastVersion()!!.fileSize.isNotEmpty()) {
                 app_size.text = fullData.getLastVersion()!!.fileSize
             } else {
-                app_size.text = getString(R.string.not_available)
+                app_size.visibility = View.GONE
             }
 
             // Set the app privacy rating
@@ -270,20 +270,21 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
 
             // Set app update timestamp
             if (fullData.getLastVersion()!!.createdOn.isNotEmpty()) {
-                app_updated_on.text = fullData.getLastVersion()!!.createdOn
+                app_updated_on.text = getFormattedTimestamp(fullData.getLastVersion()!!.createdOn)
             } else {
                 app_updated_on.text = getString(R.string.not_available)
             }
 
             // Set app minimum required Android version
             if (fullData.getLastVersion()!!.minAndroid.isNotEmpty()) {
-                app_min_android.text = fullData.getLastVersion()!!.minAndroid
+                app_min_android.text =
+                        getFormattedMinSdkVersion(fullData.getLastVersion()!!.minAndroid)
             } else {
                 app_min_android.text = getString(R.string.not_available)
             }
         } else {
             // Set app size
-            app_size.text = getString(R.string.not_available)
+            app_size.visibility = View.GONE
 
             // Set app privacy rating
             app_privacy_score.text = getString(R.string.not_available)
@@ -327,7 +328,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
                     }
                     alertDialog.setMessage(message)
                 } else {
-                    alertDialog.setMessage(getString(R.string.not_available_full))
+                    alertDialog.setMessage(getString(R.string.no_permissions))
                 }
             } else {
                 alertDialog.setMessage(getString(R.string.not_available_full))
@@ -356,7 +357,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
                     }
                     alertDialog.setMessage(message)
                 } else {
-                    alertDialog.setMessage(getString(R.string.not_available_full))
+                    alertDialog.setMessage(getString(R.string.no_trackers))
                 }
             } else {
                 alertDialog.setMessage(getString(R.string.not_available_full))
@@ -374,6 +375,22 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
         // Handle clicks on app install button
         app_install.setOnClickListener {
             onInstallButtonClick(fullData)
+        }
+    }
+
+    private fun getFormattedTimestamp(timestamp: String): String {
+        return if (timestamp.contains(" ")) {
+            timestamp.substring(0, timestamp.indexOf(" "))
+        } else {
+            timestamp
+        }
+    }
+
+    private fun getFormattedMinSdkVersion(minSdkVersion: String): String {
+        return if (minSdkVersion.contains(" (")) {
+            minSdkVersion.substring(0, minSdkVersion.indexOf(" ("))
+        } else {
+            minSdkVersion
         }
     }
 

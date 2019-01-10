@@ -36,6 +36,8 @@
     <string name="app_licence">Licence</string>
     <string name="app_screenshots_title">Screenshots</string>
     <string name="download_notification_description">Downloading</string>
+    <string name="no_permissions">No permissions requested</string>
+    <string name="no_trackers">No trackers used</string>
 
     <!-- Application Description Activity -->
     <string name="application_description_activity_title">Description</string>
