@@ -36,11 +36,6 @@ class ApplicationInfo(private val packageName: String) {
         return File(context.filesDir, packageName + "-" + data.lastVersionNumber + ".apk")
     }
 
-    fun isDownloaded(context: Context, data: BasicData): Boolean {
-        return getApkFile(context, data).exists()
-    }
-
-
     fun launch(context: Context) {
         context.startActivity(context.packageManager.getLaunchIntentForPackage(packageName))
     }

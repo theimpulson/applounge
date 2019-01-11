@@ -53,7 +53,6 @@ class Application(val packageName: String, private val applicationManager: Appli
     fun buttonClicked(activity: Activity) {
         when (stateManager.state) {
             INSTALLED -> info.launch(activity)
-            DOWNLOADED -> applicationManager.install(this)
             NOT_UPDATED, NOT_DOWNLOADED -> applicationManager.download(this)
             INSTALLING -> {
                 applicationManager.stopInstalling(this)
