@@ -25,8 +25,10 @@ class BannerApplicationLoader(private val apps: ArrayList<Application>, private 
         }
         val images = ImagesLoader(imagesUris.toTypedArray()).loadImages()
         val bannerApps = ArrayList<BannerApplication>()
-        imagesUris.forEachIndexed { index, uri ->
-            bannerApps.add(BannerApplication(apps[index], images[index]))
+        imagesUris.forEachIndexed { index, _ ->
+            if (apps.size > index && images.size > index) {
+                bannerApps.add(BannerApplication(apps[index], images[index]))
+            }
         }
         return bannerApps
     }
