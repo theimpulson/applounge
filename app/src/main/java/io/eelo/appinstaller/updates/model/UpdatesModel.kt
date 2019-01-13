@@ -21,7 +21,7 @@ class UpdatesModel : UpdatesModelInterface {
 
     override fun loadApplicationList(context: Context) {
         if (Common.isNetworkAvailable(context)) {
-            UnUpdatedAppsFinder(context.packageManager, this, applicationManager!!).execute(context)
+            OutdatedApplicationsFinder(context.packageManager, this, applicationManager!!).execute(context)
         } else {
             screenError.value = Error.NO_INTERNET
         }

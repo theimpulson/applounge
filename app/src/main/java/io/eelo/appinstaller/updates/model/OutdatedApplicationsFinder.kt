@@ -9,12 +9,12 @@ import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.utils.Execute
 import java.util.concurrent.atomic.AtomicInteger
 
-class UnUpdatedAppsFinder(private val packageManager: PackageManager, private val callback: UpdatesModelInterface, private val applicationManager: ApplicationManager) : AsyncTask<Context, Any, Any>() {
+class OutdatedApplicationsFinder(private val packageManager: PackageManager, private val callback: UpdatesModelInterface, private val applicationManager: ApplicationManager) : AsyncTask<Context, Any, Any>() {
 
     private var result: ArrayList<Application>? = null
 
     override fun doInBackground(vararg params: Context): Any? {
-        result = getNotUpdatedApplications(params[0])
+        result = getOutdatedApplications(params[0])
         return null
     }
 
@@ -22,7 +22,7 @@ class UnUpdatedAppsFinder(private val packageManager: PackageManager, private va
         callback.onAppsFound(this.result!!)
     }
 
-    private fun getNotUpdatedApplications(context: Context): ArrayList<Application> {
+    private fun getOutdatedApplications(context: Context): ArrayList<Application> {
         val result = ArrayList<Application>()
         val installedApplications = getInstalledApplications()
 
@@ -58,9 +58,31 @@ class UnUpdatedAppsFinder(private val packageManager: PackageManager, private va
     private fun getInstalledApplications(): ArrayList<String> {
         val result = ArrayList<String>()
         packageManager.getInstalledApplications(0).forEach { app ->
-            result.add(app.packageName)
+            if (!isSystemApp(app.packageName)) {
+                result.add(app.packageName)
+            }
         }
         return result
     }
 
+    private fun isSystemApp(packageName: String): Boolean {
+        try {
+            // Get package information for the app
+            val appPackageInfo = packageManager.getPackageInfo(
+                    packageName, PackageManager.GET_SIGNATURES)
+            // Get package information for the Android system
+            val systemPackageInfo = packageManager.getPackageInfo(
+                    "android", PackageManager.GET_SIGNATURES)
+
+            // Compare app and Android system signatures
+            if (appPackageInfo.signatures.isNotEmpty() &&
+                    systemPackageInfo.signatures.isNotEmpty() &&
+                    appPackageInfo.signatures[0] == systemPackageInfo.signatures[0]) {
+                return true
+            }
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
+        return false
+    }
 }

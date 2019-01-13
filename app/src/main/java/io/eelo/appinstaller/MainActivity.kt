@@ -79,11 +79,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 showFragment(searchFragment)
                 return true
             }
-            // TODO Enable once updates screen is implemented
-            /*R.id.menu_updates -> {
+            R.id.menu_updates -> {
                 showFragment(updatesFragment)
                 return true
-            }*/
+            }
             R.id.menu_settings -> {
                 showFragment(SettingsFragment())
                 return true

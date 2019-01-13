@@ -13,8 +13,7 @@
 
     </PreferenceCategory>
 
-    <!-- TODO Enable once updates screen is implemented -->
-    <!--<PreferenceCategory android:title="@string/preference_updates_title">
+    <PreferenceCategory android:title="@string/preference_updates_title">
 
         <ListPreference
             android:defaultValue="@string/preference_update_interval_default"
@@ -43,5 +42,5 @@
             android:summary="@string/preference_update_notify_available_description"
             android:title="@string/preference_update_notify_available_title" />
 
-    </PreferenceCategory>-->
+    </PreferenceCategory>
 </PreferenceScreen>
