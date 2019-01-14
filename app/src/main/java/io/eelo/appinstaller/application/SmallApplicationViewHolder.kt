@@ -71,7 +71,7 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
     @SuppressLint("SetTextI18n")
     override fun downloading(downloader: Downloader) {
         downloader.addListener { count, total ->
-            installButton.text = "${toMiB(count)}/${toMiB(total)} MiB"
+            installButton.text = ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
         }
     }
 
