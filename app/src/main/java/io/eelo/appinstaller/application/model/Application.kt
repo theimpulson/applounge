@@ -68,7 +68,8 @@ class Application(val packageName: String, private val applicationManager: Appli
                 return
             }
             DOWNLOADING -> {
-                // TODO Cancel download
+                downloader?.cancelDownload()
+                return
             }
         }
         stateManager.find(activity, basicData!!)
@@ -101,6 +102,8 @@ class Application(val packageName: String, private val applicationManager: Appli
             applicationManager.install(this)
         } else {
             info.getApkFile(context, basicData!!).delete()
+            applicationManager.stopDownloading(this)
+            downloader = null
         }
         stateManager.find(context, basicData!!)
     }

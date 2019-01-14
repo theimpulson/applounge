@@ -20,6 +20,7 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
                  private val downloaderInterface: DownloaderInterface) {
     private lateinit var downloadManager: DownloadManager
     private lateinit var request: DownloadManager.Request
+    private var downloadId: Long = 0
 
     private val listeners = ArrayList<(Int, Int) -> Unit>()
     private var totalBytes = 0
@@ -27,7 +28,8 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
 
     private val notifier = ThreadedListeners {
         listeners.forEach {
-            it.invoke(downloadedBytes, totalBytes) }
+            it.invoke(downloadedBytes, totalBytes)
+        }
     }
 
     fun addListener(listener: (Int, Int) -> Unit) {
@@ -35,11 +37,12 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
     }
 
     fun download(context: Context) {
-        downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        registerReceivers(context)
         if (fullData.getLastVersion() != null) {
+            downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            registerReceivers(context)
             initialiseDownloadManagerRequest(context)
-            handleDownloadUpdates(downloadManager.enqueue(request))
+            downloadId = downloadManager.enqueue(request)
+            handleDownloadUpdates()
         } else {
             downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
         }
@@ -48,6 +51,10 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
     private fun registerReceivers(context: Context) {
         context.registerReceiver(onComplete,
                 IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+    }
+
+    private fun unregisterReceivers(context: Context) {
+        context.unregisterReceiver(onComplete)
     }
 
     private fun initialiseDownloadManagerRequest(context: Context) {
@@ -64,15 +71,17 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
                 }
     }
 
-    private fun handleDownloadUpdates(downloadId: Long) {
+    private fun handleDownloadUpdates() {
         notifier.start()
-        var isDownloading = true
-        while (isDownloading) {
+        while (true) {
             val query = DownloadManager.Query().apply {
                 setFilterById(downloadId)
             }
             val cursor = downloadManager.query(query)
-            cursor.moveToFirst()
+            if (!cursor.moveToFirst()) {
+                break
+            }
+
             downloadedBytes = cursor.getInt(
                     cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
             totalBytes = cursor.getInt(
@@ -81,10 +90,14 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
             val downloadStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
             if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL ||
                     downloadStatus == DownloadManager.STATUS_FAILED) {
-                isDownloading = false
+                break
             }
         }
         notifier.stop()
+    }
+
+    fun cancelDownload() {
+        downloadManager.remove(downloadId)
     }
 
     @Throws(Exception::class)
@@ -115,6 +128,7 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
                 exception.printStackTrace()
             }
             downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
+            unregisterReceivers(context)
         }
     }
 }
