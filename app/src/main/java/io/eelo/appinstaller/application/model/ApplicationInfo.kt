@@ -3,6 +3,8 @@ package io.eelo.appinstaller.application.model
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.os.Environment
+import android.os.Environment.getExternalStorageDirectory
 import io.eelo.appinstaller.application.model.data.BasicData
 import java.io.File
 import java.util.regex.Pattern
@@ -17,7 +19,7 @@ class ApplicationInfo(private val packageName: String) {
         val installedVersionCode = packageInfo.versionCode
         val pattern = Pattern.compile("[(]$installedVersionCode[)]")
         val matcher = pattern.matcher(lastVersionNumber)
-        return matcher.find();
+        return matcher.find()
     }
 
     fun isInstalled(context: Context): Boolean {
@@ -32,8 +34,8 @@ class ApplicationInfo(private val packageName: String) {
         }
     }
 
-    fun getApkFile(context: Context, data: BasicData): File {
-        return File(context.filesDir, packageName + "-" + data.lastVersionNumber + ".apk")
+    fun getApkFile(data: BasicData): File {
+        return File(getExternalStorageDirectory(), Environment.DIRECTORY_DOWNLOADS + packageName + "-" + data.lastVersionNumber + ".apk")
     }
 
     fun launch(context: Context) {
@@ -41,6 +43,6 @@ class ApplicationInfo(private val packageName: String) {
     }
 
     fun install(context: Context, data: BasicData) {
-        Installer(getApkFile(context, data)).install(context)
+        Installer(getApkFile(data)).install(context)
     }
 }

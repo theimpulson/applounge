@@ -1,10 +1,12 @@
 package io.eelo.appinstaller
 
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
@@ -16,6 +18,7 @@ import io.eelo.appinstaller.home.HomeFragment
 import io.eelo.appinstaller.search.SearchFragment
 import io.eelo.appinstaller.settings.SettingsFragment
 import io.eelo.appinstaller.updates.UpdatesFragment
+import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.CURRENTLY_SELECTED_FRAGMENT_KEY
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -117,6 +120,15 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             val itemView = menuView.getChildAt(i) as BottomNavigationItemView
             itemView.setShiftingMode(false)
             itemView.setChecked(itemView.itemData.isChecked)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE &&
+                grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            Snackbar.make(container, R.string.error_storage_permission_denied,
+                    Snackbar.LENGTH_LONG).show()
         }
     }
 

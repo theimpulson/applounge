@@ -78,6 +78,7 @@
     <string name="preference_update_notify_available_description">Show a notification when app updates are available</string>
 
     <!-- Errors -->
+    <string name="error_storage_permission_denied">Storage access is required for downloading apps.</string>
     <string name="error_no_internet">Can\'t connect! Please check your internet connection and try again.</string>
     <string name="error_server_unavailable">Server unavailable! Please try again later.</string>
     <string name="error_request_timeout">Server took too long to respond! Please try again later.</string>
