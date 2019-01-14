@@ -17,10 +17,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.ApplicationStateListener
-import io.eelo.appinstaller.application.model.Downloader
-import io.eelo.appinstaller.application.model.State
+import io.eelo.appinstaller.application.model.*
 import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection

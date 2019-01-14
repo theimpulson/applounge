@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Environment
-import android.os.Environment.getExternalStorageDirectory
 import io.eelo.appinstaller.application.model.data.BasicData
 import java.io.File
 import java.util.regex.Pattern
@@ -34,8 +33,13 @@ class ApplicationInfo(private val packageName: String) {
         }
     }
 
-    fun getApkFile(data: BasicData): File {
-        return File(getExternalStorageDirectory(), Environment.DIRECTORY_DOWNLOADS + packageName + "-" + data.lastVersionNumber + ".apk")
+    fun getApkFilename(basicData: BasicData): String {
+        return packageName + "-" + basicData.lastVersionNumber + ".apk"
+    }
+
+    fun getApkFile(context: Context, data: BasicData): File {
+        return File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+                getApkFilename(data))
     }
 
     fun launch(context: Context) {
@@ -43,6 +47,6 @@ class ApplicationInfo(private val packageName: String) {
     }
 
     fun install(context: Context, data: BasicData) {
-        Installer(getApkFile(data)).install(context)
+        Installer(getApkFile(context, data)).install(context)
     }
 }

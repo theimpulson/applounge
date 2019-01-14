@@ -7,10 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.ApplicationStateListener
-import io.eelo.appinstaller.application.model.Downloader
-import io.eelo.appinstaller.application.model.State
+import io.eelo.appinstaller.application.model.*
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.toMiB

@@ -1,94 +1,90 @@
 package io.eelo.appinstaller.application.model
 
+import android.app.DownloadManager
 import android.content.Context
+import android.net.Uri
+import android.os.Environment
+import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.utils.Constants
-import java.io.*
-import java.lang.Exception
-import java.net.URL
-import java.util.concurrent.atomic.AtomicBoolean
-import javax.net.ssl.HttpsURLConnection
+import android.content.Intent
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
 import org.apache.commons.codec.binary.Hex
+import java.io.File
+import java.io.FileInputStream
+import java.lang.Exception
 import java.security.MessageDigest
 
-class Downloader {
-    private var count = 0
-    private var total = 0
-    private val listeners = ArrayList<(Int, Int) -> Unit>()
+class Downloader(private val applicationInfo: ApplicationInfo, private val fullData: FullData,
+                 private val downloaderInterface: DownloaderInterface) {
+    private lateinit var downloadManager: DownloadManager
+    private lateinit var request: DownloadManager.Request
 
-    private val isCanceled = AtomicBoolean(false)
+    private val listeners = ArrayList<(Int, Int) -> Unit>()
+    private var totalBytes = 0
+    private var downloadedBytes = 0
 
     private val notifier = ThreadedListeners {
-        listeners.forEach { it.invoke(count, total) }
-    }
-
-    private val downloadNotification = DownloadNotification()
-
-    @Throws(IOException::class)
-    fun download(context: Context, data: FullData, apkFile: File): Boolean {
-        createApkFile(apkFile)
-        // TODO Handle this error better, ideally do not create the APK file
-        if (data.getLastVersion() != null) {
-            downloadNotification.create(context, data.basicData.name)
-            val url = URL(Constants.DOWNLOAD_URL + data.getLastVersion()!!.downloadLink)
-            val connection = url.openConnection() as HttpsURLConnection
-            total = connection.contentLength
-            downloadNotification.show(total, count)
-            transferBytes(connection, apkFile)
-            connection.disconnect()
-
-            try {
-                if (getApkFileSha1(apkFile) != data.getLastVersion()!!.apkSHA) {
-                    cancel()
-                }
-            } catch (exception: Exception) {
-                // TODO Show error
-            }
-        }
-        return isCanceled.get()
-    }
-
-    private fun createApkFile(apkFile: File) {
-        if (apkFile.exists()) {
-            apkFile.delete()
-        }
-        apkFile.parentFile.mkdirs()
-        apkFile.createNewFile()
-        apkFile.deleteOnExit()
-    }
-
-    @Throws(IOException::class)
-    private fun transferBytes(connection: HttpsURLConnection, apkFile: File) {
-        connection.inputStream.use { input ->
-            FileOutputStream(apkFile).use { output ->
-                notifier.start()
-                val buffer = ByteArray(1024)
-                while (!isCanceled.get() && readAndWrite(input, output, buffer)) {
-                    downloadNotification.show(total, count)
-                }
-            }
-        }
-        downloadNotification.hide()
-        notifier.stop()
-    }
-
-    @Throws(IOException::class)
-    private fun readAndWrite(input: InputStream, output: OutputStream, buffer: ByteArray): Boolean {
-        val count = input.read(buffer)
-        if (count == -1) {
-            return false
-        }
-        output.write(buffer, 0, count)
-        this.count += count
-        return true
+        listeners.forEach {
+            it.invoke(downloadedBytes, totalBytes) }
     }
 
     fun addListener(listener: (Int, Int) -> Unit) {
         listeners.add(listener)
     }
 
-    fun cancel() {
-        isCanceled.set(true)
+    fun download(context: Context) {
+        downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        registerReceivers(context)
+        if (fullData.getLastVersion() != null) {
+            initialiseDownloadManagerRequest(context)
+            handleDownloadUpdates(downloadManager.enqueue(request))
+        } else {
+            downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
+        }
+    }
+
+    private fun registerReceivers(context: Context) {
+        context.registerReceiver(onComplete,
+                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+    }
+
+    private fun initialiseDownloadManagerRequest(context: Context) {
+        request = DownloadManager.Request(
+                Uri.parse(
+                        Constants.DOWNLOAD_URL + fullData.getLastVersion()!!.downloadLink))
+                .apply {
+                    setTitle(fullData.basicData.name)
+                    setDescription(context.getString(R.string.download_notification_description))
+                    setDestinationInExternalFilesDir(
+                            context,
+                            Environment.DIRECTORY_DOWNLOADS,
+                            applicationInfo.getApkFilename(fullData.basicData))
+                }
+    }
+
+    private fun handleDownloadUpdates(downloadId: Long) {
+        notifier.start()
+        var isDownloading = true
+        while (isDownloading) {
+            val query = DownloadManager.Query().apply {
+                setFilterById(downloadId)
+            }
+            val cursor = downloadManager.query(query)
+            cursor.moveToFirst()
+            downloadedBytes = cursor.getInt(
+                    cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+            totalBytes = cursor.getInt(
+                    cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+
+            val downloadStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+            if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL ||
+                    downloadStatus == DownloadManager.STATUS_FAILED) {
+                isDownloading = false
+            }
+        }
+        notifier.stop()
     }
 
     @Throws(Exception::class)
@@ -104,5 +100,21 @@ class Downloader {
             }
         }
         return String(Hex.encodeHex(messageDigest.digest()))
+    }
+
+    private var onComplete: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            try {
+                if (!fullData.getLastVersion()!!.apkSHA.isNullOrBlank() &&
+                        fullData.getLastVersion()!!.apkSHA!! ==
+                        getApkFileSha1(applicationInfo.getApkFile(context, fullData.basicData))) {
+                    downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_SUCCESSFUL)
+                    return
+                }
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+            }
+            downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
+        }
     }
 }

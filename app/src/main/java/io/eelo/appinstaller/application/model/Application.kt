@@ -2,6 +2,7 @@ package io.eelo.appinstaller.application.model
 
 import android.Manifest
 import android.app.Activity
+import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.widget.ImageView
@@ -16,7 +17,8 @@ import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Error
 import java.util.concurrent.atomic.AtomicInteger
 
-class Application(val packageName: String, private val applicationManager: ApplicationManager) {
+class Application(val packageName: String, private val applicationManager: ApplicationManager) :
+        DownloaderInterface {
 
     private val uses = AtomicInteger(0)
     private val info = ApplicationInfo(packageName)
@@ -66,10 +68,7 @@ class Application(val packageName: String, private val applicationManager: Appli
                 return
             }
             DOWNLOADING -> {
-                applicationManager.stopDownloading(this)
-                downloader?.cancel()
-                downloader = null
-                return
+                // TODO Cancel download
             }
         }
         stateManager.find(activity, basicData!!)
@@ -92,18 +91,16 @@ class Application(val packageName: String, private val applicationManager: Appli
 
     fun download(context: Context) {
         assertFullData(context)
-        downloader = Downloader()
+        downloader = Downloader(info, fullData!!, this)
         stateManager.notifyDownloading(downloader!!)
-        try {
-            val canceled = downloader!!.download(context, fullData!!, info.getApkFile(basicData!!))
-            downloader = null
-            if (!canceled) {
-                applicationManager.install(this)
-            } else {
-                info.getApkFile(basicData!!).delete()
-            }
-        } catch (e: Exception) {
-            stateManager.notifyError()
+        downloader!!.download(context)
+    }
+
+    override fun onDownloadComplete(context: Context, status: Int) {
+        if (status == DownloadManager.STATUS_SUCCESSFUL) {
+            applicationManager.install(this)
+        } else {
+            info.getApkFile(context, basicData!!).delete()
         }
         stateManager.find(context, basicData!!)
     }

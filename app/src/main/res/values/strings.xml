@@ -2,7 +2,6 @@
     <string name="app_name">App Installer</string>
     <string name="not_available">N/A</string>
     <string name="not_available_full">Not available</string>
-    <string name="download_notification_channel_title">App downloads</string>
     <string name="service_description">This service is used by App Installer to manage, download and install apps. Stopping it may cause app downloads to fail.</string>
 
     <!-- Application -->

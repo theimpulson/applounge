@@ -19,14 +19,14 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
         } else if (info.isLastVersionInstalled(context,
                         basicData.lastVersionNumber ?: "")) {
             state = State.INSTALLED
-            info.getApkFile(basicData).delete()
+            info.getApkFile(context, basicData).delete()
         } else if (info.isInstalled(context) && !info.isLastVersionInstalled(context,
                         basicData.lastVersionNumber ?: "")) {
             state = State.NOT_UPDATED
-            info.getApkFile(basicData).delete()
+            info.getApkFile(context, basicData).delete()
         } else {
             state = State.NOT_DOWNLOADED
-            info.getApkFile(basicData).delete()
+            info.getApkFile(context, basicData).delete()
         }
         changeState(state)
     }
