@@ -88,6 +88,7 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
                     cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
 
             val downloadStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+            cursor.close()
             if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL ||
                     downloadStatus == DownloadManager.STATUS_FAILED) {
                 break
