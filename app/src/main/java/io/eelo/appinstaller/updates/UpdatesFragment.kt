@@ -90,7 +90,10 @@ class UpdatesFragment : Fragment() {
             }
         })
 
-        updatesViewModel.loadApplicationList(context!!)
+        if (updatesViewModel.getApplications().value == null ||
+                updatesViewModel.getApplications().value!!.isEmpty()) {
+            updatesViewModel.loadApplicationList(context!!)
+        }
 
         return view
     }
