@@ -2,7 +2,9 @@ package io.eelo.appinstaller.categories.category
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -21,7 +23,9 @@ import io.eelo.appinstaller.categories.category.viewmodel.CategoryViewModel
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.CATEGORY_KEY
+import kotlinx.android.synthetic.main.activity_category.*
 
 class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectionCallback {
 
@@ -100,6 +104,15 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
                 finish()
         }
         return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE &&
+                grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            Snackbar.make(container, R.string.error_storage_permission_denied,
+                    Snackbar.LENGTH_LONG).show()
+        }
     }
 
     override fun onResume() {

@@ -1,7 +1,10 @@
 package io.eelo.appinstaller.application.model
 
+import android.Manifest
 import android.app.Activity
+import android.app.DownloadManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.widget.ImageView
 import io.eelo.appinstaller.api.AppDetailRequest
 import io.eelo.appinstaller.api.PackageNameSearchRequest
@@ -10,10 +13,12 @@ import io.eelo.appinstaller.application.model.data.BasicData
 import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Error
 import java.util.concurrent.atomic.AtomicInteger
 
-class Application(val packageName: String, private val applicationManager: ApplicationManager) {
+class Application(val packageName: String, private val applicationManager: ApplicationManager) :
+        DownloaderInterface {
 
     private val uses = AtomicInteger(0)
     private val info = ApplicationInfo(packageName)
@@ -53,36 +58,52 @@ class Application(val packageName: String, private val applicationManager: Appli
     fun buttonClicked(activity: Activity) {
         when (stateManager.state) {
             INSTALLED -> info.launch(activity)
-            NOT_UPDATED, NOT_DOWNLOADED -> applicationManager.download(this)
+            NOT_UPDATED, NOT_DOWNLOADED -> {
+                if (canWriteStorage(activity)) {
+                    applicationManager.download(this)
+                }
+            }
             INSTALLING -> {
                 applicationManager.stopInstalling(this)
                 return
             }
             DOWNLOADING -> {
-                applicationManager.stopDownloading(this)
-                downloader?.cancel()
-                downloader = null
+                downloader?.cancelDownload()
                 return
             }
         }
         stateManager.find(activity, basicData!!)
     }
 
+    private fun canWriteStorage(activity: Activity): Boolean {
+        return if (android.os.Build.VERSION.SDK_INT >= 23) {
+            if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                activity.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        Constants.STORAGE_PERMISSION_REQUEST_CODE)
+                false
+            } else {
+                true
+            }
+        } else {
+            true
+        }
+    }
+
     fun download(context: Context) {
         assertFullData(context)
-        downloader = Downloader()
+        downloader = Downloader(info, fullData!!, this)
         stateManager.notifyDownloading(downloader!!)
-        try {
-            val canceled = downloader!!.download(context, fullData!!, info.getApkFile(context, basicData!!))
+        downloader!!.download(context)
+    }
+
+    override fun onDownloadComplete(context: Context, status: Int) {
+        if (status == DownloadManager.STATUS_SUCCESSFUL) {
+            applicationManager.install(this)
+        } else {
+            info.getApkFile(context, basicData!!).delete()
+            applicationManager.stopDownloading(this)
             downloader = null
-            if (!canceled) {
-                applicationManager.install(this)
-            }
-            else {
-                info.getApkFile(context, basicData!!).delete()
-            }
-        } catch (e: Exception) {
-            stateManager.notifyError()
         }
         stateManager.find(context, basicData!!)
     }

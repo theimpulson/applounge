@@ -2,7 +2,6 @@
     <string name="app_name">App Installer</string>
     <string name="not_available">N/A</string>
     <string name="not_available_full">Not available</string>
-    <string name="download_notification_channel_title">App downloads</string>
     <string name="service_description">This service is used by App Installer to manage, download and install apps. Stopping it may cause app downloads to fail.</string>
 
     <!-- Application -->
@@ -78,6 +77,7 @@
     <string name="preference_update_notify_available_description">Show a notification when app updates are available</string>
 
     <!-- Errors -->
+    <string name="error_storage_permission_denied">Storage access is required for downloading apps.</string>
     <string name="error_no_internet">Can\'t connect! Please check your internet connection and try again.</string>
     <string name="error_server_unavailable">Server unavailable! Please try again later.</string>
     <string name="error_request_timeout">Server took too long to respond! Please try again later.</string>

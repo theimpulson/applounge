@@ -2,6 +2,7 @@ package io.eelo.appinstaller.application
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -16,16 +17,14 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.ApplicationStateListener
-import io.eelo.appinstaller.application.model.Downloader
-import io.eelo.appinstaller.application.model.State
+import io.eelo.appinstaller.application.model.*
 import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.toMiB
+import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
 import io.eelo.appinstaller.utils.Constants.APPLICATION_PACKAGE_NAME_KEY
 import io.eelo.appinstaller.utils.Constants.SELECTED_APPLICATION_SCREENSHOT_KEY
@@ -516,6 +515,17 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
             }
             app_images_scroll_view.visibility = View.VISIBLE
             app_images_container.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                application.buttonClicked(this)
+            } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Snackbar.make(container, R.string.error_storage_permission_denied,
+                        Snackbar.LENGTH_LONG).show()
+            }
         }
     }
 
