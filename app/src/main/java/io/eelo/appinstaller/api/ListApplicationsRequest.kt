@@ -14,6 +14,7 @@ import java.io.IOException
 import java.lang.Exception
 import java.net.SocketTimeoutException
 import java.net.URL
+import java.net.URLEncoder
 import javax.net.ssl.HttpsURLConnection
 
 class ListApplicationsRequest(private val category: String, private val page: Int, private val resultsPerPage: Int) {
@@ -24,7 +25,7 @@ class ListApplicationsRequest(private val category: String, private val page: In
 
     fun request(callback: (Error?, ListApplicationsResult?) -> Unit) {
         try {
-            val url = URL(Constants.BASE_URL + "apps?action=list_apps&category=$category&nres=$resultsPerPage&page=$page")
+            val url = URL(Constants.BASE_URL + "apps?action=list_apps&category=${URLEncoder.encode(category, "utf-8")}&nres=$resultsPerPage&page=$page")
             val urlConnection = url.openConnection() as HttpsURLConnection
             urlConnection.requestMethod = Constants.REQUEST_METHOD
             urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT

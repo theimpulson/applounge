@@ -14,6 +14,7 @@ import java.io.IOException
 import java.lang.Exception
 import java.net.SocketTimeoutException
 import java.net.URL
+import java.net.URLEncoder
 import javax.net.ssl.HttpsURLConnection
 
 class SearchRequest(private val keyword: String, private val page: Int, private val resultsPerPage: Int) {
@@ -24,7 +25,7 @@ class SearchRequest(private val keyword: String, private val page: Int, private 
 
     fun request(callback: (Error?, SearchResult?) -> Unit) {
         try {
-            val url = URL(Constants.BASE_URL + "apps?action=search&keyword=$keyword&page=$page&nres=$resultsPerPage")
+            val url = URL(Constants.BASE_URL + "apps?action=search&keyword=${URLEncoder.encode(keyword, "utf-8")}&page=$page&nres=$resultsPerPage")
             val urlConnection = url.openConnection() as HttpsURLConnection
             urlConnection.requestMethod = Constants.REQUEST_METHOD
             urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT
