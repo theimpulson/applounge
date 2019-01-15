@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
+import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.updates.viewModel.UpdatesViewModel
@@ -22,6 +23,7 @@ class UpdatesFragment : Fragment() {
     private lateinit var updatesViewModel: UpdatesViewModel
     private var applicationManager: ApplicationManager? = null
     private lateinit var recyclerView: RecyclerView
+    private var applicationList = ArrayList<Application>()
 
     fun initialise(applicationManager: ApplicationManager) {
         this.applicationManager = applicationManager
@@ -36,25 +38,42 @@ class UpdatesFragment : Fragment() {
 
         updatesViewModel = ViewModelProviders.of(activity!!).get(UpdatesViewModel::class.java)
         recyclerView = view.findViewById(R.id.app_list)
+        val splashContainer = view.findViewById<LinearLayout>(R.id.splash_container)
         val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
 
         // Initialise UI elements
         updatesViewModel.initialise(applicationManager!!)
-        initializeRecyclerView()
+        recyclerView.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
+        splashContainer.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
             progressBar.visibility = View.VISIBLE
             updatesViewModel.loadApplicationList(context!!)
         }
 
-        // Bind recycler view adapter to search results list in view model
+        // Initialise recycler view
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList)
+
+        // Bind recycler view adapter to outdated applications list in view model
         updatesViewModel.getApplications().observe(this, Observer {
-            if (it!!.isNotEmpty()) {
-                recyclerView.adapter.notifyDataSetChanged()
+            if (it != null) {
+                applicationList.clear()
+                applicationList.addAll(it)
                 progressBar.visibility = View.GONE
+                recyclerView.adapter.notifyDataSetChanged()
+                recyclerView.scrollToPosition(0)
+                if (applicationList.isEmpty()) {
+                    recyclerView.visibility = View.GONE
+                    splashContainer.visibility = View.VISIBLE
+                } else {
+                    splashContainer.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                }
             }
         })
 
@@ -64,6 +83,8 @@ class UpdatesFragment : Fragment() {
                 errorDescription.text = activity!!.getString(Common.getScreenErrorDescriptionId(it))
                 errorContainer.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
+                splashContainer.visibility = View.GONE
+                recyclerView.visibility = View.GONE
             } else {
                 errorContainer.visibility = View.GONE
             }
@@ -74,25 +95,23 @@ class UpdatesFragment : Fragment() {
         return view
     }
 
-    private fun initializeRecyclerView() {
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ApplicationListAdapter(activity!!, updatesViewModel.getApplications().value!!)
-    }
-
     override fun onResume() {
         super.onResume()
         if (::updatesViewModel.isInitialized) {
-            updatesViewModel.getApplications().value!!.forEach { application ->
-                application.checkForStateUpdate(context!!)
+            updatesViewModel.getApplications().value?.let {
+                it.forEach { application ->
+                    application.checkForStateUpdate(context!!)
+                }
             }
         }
     }
 
     fun decrementApplicationUses() {
         if (::updatesViewModel.isInitialized) {
-            updatesViewModel.getApplications().value!!.forEach {
-                it.decrementUses()
+            updatesViewModel.getApplications().value?.let {
+                it.forEach { application ->
+                    application.decrementUses()
+                }
             }
         }
     }

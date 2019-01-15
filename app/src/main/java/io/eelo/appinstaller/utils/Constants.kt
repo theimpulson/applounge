@@ -20,12 +20,14 @@ object Constants {
     const val APPLICATION_PACKAGE_NAME_KEY = "application_package_name"
     const val APPLICATION_DESCRIPTION_KEY = "application_description"
     const val SELECTED_APPLICATION_SCREENSHOT_KEY = "selected_application_screenshot"
-    const val DOWNLOAD_NOTIFICATION_ID = 102
-    const val DOWNLOAD_NOTIFICATION_CHANNEL_ID = "download_notification_channel"
 
     // Categories
     const val CATEGORY_KEY = "category_key"
 
     // Home
     const val CURRENTLY_SELECTED_FRAGMENT_KEY = "currently_selected_fragment"
+
+    // Updates
+    const val OUTDATED_APPLICATIONS_FILENAME = "outdated_applications.txt"
+    const val UPDATES_WORK_NAME = "updates_work"
 }

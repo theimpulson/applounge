@@ -117,6 +117,13 @@ class Application(val packageName: String, private val applicationManager: Appli
         return uses.get() != 0
     }
 
+    fun assertBasicData(context: Context): Error? {
+        if (basicData != null) {
+            return null
+        }
+        return findBasicData(context)
+    }
+
     fun assertFullData(context: Context): Error? {
         if (fullData != null) {
             return null

@@ -6,10 +6,11 @@ import android.os.AsyncTask
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.application.model.State
-import io.eelo.appinstaller.utils.Execute
-import java.util.concurrent.atomic.AtomicInteger
 
-class OutdatedApplicationsFinder(private val packageManager: PackageManager, private val callback: UpdatesModelInterface, private val applicationManager: ApplicationManager) : AsyncTask<Context, Any, Any>() {
+class OutdatedApplicationsFinder(private val packageManager: PackageManager,
+                                 private val callback: UpdatesWorkerInterface,
+                                 private val applicationManager: ApplicationManager) :
+        AsyncTask<Context, Any, Any>() {
 
     private var result: ArrayList<Application>? = null
 
@@ -19,39 +20,26 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager, pri
     }
 
     override fun onPostExecute(result: Any?) {
-        callback.onAppsFound(this.result!!)
+        callback.onApplicationsFound(this.result!!)
     }
 
     private fun getOutdatedApplications(context: Context): ArrayList<Application> {
         val result = ArrayList<Application>()
         val installedApplications = getInstalledApplications()
-
-        val waitingTasks = AtomicInteger(installedApplications.size)
-        val blocker = Object()
-
-        synchronized(blocker) {
-            installedApplications.forEach { packageName ->
-                val application = applicationManager.findOrCreateApp(packageName)
-                Execute({
-                    verifyApplication(application, waitingTasks, blocker, result, context)
-                }, {})
-            }
-            blocker.wait()
+        installedApplications.forEach { packageName ->
+            val application = applicationManager.findOrCreateApp(packageName)
+            verifyApplication(application, result, context)
         }
         return result
     }
 
-    private fun verifyApplication(application: Application, waitingTasks: AtomicInteger, blocker: Object, apps: ArrayList<Application>, context: Context) {
+    private fun verifyApplication(application: Application, apps: ArrayList<Application>,
+                                  context: Context) {
         val error = application.assertFullData(context)
         if (error == null && application.state == State.NOT_UPDATED) {
             apps.add(application)
         } else {
             application.decrementUses()
-        }
-        if (waitingTasks.decrementAndGet() == 0) {
-            synchronized(blocker) {
-                blocker.notify()
-            }
         }
     }
 

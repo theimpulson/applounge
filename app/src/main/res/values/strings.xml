@@ -60,6 +60,9 @@
     <!-- Search Fragment -->
     <string name="search_description">Search for an app</string>
 
+    <!-- Updates -->
+    <string name="updates_splash_title">All apps are up-to-date</string>
+
     <!-- Settings Fragment -->
     <string name="preference_theme_title">Theme</string>
     <string name="preference_theme_dark_title">Dark theme</string>

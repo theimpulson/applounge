@@ -14,6 +14,10 @@ class UpdatesViewModel : ViewModel(), UpdatesViewModelInterface {
 
     override fun initialise(applicationManager: ApplicationManager) {
         updatesModel.applicationManager = applicationManager
+        if (updatesModel.applicationList.value != null &&
+                updatesModel.applicationList.value!!.isEmpty()) {
+            updatesModel.applicationList.value = null
+        }
     }
 
     override fun getApplications(): MutableLiveData<ArrayList<Application>> {
