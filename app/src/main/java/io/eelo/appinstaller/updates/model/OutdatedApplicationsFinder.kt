@@ -1,12 +1,12 @@
 package io.eelo.appinstaller.updates.model
 
 import android.content.Context
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.AsyncTask
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.application.model.State
+import io.eelo.appinstaller.utils.Common
 
 class OutdatedApplicationsFinder(private val packageManager: PackageManager,
                                  private val callback: UpdatesWorkerInterface,
@@ -47,37 +47,10 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
     private fun getInstalledApplications(): ArrayList<String> {
         val result = ArrayList<String>()
         packageManager.getInstalledApplications(0).forEach { app ->
-            if (!isSystemApp(app.packageName)) {
+            if (!Common.isSystemApp(packageManager, app.packageName)) {
                 result.add(app.packageName)
             }
         }
         return result
-    }
-
-    private fun isSystemApp(packageName: String): Boolean {
-        try {
-            // Get package information for the app
-            val appPackageInfo = packageManager.getPackageInfo(
-                    packageName, PackageManager.GET_SIGNATURES)
-            // Get application information for the app
-            val appInfo = packageManager.getApplicationInfo(
-                    packageName, 0)
-            // Get package information for the Android system
-            val systemPackageInfo = packageManager.getPackageInfo(
-                    "android", PackageManager.GET_SIGNATURES)
-
-            // Compare app and Android system signatures
-            if (appPackageInfo.signatures.isNotEmpty() &&
-                    systemPackageInfo.signatures.isNotEmpty() &&
-                    appPackageInfo.signatures[0] == systemPackageInfo.signatures[0]) {
-                return true
-            } else if (appInfo.flags and (ApplicationInfo.FLAG_SYSTEM or
-                            ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-                return true
-            }
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-        }
-        return false
     }
 }

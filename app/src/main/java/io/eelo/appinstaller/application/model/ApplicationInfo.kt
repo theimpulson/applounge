@@ -5,20 +5,20 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Environment
 import io.eelo.appinstaller.application.model.data.BasicData
+import io.eelo.appinstaller.utils.Common
 import java.io.File
-import java.util.regex.Pattern
 
 class ApplicationInfo(private val packageName: String) {
 
     fun isLastVersionInstalled(context: Context, lastVersionNumber: String): Boolean {
-        val packageInfo = getPackageInfo(context) ?: return false
-        if (lastVersionNumber.isEmpty()) {
-            return false
+        if (!Common.isSystemApp(context.packageManager, packageName)) {
+            val packageInfo = getPackageInfo(context) ?: return false
+            if (lastVersionNumber.isEmpty()) {
+                return true
+            }
+            return lastVersionNumber.contains("(${packageInfo.versionCode})")
         }
-        val installedVersionCode = packageInfo.versionCode
-        val pattern = Pattern.compile("[(]$installedVersionCode[)]")
-        val matcher = pattern.matcher(lastVersionNumber)
-        return matcher.find()
+        return true
     }
 
     fun isInstalled(context: Context): Boolean {
