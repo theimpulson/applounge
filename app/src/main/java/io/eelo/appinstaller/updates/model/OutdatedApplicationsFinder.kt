@@ -1,6 +1,7 @@
 package io.eelo.appinstaller.updates.model
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.AsyncTask
 import io.eelo.appinstaller.application.model.Application
@@ -58,6 +59,9 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
             // Get package information for the app
             val appPackageInfo = packageManager.getPackageInfo(
                     packageName, PackageManager.GET_SIGNATURES)
+            // Get application information for the app
+            val appInfo = packageManager.getApplicationInfo(
+                    packageName, 0)
             // Get package information for the Android system
             val systemPackageInfo = packageManager.getPackageInfo(
                     "android", PackageManager.GET_SIGNATURES)
@@ -66,6 +70,9 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
             if (appPackageInfo.signatures.isNotEmpty() &&
                     systemPackageInfo.signatures.isNotEmpty() &&
                     appPackageInfo.signatures[0] == systemPackageInfo.signatures[0]) {
+                return true
+            } else if (appInfo.flags and (ApplicationInfo.FLAG_SYSTEM or
+                            ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
                 return true
             }
         } catch (exception: Exception) {
