@@ -12,6 +12,29 @@ import io.eelo.appinstaller.utils.Execute
 
 class CategoryModel : CategoryModelInterface {
 
+    override fun loadMore(context: Context) {
+        var apps: ArrayList<Application>? = null
+        if (Common.isNetworkAvailable(context)) {
+            Execute({
+                apps = loadApplicationsSynced(context)
+            }, {
+                if (error == null && apps != null) {
+                    val result = ArrayList<Application>()
+                    result.addAll(categoryApplicationsList.value!!)
+                    result.addAll(apps!!)
+                    if (apps!!.size != 0) {
+                        categoryApplicationsList.value = result
+                    }
+                } else {
+                    screenError.value = error
+                }
+            })
+            page++
+        } else {
+            screenError.value = Error.NO_INTERNET
+        }
+    }
+
     lateinit var applicationManager: ApplicationManager
     lateinit var category: String
     private var page = 1
@@ -37,12 +60,7 @@ class CategoryModel : CategoryModelInterface {
                 apps = loadApplicationsSynced(context)
             }, {
                 if (error == null && apps != null) {
-                    val result = ArrayList<Application>()
-                    result.addAll(categoryApplicationsList.value!!)
-                    result.addAll(apps!!)
-                    if (apps!!.size != 0) {
-                        categoryApplicationsList.value = result
-                    }
+                    categoryApplicationsList.value = apps
                 } else {
                     screenError.value = error
                 }
