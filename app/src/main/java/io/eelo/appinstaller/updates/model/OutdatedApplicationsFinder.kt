@@ -36,7 +36,7 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
 
     private fun verifyApplication(application: Application, apps: ArrayList<Application>,
                                   context: Context) {
-        val error = application.assertFullData(context)
+        val error = application.assertBasicData(context)
         if (error == null && application.state == State.NOT_UPDATED) {
             apps.add(application)
         } else {

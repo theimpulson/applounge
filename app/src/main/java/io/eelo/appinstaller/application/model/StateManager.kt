@@ -3,6 +3,7 @@ package io.eelo.appinstaller.application.model
 import android.content.Context
 import io.eelo.appinstaller.application.model.data.BasicData
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
+import io.eelo.appinstaller.utils.Error
 import java.util.*
 
 class StateManager(private val info: ApplicationInfo, private val app: Application, private val appManager: ApplicationManager) {
@@ -53,9 +54,9 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
         }
     }
 
-    fun notifyError() {
+    fun notifyError(error: Error?) {
         listeners.forEach { listener: ApplicationStateListener ->
-            listener.anErrorHasOccurred()
+            listener.anErrorHasOccurred(error)
         }
     }
 

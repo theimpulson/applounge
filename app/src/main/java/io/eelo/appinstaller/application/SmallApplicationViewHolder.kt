@@ -75,7 +75,11 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
         }
     }
 
-    override fun anErrorHasOccurred() {
-        // TODO alert the user of the error (while downloading)
+    override fun anErrorHasOccurred(error: Error?) {
+        if (error != null) {
+            Snackbar.make(activity.findViewById(R.id.container),
+                    activity.getString(Common.getScreenErrorDescriptionId(error)),
+                    Snackbar.LENGTH_LONG).show()
+        }
     }
 }

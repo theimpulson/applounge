@@ -91,10 +91,17 @@ class Application(val packageName: String, private val applicationManager: Appli
     }
 
     fun download(context: Context) {
-        assertFullData(context)
-        downloader = Downloader(info, fullData!!, this)
-        stateManager.notifyDownloading(downloader!!)
-        downloader!!.download(context)
+        val error = assertFullData(context)
+        if (error == null) {
+            downloader = Downloader(info, fullData!!, this)
+            stateManager.notifyDownloading(downloader!!)
+            downloader!!.download(context)
+        } else {
+            stateManager.notifyError(error)
+            applicationManager.stopDownloading(this)
+            downloader = null
+            stateManager.find(context, basicData!!)
+        }
     }
 
     override fun onDownloadComplete(context: Context, status: Int) {

@@ -415,8 +415,12 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
         }
     }
 
-    override fun anErrorHasOccurred() {
-        // TODO alert the user of the error (while downloading)
+    override fun anErrorHasOccurred(error: Error?) {
+        if (error != null) {
+            Snackbar.make(container,
+                    getString(Common.getScreenErrorDescriptionId(error)),
+                    Snackbar.LENGTH_LONG).show()
+        }
     }
 
     override fun stateChanged(state: State) {
