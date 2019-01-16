@@ -15,7 +15,6 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
@@ -33,7 +32,6 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
     private lateinit var categoryViewModel: CategoryViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
-    private var applicationList = ArrayList<Application>()
     private val applicationManagerServiceConnection =
             ApplicationManagerServiceConnection(this)
 
@@ -65,15 +63,12 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = ApplicationListAdapter(this, applicationList)
 
         // Bind to the list of applications in this activity's category
         categoryViewModel.getApplications().observe(this, Observer {
-            if (it!!.isNotEmpty()) {
-                applicationList.clear()
-                applicationList.addAll(it)
+            if (it != null) {
                 progressBar.visibility = View.GONE
-                recyclerView.adapter.notifyDataSetChanged()
+                recyclerView.adapter = ApplicationListAdapter(this, it)
                 recyclerView.visibility = View.VISIBLE
                 recyclerView.scrollToPosition(0)
             }
@@ -95,7 +90,9 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
 
     override fun onServiceBind(applicationManager: ApplicationManager) {
         categoryViewModel.initialise(applicationManager, category.id)
-        categoryViewModel.loadApplications(this)
+        if (categoryViewModel.getApplications().value == null) {
+            categoryViewModel.loadApplications(this)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -118,16 +115,20 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
     override fun onResume() {
         super.onResume()
         if (::categoryViewModel.isInitialized) {
-            categoryViewModel.getApplications().value!!.forEach { application ->
-                application.checkForStateUpdate(this)
+            categoryViewModel.getApplications().value?.let {
+                it.forEach { application ->
+                    application.checkForStateUpdate(this)
+                }
             }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        applicationList.forEach {
-            it.decrementUses()
+        categoryViewModel.getApplications().value?.let {
+            it.forEach { application ->
+                application.decrementUses()
+            }
         }
         applicationManagerServiceConnection.unbindService(this)
     }

@@ -19,12 +19,6 @@ class CategoryModel : CategoryModelInterface {
     var screenError = MutableLiveData<Error>()
     private var error: Error? = null
 
-    init {
-        if (categoryApplicationsList.value == null) {
-            categoryApplicationsList.value = ArrayList()
-        }
-    }
-
     override fun initialise(applicationManager: ApplicationManager, category: String) {
         this.applicationManager = applicationManager
         this.category = category
@@ -38,7 +32,9 @@ class CategoryModel : CategoryModelInterface {
             }, {
                 if (error == null && apps != null) {
                     val result = ArrayList<Application>()
-                    result.addAll(categoryApplicationsList.value!!)
+                    categoryApplicationsList.value?.let {
+                        result.addAll(it)
+                    }
                     result.addAll(apps!!)
                     if (apps!!.size != 0) {
                         categoryApplicationsList.value = result
