@@ -8,4 +8,6 @@ interface CategoryModelInterface {
     fun initialise(applicationManager: ApplicationManager, category: String)
 
     fun loadApplications(context: Context)
+
+    fun loadMore(context: Context)
 }

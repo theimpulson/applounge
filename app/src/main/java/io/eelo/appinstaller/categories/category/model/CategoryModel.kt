@@ -5,9 +5,35 @@ import android.content.Context
 import io.eelo.appinstaller.api.ListApplicationsRequest
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
-import io.eelo.appinstaller.utils.*
+import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Constants
+import io.eelo.appinstaller.utils.Error
+import io.eelo.appinstaller.utils.Execute
 
 class CategoryModel : CategoryModelInterface {
+
+    override fun loadMore(context: Context) {
+        var apps: ArrayList<Application>? = null
+        if (Common.isNetworkAvailable(context)) {
+            Execute({
+                apps = loadApplicationsSynced(context)
+            }, {
+                if (error == null && apps != null) {
+                    val result = ArrayList<Application>()
+                    result.addAll(categoryApplicationsList.value!!)
+                    result.addAll(apps!!)
+                    if (apps!!.size != 0) {
+                        categoryApplicationsList.value = result
+                    }
+                } else {
+                    screenError.value = error
+                }
+            })
+            page++
+        } else {
+            screenError.value = Error.NO_INTERNET
+        }
+    }
 
     lateinit var applicationManager: ApplicationManager
     lateinit var category: String
