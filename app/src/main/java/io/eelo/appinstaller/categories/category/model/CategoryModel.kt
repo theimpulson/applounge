@@ -40,12 +40,16 @@ class CategoryModel : CategoryModelInterface {
                         categoryApplicationsList.value = result
                     }
                 } else {
-                    screenError.value = error
+                    if (page == 1) {
+                        screenError.value = error
+                    }
                 }
             })
             page++
         } else {
-            screenError.value = Error.NO_INTERNET
+            if (page == 1) {
+                screenError.value = Error.NO_INTERNET
+            }
         }
     }
 
