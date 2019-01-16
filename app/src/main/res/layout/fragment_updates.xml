@@ -4,13 +4,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="@dimen/default_elevation"
+        android:padding="@dimen/layout_padding_medium"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/AlertDialog.AppCompat.Light">
+
+        <RelativeLayout
+            android:id="@+id/update_all_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/update_all"
+                android:layout_width="@dimen/update_all_button_width"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center"
+                android:background="@drawable/app_install_border"
+                android:ellipsize="end"
+                android:foreground="?android:selectableItemBackground"
+                android:maxWidth="@dimen/install_button_width"
+                android:maxLines="1"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="@dimen/layout_padding_medium"
+                android:text="@string/action_update_all"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="@dimen/text_size_medium" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/app_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <include
         layout="@layout/updates_splash_layout"
@@ -19,7 +57,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <include
         layout="@layout/error_layout"
@@ -28,7 +66,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -37,6 +75,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
 </android.support.constraint.ConstraintLayout>
