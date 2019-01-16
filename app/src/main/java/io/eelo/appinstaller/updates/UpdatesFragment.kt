@@ -76,16 +76,17 @@ class UpdatesFragment : Fragment() {
             if (it != null) {
                 applicationList.clear()
                 applicationList.addAll(it)
-                updateAll.isEnabled = true
                 progressBar.visibility = View.GONE
                 recyclerView.adapter.notifyDataSetChanged()
                 recyclerView.scrollToPosition(0)
                 if (applicationList.isEmpty()) {
                     recyclerView.visibility = View.GONE
                     splashContainer.visibility = View.VISIBLE
+                    updateAll.isEnabled = false
                 } else {
                     splashContainer.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
+                    updateAll.isEnabled = true
                 }
             }
         })
