@@ -9,11 +9,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.updates.viewModel.UpdatesViewModel
@@ -38,6 +40,7 @@ class UpdatesFragment : Fragment() {
 
         updatesViewModel = ViewModelProviders.of(activity!!).get(UpdatesViewModel::class.java)
         recyclerView = view.findViewById(R.id.app_list)
+        val updateAll = view.findViewById<Button>(R.id.update_all)
         val splashContainer = view.findViewById<LinearLayout>(R.id.splash_container)
         val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
@@ -46,10 +49,19 @@ class UpdatesFragment : Fragment() {
         // Initialise UI elements
         updatesViewModel.initialise(applicationManager!!)
         recyclerView.visibility = View.GONE
+        updateAll.isEnabled = false
+        updateAll.setOnClickListener {
+            applicationList.forEach { application ->
+                if (application.state == State.NOT_UPDATED) {
+                    application.buttonClicked(activity!!)
+                }
+            }
+        }
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
         splashContainer.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
+            updateAll.isEnabled = false
             progressBar.visibility = View.VISIBLE
             updatesViewModel.loadApplicationList(context!!)
         }
@@ -64,6 +76,7 @@ class UpdatesFragment : Fragment() {
             if (it != null) {
                 applicationList.clear()
                 applicationList.addAll(it)
+                updateAll.isEnabled = true
                 progressBar.visibility = View.GONE
                 recyclerView.adapter.notifyDataSetChanged()
                 recyclerView.scrollToPosition(0)
@@ -82,6 +95,7 @@ class UpdatesFragment : Fragment() {
             if (it != null) {
                 errorDescription.text = activity!!.getString(Common.getScreenErrorDescriptionId(it))
                 errorContainer.visibility = View.VISIBLE
+                updateAll.isEnabled = false
                 progressBar.visibility = View.GONE
                 splashContainer.visibility = View.GONE
                 recyclerView.visibility = View.GONE

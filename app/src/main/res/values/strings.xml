@@ -65,9 +65,6 @@
     <string name="updates_splash_title">All apps are up-to-date</string>
 
     <!-- Settings Fragment -->
-    <string name="preference_theme_title">Theme</string>
-    <string name="preference_theme_dark_title">Dark theme</string>
-    <string name="preference_theme_dark_description">Use a dark theme throughout the app</string>
     <string name="preference_updates_title">Updates</string>
     <string name="preference_update_interval_default">24</string>
     <string name="preference_update_interval_title">Automatic update interval</string>

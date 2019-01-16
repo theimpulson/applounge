@@ -16,7 +16,6 @@
         app:popupTheme="@style/AlertDialog.AppCompat.Light">
 
         <RelativeLayout
-            android:id="@+id/update_all_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
