@@ -37,6 +37,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
     private val applicationManagerServiceConnection =
             ApplicationManagerServiceConnection(this)
     private var applicationList = ArrayList<Application>()
+    private var isLoadingMoreApplications = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +64,12 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
                 if (!recyclerView.canScrollVertically(1)) {
                     loadMoreContainer.visibility = View.VISIBLE
                     recyclerView.scrollToPosition(applicationList.size - 1)
-                    categoryViewModel.loadApplications(this@CategoryActivity)
+                    if (!isLoadingMoreApplications) {
+                        isLoadingMoreApplications = true
+                        categoryViewModel.loadApplications(this@CategoryActivity)
+                    }
+                } else {
+                    loadMoreContainer.visibility = View.GONE
                 }
             }
         })
@@ -89,6 +95,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
                 recyclerView.adapter.notifyDataSetChanged()
                 recyclerView.visibility = View.VISIBLE
                 loadMoreContainer.visibility = View.GONE
+                isLoadingMoreApplications = false
             }
         })
 
@@ -99,6 +106,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
                 errorContainer.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
                 loadMoreContainer.visibility = View.GONE
+                isLoadingMoreApplications = false
             } else {
                 errorContainer.visibility = View.GONE
             }
