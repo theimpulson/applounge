@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
@@ -49,15 +50,19 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
 
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
         recyclerView = findViewById(R.id.app_list)
+        val loadMoreContainer = findViewById<RelativeLayout>(R.id.load_more_container)
         progressBar = findViewById(R.id.progress_bar)
         val errorContainer = findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = findViewById<TextView>(R.id.error_description)
 
         // Initialise UI elements
         recyclerView.visibility = View.GONE
-        recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener(){
+        loadMoreContainer.visibility = View.GONE
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(1)) {
+                    loadMoreContainer.visibility = View.VISIBLE
+                    recyclerView.scrollToPosition(applicationList.size - 1)
                     categoryViewModel.loadApplications(this@CategoryActivity)
                 }
             }
@@ -65,6 +70,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
         findViewById<TextView>(R.id.error_resolve).setOnClickListener {
+            loadMoreContainer.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             categoryViewModel.loadApplications(this)
         }
@@ -82,6 +88,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
                 progressBar.visibility = View.GONE
                 recyclerView.adapter.notifyDataSetChanged()
                 recyclerView.visibility = View.VISIBLE
+                loadMoreContainer.visibility = View.GONE
             }
         })
 
@@ -91,6 +98,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
                 errorDescription.text = getString(Common.getScreenErrorDescriptionId(it))
                 errorContainer.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
+                loadMoreContainer.visibility = View.GONE
             } else {
                 errorContainer.visibility = View.GONE
             }

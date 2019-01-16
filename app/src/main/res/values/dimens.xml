@@ -26,5 +26,6 @@
     <dimen name="small_application_list_item_width">116dp</dimen>
     <dimen name="app_privacy_analyses_height">112dp</dimen>
     <dimen name="category_icon_size">32dp</dimen>
+    <dimen name="load_more_progress_bar_size">32dp</dimen>
 
 </resources>
