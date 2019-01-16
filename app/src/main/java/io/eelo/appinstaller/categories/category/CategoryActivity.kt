@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import io.eelo.appinstaller.R
+import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
@@ -34,6 +35,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
     private lateinit var progressBar: ProgressBar
     private val applicationManagerServiceConnection =
             ApplicationManagerServiceConnection(this)
+    private var applicationList = ArrayList<Application>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +55,13 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
 
         // Initialise UI elements
         recyclerView.visibility = View.GONE
+        recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    categoryViewModel.loadApplications(this@CategoryActivity)
+                }
+            }
+        })
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
         findViewById<TextView>(R.id.error_resolve).setOnClickListener {
@@ -63,14 +72,16 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = ApplicationListAdapter(this, applicationList)
 
         // Bind to the list of applications in this activity's category
         categoryViewModel.getApplications().observe(this, Observer {
             if (it != null) {
+                applicationList.clear()
+                applicationList.addAll(it)
                 progressBar.visibility = View.GONE
-                recyclerView.adapter = ApplicationListAdapter(this, it)
+                recyclerView.adapter.notifyDataSetChanged()
                 recyclerView.visibility = View.VISIBLE
-                recyclerView.scrollToPosition(0)
             }
         })
 
