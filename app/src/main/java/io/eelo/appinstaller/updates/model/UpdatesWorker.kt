@@ -29,12 +29,14 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
     }
 
     override fun onApplicationsFound(applications: ArrayList<Application>) {
-        applicationContext.openFileOutput(Constants.OUTDATED_APPLICATIONS_FILENAME,
-                Context.MODE_PRIVATE).use {
-            applications.forEach { application ->
-                it.write((application.basicData!!.packageName + "\n").toByteArray())
+        if (applications.size > 0) {
+            applicationContext.openFileOutput(Constants.OUTDATED_APPLICATIONS_FILENAME,
+                    Context.MODE_PRIVATE).use {
+                applications.forEach { application ->
+                    it.write((application.basicData!!.packageName + "\n").toByteArray())
+                }
+                it.close()
             }
-            it.close()
         }
         synchronized(blocker) {
             blocker.notify()

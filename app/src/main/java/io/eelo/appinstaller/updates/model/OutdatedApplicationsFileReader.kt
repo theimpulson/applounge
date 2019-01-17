@@ -25,27 +25,29 @@ class OutdatedApplicationsFileReader(private val applicationManager: Application
                     totalLines++
                 }
             }
-            context[0].openFileInput(Constants.OUTDATED_APPLICATIONS_FILENAME).use {
-                BufferedReader(InputStreamReader(it)).forEachLine { packageName ->
-                    Execute({
-                        val application = applicationManager.findOrCreateApp(packageName)
-                        val error = application.assertBasicData(context[0])
-                        if (error == null) {
-                            if (application.state == State.NOT_UPDATED) {
-                                applications.add(application)
+            if (totalLines > 0) {
+                context[0].openFileInput(Constants.OUTDATED_APPLICATIONS_FILENAME).use {
+                    BufferedReader(InputStreamReader(it)).forEachLine { packageName ->
+                        Execute({
+                            val application = applicationManager.findOrCreateApp(packageName)
+                            val error = application.assertBasicData(context[0])
+                            if (error == null) {
+                                if (application.state == State.NOT_UPDATED) {
+                                    applications.add(application)
+                                }
                             }
-                        }
-                    }, {
-                        requestsComplete++
-                        if (requestsComplete == totalLines) {
-                            synchronized(blocker) {
-                                blocker.notify()
+                        }, {
+                            requestsComplete++
+                            if (requestsComplete == totalLines) {
+                                synchronized(blocker) {
+                                    blocker.notify()
+                                }
                             }
-                        }
-                    })
-                }
-                synchronized(blocker) {
-                    blocker.wait()
+                        })
+                    }
+                    synchronized(blocker) {
+                        blocker.wait()
+                    }
                 }
             }
         } catch (exception: Exception) {
