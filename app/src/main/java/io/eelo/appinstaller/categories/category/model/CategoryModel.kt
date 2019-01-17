@@ -42,6 +42,8 @@ class CategoryModel : CategoryModelInterface {
                 } else {
                     if (page == 1) {
                         screenError.value = error
+                    } else {
+                        screenError.value = null
                     }
                 }
             })
@@ -49,6 +51,8 @@ class CategoryModel : CategoryModelInterface {
         } else {
             if (page == 1) {
                 screenError.value = Error.NO_INTERNET
+            } else {
+                screenError.value = null
             }
         }
     }
