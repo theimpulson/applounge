@@ -68,7 +68,11 @@ class Application(val packageName: String, private val applicationManager: Appli
                 return
             }
             DOWNLOADING -> {
-                downloader?.cancelDownload()
+                if (downloader != null) {
+                    downloader?.cancelDownload()
+                } else {
+                    onDownloadComplete(activity, DownloadManager.STATUS_FAILED)
+                }
                 return
             }
         }
