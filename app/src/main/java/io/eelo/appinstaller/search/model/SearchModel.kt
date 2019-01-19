@@ -2,6 +2,7 @@ package io.eelo.appinstaller.search.model
 
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import android.os.AsyncTask
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.utils.Common
@@ -12,8 +13,9 @@ class SearchModel : SearchModelInterface {
     val suggestionList = MutableLiveData<ArrayList<String>>()
     val applicationList = MutableLiveData<ArrayList<Application>>()
     var screenError = MutableLiveData<Error>()
-    private var element: SearchElement? = null
     private var applicationManager: ApplicationManager? = null
+    private var pageNumber = 0
+    private lateinit var searchQuery: String
 
     override fun initialise(applicationManager: ApplicationManager) {
         this.applicationManager = applicationManager
@@ -31,20 +33,22 @@ class SearchModel : SearchModelInterface {
     }
 
     override fun search(context: Context, searchQuery: String) {
-        if (Common.isNetworkAvailable(context)) {
-            element?.apps?.forEach { app ->
-                app.decrementUses()
-            }
-            element = SearchElement(searchQuery, applicationManager!!, this)
-            loadMore(context)
-        } else {
-            applicationList.value = ArrayList()
-            screenError.value = Error.NO_INTERNET
+        pageNumber = 0
+        this.searchQuery = searchQuery
+        applicationList.value?.forEach { app ->
+            app.decrementUses()
         }
+        loadMore(context)
     }
 
     override fun loadMore(context: Context) {
-        element!!.loadMoreInBackground(context)
+        if (Common.isNetworkAvailable(context)) {
+            pageNumber++
+            SearchElement(searchQuery, pageNumber, applicationManager!!, this)
+                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
+        } else {
+            screenError.value = Error.NO_INTERNET
+        }
     }
 
     override fun onSearchComplete(error: Error?, applicationList: ArrayList<Application>) {

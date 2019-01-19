@@ -6,39 +6,31 @@ import io.eelo.appinstaller.api.SearchRequest
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.utils.Error
-import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
 
-class SearchElement(private val query: String, private val applicationManager: ApplicationManager, private val callback: SearchModelInterface) : AsyncTask<Context, Void, Void>() {
-
-    val apps = ArrayList<Application>()
-    private var nextPage = 1
+class SearchElement(private val query: String, private val pageNumber: Int,
+                    private val applicationManager: ApplicationManager,
+                    private val callback: SearchModelInterface) :
+        AsyncTask<Context, Void, ArrayList<Application>>() {
     private var error: Error? = null
 
-    fun loadMoreInBackground(context: Context) {
-        executeOnExecutor(Common.EXECUTOR, context)
-    }
-
-    override fun doInBackground(vararg params: Context): Void? {
-        loadMore(params[0])
-        nextPage++
-        return null
-    }
-
-    override fun onPostExecute(result: Void?) {
-        callback.onSearchComplete(error, apps)
-    }
-
-    private fun loadMore(context: Context) {
-        SearchRequest(query, nextPage, Constants.RESULTS_PER_PAGE).request { applicationError, searchResult ->
-            when (applicationError) {
-                null -> {
-                    apps.addAll(searchResult!!.getApplications(applicationManager, context))
+    override fun doInBackground(vararg params: Context): ArrayList<Application> {
+        val apps = ArrayList<Application>()
+        SearchRequest(query, pageNumber, Constants.RESULTS_PER_PAGE)
+                .request { applicationError, searchResult ->
+                    when (applicationError) {
+                        null -> {
+                            apps.addAll(searchResult!!.getApplications(applicationManager, params[0]))
+                        }
+                        else -> {
+                            error = applicationError
+                        }
+                    }
                 }
-                else -> {
-                    error = applicationError
-                }
-            }
-        }
+        return apps
+    }
+
+    override fun onPostExecute(result: ArrayList<Application>) {
+        callback.onSearchComplete(error, result)
     }
 }
