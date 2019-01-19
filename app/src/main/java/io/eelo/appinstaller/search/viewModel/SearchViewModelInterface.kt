@@ -18,4 +18,6 @@ interface SearchViewModelInterface {
     fun onSearchQueryChanged(context: Context, searchQuery: String)
 
     fun onSearchQuerySubmitted(context: Context, searchQuery: String)
+
+    fun loadMore(context: Context)
 }

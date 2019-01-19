@@ -15,15 +15,6 @@ class SearchModel : SearchModelInterface {
     private var element: SearchElement? = null
     private var applicationManager: ApplicationManager? = null
 
-    init {
-        if (suggestionList.value == null) {
-            suggestionList.value = ArrayList()
-        }
-        if (applicationList.value == null) {
-            applicationList.value = ArrayList()
-        }
-    }
-
     override fun initialise(applicationManager: ApplicationManager) {
         this.applicationManager = applicationManager
     }

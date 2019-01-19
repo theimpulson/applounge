@@ -60,7 +60,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         searchViewModel.initialise(applicationManager!!)
         recyclerView.visibility = View.GONE
         progressBar.visibility = View.GONE
-        if (searchViewModel.getScreenError().value == null && searchViewModel.getApplications().value!!.isEmpty()) {
+        if (searchViewModel.getScreenError().value == null &&
+                searchViewModel.getApplications().value == null) {
             splashContainer.visibility = View.VISIBLE
         } else {
             splashContainer.visibility = View.GONE
@@ -77,7 +78,6 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         searchView.suggestionsAdapter = SimpleCursorAdapter(context,
                 android.R.layout.simple_list_item_1, null, from, to,
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
-        populateSuggestionsAdapter(searchViewModel.getSuggestions().value!!)
 
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
@@ -86,17 +86,25 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
         // Bind search view suggestions adapter to search suggestions list in view model
         searchViewModel.getSuggestions().observe(this, Observer {
-            populateSuggestionsAdapter(it!!)
+            if (it != null) {
+                populateSuggestionsAdapter(it)
+            }
         })
 
         // Bind recycler view adapter to search results list in view model
         searchViewModel.getApplications().observe(this, Observer {
-            applicationList.clear()
-            applicationList.addAll(searchViewModel.getApplications().value!!)
-            progressBar.visibility = View.GONE
-            recyclerView.adapter.notifyDataSetChanged()
-            recyclerView.scrollToPosition(0)
-            if (applicationList.isEmpty()) recyclerView.visibility = View.GONE else recyclerView.visibility = View.VISIBLE
+            if (it != null) {
+                applicationList.clear()
+                applicationList.addAll(it)
+                progressBar.visibility = View.GONE
+                recyclerView.adapter.notifyDataSetChanged()
+                recyclerView.scrollToPosition(0)
+                if (applicationList.isEmpty()) {
+                    recyclerView.visibility = View.GONE
+                } else {
+                    recyclerView.visibility = View.VISIBLE
+                }
+            }
         })
 
         // Bind to the screen error
@@ -143,7 +151,9 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     }
 
     override fun onSuggestionClick(position: Int): Boolean {
-        searchView.setQuery(searchViewModel.getSuggestions().value!![position], true)
+        searchViewModel.getSuggestions().value?.let {
+            searchView.setQuery(it[position], true)
+        }
         return true
     }
 
@@ -167,12 +177,12 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     }
 
     override fun onResume() {
-        focusView?.let {
-            focusView!!.requestFocus()
-        }
+        focusView?.requestFocus()
         if (::searchViewModel.isInitialized) {
-            searchViewModel.getApplications().value!!.forEach { application ->
-                application.checkForStateUpdate(context!!)
+            searchViewModel.getApplications().value?.let {
+                it.forEach { application ->
+                    application.checkForStateUpdate(context!!)
+                }
             }
         }
         super.onResume()

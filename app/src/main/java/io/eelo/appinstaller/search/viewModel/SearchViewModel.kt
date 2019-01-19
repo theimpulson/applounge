@@ -35,4 +35,8 @@ class SearchViewModel : ViewModel(), SearchViewModelInterface {
         searchModel.screenError.value = null
         searchModel.search(context, searchQuery)
     }
+
+    override fun loadMore(context: Context) {
+        searchModel.loadMore(context)
+    }
 }
