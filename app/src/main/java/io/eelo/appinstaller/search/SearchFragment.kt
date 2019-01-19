@@ -83,6 +83,13 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList)
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    searchViewModel.loadMore(context!!)
+                }
+            }
+        })
 
         // Bind search view suggestions adapter to search suggestions list in view model
         searchViewModel.getSuggestions().observe(this, Observer {
@@ -98,7 +105,6 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
                 applicationList.addAll(it)
                 progressBar.visibility = View.GONE
                 recyclerView.adapter.notifyDataSetChanged()
-                recyclerView.scrollToPosition(0)
                 if (applicationList.isEmpty()) {
                     recyclerView.visibility = View.GONE
                 } else {

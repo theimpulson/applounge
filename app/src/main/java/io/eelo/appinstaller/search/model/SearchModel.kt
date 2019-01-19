@@ -53,7 +53,13 @@ class SearchModel : SearchModelInterface {
 
     override fun onSearchComplete(error: Error?, applicationList: ArrayList<Application>) {
         if (error == null) {
-            this.applicationList.value = applicationList
+            if (pageNumber > 1 && this.applicationList.value != null) {
+                val combinedAppList = this.applicationList.value!!
+                combinedAppList.addAll(applicationList)
+                this.applicationList.value = combinedAppList
+            } else {
+                this.applicationList.value = applicationList
+            }
             if (applicationList.isEmpty()) {
                 screenError.value = Error.NO_RESULTS
             }
