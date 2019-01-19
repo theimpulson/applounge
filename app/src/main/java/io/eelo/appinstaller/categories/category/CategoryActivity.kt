@@ -102,14 +102,17 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         // Bind to the screen error
         categoryViewModel.getScreenError().observe(this, Observer {
             if (it != null) {
-                errorDescription.text = getString(it.description)
-                errorContainer.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-                loadMoreContainer.visibility = View.GONE
+                if (!isLoadingMoreApplications) {
+                    errorDescription.text = getString(it.description)
+                    errorContainer.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                    loadMoreContainer.visibility = View.GONE
+                } else {
+                    isLoadingMoreApplications = false
+                }
             } else {
                 errorContainer.visibility = View.GONE
             }
-            isLoadingMoreApplications = false
         })
 
         applicationManagerServiceConnection.bindService(this)

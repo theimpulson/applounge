@@ -130,14 +130,17 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         // Bind to the screen error
         searchViewModel.getScreenError().observe(this, Observer {
             if (it != null) {
-                errorDescription.text = activity!!.getString(it.description)
-                errorContainer.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-                loadMoreContainer.visibility = View.GONE
+                if (!isLoadingMoreApplications) {
+                    errorDescription.text = activity!!.getString(it.description)
+                    errorContainer.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                    loadMoreContainer.visibility = View.GONE
+                } else {
+                    isLoadingMoreApplications = false
+                }
             } else {
                 errorContainer.visibility = View.GONE
             }
-            isLoadingMoreApplications = false
         })
 
         // Handle suggestion clicks

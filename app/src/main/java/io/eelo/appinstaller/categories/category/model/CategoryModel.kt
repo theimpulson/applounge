@@ -40,20 +40,12 @@ class CategoryModel : CategoryModelInterface {
                         categoryApplicationsList.value = result
                     }
                 } else {
-                    if (page == 1) {
-                        screenError.value = error
-                    } else {
-                        screenError.value = null
-                    }
+                    screenError.value = error
                 }
             })
             page++
         } else {
-            if (page == 1) {
-                screenError.value = Error.NO_INTERNET
-            } else {
-                screenError.value = null
-            }
+            screenError.value = Error.NO_INTERNET
         }
     }
 
@@ -70,10 +62,10 @@ class CategoryModel : CategoryModelInterface {
                         }
                     }
                 }
-        if (listApplications != null) {
-            return listApplications!!.getApplications(applicationManager, context)
+        return if (listApplications != null) {
+            listApplications!!.getApplications(applicationManager, context)
         } else {
-            return null
+            null
         }
     }
 
