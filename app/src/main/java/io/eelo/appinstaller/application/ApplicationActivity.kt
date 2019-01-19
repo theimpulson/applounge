@@ -58,8 +58,21 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
+        initialiseDimensions()
+
+
+        val applicationPackageName: String? = intent.getStringExtra(APPLICATION_PACKAGE_NAME_KEY)
+        if (!applicationPackageName.isNullOrEmpty()) {
+            this.applicationPackageName = applicationPackageName!!
+            applicationManagerServiceConnection.bindService(this)
+        }
+    }
+
+    private fun initialiseElevation() {
         if (scroll_view.scrollY == 0) {
             toolbar.elevation = 0f
+        } else {
+            toolbar.elevation = defaultElevation
         }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             scroll_view.setOnScrollChangeListener { view, ia, ib, ic, id ->
@@ -69,14 +82,6 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
                     toolbar.elevation = defaultElevation
                 }
             }
-        }
-
-        initialiseDimensions()
-
-        val applicationPackageName: String? = intent.getStringExtra(APPLICATION_PACKAGE_NAME_KEY)
-        if (!applicationPackageName.isNullOrEmpty()) {
-            this.applicationPackageName = applicationPackageName!!
-            applicationManagerServiceConnection.bindService(this)
         }
     }
 
@@ -147,6 +152,8 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
     }
 
     private fun onApplicationInfoLoaded() {
+        initialiseElevation()
+
         val basicData = application.basicData!!
         val fullData = application.fullData!!
 
