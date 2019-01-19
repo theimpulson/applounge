@@ -61,8 +61,21 @@
         android:id="@+id/app_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:scrollbars="none"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/load_more_container"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/load_more_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/layout_padding_medium"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ProgressBar
+            android:layout_width="@dimen/load_more_progress_bar_size"
+            android:layout_height="@dimen/load_more_progress_bar_size"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

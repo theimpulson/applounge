@@ -49,6 +49,8 @@ class SearchModel : SearchModelInterface {
         } else {
             if (pageNumber == 1) {
                 screenError.value = Error.NO_INTERNET
+            } else {
+                screenError.value = null
             }
         }
     }
@@ -64,10 +66,14 @@ class SearchModel : SearchModelInterface {
             }
             if (applicationList.isEmpty() && pageNumber == 1) {
                 screenError.value = Error.NO_RESULTS
+            } else {
+                screenError.value = null
             }
         } else {
             if (pageNumber == 1) {
                 screenError.value = error
+            } else {
+                screenError.value = null
             }
         }
     }

@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
@@ -36,6 +37,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     private lateinit var splashContainer: LinearLayout
     private var applicationList = ArrayList<Application>()
     private var applicationManager: ApplicationManager? = null
+    private var isLoadingMoreApplications = false
 
     fun initialise(applicationManager: ApplicationManager) {
         this.applicationManager = applicationManager
@@ -56,6 +58,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         splashContainer = view.findViewById(R.id.splash_container)
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
+        val loadMoreContainer = view.findViewById<RelativeLayout>(R.id.load_more_container)
 
         searchViewModel.initialise(applicationManager!!)
         recyclerView.visibility = View.GONE
@@ -68,6 +71,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         }
         errorContainer.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
+            loadMoreContainer.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             onQueryTextSubmit(searchView.query.toString())
         }
@@ -83,10 +87,18 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList)
+        loadMoreContainer.visibility = View.GONE
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(1)) {
-                    searchViewModel.loadMore(context!!)
+                    loadMoreContainer.visibility = View.VISIBLE
+                    recyclerView.scrollToPosition(applicationList.size - 1)
+                    if (!isLoadingMoreApplications) {
+                        isLoadingMoreApplications = true
+                        searchViewModel.loadMore(context!!)
+                    }
+                } else {
+                    loadMoreContainer.visibility = View.GONE
                 }
             }
         })
@@ -105,6 +117,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
                 applicationList.addAll(it)
                 progressBar.visibility = View.GONE
                 recyclerView.adapter.notifyDataSetChanged()
+                loadMoreContainer.visibility = View.GONE
+                isLoadingMoreApplications = false
                 if (applicationList.isEmpty()) {
                     recyclerView.visibility = View.GONE
                 } else {
@@ -119,9 +133,11 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
                 errorDescription.text = activity!!.getString(Common.getScreenErrorDescriptionId(it))
                 errorContainer.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
+                loadMoreContainer.visibility = View.GONE
             } else {
                 errorContainer.visibility = View.GONE
             }
+            isLoadingMoreApplications = false
         })
 
         // Handle suggestion clicks
