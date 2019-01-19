@@ -9,7 +9,10 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.*
+import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.ApplicationStateListener
+import io.eelo.appinstaller.application.model.Downloader
+import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.viewmodel.ApplicationViewModel
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.toMiB
@@ -36,7 +39,7 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
             if (application?.fullData != null &&
                     application!!.fullData!!.getLastVersion() == null) {
                 Snackbar.make(view, activity.getString(
-                        Common.getScreenErrorDescriptionId(Error.APK_UNAVAILABLE)),
+                        Error.APK_UNAVAILABLE.description),
                         Snackbar.LENGTH_LONG).show()
             } else {
                 application?.buttonClicked(activity)
@@ -75,11 +78,9 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
         }
     }
 
-    override fun anErrorHasOccurred(error: Error?) {
-        if (error != null) {
-            Snackbar.make(activity.findViewById(R.id.container),
-                    activity.getString(Common.getScreenErrorDescriptionId(error)),
-                    Snackbar.LENGTH_LONG).show()
-        }
+    override fun anErrorHasOccurred(error: Error) {
+        Snackbar.make(activity.findViewById(R.id.container),
+                activity.getString(error.description),
+                Snackbar.LENGTH_LONG).show()
     }
 }

@@ -54,7 +54,7 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
         }
     }
 
-    fun notifyError(error: Error?) {
+    fun notifyError(error: Error) {
         listeners.forEach { listener: ApplicationStateListener ->
             listener.anErrorHasOccurred(error)
         }

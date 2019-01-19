@@ -94,7 +94,7 @@ class UpdatesFragment : Fragment() {
         // Bind to the screen error
         updatesViewModel.getScreenError().observe(this, Observer {
             if (it != null) {
-                errorDescription.text = activity!!.getString(Common.getScreenErrorDescriptionId(it))
+                errorDescription.text = activity!!.getString(it.description)
                 errorContainer.visibility = View.VISIBLE
                 updateAll.isEnabled = false
                 progressBar.visibility = View.GONE

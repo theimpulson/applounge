@@ -8,6 +8,6 @@ interface ApplicationStateListener {
 
     fun downloading(downloader: Downloader)
 
-    fun anErrorHasOccurred(error: Error?)
+    fun anErrorHasOccurred(error: Error)
 
 }

@@ -15,14 +15,17 @@ import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
 import io.eelo.appinstaller.R
-import io.eelo.appinstaller.application.model.*
+import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.ApplicationStateListener
+import io.eelo.appinstaller.application.model.Downloader
+import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
-import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.toMiB
 import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
@@ -87,7 +90,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
                 onApplicationInfoLoaded()
             } else {
                 Snackbar.make(container,
-                        getString(Common.getScreenErrorDescriptionId(error!!)),
+                        getString(error!!.description),
                         Snackbar.LENGTH_LONG).show()
 
                 // Close activity once snackbar has hidden
@@ -397,7 +400,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
         // Make sure the APK is available for download
         if (fullData.getLastVersion() == null) {
             Snackbar.make(container,
-                    getString(Common.getScreenErrorDescriptionId(Error.APK_UNAVAILABLE)),
+                    getString(Error.APK_UNAVAILABLE.description),
                     Snackbar.LENGTH_LONG).show()
             return
         }
@@ -415,12 +418,10 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
         }
     }
 
-    override fun anErrorHasOccurred(error: Error?) {
-        if (error != null) {
-            Snackbar.make(container,
-                    getString(Common.getScreenErrorDescriptionId(error)),
-                    Snackbar.LENGTH_LONG).show()
-        }
+    override fun anErrorHasOccurred(error: Error) {
+        Snackbar.make(container,
+                getString(error.description),
+                Snackbar.LENGTH_LONG).show()
     }
 
     override fun stateChanged(state: State) {

@@ -85,7 +85,7 @@ class HomeFragment : Fragment() {
         // Bind to the screen error
         homeViewModel.getScreenError().observe(this, Observer {
             if (it != null) {
-                errorDescription.text = activity!!.getString(Common.getScreenErrorDescriptionId(it))
+                errorDescription.text = activity!!.getString(it.description)
                 errorContainer.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
             } else {

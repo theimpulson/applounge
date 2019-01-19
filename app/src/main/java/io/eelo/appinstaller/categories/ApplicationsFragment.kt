@@ -44,7 +44,7 @@ class ApplicationsFragment : Fragment() {
         // Bind to the screen error
         categoriesViewModel.getScreenError().observe(this, Observer {
             if (it != null) {
-                view.error_description.text = activity!!.getString(Common.getScreenErrorDescriptionId(it))
+                view.error_description.text = activity!!.getString(it.description)
                 view.error_container.visibility = View.VISIBLE
                 view.progress_bar.visibility = View.GONE
             } else {

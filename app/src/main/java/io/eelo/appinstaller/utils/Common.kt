@@ -22,8 +22,6 @@ object Common {
         return inMiB.times(10.0).roundToInt().div(10.0)
     }
 
-    fun getScreenErrorDescriptionId(screenError: Error) = screenError.description
-
     fun isSystemApp(packageManager: PackageManager, packageName: String): Boolean {
         try {
             // Get package information for the app
