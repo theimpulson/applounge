@@ -3,9 +3,11 @@ package io.eelo.appinstaller.utils
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import java.util.concurrent.Executors
-import kotlin.math.roundToInt
 import android.net.ConnectivityManager
+import java.net.URL
+import java.util.concurrent.Executors
+import javax.net.ssl.HttpsURLConnection
+import kotlin.math.roundToInt
 
 object Common {
 
@@ -20,6 +22,14 @@ object Common {
     fun toMiB(bytes: Int): Double {
         val inMiB = bytes.div(1048576.0)
         return inMiB.times(10.0).roundToInt().div(10.0)
+    }
+
+    fun createConnection(url: String): HttpsURLConnection {
+        val connection = URL(url).openConnection() as HttpsURLConnection
+        connection.requestMethod = Constants.REQUEST_METHOD
+        connection.connectTimeout = Constants.CONNECT_TIMEOUT
+        connection.readTimeout = Constants.READ_TIMEOUT
+        return connection
     }
 
     fun isSystemApp(packageManager: PackageManager, packageName: String): Boolean {

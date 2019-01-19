@@ -3,6 +3,7 @@ package io.eelo.appinstaller.api
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.Constants
 import java.io.IOException
@@ -19,11 +20,8 @@ class ListCategoriesRequest {
 
     fun request(callback: (Error?, ListCategoriesResult?) -> Unit) {
         try {
-            val url = URL(Constants.BASE_URL + "apps?action=list_cat")
-            val urlConnection = url.openConnection() as HttpsURLConnection
-            urlConnection.requestMethod = Constants.REQUEST_METHOD
-            urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT
-            urlConnection.readTimeout = Constants.READ_TIMEOUT
+            val url = Constants.BASE_URL + "apps?action=list_cat"
+            val urlConnection = Common.createConnection(url)
             val result = reader.readValue<ListCategoriesResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)

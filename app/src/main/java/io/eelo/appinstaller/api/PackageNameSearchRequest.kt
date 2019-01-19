@@ -4,13 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.eelo.appinstaller.application.model.data.BasicData
-import io.eelo.appinstaller.utils.Error
+import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
-import java.io.IOException
-import java.net.SocketTimeoutException
-import java.net.URL
+import io.eelo.appinstaller.utils.Error
 import java.net.URLEncoder
-import javax.net.ssl.HttpsURLConnection
 
 class PackageNameSearchRequest(private val packageName: String) {
 
@@ -20,11 +17,8 @@ class PackageNameSearchRequest(private val packageName: String) {
 
     fun request(callback: (Error?, SearchResult?) -> Unit) {
         try {
-            val url = URL(Constants.BASE_URL + "apps?action=search&keyword=${URLEncoder.encode(packageName, "utf-8")}&by=package_name")
-            val urlConnection = url.openConnection() as HttpsURLConnection
-            urlConnection.requestMethod = Constants.REQUEST_METHOD
-            urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT
-            urlConnection.readTimeout = Constants.READ_TIMEOUT
+            val url = Constants.BASE_URL + "apps?action=search&keyword=${URLEncoder.encode(packageName, "utf-8")}&by=package_name"
+            val urlConnection = Common.createConnection(url)
             val result = reader.readValue<SearchResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)

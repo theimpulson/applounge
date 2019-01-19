@@ -11,6 +11,7 @@ import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.ApplicationParser
+import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
 import java.io.IOException
 import java.lang.Exception
@@ -26,11 +27,8 @@ class HomeRequest {
 
     fun request(callback: (Error?, HomeResult?) -> Unit) {
         try {
-            val url = URL(Constants.BASE_URL + "apps?action=list_home")
-            val urlConnection = url.openConnection() as HttpsURLConnection
-            urlConnection.requestMethod = Constants.REQUEST_METHOD
-            urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT
-            urlConnection.readTimeout = Constants.READ_TIMEOUT
+            val url = Constants.BASE_URL + "apps?action=list_home"
+            val urlConnection = Common.createConnection(url)
             val result = reader.readValue<HomeResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)
