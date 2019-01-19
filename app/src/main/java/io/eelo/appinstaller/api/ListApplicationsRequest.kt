@@ -33,12 +33,8 @@ class ListApplicationsRequest(private val category: String, private val page: In
             val result = reader.readValue<ListApplicationsResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)
-        } catch (e: SocketTimeoutException) {
-            callback.invoke(Error.REQUEST_TIMEOUT, null)
-        } catch (e: IOException) {
-            callback.invoke(Error.SERVER_UNAVAILABLE, null)
         } catch (e: Exception) {
-            callback.invoke(Error.UNKNOWN, null)
+            callback.invoke(Error.findError(e), null)
         }
     }
 

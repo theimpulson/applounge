@@ -28,12 +28,8 @@ class PackageNameSearchRequest(private val packageName: String) {
             val result = reader.readValue<SearchResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)
-        } catch (e: SocketTimeoutException) {
-            callback.invoke(Error.REQUEST_TIMEOUT, null)
-        } catch (e: IOException) {
-            callback.invoke(Error.SERVER_UNAVAILABLE, null)
         } catch (e: Exception) {
-            callback.invoke(Error.UNKNOWN, null)
+            callback.invoke(Error.findError(e), null)
         }
     }
 
