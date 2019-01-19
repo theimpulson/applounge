@@ -25,7 +25,7 @@ import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.search.viewModel.SearchViewModel
-import io.eelo.appinstaller.utils.Common
+import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.SUGGESTION_KEY
 
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
@@ -90,7 +90,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         loadMoreContainer.visibility = View.GONE
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (!recyclerView.canScrollVertically(1)) {
+                if (!recyclerView.canScrollVertically(1) &&
+                        applicationList.size >= Constants.RESULTS_PER_PAGE) {
                     loadMoreContainer.visibility = View.VISIBLE
                     recyclerView.scrollToPosition(applicationList.size - 1)
                     if (!isLoadingMoreApplications) {

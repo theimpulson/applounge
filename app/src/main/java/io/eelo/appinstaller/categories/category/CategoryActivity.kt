@@ -23,7 +23,6 @@ import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnecti
 import io.eelo.appinstaller.categories.category.viewmodel.CategoryViewModel
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.ApplicationListAdapter
-import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.CATEGORY_KEY
 import kotlinx.android.synthetic.main.activity_category.*
@@ -102,7 +101,8 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         // Bind to the screen error
         categoryViewModel.getScreenError().observe(this, Observer {
             if (it != null) {
-                if (!isLoadingMoreApplications) {
+                if (!isLoadingMoreApplications &&
+                        applicationList.size >= Constants.RESULTS_PER_PAGE) {
                     errorDescription.text = getString(it.description)
                     errorContainer.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
