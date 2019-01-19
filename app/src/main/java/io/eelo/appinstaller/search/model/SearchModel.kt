@@ -47,7 +47,9 @@ class SearchModel : SearchModelInterface {
             SearchElement(searchQuery, pageNumber, applicationManager!!, this)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
         } else {
-            screenError.value = Error.NO_INTERNET
+            if (pageNumber == 1) {
+                screenError.value = Error.NO_INTERNET
+            }
         }
     }
 
@@ -60,11 +62,13 @@ class SearchModel : SearchModelInterface {
             } else {
                 this.applicationList.value = applicationList
             }
-            if (applicationList.isEmpty()) {
+            if (applicationList.isEmpty() && pageNumber == 1) {
                 screenError.value = Error.NO_RESULTS
             }
         } else {
-            screenError.value = error
+            if (pageNumber == 1) {
+                screenError.value = error
+            }
         }
     }
 }
