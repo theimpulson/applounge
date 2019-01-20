@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.text.method.LinkMovementMethod
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Menu
@@ -17,6 +18,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
 import io.eelo.appinstaller.application.model.ApplicationStateListener
@@ -259,10 +261,13 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
                 setPrivacyRatingBorder(-1)
             }
             app_privacy_container.setOnClickListener {
+                val message = layoutInflater.inflate(R.layout.privacy_dialog_message, null) as
+                        TextView
+                message.movementMethod = (LinkMovementMethod.getInstance())
                 val alertDialog = AlertDialog.Builder(this).create()
                 alertDialog.setIcon(R.drawable.ic_dialog_info)
                 alertDialog.setTitle(R.string.app_privacy_score)
-                alertDialog.setMessage(getString(R.string.app_privacy_description))
+                alertDialog.setView(message)
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
                 { _, _ ->
                     alertDialog.dismiss()
