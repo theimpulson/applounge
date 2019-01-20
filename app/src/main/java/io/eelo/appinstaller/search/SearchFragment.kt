@@ -118,6 +118,9 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
                 applicationList.addAll(it)
                 progressBar.visibility = View.GONE
                 recyclerView.adapter.notifyDataSetChanged()
+                if (!isLoadingMoreApplications) {
+                    recyclerView.scrollToPosition(0)
+                }
                 loadMoreContainer.visibility = View.GONE
                 isLoadingMoreApplications = false
                 if (applicationList.isEmpty()) {
