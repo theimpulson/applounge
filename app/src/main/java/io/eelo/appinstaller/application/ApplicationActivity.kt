@@ -28,6 +28,7 @@ import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
+import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Common.toMiB
 import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.APPLICATION_DESCRIPTION_KEY
@@ -440,6 +441,14 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
         Execute({}, {
             app_install.text = resources.getString(state.installButtonTextId)
             when (state) {
+                State.INSTALLED -> {
+                    app_install.setBackgroundResource(R.drawable.app_install_border)
+                    app_install.setTextColor(resources.getColor(android.R.color.primary_text_dark))
+                    app_install.isEnabled =
+                            Common.appHasLaunchActivity(this, application.packageName)
+                    app_size.visibility = View.VISIBLE
+                    app_download_container.visibility = View.GONE
+                }
                 State.DOWNLOADING -> {
                     app_install.setBackgroundResource(R.drawable.app_install_border_simple)
                     app_install.setTextColor(resources.getColor(android.R.color.primary_text_light))

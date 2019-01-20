@@ -78,6 +78,10 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         Execute({}, {
             installButton.text = activity.getString(state.installButtonTextId)
             when (state) {
+                State.INSTALLED -> {
+                    installButton.isEnabled =
+                            Common.appHasLaunchActivity(activity, application!!.packageName)
+                }
                 State.INSTALLING -> {
                     installButton.isEnabled = false
                 }

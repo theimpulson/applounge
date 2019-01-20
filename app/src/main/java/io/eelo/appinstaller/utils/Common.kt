@@ -58,4 +58,8 @@ object Common {
         }
         return false
     }
+
+    fun appHasLaunchActivity(context: Context, packageName: String): Boolean {
+        return (context.packageManager.getLaunchIntentForPackage(packageName) != null)
+    }
 }
