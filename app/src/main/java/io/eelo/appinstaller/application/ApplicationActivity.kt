@@ -330,13 +330,14 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
         app_permissions_container.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setTitle(R.string.app_permissions_title)
-            if (fullData.getLastVersion() != null) {
-                if (fullData.getLastVersion()!!.exodusPermissions.isNotEmpty()) {
+            if (fullData.getLastVersion() != null &&
+                    fullData.getLastVersion()!!.exodusPermissions != null) {
+                if (fullData.getLastVersion()!!.exodusPermissions!!.isNotEmpty()) {
                     var message = ""
                     var index = 0
-                    fullData.getLastVersion()!!.exodusPermissions.forEach { permission ->
+                    fullData.getLastVersion()!!.exodusPermissions!!.forEach { permission ->
                         message += permission
-                        if (index != fullData.getLastVersion()!!.exodusPermissions.size - 1) {
+                        if (index != fullData.getLastVersion()!!.exodusPermissions!!.size - 1) {
                             message += "\n"
                         }
                         index++
@@ -359,13 +360,14 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
         app_trackers_container.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setTitle(R.string.app_trackers_title)
-            if (fullData.getLastVersion() != null) {
-                if (fullData.getLastVersion()!!.exodusTrackers.isNotEmpty()) {
+            if (fullData.getLastVersion() != null &&
+                    fullData.getLastVersion()!!.exodusTrackers != null) {
+                if (fullData.getLastVersion()!!.exodusTrackers!!.isNotEmpty()) {
                     var message = ""
                     var index = 0
-                    fullData.getLastVersion()!!.exodusTrackers.forEach { tracker ->
+                    fullData.getLastVersion()!!.exodusTrackers!!.forEach { tracker ->
                         message += tracker
-                        if (index != fullData.getLastVersion()!!.exodusTrackers.size - 1) {
+                        if (index != fullData.getLastVersion()!!.exodusTrackers!!.size - 1) {
                             message += "\n"
                         }
                         index++

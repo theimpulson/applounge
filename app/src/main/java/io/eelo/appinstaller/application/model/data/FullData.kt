@@ -77,19 +77,27 @@ constructor(
         }
     }
 
-    private fun getPermissions(rawPermissions: ArrayList<String>?): ArrayList<String> {
-        val permissions = ArrayList<String>()
-        rawPermissions?.forEach {
-            permissions.add(it.substring(it.lastIndexOf(".") + 1))
+    private fun getPermissions(rawPermissions: ArrayList<String>?): ArrayList<String>? {
+        return if (rawPermissions != null) {
+            val permissions = ArrayList<String>()
+            rawPermissions.forEach {
+                permissions.add(it.substring(it.lastIndexOf(".") + 1))
+            }
+            permissions
+        } else {
+            null
         }
-        return permissions
     }
 
-    private fun getTrackers(rawTrackers: ArrayList<LinkedHashMap<String, String>>?): ArrayList<String> {
-        val trackers = ArrayList<String>()
-        rawTrackers?.forEach {
-            trackers.add(it["name"]!!)
+    private fun getTrackers(rawTrackers: ArrayList<LinkedHashMap<String, String>>?): ArrayList<String>? {
+        return if (rawTrackers != null) {
+            val trackers = ArrayList<String>()
+            rawTrackers.forEach {
+                trackers.add(it["name"]!!)
+            }
+            trackers
+        } else {
+            null
         }
-        return trackers
     }
 }
