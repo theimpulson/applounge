@@ -58,16 +58,13 @@
     <!-- Search fragment -->
     <string name="search_splash_title">Search for an app</string>
 
-    <!-- Search Fragment -->
-    <string name="search_description">Search for an app</string>
-
     <!-- Updates -->
     <string name="updates_splash_title">All apps are up-to-date</string>
 
     <!-- Settings Fragment -->
     <string name="preference_updates_title">Updates</string>
     <string name="preference_update_interval_default">24</string>
-    <string name="preference_update_interval_title">Automatic update interval</string>
+    <string name="preference_update_interval_title">Update check interval</string>
     <string name="preference_update_wifi_only_title">Only on Wi-Fi</string>
     <string name="preference_update_wifi_only_description">Update apps automatically only on
         un-metered networks such as Wi-Fi</string>
@@ -76,6 +73,10 @@
         updates in the background</string>
     <string name="preference_update_notify_available_title">Show available updates</string>
     <string name="preference_update_notify_available_description">Show a notification when app updates are available</string>
+    <string name="pref_update_interval_key">pref_update_interval</string>
+    <string name="pref_update_wifi_only_key">pref_update_wifi_only</string>
+    <string name="pref_update_install_automatically_key">pref_update_install_automatically</string>
+    <string name="pref_update_notify_key">pref_update_notify</string>
 
     <!-- Errors -->
     <string name="error_storage_permission_denied">Storage access is required for downloading apps.</string>

@@ -10,7 +10,6 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import androidx.work.*
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnection
 import io.eelo.appinstaller.applicationmanager.ApplicationManagerServiceConnectionCallback
@@ -19,11 +18,9 @@ import io.eelo.appinstaller.home.HomeFragment
 import io.eelo.appinstaller.search.SearchFragment
 import io.eelo.appinstaller.settings.SettingsFragment
 import io.eelo.appinstaller.updates.UpdatesFragment
-import io.eelo.appinstaller.updates.model.UpdatesWorker
 import io.eelo.appinstaller.utils.Constants
 import io.eelo.appinstaller.utils.Constants.CURRENTLY_SELECTED_FRAGMENT_KEY
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
         ApplicationManagerServiceConnectionCallback {
@@ -55,16 +52,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun initialiseUpdatesWorker() {
-        val constraints = Constraints.Builder().apply {
-            setRequiresBatteryNotLow(true)
-            setRequiredNetworkType(NetworkType.CONNECTED)
-        }.build()
-        val updatesCheckBuilder = PeriodicWorkRequest
-                .Builder(UpdatesWorker::class.java, 15, TimeUnit.MINUTES).apply {
-                    setConstraints(constraints)
-                }
-        WorkManager.getInstance().enqueueUniquePeriodicWork(Constants.UPDATES_WORK_NAME,
-                ExistingPeriodicWorkPolicy.KEEP, updatesCheckBuilder.build())
+        UpdatesManager(applicationContext).startWorker()
     }
 
     override fun onServiceBind(applicationManager: ApplicationManager) {

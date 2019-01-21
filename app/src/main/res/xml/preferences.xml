@@ -10,27 +10,27 @@
             android:dialogTitle="@string/preference_update_interval_title"
             android:entries="@array/update_interval_names"
             android:entryValues="@array/update_interval_values"
-            android:key="pref_update_interval"
+            android:key="@string/pref_update_interval_key"
             android:summary="%s"
             android:title="@string/preference_update_interval_title" />
 
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_update_wifi_only"
-            android:summary="@string/preference_update_wifi_only_description"
-            android:title="@string/preference_update_wifi_only_title" />
+            android:defaultValue="true"
+            android:key="@string/pref_update_notify_key"
+            android:summary="@string/preference_update_notify_available_description"
+            android:title="@string/preference_update_notify_available_title" />
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="pref_update_install_automatically"
+            android:key="@string/pref_update_install_automatically_key"
             android:summary="@string/preference_update_install_automatically_description"
             android:title="@string/preference_update_install_automatically_title" />
 
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_update_notify"
-            android:summary="@string/preference_update_notify_available_description"
-            android:title="@string/preference_update_notify_available_title" />
+            android:defaultValue="false"
+            android:key="@string/pref_update_wifi_only_key"
+            android:summary="@string/preference_update_wifi_only_description"
+            android:title="@string/preference_update_wifi_only_title" />
 
     </PreferenceCategory>
 </PreferenceScreen>
