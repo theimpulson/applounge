@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.eelo.appinstaller.application.model.Application
-import io.eelo.appinstaller.application.model.data.FullData
+import io.eelo.appinstaller.application.model.data.BasicData
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.utils.ApplicationParser
 import io.eelo.appinstaller.utils.Common
@@ -34,7 +34,7 @@ class ListApplicationsRequest(private val category: String, private val page: In
     class ListApplicationsResult @JsonCreator
     constructor(@JsonProperty("success") success: Boolean,
                 @JsonProperty("pages") val pages: Int,
-                @JsonProperty("apps") private val apps: Array<FullData>) {
+                @JsonProperty("apps") private val apps: Array<BasicData>) {
 
         fun getApplications(applicationManager: ApplicationManager, context: Context): ArrayList<Application> {
             return ApplicationParser.parseToApps(applicationManager, context, apps)

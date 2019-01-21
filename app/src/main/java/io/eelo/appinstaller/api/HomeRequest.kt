@@ -6,18 +6,14 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.data.BasicData
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
-import io.eelo.appinstaller.application.model.data.FullData
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.utils.Error
 import io.eelo.appinstaller.utils.ApplicationParser
 import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
-import java.io.IOException
 import java.lang.Exception
-import java.net.SocketTimeoutException
-import java.net.URL
-import javax.net.ssl.HttpsURLConnection
 
 class HomeRequest {
 
@@ -56,20 +52,21 @@ class HomeRequest {
     }
 
     class SubHomeResult @JsonCreator
-    constructor(@JsonProperty("banner_apps") val bannerApps: Array<FullData>) {
+    constructor(@JsonProperty("banner_apps") val bannerApps: Array<BasicData>) {
 
-        val apps = HashMap<Category, ArrayList<FullData>>()
+        val apps = HashMap<Category, ArrayList<BasicData>>()
 
         @JsonAnySetter
         fun append(key: String, value: Any) {
             val apps = value as ArrayList<*>
-            val appsData = ArrayList<FullData>()
+            val appsData = ArrayList<BasicData>()
             apps.forEach {
                 val data = it as LinkedHashMap<*, *>
-                val appData = FullData(
+                val appData = BasicData(
                         data["package_name"] as String,
                         data["_id"] as String,
                         data["name"] as String,
+                        0f,
                         data["last_modified"] as String,
                         data["latest_version"] as String,
                         data["latest_version_number"] as String?,
@@ -77,16 +74,8 @@ class HomeRequest {
                         data["author"] as String,
                         data["icon_image_path"] as String,
                         (data["other_images_path"] as List<String>).toTypedArray(),
-                        data["category"] as String,
-                        data["created_on"] as String,
-                        data["source"] as String,
-                        data["description"] as String,
-                        data["app_link"] as String,
-                        data["licence"] as String,
-                        null)
-                for (pair in data) {
-                    appData.jsonCreator(pair.key as String, pair.value)
-                }
+                        data["exodus_score"].toString().toFloat(),
+                        BasicData.Ratings(0f, 0f))
                 appsData.add(appData)
             }
             this.apps[Category(key)] = appsData
