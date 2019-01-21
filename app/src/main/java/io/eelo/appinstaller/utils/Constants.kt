@@ -30,4 +30,9 @@ object Constants {
     // Updates
     const val OUTDATED_APPLICATIONS_FILENAME = "outdated_applications.txt"
     const val UPDATES_WORK_NAME = "updates_work"
+    const val UPDATES_NOTIFICATION_ID = 76
+    const val UPDATES_NOTIFICATION_CHANNEL_ID = "updates_notification"
+    const val UPDATES_NOTIFICATION_CHANNEL_TITLE = "App updates"
+    const val AUTOMATICALLY_INSTALL_UPDATES = "will"
+    const val MANUALLY_INSTALL_UPDATES = "will not"
 }
