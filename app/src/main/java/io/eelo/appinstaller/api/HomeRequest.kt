@@ -75,7 +75,11 @@ class HomeRequest {
                         data["icon_image_path"] as String,
                         (data["other_images_path"] as List<String>).toTypedArray(),
                         data["exodus_score"].toString().toFloat(),
-                        BasicData.Ratings(0f, 0f))
+                        BasicData.Ratings(
+                                (data["ratings"] as LinkedHashMap<String, Int>)
+                                        ["usageQualityScore"]!!.toFloat(),
+                                (data["ratings"] as LinkedHashMap<String, Int>)
+                                        ["privacyScore"]!!.toFloat()))
                 appsData.add(appData)
             }
             this.apps[Category(key)] = appsData
