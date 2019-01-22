@@ -35,7 +35,7 @@
 
     <include
         layout="@layout/simple_install_button_layout"
-        android:layout_width="@dimen/simple_install_button_width"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_title"
         android:layout_centerHorizontal="true"
