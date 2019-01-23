@@ -19,7 +19,6 @@ import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.common.ApplicationListAdapter
 import io.eelo.appinstaller.updates.viewModel.UpdatesViewModel
-import io.eelo.appinstaller.utils.Common
 
 class UpdatesFragment : Fragment() {
     private lateinit var updatesViewModel: UpdatesViewModel
@@ -53,7 +52,7 @@ class UpdatesFragment : Fragment() {
         updateAll.setOnClickListener {
             applicationList.forEach { application ->
                 if (application.state == State.NOT_UPDATED) {
-                    application.buttonClicked(activity!!)
+                    application.buttonClicked(context!!, activity!!)
                 }
             }
         }

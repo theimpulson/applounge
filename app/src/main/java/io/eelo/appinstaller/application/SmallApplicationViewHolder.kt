@@ -42,7 +42,7 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
                         Error.APK_UNAVAILABLE.description),
                         Snackbar.LENGTH_LONG).show()
             } else {
-                application?.buttonClicked(activity)
+                application?.buttonClicked(activity, activity)
             }
         }
     }

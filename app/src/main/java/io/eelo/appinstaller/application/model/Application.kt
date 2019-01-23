@@ -55,24 +55,28 @@ class Application(val packageName: String, private val applicationManager: Appli
     }
 
     @Synchronized
-    fun buttonClicked(activity: Activity) {
+    fun buttonClicked(context: Context, activity: Activity?) {
         when (stateManager.state) {
-            INSTALLED -> info.launch(activity)
+            INSTALLED -> info.launch(context)
             NOT_UPDATED, NOT_DOWNLOADED -> {
-                if (canWriteStorage(activity)) {
-                    applicationManager.install(activity, this)
+                if (activity != null) {
+                    if (canWriteStorage(activity)) {
+                        applicationManager.install(context, this)
+                    }
+                } else {
+                    applicationManager.install(context, this)
                 }
             }
             INSTALLING -> {
                 if (downloader != null) {
                     downloader?.cancelDownload()
                 } else {
-                    onDownloadComplete(activity, DownloadManager.STATUS_FAILED)
+                    onDownloadComplete(context, DownloadManager.STATUS_FAILED)
                 }
                 return
             }
         }
-        checkForStateUpdate(activity)
+        checkForStateUpdate(context)
     }
 
     private fun canWriteStorage(activity: Activity): Boolean {

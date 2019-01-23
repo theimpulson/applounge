@@ -47,7 +47,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
                         Error.APK_UNAVAILABLE.description),
                         Snackbar.LENGTH_LONG).show()
             } else {
-                application?.buttonClicked(activity)
+                application?.buttonClicked(activity, activity)
             }
         }
     }

@@ -1,6 +1,10 @@
 package io.eelo.appinstaller.updates.model
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.AsyncTask
 import android.preference.PreferenceManager
 import android.util.Log
@@ -8,8 +12,10 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import io.eelo.appinstaller.R
 import io.eelo.appinstaller.application.model.Application
+import io.eelo.appinstaller.application.model.State
 import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.updates.UpdatesNotifier
+import io.eelo.appinstaller.utils.Common
 import io.eelo.appinstaller.utils.Constants
 
 class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context, params),
@@ -68,9 +74,44 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
                         applications.size,
                         installAutomatically)
             }
+            if (installAutomatically && canWriteStorage(applicationContext)) {
+                if (wifiOnly) {
+                    if (isConnectedToUnmeteredNetwork(applicationContext)) {
+                        applications.forEach {
+                            if (it.state == State.NOT_UPDATED) {
+                                Log.i(TAG, "Updating ${it.packageName}")
+                                it.buttonClicked(applicationContext, null)
+                            }
+                        }
+                    }
+                } else {
+                    applications.forEach {
+                        if (it.state == State.NOT_UPDATED) {
+                            Log.i(TAG, "Updating ${it.packageName}")
+                            it.buttonClicked(applicationContext, null)
+                        }
+                    }
+                }
+            }
         }
         synchronized(blocker) {
             blocker.notify()
+        }
+    }
+
+    private fun canWriteStorage(context: Context) = !(android.os.Build.VERSION.SDK_INT >= 23 &&
+            context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+            PackageManager.PERMISSION_GRANTED)
+
+    private fun isConnectedToUnmeteredNetwork(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as
+                ConnectivityManager
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork
+            val capabilities = connectivityManager.getNetworkCapabilities(network)
+            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+        } else {
+            Common.isNetworkAvailable(context)
         }
     }
 }

@@ -419,7 +419,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
                     Snackbar.LENGTH_LONG).show()
             return
         }
-        application.buttonClicked(this)
+        application.buttonClicked(this, this)
     }
 
     @SuppressLint("SetTextI18n")
@@ -542,7 +542,7 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                application.buttonClicked(this)
+                application.buttonClicked(this, this)
             } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Snackbar.make(container, R.string.error_storage_permission_denied,
                         Snackbar.LENGTH_LONG).show()
