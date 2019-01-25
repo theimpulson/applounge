@@ -65,9 +65,6 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
                     installButton.isEnabled =
                             Common.appHasLaunchActivity(activity, application!!.packageName)
                 }
-                State.INSTALLING -> {
-                    installButton.isEnabled = false
-                }
                 else -> {
                     installButton.isEnabled = true
                 }

@@ -12,22 +12,16 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
         private set
 
     fun find(context: Context, basicData: BasicData) {
-        val state: State
-        if (appManager.isDownloading(app)) {
-            state = State.DOWNLOADING
-        } else if (appManager.isInstalling(app)) {
-            state = State.INSTALLING
+        val state = if (appManager.isInstalling(app)) {
+            State.INSTALLING
         } else if (info.isLastVersionInstalled(context,
                         basicData.lastVersionNumber ?: "")) {
-            state = State.INSTALLED
-            info.getApkFile(context, basicData).delete()
+            State.INSTALLED
         } else if (info.isInstalled(context) && !info.isLastVersionInstalled(context,
                         basicData.lastVersionNumber ?: "")) {
-            state = State.NOT_UPDATED
-            info.getApkFile(context, basicData).delete()
+            State.NOT_UPDATED
         } else {
-            state = State.NOT_DOWNLOADED
-            info.getApkFile(context, basicData).delete()
+            State.NOT_DOWNLOADED
         }
         changeState(state)
     }
@@ -39,7 +33,7 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
 
     fun addListener(listener: ApplicationStateListener) {
         listeners.add(listener)
-        if (state == State.DOWNLOADING) {
+        if (state == State.INSTALLING) {
             app.downloader?.let { listener.downloading(it) }
         }
     }

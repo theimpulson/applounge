@@ -8,8 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue
 class ApplicationManager {
 
     private val apps = HashMap<String, Application>()
-    private val downloading = LinkedBlockingQueue<Application>()
-    private val installing = LinkedBlockingQueue<Application>()
+    private val queue = LinkedBlockingQueue<Application>()
 
     @Synchronized
     fun findOrCreateApp(packageName: String): Application {
@@ -22,69 +21,43 @@ class ApplicationManager {
     }
 
     @Synchronized
-    fun download(app: Application) {
-        if (!downloading.contains(app)) {
-            downloading.put(app)
-            downloading.put(app)
+    fun install(context: Context, app: Application) {
+        if (!queue.contains(app)) {
+            queue.put(app)
+            queue.put(app)
         }
-    }
-
-    @Synchronized
-    fun install(app: Application) {
-        if (!installing.contains(app)) {
-            installing.put(app)
-            installing.put(app)
-        }
+        app.checkForStateUpdate(context)
     }
 
     fun start(context: Context) {
-        Thread {
-            startDownloads(context)
-        }.start()
         Thread {
             startInstalls(context)
         }.start()
     }
 
-    private fun startDownloads(context: Context) {
-        while (true) {
-            val app = downloading.take()
-            app.download(context)
-            stopDownloading(app)
-            tryRemove(app)
-        }
-    }
-
     private fun startInstalls(context: Context) {
         while (true) {
-            val app = installing.take()
-            app.install(context)
-            stopInstalling(app)
+            val app = queue.take()
+            app.download(context)
+            stopInstalling(context, app)
             tryRemove(app)
         }
     }
 
     fun tryRemove(app: Application) {
-        if (!app.isUsed() && !installing.contains(app) && !downloading.contains(app)) {
+        if (!app.isUsed() && !queue.contains(app)) {
             apps.remove(app.packageName)
         }
     }
 
-    fun stopDownloading(app: Application) {
-        while (downloading.remove(app)) {
+    @Synchronized
+    fun stopInstalling(context: Context, app: Application) {
+        while (queue.remove(app)) {
         }
-    }
-
-    fun stopInstalling(app: Application) {
-        while (installing.remove(app)) {
-        }
+        app.checkForStateUpdate(context)
     }
 
     fun isInstalling(app: Application): Boolean {
-        return installing.contains(app)
-    }
-
-    fun isDownloading(app: Application): Boolean {
-        return downloading.contains(app)
+        return queue.contains(app)
     }
 }

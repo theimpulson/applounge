@@ -60,14 +60,10 @@ class Application(val packageName: String, private val applicationManager: Appli
             INSTALLED -> info.launch(activity)
             NOT_UPDATED, NOT_DOWNLOADED -> {
                 if (canWriteStorage(activity)) {
-                    applicationManager.download(this)
+                    applicationManager.install(activity, this)
                 }
             }
             INSTALLING -> {
-                applicationManager.stopInstalling(this)
-                return
-            }
-            DOWNLOADING -> {
                 if (downloader != null) {
                     downloader?.cancelDownload()
                 } else {
@@ -76,7 +72,7 @@ class Application(val packageName: String, private val applicationManager: Appli
                 return
             }
         }
-        stateManager.find(activity, basicData!!)
+        checkForStateUpdate(activity)
     }
 
     private fun canWriteStorage(activity: Activity): Boolean {
@@ -102,31 +98,27 @@ class Application(val packageName: String, private val applicationManager: Appli
             downloader!!.download(context)
         } else {
             stateManager.notifyError(error)
-            applicationManager.stopDownloading(this)
-            downloader = null
-            stateManager.find(context, basicData!!)
+            onDownloadComplete(context, DownloadManager.STATUS_FAILED)
         }
     }
 
     override fun onDownloadComplete(context: Context, status: Int) {
         if (status == DownloadManager.STATUS_SUCCESSFUL) {
-            applicationManager.install(this)
+            install(context)
         } else {
             info.getApkFile(context, basicData!!).delete()
-            applicationManager.stopDownloading(this)
-            downloader = null
+            applicationManager.stopInstalling(context, this)
         }
-        stateManager.find(context, basicData!!)
+        downloader = null
     }
 
-    fun install(context: Context) {
+    private fun install(context: Context) {
         info.install(context, basicData!!, this)
-        stateManager.find(context, basicData!!)
     }
 
     override fun onInstallationComplete(context: Context) {
         info.getApkFile(context, basicData!!).delete()
-        stateManager.find(context, basicData!!)
+        applicationManager.stopInstalling(context, this)
     }
 
     fun isUsed(): Boolean {
@@ -208,7 +200,7 @@ class Application(val packageName: String, private val applicationManager: Appli
     fun update(basicData: BasicData, context: Context) {
         this.basicData?.let { basicData.updateLoadedImages(it) }
         this.basicData = basicData
-        stateManager.find(context, basicData)
+        checkForStateUpdate(context)
     }
 
     fun update(fullData: FullData, context: Context) {

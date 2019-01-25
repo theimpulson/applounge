@@ -19,7 +19,6 @@ import io.eelo.appinstaller.applicationmanager.ApplicationManager
 import io.eelo.appinstaller.categories.model.Category
 import io.eelo.appinstaller.common.SmallApplicationListAdapter
 import io.eelo.appinstaller.home.viewmodel.HomeViewModel
-import io.eelo.appinstaller.utils.Common
 
 class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel

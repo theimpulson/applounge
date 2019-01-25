@@ -118,6 +118,7 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
 
     private var onComplete: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            unregisterReceivers(context)
             try {
                 if (!fullData.getLastVersion()!!.apkSHA.isNullOrBlank() &&
                         fullData.getLastVersion()!!.apkSHA!! ==
@@ -129,7 +130,6 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
                 exception.printStackTrace()
             }
             downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
-            unregisterReceivers(context)
         }
     }
 }
