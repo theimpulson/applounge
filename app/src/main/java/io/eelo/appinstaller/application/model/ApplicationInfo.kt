@@ -46,7 +46,7 @@ class ApplicationInfo(private val packageName: String) {
         context.startActivity(context.packageManager.getLaunchIntentForPackage(packageName))
     }
 
-    fun install(context: Context, data: BasicData) {
-        Installer(getApkFile(context, data)).install(context)
+    fun install(context: Context, data: BasicData, callback: InstallerInterface) {
+        Installer(data.packageName, getApkFile(context, data), callback).install(context)
     }
 }

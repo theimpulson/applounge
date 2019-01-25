@@ -18,7 +18,7 @@ import io.eelo.appinstaller.utils.Error
 import java.util.concurrent.atomic.AtomicInteger
 
 class Application(val packageName: String, private val applicationManager: ApplicationManager) :
-        DownloaderInterface {
+        DownloaderInterface, InstallerInterface {
 
     private val uses = AtomicInteger(0)
     private val info = ApplicationInfo(packageName)
@@ -120,7 +120,12 @@ class Application(val packageName: String, private val applicationManager: Appli
     }
 
     fun install(context: Context) {
-        info.install(context, basicData!!)
+        info.install(context, basicData!!, this)
+        stateManager.find(context, basicData!!)
+    }
+
+    override fun onInstallationComplete(context: Context) {
+        info.getApkFile(context, basicData!!).delete()
         stateManager.find(context, basicData!!)
     }
 
