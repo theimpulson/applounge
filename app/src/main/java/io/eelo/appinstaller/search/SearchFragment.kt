@@ -140,6 +140,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
                     progressBar.visibility = View.GONE
                     loadMoreContainer.visibility = View.GONE
                 } else {
+                    loadMoreContainer.visibility = View.GONE
                     isLoadingMoreApplications = false
                 }
             } else {

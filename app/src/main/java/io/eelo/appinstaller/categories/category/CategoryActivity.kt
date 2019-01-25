@@ -108,6 +108,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
                     progressBar.visibility = View.GONE
                     loadMoreContainer.visibility = View.GONE
                 } else {
+                    loadMoreContainer.visibility = View.GONE
                     isLoadingMoreApplications = false
                 }
             } else {
