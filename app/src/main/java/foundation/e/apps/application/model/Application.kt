@@ -38,6 +38,7 @@ class Application(val packageName: String, private val applicationManager: Appli
     val state: State
         get() = stateManager.state
     var downloader: Downloader? = null
+    private val blocker = Object()
 
     fun incrementUses() {
         uses.incrementAndGet()
@@ -100,6 +101,9 @@ class Application(val packageName: String, private val applicationManager: Appli
             downloader = Downloader(info, fullData!!, this)
             stateManager.notifyDownloading(downloader!!)
             downloader!!.download(context)
+            synchronized(blocker) {
+                blocker.wait()
+            }
         } else {
             stateManager.notifyError(error)
             onDownloadComplete(context, DownloadManager.STATUS_FAILED)
@@ -110,6 +114,9 @@ class Application(val packageName: String, private val applicationManager: Appli
         if (status == DownloadManager.STATUS_SUCCESSFUL) {
             install(context)
         } else {
+            synchronized(blocker) {
+                blocker.notify()
+            }
             info.getApkFile(context, basicData!!).delete()
             applicationManager.stopInstalling(context, this)
         }
@@ -121,8 +128,10 @@ class Application(val packageName: String, private val applicationManager: Appli
     }
 
     override fun onInstallationComplete(context: Context) {
+        synchronized(blocker) {
+            blocker.notify()
+        }
         info.getApkFile(context, basicData!!).delete()
-        applicationManager.stopInstalling(context, this)
     }
 
     fun isUsed(): Boolean {

@@ -42,7 +42,9 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
             registerReceivers(context)
             initialiseDownloadManagerRequest(context)
             downloadId = downloadManager.enqueue(request)
-            handleDownloadUpdates()
+            Thread {
+                handleDownloadUpdates()
+            }.start()
         } else {
             downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
         }
