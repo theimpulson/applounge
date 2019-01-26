@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">App Installer</string>
+    <string name="app_name">Apps</string>
     <string name="not_available">N/A</string>
     <string name="not_available_full">Not available</string>
-    <string name="service_description">This service is used by App Installer to manage, download and install apps. Stopping it may cause app downloads to fail.</string>
+    <string name="service_description">This service is used by Apps to manage, download and install apps. Stopping it may cause app downloads to fail.</string>
 
     <!-- Application -->
     <string name="app_icon_content_description">App icon</string>

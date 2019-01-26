@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.eelo.appinstaller"
+    package="foundation.e.apps"
     android:installLocation="internalOnly">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,24 +16,24 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="foundation.e.apps.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".application.ApplicationActivity" />
-        <activity android:name=".categories.category.CategoryActivity" />
+        <activity android:name="foundation.e.apps.application.ApplicationActivity" />
+        <activity android:name="foundation.e.apps.categories.category.CategoryActivity" />
 
         <service
-            android:name=".applicationmanager.ApplicationManagerService"
+            android:name="foundation.e.apps.applicationmanager.ApplicationManagerService"
             android:description="@string/service_description"
             android:exported="false" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="io.eelo.appinstaller.provider"
+            android:authorities="foundation.e.apps.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -41,9 +41,9 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".application.ApplicationDescriptionActivity" />
+        <activity android:name="foundation.e.apps.application.ApplicationDescriptionActivity" />
         <activity
-            android:name=".application.ScreenshotsActivity"
+            android:name="foundation.e.apps.application.ScreenshotsActivity"
             android:theme="@style/FullScreenTheme" />
     </application>
 

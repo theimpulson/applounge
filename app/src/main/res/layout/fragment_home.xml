@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <io.eelo.appinstaller.utils.CustomNestedScrollView
+    <foundation.e.apps.utils.CustomNestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none">
@@ -36,7 +36,7 @@
 
         </LinearLayout>
 
-    </io.eelo.appinstaller.utils.CustomNestedScrollView>
+    </foundation.e.apps.utils.CustomNestedScrollView>
 
     <include
         layout="@layout/error_layout"
