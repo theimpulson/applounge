@@ -82,6 +82,9 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
                     installButton.isEnabled =
                             Common.appHasLaunchActivity(activity, application!!.packageName)
                 }
+                State.INSTALLING -> {
+                    installButton.isEnabled = false
+                }
                 else -> {
                     installButton.isEnabled = true
                 }

@@ -12,7 +12,9 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
         private set
 
     fun find(context: Context, basicData: BasicData) {
-        val state = if (appManager.isInstalling(app)) {
+        val state = if (appManager.isInstalling(app) && !app.isInstalling) {
+            State.DOWNLOADING
+        } else if (appManager.isInstalling(app) && app.isInstalling) {
             State.INSTALLING
         } else if (info.isLastVersionInstalled(context,
                         basicData.lastVersionNumber ?: "")) {
@@ -33,7 +35,7 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
 
     fun addListener(listener: ApplicationStateListener) {
         listeners.add(listener)
-        if (state == State.INSTALLING) {
+        if (state == State.DOWNLOADING) {
             app.downloader?.let { listener.downloading(it) }
         }
     }

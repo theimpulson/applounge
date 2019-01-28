@@ -69,7 +69,7 @@ class Application(val packageName: String, private val applicationManager: Appli
                     applicationManager.install(context, this)
                 }
             }
-            INSTALLING -> {
+            DOWNLOADING -> {
                 if (!isInstalling) {
                     if (downloader != null) {
                         downloader?.cancelDownload()
@@ -79,6 +79,8 @@ class Application(val packageName: String, private val applicationManager: Appli
                 }
                 return
             }
+            else ->
+                return
         }
         checkForStateUpdate(context)
     }
@@ -128,6 +130,7 @@ class Application(val packageName: String, private val applicationManager: Appli
 
     private fun install(context: Context) {
         isInstalling = true
+        checkForStateUpdate(context)
         info.install(context, basicData!!, this)
     }
 
