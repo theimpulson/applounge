@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         currentFragmentId = if (savedInstanceState != null &&
                 savedInstanceState.containsKey(CURRENTLY_SELECTED_FRAGMENT_KEY)) {
             savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY)
+        } else if (intent.hasExtra(Constants.UPDATES_NOTIFICATION_CLICK_EXTRA)) {
+            R.id.menu_updates
         } else {
             R.id.menu_home
         }
@@ -101,6 +103,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun showFragment(fragment: Fragment) {
+        bottom_navigation_view.menu.findItem(currentFragmentId).isChecked = true
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment)
