@@ -41,8 +41,8 @@ class HomeRequest {
             return ApplicationParser.parseToApps(applicationManager, context, home.bannerApps)
         }
 
-        fun getApps(applicationManager: ApplicationManager, context: Context): HashMap<Category, ArrayList<Application>> {
-            val apps = HashMap<Category, ArrayList<Application>>()
+        fun getApps(applicationManager: ApplicationManager, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
+            val apps = LinkedHashMap<Category, ArrayList<Application>>()
             for (pair in home.apps) {
                 apps[pair.key] = ApplicationParser.parseToApps(applicationManager, context, pair.value.toTypedArray())
             }
@@ -51,10 +51,9 @@ class HomeRequest {
 
     }
 
-    class SubHomeResult @JsonCreator
-    constructor(@JsonProperty("banner_apps") val bannerApps: Array<BasicData>) {
-
-        val apps = HashMap<Category, ArrayList<BasicData>>()
+    class SubHomeResult @JsonCreator constructor() {
+        val apps = LinkedHashMap<Category, ArrayList<BasicData>>()
+        lateinit var bannerApps: Array<BasicData>
 
         @JsonAnySetter
         fun append(key: String, value: Any) {
@@ -82,9 +81,11 @@ class HomeRequest {
                                         ["privacyScore"]!!.toFloat()))
                 appsData.add(appData)
             }
-            this.apps[Category(key)] = appsData
+            if (key == "banner_apps") {
+                bannerApps = appsData.toTypedArray()
+            } else {
+                this.apps[Category(key)] = appsData
+            }
         }
-
     }
-
 }
