@@ -84,6 +84,7 @@
                         android:layout_marginTop="@dimen/layout_margin_medium"
                         android:background="@drawable/app_category_border"
                         android:ellipsize="end"
+                        android:foreground="?android:selectableItemBackground"
                         android:maxLines="1"
                         android:textSize="@dimen/text_size_medium"
                         tools:text="App category" />

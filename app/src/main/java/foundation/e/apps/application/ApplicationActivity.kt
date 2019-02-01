@@ -28,6 +28,7 @@ import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnection
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnectionCallback
+import foundation.e.apps.categories.category.CategoryActivity
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Common.toMiB
 import foundation.e.apps.utils.Constants
@@ -180,6 +181,11 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
         // Set the app category
         if (fullData.category.getTitle().isNotEmpty()) {
             app_category.text = fullData.category.getTitle()
+            app_category.setOnClickListener {
+                startActivity(Intent(this, CategoryActivity::class.java).apply {
+                    putExtra(Constants.CATEGORY_KEY, fullData.category)
+                })
+            }
         } else {
             app_category.visibility = View.GONE
         }
