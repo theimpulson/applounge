@@ -121,17 +121,7 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
     private var onComplete: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             unregisterReceivers(context)
-            try {
-                if (!fullData.getLastVersion()!!.apkSHA.isNullOrBlank() &&
-                        fullData.getLastVersion()!!.apkSHA!! ==
-                        getApkFileSha1(applicationInfo.getApkFile(context, fullData.basicData))) {
-                    downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_SUCCESSFUL)
-                    return
-                }
-            } catch (exception: Exception) {
-                exception.printStackTrace()
-            }
-            downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
+            downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_SUCCESSFUL)
         }
     }
 }
