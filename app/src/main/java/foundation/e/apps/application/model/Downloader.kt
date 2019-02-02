@@ -121,7 +121,26 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
     private var onComplete: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             unregisterReceivers(context)
-            downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_SUCCESSFUL)
+            val status = getDownloadStatus()
+            if (status != null && status == DownloadManager.STATUS_SUCCESSFUL) {
+                downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_SUCCESSFUL)
+            } else {
+                downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
+            }
         }
+    }
+
+    private fun getDownloadStatus(): Int? {
+        val query = DownloadManager.Query().apply {
+            setFilterById(downloadId)
+        }
+        val cursor = downloadManager.query(query)
+        if (cursor.moveToNext()) {
+            val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+            val status = cursor.getInt(columnIndex)
+            cursor.close()
+            return status
+        }
+        return null
     }
 }
