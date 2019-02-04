@@ -517,10 +517,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:paddingStart="@dimen/layout_padding_large"
-                    android:paddingTop="@dimen/layout_padding_medium"
-                    android:paddingEnd="@dimen/layout_padding_large"
-                    android:paddingBottom="@dimen/layout_padding_medium">
+                    android:padding="@dimen/layout_padding_large">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -552,10 +549,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:paddingStart="@dimen/layout_padding_large"
-                    android:paddingTop="@dimen/layout_padding_medium"
-                    android:paddingEnd="@dimen/layout_padding_large"
-                    android:paddingBottom="@dimen/layout_padding_medium">
+                    android:padding="@dimen/layout_padding_large">
 
                     <TextView
                         android:layout_width="wrap_content"
