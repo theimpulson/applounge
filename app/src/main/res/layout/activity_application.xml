@@ -114,6 +114,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <TextView
@@ -542,6 +543,13 @@
 
                 </RelativeLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_divider_height"
+                    android:layout_marginStart="@dimen/layout_margin_medium"
+                    android:layout_marginEnd="@dimen/layout_margin_medium"
+                    android:background="@color/colorDivider" />
+
                 <RelativeLayout
                     android:id="@+id/app_trackers_container"
                     android:layout_width="match_parent"
@@ -575,6 +583,13 @@
                 </RelativeLayout>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_divider_height"
+                android:layout_marginStart="@dimen/layout_margin_medium"
+                android:layout_marginEnd="@dimen/layout_margin_medium"
+                android:background="@color/colorDivider" />
 
             <LinearLayout
                 android:layout_width="match_parent"

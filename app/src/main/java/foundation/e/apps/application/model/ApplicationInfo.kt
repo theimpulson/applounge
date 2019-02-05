@@ -7,16 +7,28 @@ import android.os.Environment
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.utils.Common
 import java.io.File
+import java.util.regex.Pattern
 
 class ApplicationInfo(private val packageName: String) {
 
     fun isLastVersionInstalled(context: Context, lastVersionNumber: String): Boolean {
+        val packageInfo = getPackageInfo(context) ?: return false
+        if (lastVersionNumber.isBlank() ||
+                !lastVersionNumber.contains("(") ||
+                !lastVersionNumber.contains(")")) {
+            return true
+        }
         if (!Common.isSystemApp(context.packageManager, packageName)) {
-            val packageInfo = getPackageInfo(context) ?: return false
-            if (lastVersionNumber.isEmpty()) {
-                return true
+            try {
+                val pattern = Pattern.compile("[(]\\d+[)]")
+                val matcher = pattern.matcher(lastVersionNumber)
+                matcher.find()
+                val updateVersionCode = matcher.group()
+                        .replace("(", "")
+                        .replace(")", "")
+                return (updateVersionCode.toInt() <= packageInfo.versionCode)
+            } catch (exception: Exception) {
             }
-            return lastVersionNumber.contains("(${packageInfo.versionCode})")
         }
         return true
     }
