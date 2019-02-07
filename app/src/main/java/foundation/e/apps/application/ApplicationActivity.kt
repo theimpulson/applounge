@@ -450,16 +450,12 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
             app_install.text = resources.getString(state.installButtonTextId)
             when (state) {
                 State.INSTALLED -> {
-                    app_install.setBackgroundResource(R.drawable.app_install_border)
-                    app_install.setTextColor(resources.getColor(android.R.color.primary_text_dark))
                     app_install.isEnabled =
                             Common.appHasLaunchActivity(this, application.packageName)
                     app_size.visibility = View.VISIBLE
                     app_download_container.visibility = View.GONE
                 }
                 State.DOWNLOADING -> {
-                    app_install.setBackgroundResource(R.drawable.app_install_border_simple)
-                    app_install.setTextColor(resources.getColor(android.R.color.primary_text_light))
                     app_install.isEnabled = true
                     app_size.visibility = View.GONE
                     app_download_mb.text = getString(R.string.state_installing)
@@ -468,15 +464,11 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
                     app_download_container.visibility = View.VISIBLE
                 }
                 State.INSTALLING -> {
-                    app_install.setBackgroundResource(R.drawable.app_install_border)
-                    app_install.setTextColor(resources.getColor(android.R.color.primary_text_dark))
                     app_install.isEnabled = false
                     app_size.visibility = View.VISIBLE
                     app_download_container.visibility = View.GONE
                 }
                 else -> {
-                    app_install.setBackgroundResource(R.drawable.app_install_border)
-                    app_install.setTextColor(resources.getColor(android.R.color.primary_text_dark))
                     app_install.isEnabled = true
                     app_size.visibility = View.VISIBLE
                     app_download_container.visibility = View.GONE

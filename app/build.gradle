@@ -27,7 +27,7 @@ android {
 
 dependencies {
     def lifecycle_version = "1.1.1"
-    def work_version = "1.0.0-beta01"
+    def work_version = "1.0.0-beta04"
     implementation "android.arch.work:work-runtime:$work_version"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -45,4 +45,6 @@ dependencies {
     implementation files('libs/jackson-annotations-2.9.7.jar')
     implementation files('libs/jackson-core-2.9.7.jar')
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.11'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.60'
+    implementation 'org.bouncycastle:bcpg-jdk15on:1.60'
 }

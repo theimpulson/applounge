@@ -10,14 +10,11 @@ import foundation.e.apps.utils.Constants
 import android.content.Intent
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
-import org.apache.commons.codec.binary.Hex
-import java.io.File
-import java.io.FileInputStream
-import java.lang.Exception
-import java.security.MessageDigest
+import android.os.AsyncTask
 
 class Downloader(private val applicationInfo: ApplicationInfo, private val fullData: FullData,
-                 private val downloaderInterface: DownloaderInterface) {
+                 private val downloaderInterface: DownloaderInterface) :
+        IntegrityVerificationCallback {
     private lateinit var downloadManager: DownloadManager
     private lateinit var request: DownloadManager.Request
     private var downloadId: Long = 0
@@ -103,30 +100,27 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
         downloadManager.remove(downloadId)
     }
 
-    @Throws(Exception::class)
-    private fun getApkFileSha1(file: File): String {
-        val messageDigest = MessageDigest.getInstance("SHA-1")
-        val fileInputStream = FileInputStream(file)
-        var length = 0
-        val buffer = ByteArray(8192)
-        while (length != -1) {
-            length = fileInputStream.read(buffer)
-            if (length > 0) {
-                messageDigest.update(buffer, 0, length)
-            }
-        }
-        return String(Hex.encodeHex(messageDigest.digest()))
-    }
-
     private var onComplete: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             unregisterReceivers(context)
             val status = getDownloadStatus()
             if (status != null && status == DownloadManager.STATUS_SUCCESSFUL) {
-                downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_SUCCESSFUL)
+                IntegrityVerificationTask(
+                        applicationInfo,
+                        fullData,
+                        this@Downloader)
+                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
             } else {
                 downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
             }
+        }
+    }
+
+    override fun onIntegrityVerified(context: Context, verificationSuccessful: Boolean) {
+        if (verificationSuccessful) {
+            downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_SUCCESSFUL)
+        } else {
+            downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
         }
     }
 
