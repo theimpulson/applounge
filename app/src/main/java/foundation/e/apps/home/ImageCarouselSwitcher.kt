@@ -5,7 +5,7 @@ import android.support.v4.view.ViewPager
 
 class ImageCarouselSwitcher(private var imagesCount: Int, private val imageCarousel: ViewPager) {
     private val handler = Handler()
-    private val switchImageInterval = 4000L
+    private val switchImageInterval = 2000L
 
     fun start() {
         handler.postDelayed(this::switchImage, switchImageInterval)

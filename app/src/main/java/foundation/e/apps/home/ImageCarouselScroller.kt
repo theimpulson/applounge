@@ -5,7 +5,7 @@ import android.widget.Scroller
 
 class ImageCarouselScroller(context: Context) : Scroller(context) {
 
-    private val scrollDuration = 2000
+    private val scrollDuration = 1000
 
     override fun startScroll(startX: Int, startY: Int, dx: Int, dy: Int, duration: Int) {
         super.startScroll(startX, startY, dx, dy, scrollDuration)
