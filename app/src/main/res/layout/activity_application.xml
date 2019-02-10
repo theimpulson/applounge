@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <ScrollView
+    <foundation.e.apps.utils.CustomNestedScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -449,6 +449,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_margin_large"
+                    android:nestedScrollingEnabled="false"
                     android:scrollbars="none">
 
                     <LinearLayout
@@ -773,7 +774,7 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </foundation.e.apps.utils.CustomNestedScrollView>
 
     <View
         android:layout_width="match_parent"
