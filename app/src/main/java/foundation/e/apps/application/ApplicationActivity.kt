@@ -24,6 +24,7 @@ import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.ApplicationStateListener
 import foundation.e.apps.application.model.Downloader
 import foundation.e.apps.application.model.State
+import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnection
@@ -46,7 +47,8 @@ class ApplicationActivity :
         AppCompatActivity(),
         ApplicationStateListener,
         ApplicationManagerServiceConnectionCallback,
-        Downloader.DownloadProgressCallback {
+        Downloader.DownloadProgressCallback,
+        BasicData.IconLoaderCallback {
     private lateinit var applicationPackageName: String
     private lateinit var application: Application
     private val applicationManagerServiceConnection =
@@ -165,7 +167,7 @@ class ApplicationActivity :
         val fullData = application.fullData!!
 
         // Load the app icon
-        application.loadIcon(app_icon)
+        application.loadIcon(this)
 
         // Set the app title
         if (basicData.name.isNotEmpty()) {
@@ -401,6 +403,12 @@ class ApplicationActivity :
         // Handle clicks on app install button
         app_install.setOnClickListener {
             onInstallButtonClick(fullData)
+        }
+    }
+
+    override fun onIconLoaded(application: Application, bitmap: Bitmap) {
+        if (application == this.application) {
+            app_icon.setImageBitmap(bitmap)
         }
     }
 

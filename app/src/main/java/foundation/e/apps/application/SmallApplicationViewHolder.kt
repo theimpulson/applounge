@@ -2,6 +2,7 @@ package foundation.e.apps.application
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.graphics.Bitmap
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -13,6 +14,7 @@ import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.ApplicationStateListener
 import foundation.e.apps.application.model.Downloader
 import foundation.e.apps.application.model.State
+import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.viewmodel.ApplicationViewModel
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Common.toMiB
@@ -24,7 +26,8 @@ import kotlinx.android.synthetic.main.install_button_layout.view.*
 class SmallApplicationViewHolder(private val activity: Activity, private val view: View) :
         RecyclerView.ViewHolder(view),
         ApplicationStateListener,
-        Downloader.DownloadProgressCallback {
+        Downloader.DownloadProgressCallback,
+        BasicData.IconLoaderCallback {
 
     private val icon: ImageView = view.app_icon
     private val title: TextView = view.app_title
@@ -52,13 +55,19 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
     }
 
     fun createApplicationView(app: Application) {
-        icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
-        app.loadIcon(icon)
         this.application?.removeListener(this)
         this.application = app
-        app.addListener(this)
-        title.text = app.basicData!!.name
-        stateChanged(app.state)
+        icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+        application!!.loadIcon(this)
+        application!!.addListener(this)
+        title.text = application!!.basicData!!.name
+        stateChanged(application!!.state)
+    }
+
+    override fun onIconLoaded(application: Application, bitmap: Bitmap) {
+        if (this.application != null && application == this.application) {
+            icon.setImageBitmap(bitmap)
+        }
     }
 
     override fun stateChanged(state: State) {

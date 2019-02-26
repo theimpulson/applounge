@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import foundation.e.apps.application.model.Application
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.BASE_URL
 import foundation.e.apps.utils.Error
@@ -49,7 +50,7 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
         }
     }
 
-    fun loadIconAsync(getter: (Bitmap) -> Unit) {
+    fun loadIconAsync(application: Application, iconLoaderCallback: IconLoaderCallback) {
         if (icon == null) {
             var error: Error? = null
             Execute({
@@ -57,12 +58,12 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
             }, {
                 if (error == null) {
                     icon?.let {
-                        getter.invoke(it)
+                        iconLoaderCallback.onIconLoaded(application, it)
                     }
                 }
             })
         } else {
-            getter.invoke(icon!!)
+            iconLoaderCallback.onIconLoaded(application, icon!!)
         }
     }
 
@@ -96,4 +97,8 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
 
     class Ratings(@param:JsonProperty("usageQualityScore") val rating: Float,
                   @param:JsonProperty("privacyScore") val privacyRating: Float)
+
+    interface IconLoaderCallback {
+        fun onIconLoaded(application: Application, bitmap: Bitmap)
+    }
 }

@@ -212,10 +212,8 @@ class Application(val packageName: String, private val applicationManager: Appli
         return error
     }
 
-    fun loadIcon(view: ImageView) {
-        basicData?.loadIconAsync {
-            view.setImageBitmap(it)
-        }
+    fun loadIcon(iconLoaderCallback: BasicData.IconLoaderCallback) {
+        basicData?.loadIconAsync(this, iconLoaderCallback)
     }
 
     fun update(basicData: BasicData, context: Context) {
