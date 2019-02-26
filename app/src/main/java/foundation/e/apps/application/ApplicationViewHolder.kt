@@ -22,7 +22,10 @@ import foundation.e.apps.utils.Execute
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import kotlinx.android.synthetic.main.install_button_layout.view.*
 
-class ApplicationViewHolder(private val activity: Activity, private val view: View) : RecyclerView.ViewHolder(view), ApplicationStateListener {
+class ApplicationViewHolder(private val activity: Activity, private val view: View) :
+        RecyclerView.ViewHolder(view),
+        ApplicationStateListener,
+        Downloader.DownloadProgressCallback {
 
     private val icon: ImageView = view.app_icon
     private val title: TextView = view.app_title
@@ -33,6 +36,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
     private val installButton: Button = view.app_install
     private var application: Application? = null
     private val applicationViewModel = ApplicationViewModel()
+    private var downloader: Downloader? = null
 
     init {
         view.setOnClickListener {
@@ -92,16 +96,24 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         })
     }
 
-    @SuppressLint("SetTextI18n")
     override fun downloading(downloader: Downloader) {
-        downloader.addListener { count, total ->
-            installButton.text = ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
-        }
+        this.downloader = downloader
+        this.downloader!!.addListener(this)
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun notifyDownloadProgress(count: Int, total: Int) {
+        installButton.text = ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
     }
 
     override fun anErrorHasOccurred(error: Error) {
         Snackbar.make(activity.findViewById(R.id.container),
                 activity.getString(error.description),
                 Snackbar.LENGTH_LONG).show()
+    }
+
+    fun onViewRecycled() {
+        downloader?.removeListener(this)
+        downloader = null
     }
 }

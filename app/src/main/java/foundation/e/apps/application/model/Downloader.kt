@@ -19,18 +19,22 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
     private lateinit var request: DownloadManager.Request
     private var downloadId: Long = 0
 
-    private val listeners = ArrayList<(Int, Int) -> Unit>()
+    private val listeners = ArrayList<DownloadProgressCallback>()
     private var totalBytes = 0
     private var downloadedBytes = 0
 
     private val notifier = ThreadedListeners {
         listeners.forEach {
-            it.invoke(downloadedBytes, totalBytes)
+            it.notifyDownloadProgress(downloadedBytes, totalBytes)
         }
     }
 
-    fun addListener(listener: (Int, Int) -> Unit) {
+    fun addListener(listener: DownloadProgressCallback) {
         listeners.add(listener)
+    }
+
+    fun removeListener(listener: DownloadProgressCallback) {
+        listeners.remove(listener)
     }
 
     fun download(context: Context) {
@@ -136,5 +140,9 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
             return status
         }
         return null
+    }
+
+    interface DownloadProgressCallback {
+        fun notifyDownloadProgress(count: Int, total: Int)
     }
 }

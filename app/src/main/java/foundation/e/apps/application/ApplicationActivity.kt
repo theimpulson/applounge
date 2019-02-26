@@ -42,8 +42,11 @@ import kotlinx.android.synthetic.main.activity_application.*
 import kotlinx.android.synthetic.main.install_button_layout.*
 import kotlin.math.roundToInt
 
-class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
-        ApplicationManagerServiceConnectionCallback {
+class ApplicationActivity :
+        AppCompatActivity(),
+        ApplicationStateListener,
+        ApplicationManagerServiceConnectionCallback,
+        Downloader.DownloadProgressCallback {
     private lateinit var applicationPackageName: String
     private lateinit var application: Application
     private val applicationManagerServiceConnection =
@@ -428,15 +431,17 @@ class ApplicationActivity : AppCompatActivity(), ApplicationStateListener,
         application.buttonClicked(this, this)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun downloading(downloader: Downloader) {
-        downloader.addListener { count, total ->
-            app_download_mb.text = "${toMiB(count)}/${toMiB(total)} MiB"
-            app_download_percentage.text =
-                    ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
-            app_download_progress.max = total
-            app_download_progress.progress = count
-        }
+        downloader.addListener(this)
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun notifyDownloadProgress(count: Int, total: Int) {
+        app_download_mb.text = "${toMiB(count)}/${toMiB(total)} MiB"
+        app_download_percentage.text =
+                ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
+        app_download_progress.max = total
+        app_download_progress.progress = count
     }
 
     override fun anErrorHasOccurred(error: Error) {

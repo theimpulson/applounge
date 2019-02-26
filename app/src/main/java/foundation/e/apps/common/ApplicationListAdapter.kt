@@ -20,4 +20,8 @@ class ApplicationListAdapter(private val activity: Activity, private val applica
     }
 
     override fun getItemCount() = applicationList.size
+
+    override fun onViewRecycled(holder: ApplicationViewHolder) {
+        holder.onViewRecycled()
+    }
 }
