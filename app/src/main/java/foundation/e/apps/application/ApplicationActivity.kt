@@ -339,62 +339,70 @@ class ApplicationActivity :
 
         // Handle clicks on app permissions
         app_permissions_container.setOnClickListener {
+            val layout = layoutInflater.inflate(R.layout.custom_alert_dialog_layout, null)
+            val message = layout.findViewById<TextView>(R.id.message)
             val alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setTitle(R.string.app_permissions_title)
             if (fullData.getLastVersion() != null &&
                     fullData.getLastVersion()!!.exodusPermissions != null) {
                 if (fullData.getLastVersion()!!.exodusPermissions!!.isNotEmpty()) {
-                    var message = ""
+                    var rawMessage = ""
                     var index = 0
                     fullData.getLastVersion()!!.exodusPermissions!!.forEach { permission ->
-                        message += permission
+                        rawMessage += permission
                         if (index != fullData.getLastVersion()!!.exodusPermissions!!.size - 1) {
-                            message += "\n"
+                            rawMessage += "\n"
                         }
                         index++
                     }
-                    alertDialog.setMessage(message)
+                    message.text = rawMessage
                 } else {
-                    alertDialog.setMessage(getString(R.string.no_permissions))
+                    message.text = getString(R.string.no_permissions)
                 }
             } else {
-                alertDialog.setMessage(getString(R.string.not_available_full))
+                message.text = getString(R.string.not_available_full)
             }
+            alertDialog.setView(layout)
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
             { _, _ ->
                 alertDialog.dismiss()
             }
             alertDialog.show()
+            layout.findViewById<TextView>(R.id.privacy_message).movementMethod = LinkMovementMethod.getInstance()
         }
 
         // Handle clicks on app trackers
         app_trackers_container.setOnClickListener {
+            val layout = layoutInflater.inflate(R.layout.custom_alert_dialog_layout, null)
+            val message = layout.findViewById<TextView>(R.id.message)
             val alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setTitle(R.string.app_trackers_title)
             if (fullData.getLastVersion() != null &&
                     fullData.getLastVersion()!!.exodusTrackers != null) {
                 if (fullData.getLastVersion()!!.exodusTrackers!!.isNotEmpty()) {
-                    var message = ""
+                    var rawMessage = ""
                     var index = 0
                     fullData.getLastVersion()!!.exodusTrackers!!.forEach { tracker ->
-                        message += tracker
+                        rawMessage += tracker
                         if (index != fullData.getLastVersion()!!.exodusTrackers!!.size - 1) {
-                            message += "\n"
+                            rawMessage += "\n"
                         }
                         index++
                     }
-                    alertDialog.setMessage(message)
+                    message.text = rawMessage
                 } else {
-                    alertDialog.setMessage(getString(R.string.no_trackers))
+                    message.text = getString(R.string.no_trackers)
                 }
             } else {
-                alertDialog.setMessage(getString(R.string.not_available_full))
+                message.text = getString(R.string.not_available_full)
             }
+            alertDialog.setView(layout)
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
             { _, _ ->
                 alertDialog.dismiss()
             }
             alertDialog.show()
+            layout.findViewById<TextView>(R.id.privacy_message).movementMethod = LinkMovementMethod.getInstance()
         }
 
         application.addListener(this)
