@@ -26,7 +26,8 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
             @param:JsonProperty("icon_image_path") private val iconUri: String,
             @param:JsonProperty("other_images_path") val imagesUri: Array<String>,
             @param:JsonProperty("exodus_score") val privacyRating: Float?,
-            @param:JsonProperty("ratings") val ratings: Ratings) {
+            @param:JsonProperty("ratings") val ratings: Ratings,
+            @param:JsonProperty("category") val category: String) {
 
     private var icon: Bitmap? = null
     private var images: List<Bitmap>? = null

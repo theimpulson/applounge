@@ -78,7 +78,8 @@ class HomeRequest {
                                 (data["ratings"] as LinkedHashMap<String, Int>)
                                         ["usageQualityScore"]!!.toFloat(),
                                 (data["ratings"] as LinkedHashMap<String, Int>)
-                                        ["privacyScore"]!!.toFloat()))
+                                        ["privacyScore"]!!.toFloat()),
+                        data["category"] as String)
                 appsData.add(appData)
             }
             if (key == "banner_apps") {

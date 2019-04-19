@@ -18,7 +18,7 @@ constructor(
         @JsonProperty("author") author: String,
         @JsonProperty("icon_image_path") iconUri: String,
         @JsonProperty("other_images_path") imagesUri: Array<String>,
-        @JsonProperty("category") category_id: String,
+        @JsonProperty("category") categoryId: String,
         @JsonProperty("created_on") val createdOn: String,
         @JsonProperty("source") val source: String,
         @JsonProperty("description") val description: String,
@@ -29,11 +29,11 @@ constructor(
     var basicData = if (ratings == null) {
         BasicData(packageName, id, name, -1f, lastModified, lastVersion,
                 latestVersionNumber, latestDownloadableUpdate, author, iconUri, imagesUri,
-                null, BasicData.Ratings(-1f, -1f))
+                null, BasicData.Ratings(-1f, -1f), categoryId)
     } else {
         BasicData(packageName, id, name, -1f, lastModified, lastVersion,
                 latestVersionNumber, latestDownloadableUpdate, author, iconUri, imagesUri,
-                ratings.privacyRating, ratings)
+                ratings.privacyRating, ratings, categoryId)
     }
 
     private val versions = HashMap<String, Version>()
@@ -51,7 +51,7 @@ constructor(
     val category: Category
 
     init {
-        this.category = Category(category_id)
+        this.category = Category(categoryId)
     }
 
     @Suppress("unused")
