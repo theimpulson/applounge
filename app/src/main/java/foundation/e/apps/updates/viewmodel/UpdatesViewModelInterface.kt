@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!--
+/*
     Copyright (C) 2019  e Foundation
 
     This program is free software: you can redistribute it and/or modify
@@ -15,16 +13,23 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-    -->
+ */
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+package foundation.e.apps.updates.viewmodel
 
-    <item
-        android:id="@+id/action_share"
-        android:icon="@drawable/ic_action_share"
-        android:orderInCategory="1"
-        android:title="@string/action_share"
-        app:showAsAction="ifRoom" />
+import android.arch.lifecycle.MutableLiveData
+import android.content.Context
+import foundation.e.apps.application.model.Application
+import foundation.e.apps.applicationmanager.ApplicationManager
+import foundation.e.apps.utils.Error
 
-</menu>
+interface UpdatesViewModelInterface {
+
+    fun initialise(applicationManager: ApplicationManager)
+
+    fun getApplications(): MutableLiveData<ArrayList<Application>>
+
+    fun getScreenError(): MutableLiveData<Error>
+
+    fun loadApplicationList(context: Context)
+}
