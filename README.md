@@ -1,6 +1,6 @@
 # Apps
 
-Quickly and easily install apps onto your Android device!
+Quickly and easily install Android apps onto your device!
 
 To help you protect your privacy, every app has been analysed to provide you with a list of permissions and trackers used by the app.
 
