@@ -53,13 +53,13 @@ constructor(
                 ratings.privacyRating, ratings, categoryId)
     }
 
-    private val versions = HashMap<String, Version>()
+    private var latestVersion: Version? = null;
     val packageName: String
         get() = basicData.packageName
 
     fun getLastVersion(): Version? {
         return if (basicData.latestDownloadableUpdate != "-1") {
-            versions[basicData.latestDownloadableUpdate]
+            latestVersion
         } else {
             null
         }
@@ -74,9 +74,9 @@ constructor(
     @Suppress("unused")
     @JsonAnySetter
     fun jsonCreator(name: String, value: Any) {
-        if (name.startsWith("update_")) {
+        if (name == basicData.latestDownloadableUpdate) {
             val result = value as LinkedHashMap<*, *>
-            versions[name] = Version(result["downloaded_flag"] as String?,
+            latestVersion = Version(result["downloaded_flag"] as String?,
                     result["eelo_download_link"] as String,
                     result["min_android"] as String,
                     result["apk_file_sha1"] as String?,
