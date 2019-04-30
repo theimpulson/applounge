@@ -15,32 +15,26 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.updates.model
+package foundation.e.apps.search.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
-import android.os.AsyncTask
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
-import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Error
 
-class UpdatesModel : UpdatesModelInterface {
-    val applicationList = MutableLiveData<ArrayList<Application>>()
-    var screenError = MutableLiveData<Error>()
+interface SearchViewModelInterface {
+    fun initialise(applicationManager: ApplicationManager)
 
-    var applicationManager: ApplicationManager? = null
+    fun getSuggestions(): MutableLiveData<ArrayList<String>>
 
-    override fun loadApplicationList(context: Context) {
-        if (Common.isNetworkAvailable(context)) {
-            OutdatedApplicationsFileReader(applicationManager!!, this)
-                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
-        } else {
-            screenError.value = Error.NO_INTERNET
-        }
-    }
+    fun getApplications(): MutableLiveData<ArrayList<Application>>
 
-    override fun onAppsFound(applications: ArrayList<Application>) {
-        applicationList.value = applications
-    }
+    fun getScreenError(): MutableLiveData<Error>
+
+    fun onSearchQueryChanged(context: Context, searchQuery: String)
+
+    fun onSearchQuerySubmitted(context: Context, searchQuery: String)
+
+    fun loadMore(context: Context)
 }
