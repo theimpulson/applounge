@@ -39,14 +39,19 @@ class SearchModel : SearchModelInterface {
     }
 
     override fun searchSuggestions(context: Context, searchQuery: String) {
+        this.searchQuery = searchQuery
         if (Common.isNetworkAvailable(context)) {
             SearchSuggestionsTask(searchQuery, applicationManager!!, this)
                     .executeOnExecutor(Common.EXECUTOR, context)
         }
     }
 
-    override fun onSearchSuggestionsRetrieved(suggestionsList: ArrayList<String>) {
-        this.suggestionList.value = suggestionsList
+    override fun onSearchSuggestionsRetrieved(
+            searchTerm: String,
+            suggestionsList: ArrayList<String>) {
+        if (searchTerm == searchQuery) {
+            this.suggestionList.value = suggestionsList
+        }
     }
 
     override fun search(context: Context, searchQuery: String) {

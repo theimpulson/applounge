@@ -27,7 +27,7 @@ interface SearchModelInterface {
 
     fun searchSuggestions(context: Context, searchQuery: String)
 
-    fun onSearchSuggestionsRetrieved(suggestionsList: ArrayList<String>)
+    fun onSearchSuggestionsRetrieved(searchTerm: String, suggestionsList: ArrayList<String>)
 
     fun search(context: Context, searchQuery: String)
 

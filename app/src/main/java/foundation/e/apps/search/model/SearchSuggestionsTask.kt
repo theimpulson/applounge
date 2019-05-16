@@ -48,6 +48,6 @@ class SearchSuggestionsTask(private val searchQuery: String,
     }
 
     override fun onPostExecute(result: ArrayList<String>) {
-        callback.onSearchSuggestionsRetrieved(result)
+        callback.onSearchSuggestionsRetrieved(searchQuery, result)
     }
 }
