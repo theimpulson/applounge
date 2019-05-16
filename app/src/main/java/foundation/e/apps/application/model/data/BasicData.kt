@@ -20,6 +20,7 @@ package foundation.e.apps.application.model.data
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.utils.Constants
@@ -30,7 +31,7 @@ import foundation.e.apps.utils.ImagesLoader
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
-class BasicData @JsonCreator
+class BasicData @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
 constructor(@param:JsonProperty("package_name") val packageName: String,
             @param:JsonProperty("_id") val id: String,
             @param:JsonProperty("name") val name: String,

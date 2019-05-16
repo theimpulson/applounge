@@ -20,6 +20,7 @@ package foundation.e.apps.api
 import android.content.Context
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import foundation.e.apps.application.model.Application
@@ -50,7 +51,7 @@ class HomeRequest {
         }
     }
 
-    class HomeResult @JsonCreator
+    class HomeResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
     constructor(@JsonProperty("success") private val success: Boolean,
                 @JsonProperty("home") private val home: SubHomeResult) {
 
@@ -68,7 +69,7 @@ class HomeRequest {
 
     }
 
-    class SubHomeResult @JsonCreator constructor() {
+    class SubHomeResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true) constructor() {
         val apps = LinkedHashMap<Category, ArrayList<BasicData>>()
         lateinit var bannerApps: Array<BasicData>
 

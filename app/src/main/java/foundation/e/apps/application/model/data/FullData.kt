@@ -19,11 +19,12 @@ package foundation.e.apps.application.model.data
 
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.application.model.Version
 import foundation.e.apps.categories.model.Category
 
-class FullData @JsonCreator
+class FullData @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
 constructor(
         @JsonProperty("package_name") packageName: String,
         @JsonProperty("_id") id: String,

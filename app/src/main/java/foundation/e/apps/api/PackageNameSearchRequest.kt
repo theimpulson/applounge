@@ -18,6 +18,7 @@
 package foundation.e.apps.api
 
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import foundation.e.apps.application.model.data.BasicData
@@ -44,7 +45,7 @@ class PackageNameSearchRequest(private val packageName: String) {
         }
     }
 
-    class SearchResult @JsonCreator
+    class SearchResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
     constructor(@JsonProperty("success") success: Boolean,
                 @param:JsonProperty("pages") val pages: Int,
                 @param:JsonProperty("numberOfResults") val resultsNumber: Int,

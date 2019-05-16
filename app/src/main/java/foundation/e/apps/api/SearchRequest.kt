@@ -19,6 +19,7 @@ package foundation.e.apps.api
 
 import android.content.Context
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import foundation.e.apps.application.model.Application
@@ -49,7 +50,7 @@ class SearchRequest(private val keyword: String, private val page: Int, private 
         }
     }
 
-    class SearchResult @JsonCreator
+    class SearchResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
     constructor(@JsonProperty("success") success: Boolean,
                 @param:JsonProperty("pages") val pages: Int,
                 @param:JsonProperty("numberOfResults") val resultsNumber: Int,

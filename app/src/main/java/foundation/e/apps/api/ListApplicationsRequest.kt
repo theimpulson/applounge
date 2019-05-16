@@ -19,6 +19,7 @@ package foundation.e.apps.api
 
 import android.content.Context
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import foundation.e.apps.application.model.Application
@@ -48,7 +49,7 @@ class ListApplicationsRequest(private val category: String, private val page: In
         }
     }
 
-    class ListApplicationsResult @JsonCreator
+    class ListApplicationsResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
     constructor(@JsonProperty("success") success: Boolean,
                 @JsonProperty("pages") val pages: Int,
                 @JsonProperty("apps") private val apps: Array<BasicData>) {

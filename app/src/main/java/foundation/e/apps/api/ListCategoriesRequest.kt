@@ -18,6 +18,7 @@
 package foundation.e.apps.api
 
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import foundation.e.apps.utils.Common
@@ -43,7 +44,7 @@ class ListCategoriesRequest {
         }
     }
 
-    class ListCategoriesResult @JsonCreator
+    class ListCategoriesResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
     constructor(@JsonProperty("success") success: Boolean,
                 @JsonProperty("apps") val appsCategories: Array<String>,
                 @JsonProperty("games") val gamesCategories: Array<String>)
