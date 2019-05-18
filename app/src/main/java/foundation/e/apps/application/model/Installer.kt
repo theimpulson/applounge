@@ -17,19 +17,41 @@
 
 package foundation.e.apps.application.model
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.app.PendingIntent
+import android.content.*
+import android.content.pm.PackageInstaller
 import android.net.Uri
 import android.support.v4.content.FileProvider
+import android.util.Log
+import foundation.e.apps.utils.Common
 import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 
 class Installer(private val packageName: String,
                 private val apk: File,
                 private val callback: InstallerInterface) {
+    private val TAG = "Installer"
 
     fun install(context: Context) {
+        try {
+            Log.i(TAG, "Installing $packageName")
+            if (Common.isSystemApp(context.packageManager, context.packageName)) {
+                val inputStream = File(apk.absolutePath).inputStream()
+                Log.i(TAG, "Opened input stream to $packageName APK")
+                installApplication(context, inputStream)
+                Log.i(TAG, "Installing APK")
+            } else {
+                requestApplicationInstall(context)
+                Log.i(TAG, "Requested APK installation")
+            }
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
+    }
+
+    private fun requestApplicationInstall(context: Context) {
         val uri = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             FileProvider.getUriForFile(context, context.packageName + ".provider", apk)
         } else {
@@ -44,9 +66,60 @@ class Installer(private val packageName: String,
         registerReceiver(context)
     }
 
+    private fun installApplication(context: Context, inputStream: InputStream): Boolean {
+        val packageInstaller = context.packageManager.packageInstaller
+        val sessionParams =
+                PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
+        val sessionId = packageInstaller.createSession(sessionParams)
+        val session = packageInstaller.openSession(sessionId)
+
+        var outputStream: OutputStream? = null
+        val buffer = ByteArray(65536)
+
+        try {
+            outputStream = session.openWrite("app", 0, -1)
+            var count: Int
+            count = inputStream.read(buffer)
+            while (count >= 0) {
+                outputStream.write(buffer, 0, count)
+                count = inputStream.read(buffer)
+            }
+            session.fsync(outputStream)
+        } catch (exception: IOException) {
+            exception.printStackTrace()
+            return false
+        } finally {
+            try {
+                inputStream.close()
+            } catch (exception: IOException) {
+                exception.printStackTrace()
+                return false
+            }
+            try {
+                outputStream?.close()
+            } catch (exception: IOException) {
+                exception.printStackTrace()
+                return false
+            }
+        }
+
+        val intentSender = createIntentSender(context, sessionId)
+        session.commit(intentSender)
+        Log.i(TAG, "Committed $packageName install session")
+        return true
+    }
+
+    private fun createIntentSender(context: Context, sessionId: Int): IntentSender {
+        registerReceiver(context)
+        val intent = Intent(Intent.ACTION_PACKAGE_ADDED)
+        val pendingIntent = PendingIntent.getBroadcast(context, sessionId, intent, 0)
+        return pendingIntent.intentSender
+    }
+
     private fun registerReceiver(context: Context) {
         try {
             context.unregisterReceiver(receiver)
+            Log.i(TAG, "Unregistered old broadcast receiver")
         } catch (exception: Exception) {
             exception.printStackTrace()
         }
@@ -54,12 +127,14 @@ class Installer(private val packageName: String,
             addAction(Intent.ACTION_PACKAGE_ADDED)
             addDataScheme("package")
         })
+        Log.i(TAG, "Registered new broadcast receiver")
     }
 
     private var receiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context, p1: Intent) {
             if (p1.action == Intent.ACTION_PACKAGE_ADDED &&
                     (p1.data.encodedSchemeSpecificPart == packageName)) {
+                Log.i(TAG, "Broadcast received")
                 callback.onInstallationComplete(p0)
             }
         }
