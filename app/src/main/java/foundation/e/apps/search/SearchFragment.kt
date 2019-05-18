@@ -123,9 +123,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
         // Bind search view suggestions adapter to search suggestions list in view model
         searchViewModel.getSuggestions().observe(this, Observer {
-            if (it != null) {
-                populateSuggestionsAdapter(it)
-            }
+            populateSuggestionsAdapter(it)
         })
 
         // Bind recycler view adapter to search results list in view model
@@ -204,10 +202,12 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         return true
     }
 
-    private fun populateSuggestionsAdapter(suggestions: ArrayList<String>) {
+    private fun populateSuggestionsAdapter(suggestions: ArrayList<String>?) {
         val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SUGGESTION_KEY))
-        for (i in 0 until suggestions.size) {
-            cursor.addRow(arrayOf(i, suggestions[i]))
+        if (suggestions != null) {
+            for (i in 0 until suggestions.size) {
+                cursor.addRow(arrayOf(i, suggestions[i]))
+            }
         }
         searchView.suggestionsAdapter.changeCursor(cursor)
     }

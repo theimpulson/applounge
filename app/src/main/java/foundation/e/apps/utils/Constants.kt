@@ -28,6 +28,7 @@ object Constants {
     const val REQUEST_METHOD = "GET"
 
     // Search
+    const val MIN_SEARCH_TERM_LENGTH = 3;
     const val RESULTS_PER_PAGE = 20
     const val SUGGESTION_KEY = "suggestion"
     const val SUGGESTIONS_RESULTS = 5

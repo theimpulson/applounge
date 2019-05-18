@@ -23,6 +23,7 @@ import android.os.AsyncTask
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
+import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
 
 class SearchModel : SearchModelInterface {
@@ -40,9 +41,13 @@ class SearchModel : SearchModelInterface {
 
     override fun searchSuggestions(context: Context, searchQuery: String) {
         this.searchQuery = searchQuery
-        if (Common.isNetworkAvailable(context)) {
-            SearchSuggestionsTask(searchQuery, applicationManager!!, this)
-                    .executeOnExecutor(Common.EXECUTOR, context)
+        if (searchQuery.length >= Constants.MIN_SEARCH_TERM_LENGTH) {
+            if (Common.isNetworkAvailable(context)) {
+                SearchSuggestionsTask(searchQuery, applicationManager!!, this)
+                        .executeOnExecutor(Common.EXECUTOR, context)
+            }
+        } else {
+            suggestionList.value = null
         }
     }
 
