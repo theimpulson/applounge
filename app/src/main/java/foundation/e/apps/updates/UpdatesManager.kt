@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit
 class UpdatesManager(applicationContext: Context) {
     private val TAG = "UpdatesManager"
     private var automaticUpdateInterval: Int
+    private var updateOnUnmeteredNetworkOnly: Boolean
 
     init {
         val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -37,11 +38,18 @@ class UpdatesManager(applicationContext: Context) {
                         applicationContext.getString(R.string.pref_update_interval_key),
                         applicationContext.getString(R.string.preference_update_interval_default))
                         .toInt()
+        updateOnUnmeteredNetworkOnly =
+                preferences.getBoolean(applicationContext.getString(
+                        R.string.pref_update_wifi_only_key), true)
     }
 
     private fun getWorkerConstraints() = Constraints.Builder().apply {
         setRequiresBatteryNotLow(true)
-        setRequiredNetworkType(NetworkType.CONNECTED)
+        if (updateOnUnmeteredNetworkOnly) {
+            setRequiredNetworkType(NetworkType.UNMETERED)
+        } else {
+            setRequiredNetworkType(NetworkType.CONNECTED)
+        }
     }.build()
 
     private fun getPeriodicWorkRequest() = PeriodicWorkRequest.Builder(
