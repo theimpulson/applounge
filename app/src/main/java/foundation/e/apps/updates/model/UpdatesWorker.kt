@@ -41,6 +41,7 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
     private val blocker = Object()
     private var notifyAvailable = true
     private var installAutomatically = true
+    private var wifiOnly = false
 
     override fun doWork(): Result {
         Log.i(TAG, "Checking for app updates")
@@ -59,6 +60,9 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
         installAutomatically =
                 preferences.getBoolean(applicationContext.getString(
                         R.string.pref_update_install_automatically_key), true)
+        wifiOnly =
+                preferences.getBoolean(applicationContext.getString(
+                        R.string.pref_update_wifi_only_key), false)
     }
 
     private fun loadOutdatedApplications(applicationManager: ApplicationManager) {
@@ -88,10 +92,21 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
                         installAutomatically)
             }
             if (installAutomatically && canWriteStorage(applicationContext)) {
-                applications.forEach {
-                    if (it.state == State.NOT_UPDATED) {
-                        Log.i(TAG, "Updating ${it.packageName}")
-                        it.buttonClicked(applicationContext, null)
+                if (wifiOnly) {
+                    if (isConnectedToUnmeteredNetwork(applicationContext)) {
+                        applications.forEach {
+                            if (it.state == State.NOT_UPDATED) {
+                                Log.i(TAG, "Updating ${it.packageName}")
+                                it.buttonClicked(applicationContext, null)
+                            }
+                        }
+                    }
+                } else {
+                    applications.forEach {
+                        if (it.state == State.NOT_UPDATED) {
+                            Log.i(TAG, "Updating ${it.packageName}")
+                            it.buttonClicked(applicationContext, null)
+                        }
                     }
                 }
             }
@@ -104,4 +119,16 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
     private fun canWriteStorage(context: Context) = !(android.os.Build.VERSION.SDK_INT >= 23 &&
             context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
             PackageManager.PERMISSION_GRANTED)
+
+    private fun isConnectedToUnmeteredNetwork(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as
+                ConnectivityManager
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork
+            val capabilities = connectivityManager.getNetworkCapabilities(network)
+            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+        } else {
+            Common.isNetworkAvailable(context)
+        }
+    }
 }
