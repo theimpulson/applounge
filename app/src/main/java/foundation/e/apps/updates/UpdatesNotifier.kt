@@ -31,7 +31,11 @@ import foundation.e.apps.R
 import foundation.e.apps.utils.Constants
 
 class UpdatesNotifier {
-    private fun getNotification(context: Context, numberOfApps: Int, installAutomatically: Boolean):
+    private fun getNotification(context: Context,
+                                numberOfApps: Int,
+                                installAutomatically: Boolean,
+                                unmeteredNetworkOnly: Boolean,
+                                isConnectedToUnmeteredNetwork: Boolean):
             Notification {
         val notificationBuilder =
                 NotificationCompat.Builder(context, Constants.UPDATES_NOTIFICATION_CHANNEL_ID)
@@ -51,6 +55,10 @@ class UpdatesNotifier {
         if (installAutomatically) {
             notificationBuilder.setContentText(context.getString(R.string.updates_notification_text,
                     Constants.AUTOMATICALLY_INSTALL_UPDATES))
+            if (unmeteredNetworkOnly && !isConnectedToUnmeteredNetwork) {
+                notificationBuilder.setSubText(context
+                        .getString(R.string.updates_notification_unmetered_network_warning))
+            }
         } else {
             notificationBuilder.setContentText(context.getString(R.string.updates_notification_text,
                     Constants.MANUALLY_INSTALL_UPDATES))
@@ -82,11 +90,19 @@ class UpdatesNotifier {
         }
     }
 
-    fun showNotification(context: Context, numberOfApps: Int, installAutomatically: Boolean) {
+    fun showNotification(context: Context,
+                         numberOfApps: Int,
+                         installAutomatically: Boolean,
+                         unmeteredNetworkOnly: Boolean,
+                         isConnectedToUnmeteredNetwork: Boolean) {
         with(NotificationManagerCompat.from(context)) {
             createNotificationChannel(context)
             notify(Constants.UPDATES_NOTIFICATION_ID,
-                    getNotification(context, numberOfApps, installAutomatically))
+                    getNotification(context,
+                            numberOfApps,
+                            installAutomatically,
+                            unmeteredNetworkOnly,
+                            isConnectedToUnmeteredNetwork))
         }
     }
 }

@@ -62,7 +62,7 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
                         R.string.pref_update_install_automatically_key), true)
         wifiOnly =
                 preferences.getBoolean(applicationContext.getString(
-                        R.string.pref_update_wifi_only_key), false)
+                        R.string.pref_update_wifi_only_key), true)
     }
 
     private fun loadOutdatedApplications(applicationManager: ApplicationManager) {
@@ -85,15 +85,18 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
                 }
                 it.close()
             }
+            val isConnectedToUnmeteredNetwork = isConnectedToUnmeteredNetwork(applicationContext)
             if (notifyAvailable) {
                 UpdatesNotifier().showNotification(
                         applicationContext,
                         applications.size,
-                        installAutomatically)
+                        installAutomatically,
+                        wifiOnly,
+                        isConnectedToUnmeteredNetwork)
             }
             if (installAutomatically && canWriteStorage(applicationContext)) {
                 if (wifiOnly) {
-                    if (isConnectedToUnmeteredNetwork(applicationContext)) {
+                    if (isConnectedToUnmeteredNetwork) {
                         applications.forEach {
                             if (it.state == State.NOT_UPDATED) {
                                 Log.i(TAG, "Updating ${it.packageName}")

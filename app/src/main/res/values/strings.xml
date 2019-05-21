@@ -84,6 +84,7 @@
         <item quantity="other">%1$d app updates are available</item>
     </plurals>
     <string name="updates_notification_text">App updates %1$s be installed automatically</string>
+    <string name="updates_notification_unmetered_network_warning">Waiting for un-metered network</string>
 
     <!-- Settings Fragment -->
     <string name="preference_updates_title">Updates</string>
