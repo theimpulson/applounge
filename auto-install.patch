@@ -1,0 +1,14 @@
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index e3d84c2..a1a0c47 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -20,7 +20,8 @@
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools"
+     package="foundation.e.apps"
+-    android:installLocation="internalOnly">
++    android:installLocation="internalOnly"
++    android:sharedUserId="android.uid.system">
+ 
+     <uses-permission android:name="android.permission.INTERNET" />
+     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />

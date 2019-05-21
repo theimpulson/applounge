@@ -12,10 +12,17 @@ cache:
   paths:
   - .gradle/
 
-build:
+build-without-auto-install:
   stage: build
   script:
   - ./gradlew build
   artifacts:
     paths:
     - app/build/outputs/apk/
+
+build:
+  extends: build-without-auto-install
+  script:
+  - git apply auto-install.patch
+  - ./gradlew build
+  
