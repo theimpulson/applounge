@@ -41,7 +41,7 @@ class SearchRequest(private val keyword: String, private val page: Int, private 
     fun request(callback: (Error?, SearchResult?) -> Unit) {
         try {
             val url = Constants.BASE_URL + "apps?action=search&keyword=${URLEncoder.encode(keyword, "utf-8")}&page=$page&nres=$resultsPerPage"
-            val urlConnection = Common.createConnection(url)
+            val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<SearchResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)

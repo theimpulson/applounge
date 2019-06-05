@@ -41,9 +41,9 @@ object Common {
         return inMiB.times(10.0).roundToInt().div(10.0)
     }
 
-    fun createConnection(url: String): HttpsURLConnection {
+    fun createConnection(url: String, requestMethod: String): HttpsURLConnection {
         val connection = URL(url).openConnection() as HttpsURLConnection
-        connection.requestMethod = Constants.REQUEST_METHOD
+        connection.requestMethod = requestMethod
         connection.connectTimeout = Constants.CONNECT_TIMEOUT
         connection.readTimeout = Constants.READ_TIMEOUT
         return connection

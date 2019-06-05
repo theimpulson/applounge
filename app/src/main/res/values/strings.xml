@@ -103,6 +103,20 @@
     <string name="pref_update_install_automatically_key">pref_update_install_automatically</string>
     <string name="pref_update_notify_key">pref_update_notify</string>
 
+    <string name="preference_apps_title">Apps</string>
+    <string name="pref_apps_request_app_key">pref_apps_request_app</string>
+    <string name="preference_apps_request_app_title">Request app</string>
+    <string name="preference_apps_request_app_summary">Request an app that is currently unavailable</string>
+
+    <!-- App Request Activity -->
+    <string name="edit_text_hint">Package name</string>
+    <string name="submit_button_text">Submit</string>
+    <string name="app_request_successful_text">App request successfully placed!</string>
+    <string name="package_name_help_title">What is a package name?</string>
+    <string name="package_name_help_text">A package name is a unique identifier for an Android app. Package names are usually in lowercase and written in the following format: \"domain.company.application\"</string>
+    <string name="package_name_find_title">How to find the package name of an app?</string>
+    <string name="package_name_find_text">To find the package name of an app that is installed on your device, go to System Settings > Apps > [your app]. The package name should be listed at the bottom of the page.\n*This process may vary on some devices.</string>
+
     <!-- Errors -->
     <string name="error_storage_permission_denied">Storage access is required for downloading apps.</string>
     <string name="error_no_internet">Can\'t connect! Please check your internet connection and try again.</string>
@@ -116,4 +130,7 @@
     <string name="error_apk_download_failed">App couldn\'t be downloaded! Please try again later.</string>
     <string name="error_resolve">Retry</string>
     <string name="error_no_screenshots_available">No screenshots available</string>
+    <string name="error_invalid_package_name">Unable to submit request. Please enter a valid package name.</string>
+    <string name="error_package_already_exists">This app is already available or has been requested.</string>
+    <string name="error_no_error">No error.</string>
 </resources>

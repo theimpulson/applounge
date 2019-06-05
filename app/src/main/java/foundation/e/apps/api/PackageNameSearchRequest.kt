@@ -36,7 +36,7 @@ class PackageNameSearchRequest(private val packageName: String) {
     fun request(callback: (Error?, SearchResult?) -> Unit) {
         try {
             val url = Constants.BASE_URL + "apps?action=search&keyword=${URLEncoder.encode(packageName, "utf-8")}&by=package_name"
-            val urlConnection = Common.createConnection(url)
+            val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<SearchResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)

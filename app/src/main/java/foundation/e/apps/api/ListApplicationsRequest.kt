@@ -40,7 +40,7 @@ class ListApplicationsRequest(private val category: String, private val page: In
     fun request(callback: (Error?, ListApplicationsResult?) -> Unit) {
         try {
             val url = Constants.BASE_URL + "apps?action=list_apps&category=${URLEncoder.encode(category, "utf-8")}&nres=$resultsPerPage&page=$page"
-            val urlConnection = Common.createConnection(url)
+            val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<ListApplicationsResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)

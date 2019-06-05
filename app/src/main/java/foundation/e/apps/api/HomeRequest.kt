@@ -42,7 +42,7 @@ class HomeRequest {
     fun request(callback: (Error?, HomeResult?) -> Unit) {
         try {
             val url = Constants.BASE_URL + "apps?action=list_home"
-            val urlConnection = Common.createConnection(url)
+            val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<HomeResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)

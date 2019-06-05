@@ -92,7 +92,7 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
             try {
                 val url = URL(BASE_URL + "media/" + iconUri)
                 val urlConnection = url.openConnection() as HttpsURLConnection
-                urlConnection.requestMethod = Constants.REQUEST_METHOD
+                urlConnection.requestMethod = Constants.REQUEST_METHOD_GET
                 urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT
                 urlConnection.readTimeout = Constants.READ_TIMEOUT
                 icon = BitmapFactory.decodeStream(urlConnection.inputStream)

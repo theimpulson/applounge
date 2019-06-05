@@ -35,7 +35,7 @@ class AppDetailRequest(private val id: String) {
     fun request(callback: (Error?, FullData?) -> Unit) {
         try {
             val url = Constants.BASE_URL + "apps?action=app_detail&id=$id"
-            val urlConnection = Common.createConnection(url)
+            val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<Result>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result.app)

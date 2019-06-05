@@ -25,7 +25,8 @@ object Constants {
     const val STORAGE_PERMISSION_REQUEST_CODE = 0
     const val CONNECT_TIMEOUT = 5000 // 5 seconds
     const val READ_TIMEOUT = 10000 // 10 seconds
-    const val REQUEST_METHOD = "GET"
+    const val REQUEST_METHOD_GET = "GET"
+    const val REQUEST_METHOD_POST = "POST"
 
     // Search
     const val MIN_SEARCH_TERM_LENGTH = 3;

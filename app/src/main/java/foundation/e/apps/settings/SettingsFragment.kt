@@ -17,9 +17,11 @@
 
 package foundation.e.apps.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.preference.CheckBoxPreference
 import android.support.v7.preference.ListPreference
+import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import foundation.e.apps.R
 import foundation.e.apps.updates.UpdatesManager
@@ -47,6 +49,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
         onlyOnWifi.isEnabled = automaticallyInstallUpdates.isChecked
         automaticallyInstallUpdates.setOnPreferenceChangeListener { _, newValue ->
             onlyOnWifi.isEnabled = newValue.toString().toBoolean()
+            true
+        }
+
+        // Launch AppRequestActivity when "Request app" preference is clicked
+        val requestApp =
+                preferenceManager.findPreference(getString(R.string.pref_apps_request_app_key))
+                        as Preference
+        requestApp.setOnPreferenceClickListener {_ ->
+            startActivity(Intent(context, AppRequestActivity::class.java))
             true
         }
     }
