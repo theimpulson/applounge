@@ -75,7 +75,7 @@ class ImagesLoader(private val imagesUri: Array<String>) {
             try {
                 val url = URL(Constants.BASE_URL + "media/" + uri)
                 val urlConnection = url.openConnection() as HttpsURLConnection
-                urlConnection.requestMethod = Constants.REQUEST_METHOD
+                urlConnection.requestMethod = Constants.REQUEST_METHOD_GET
                 urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT
                 urlConnection.readTimeout = Constants.READ_TIMEOUT
                 image = BitmapFactory.decodeStream(urlConnection.inputStream)

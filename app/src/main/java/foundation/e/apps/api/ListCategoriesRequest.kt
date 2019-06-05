@@ -35,7 +35,7 @@ class ListCategoriesRequest {
     fun request(callback: (Error?, ListCategoriesResult?) -> Unit) {
         try {
             val url = Constants.BASE_URL + "apps?action=list_cat"
-            val urlConnection = Common.createConnection(url)
+            val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<ListCategoriesResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)

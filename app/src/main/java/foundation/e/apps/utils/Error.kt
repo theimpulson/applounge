@@ -29,7 +29,10 @@ enum class Error(val description: Int) {
     UNKNOWN(R.string.error_unknown),
     APK_UNAVAILABLE(R.string.error_apk_unavailable),
     APK_CORRUPT(R.string.error_apk_corrupt),
-    INSTALL_FAILED(R.string.error_install_failed);
+    INSTALL_FAILED(R.string.error_install_failed),
+    INVALID_PACKAGE_NAME(R.string.error_invalid_package_name),
+    PACKAGE_ALREADY_EXISTS(R.string.error_package_already_exists),
+    NO_ERROR(R.string.error_no_error);
 
     companion object {
         fun findError(e: Exception): Error {

@@ -51,4 +51,13 @@
             android:title="@string/preference_update_wifi_only_title" />
 
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/preference_apps_title">
+
+        <Preference
+            android:key="@string/pref_apps_request_app_key"
+            android:summary="@string/preference_apps_request_app_summary"
+            android:title="@string/preference_apps_request_app_title" />
+
+    </PreferenceCategory>
 </PreferenceScreen>
