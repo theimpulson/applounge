@@ -81,6 +81,7 @@ class AppRequestActivity : AppCompatActivity(), TextWatcher {
                     app_request_error_text_view.text = getString(it.description)
                     app_request_error_text_view.background = getDrawable(R.drawable.error_border)
                 }
+                scroll_view.scrollTo(0, 0)
             }
         })
     }
