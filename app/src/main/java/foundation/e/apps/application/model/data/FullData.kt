@@ -91,7 +91,8 @@ constructor(
                     name,
                     result["exodus_score"] as Int?,
                     getPermissions(result["exodus_perms"] as ArrayList<String>?),
-                    getTrackers(result["exodus_trackers"] as ArrayList<LinkedHashMap<String, String>>?))
+                    getTrackers(result["exodus_trackers"] as ArrayList<LinkedHashMap<String, String>>?),
+                    result["architecture"] as String)
         }
     }
 

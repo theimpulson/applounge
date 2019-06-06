@@ -602,7 +602,10 @@ class ApplicationActivity :
 
     override fun onDestroy() {
         super.onDestroy()
-        application.decrementUses()
-        applicationManagerServiceConnection.unbindService(this)
+        if (::application.isInitialized) {
+            application.removeListener(this)
+            application.decrementUses()
+            applicationManagerServiceConnection.unbindService(this)
+        }
     }
 }

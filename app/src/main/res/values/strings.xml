@@ -133,4 +133,5 @@
     <string name="error_invalid_package_name">Unable to submit request. Please enter a valid package name.</string>
     <string name="error_package_already_exists">This app is already available or has been requested.</string>
     <string name="error_no_error">No error.</string>
+    <string name="error_apk_incompatible">This app is incompatible with your device.</string>
 </resources>

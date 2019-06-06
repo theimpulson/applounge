@@ -120,15 +120,33 @@ class Application(val packageName: String, private val applicationManager: Appli
     fun download(context: Context) {
         val error = assertFullData(context)
         if (error == null) {
-            downloader = Downloader(info, fullData!!, this)
-            stateManager.notifyDownloading(downloader!!)
-            downloader!!.download(context)
-            synchronized(blocker) {
-                blocker.wait()
+            if (isAPKArchCompatible()) {
+                downloader = Downloader(info, fullData!!, this)
+                stateManager.notifyDownloading(downloader!!)
+                downloader!!.download(context)
+                synchronized(blocker) {
+                    blocker.wait()
+                }
+            } else {
+                stateManager.notifyError(Error.APK_INCOMPATIBLE)
+                onDownloadComplete(context, DownloadManager.STATUS_FAILED)
             }
         } else {
             stateManager.notifyError(error)
             onDownloadComplete(context, DownloadManager.STATUS_FAILED)
+        }
+    }
+
+    private fun isAPKArchCompatible(): Boolean {
+        val apkArchitecture: String? = fullData!!.getLastVersion()?.apkArchitecture
+        return if (apkArchitecture != null) {
+            if (apkArchitecture == "universal") {
+                true
+            } else {
+                android.os.Build.SUPPORTED_ABIS.toList().contains(apkArchitecture)
+            }
+        } else {
+            false
         }
     }
 

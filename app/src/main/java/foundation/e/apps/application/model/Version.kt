@@ -31,4 +31,5 @@ class Version(val downloadFlag: String?,
               val updateName: String,
               val privacyRating: Int?,
               val exodusPermissions: ArrayList<String>?,
-              val exodusTrackers: ArrayList<String>?)
+              val exodusTrackers: ArrayList<String>?,
+              val apkArchitecture: String)
