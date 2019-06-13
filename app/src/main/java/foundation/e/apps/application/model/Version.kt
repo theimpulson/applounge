@@ -32,4 +32,4 @@ class Version(val downloadFlag: String?,
               val privacyRating: Int?,
               val exodusPermissions: ArrayList<String>?,
               val exodusTrackers: ArrayList<String>?,
-              val apkArchitecture: String)
+              val apkArchitecture: String?)

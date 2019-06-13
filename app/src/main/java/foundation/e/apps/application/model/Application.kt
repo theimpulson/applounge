@@ -140,13 +140,13 @@ class Application(val packageName: String, private val applicationManager: Appli
     private fun isAPKArchCompatible(): Boolean {
         val apkArchitecture: String? = fullData!!.getLastVersion()?.apkArchitecture
         return if (apkArchitecture != null) {
-            if (apkArchitecture == "universal") {
+            if (apkArchitecture == "universal" || apkArchitecture == "noarch") {
                 true
             } else {
                 android.os.Build.SUPPORTED_ABIS.toList().contains(apkArchitecture)
             }
         } else {
-            false
+            true
         }
     }
 
