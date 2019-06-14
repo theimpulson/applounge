@@ -17,13 +17,15 @@
 
 package foundation.e.apps.application.model
 
+import android.Manifest
 import android.app.PendingIntent
 import android.content.*
 import android.content.pm.PackageInstaller
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.util.Log
-import foundation.e.apps.utils.Common
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -37,7 +39,8 @@ class Installer(private val packageName: String,
     fun install(context: Context) {
         try {
             Log.i(TAG, "Installing $packageName")
-            if (Common.isSystemApp(context.packageManager, context.packageName)) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.INSTALL_PACKAGES)
+                    == PackageManager.PERMISSION_GRANTED) {
                 val inputStream = File(apk.absolutePath).inputStream()
                 Log.i(TAG, "Opened input stream to $packageName APK")
                 installApplication(context, inputStream)
