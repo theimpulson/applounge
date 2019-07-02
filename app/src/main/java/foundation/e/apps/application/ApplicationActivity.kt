@@ -144,8 +144,8 @@ class ApplicationActivity :
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when {
-            item?.itemId == R.id.action_share -> {
+        when (item?.itemId) {
+            /*R.id.action_share -> {
                 if (::application.isInitialized) {
                     val shareIntent = Intent().apply {
                         action = Intent.ACTION_SEND
@@ -154,8 +154,8 @@ class ApplicationActivity :
                     }
                     startActivity(shareIntent)
                 }
-            }
-            item?.itemId == android.R.id.home -> {
+            }*/
+            android.R.id.home -> {
                 finish()
             }
             else -> {
