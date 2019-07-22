@@ -22,8 +22,8 @@ import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.widget.ImageView
 import foundation.e.apps.api.AppDetailRequest
+import foundation.e.apps.api.AppDownloadedRequest
 import foundation.e.apps.api.PackageNameSearchRequest
 import foundation.e.apps.application.model.State.*
 import foundation.e.apps.application.model.data.BasicData
@@ -32,6 +32,7 @@ import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
+import foundation.e.apps.utils.Execute
 import java.util.concurrent.atomic.AtomicInteger
 
 class Application(val packageName: String, private val applicationManager: ApplicationManager) :
@@ -152,6 +153,9 @@ class Application(val packageName: String, private val applicationManager: Appli
 
     override fun onDownloadComplete(context: Context, status: Int) {
         if (status == DownloadManager.STATUS_SUCCESSFUL) {
+            Execute({
+                AppDownloadedRequest(basicData!!.id).request()
+            }, {})
             install(context)
         } else {
             synchronized(blocker) {
