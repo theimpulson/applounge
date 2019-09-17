@@ -19,9 +19,7 @@ package foundation.e.apps.api
 
 import android.content.Context
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.applicationmanager.ApplicationManager
@@ -34,7 +32,7 @@ import java.net.URLEncoder
 class ListApplicationsRequest(private val category: String, private val page: Int, private val resultsPerPage: Int) {
 
     companion object {
-        private val reader = ObjectMapper().readerFor(ListApplicationsResult::class.java)
+        private val reader = Common.getObjectMapper().readerFor(ListApplicationsResult::class.java)
     }
 
     fun request(callback: (Error?, ListApplicationsResult?) -> Unit) {
@@ -49,10 +47,8 @@ class ListApplicationsRequest(private val category: String, private val page: In
         }
     }
 
-    class ListApplicationsResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
-    constructor(@JsonProperty("success") success: Boolean,
-                @JsonProperty("pages") val pages: Int,
-                @JsonProperty("apps") private val apps: Array<BasicData>) {
+    class ListApplicationsResult @JsonCreator
+    constructor(@JsonProperty("apps") private val apps: Array<BasicData>) {
 
         fun getApplications(applicationManager: ApplicationManager, context: Context): ArrayList<Application> {
             return ApplicationParser.parseToApps(applicationManager, context, apps)

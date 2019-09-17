@@ -19,39 +19,32 @@ package foundation.e.apps.application.model.data
 
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.application.model.Version
 import foundation.e.apps.categories.model.Category
 
-class FullData @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
+class FullData @JsonCreator
 constructor(
         @JsonProperty("package_name") packageName: String,
         @JsonProperty("_id") id: String,
         @JsonProperty("name") name: String,
-        @JsonProperty("last_modified") lastModified: String,
-        @JsonProperty("latest_version") lastVersion: String,
         @JsonProperty("latest_version_number") latestVersionNumber: String?,
         @JsonProperty("latest_downloaded_version") latestDownloadableUpdate: String,
         @JsonProperty("author") author: String,
         @JsonProperty("icon_image_path") iconUri: String,
         @JsonProperty("other_images_path") imagesUri: Array<String>,
         @JsonProperty("category") categoryId: String,
-        @JsonProperty("created_on") val createdOn: String,
-        @JsonProperty("source") val source: String,
         @JsonProperty("description") val description: String,
-        @JsonProperty("app_link") val appLink: String,
         @JsonProperty("licence") val licence: String,
         @JsonProperty("ratings") ratings: BasicData.Ratings?) {
 
     var basicData = if (ratings == null) {
-        BasicData(packageName, id, name, -1f, lastModified, lastVersion,
-                latestVersionNumber, latestDownloadableUpdate, author, iconUri, imagesUri,
-                null, BasicData.Ratings(-1f, -1f), categoryId)
+        BasicData(packageName, id, name, latestVersionNumber, latestDownloadableUpdate, author,
+                iconUri, imagesUri, null,
+                BasicData.Ratings(-1f, -1f), categoryId)
     } else {
-        BasicData(packageName, id, name, -1f, lastModified, lastVersion,
-                latestVersionNumber, latestDownloadableUpdate, author, iconUri, imagesUri,
-                ratings.privacyRating, ratings, categoryId)
+        BasicData(packageName, id, name, latestVersionNumber, latestDownloadableUpdate, author,
+                iconUri, imagesUri, ratings.privacyRating, ratings, categoryId)
     }
 
     private var latestVersion: Version? = null;

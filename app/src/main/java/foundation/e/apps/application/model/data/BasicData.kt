@@ -20,7 +20,6 @@ package foundation.e.apps.application.model.data
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.utils.Constants
@@ -31,13 +30,10 @@ import foundation.e.apps.utils.ImagesLoader
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
-class BasicData @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
+class BasicData @JsonCreator
 constructor(@param:JsonProperty("package_name") val packageName: String,
             @param:JsonProperty("_id") val id: String,
             @param:JsonProperty("name") val name: String,
-            @param:JsonProperty("search_score") val score: Float,
-            @param:JsonProperty("last_modified") val lastModified: String,
-            @param:JsonProperty("latest_version") val lastVersion: String,
             @param:JsonProperty("latest_version_number") var lastVersionNumber: String?,
             @param:JsonProperty("latest_downloaded_version") val latestDownloadableUpdate: String,
             @param:JsonProperty("author") val author: String,
@@ -87,7 +83,7 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
     }
 
     @Synchronized
-    private fun loadIconSynced(): foundation.e.apps.utils.Error? {
+    private fun loadIconSynced(): Error? {
         if (icon == null) {
             try {
                 val url = URL(BASE_URL + "media/" + iconUri)
@@ -99,7 +95,7 @@ constructor(@param:JsonProperty("package_name") val packageName: String,
                 urlConnection.disconnect()
             } catch (e: Exception) {
                 e.printStackTrace()
-                return foundation.e.apps.utils.Error.UNKNOWN
+                return Error.UNKNOWN
             }
         }
         return null

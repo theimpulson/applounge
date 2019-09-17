@@ -36,7 +36,7 @@ import java.lang.Exception
 class HomeRequest {
 
     companion object {
-        private val reader = ObjectMapper().readerFor(HomeResult::class.java)
+        private val reader = Common.getObjectMapper().readerFor(HomeResult::class.java)
     }
 
     fun request(callback: (Error?, HomeResult?) -> Unit) {
@@ -51,9 +51,8 @@ class HomeRequest {
         }
     }
 
-    class HomeResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
-    constructor(@JsonProperty("success") private val success: Boolean,
-                @JsonProperty("home") private val home: SubHomeResult) {
+    class HomeResult @JsonCreator
+    constructor(@JsonProperty("home") private val home: SubHomeResult) {
 
         fun getBannerApps(applicationManager: ApplicationManager, context: Context): ArrayList<Application> {
             return ApplicationParser.parseToApps(applicationManager, context, home.bannerApps)
@@ -69,7 +68,7 @@ class HomeRequest {
 
     }
 
-    class SubHomeResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true) constructor() {
+    class SubHomeResult @JsonCreator constructor() {
         val apps = LinkedHashMap<Category, ArrayList<BasicData>>()
         lateinit var bannerApps: Array<BasicData>
 
@@ -83,9 +82,6 @@ class HomeRequest {
                         data["package_name"] as String,
                         data["_id"] as String,
                         data["name"] as String,
-                        0f,
-                        data["last_modified"] as String,
-                        data["latest_version"] as String,
                         data["latest_version_number"] as String?,
                         data["latest_downloaded_version"].toString(),
                         data["author"] as String,

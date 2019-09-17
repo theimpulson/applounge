@@ -19,15 +19,14 @@ package foundation.e.apps.api
 
 import android.content.Context
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.ApplicationParser
 import foundation.e.apps.utils.Common
+import foundation.e.apps.utils.Common.getObjectMapper
 import foundation.e.apps.utils.Constants
 import java.lang.Exception
 import java.net.URLEncoder
@@ -35,7 +34,7 @@ import java.net.URLEncoder
 class SearchRequest(private val keyword: String, private val page: Int, private val resultsPerPage: Int) {
 
     companion object {
-        private val reader = ObjectMapper().readerFor(SearchResult::class.java)
+        private val reader = getObjectMapper().readerFor(SearchResult::class.java)
     }
 
     fun request(callback: (Error?, SearchResult?) -> Unit) {
@@ -50,11 +49,8 @@ class SearchRequest(private val keyword: String, private val page: Int, private 
         }
     }
 
-    class SearchResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
-    constructor(@JsonProperty("success") success: Boolean,
-                @param:JsonProperty("pages") val pages: Int,
-                @param:JsonProperty("numberOfResults") val resultsNumber: Int,
-                @param:JsonProperty("apps") val appResults: Array<BasicData>) {
+    class SearchResult @JsonCreator
+    constructor(@param:JsonProperty("apps") val appResults: Array<BasicData>) {
 
         fun getApplications(applicationManager: ApplicationManager, context: Context): List<Application> {
             return ApplicationParser.parseToApps(applicationManager, context, appResults)
