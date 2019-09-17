@@ -21,6 +21,8 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
 import java.net.URL
 import java.util.concurrent.Executors
 import javax.net.ssl.HttpsURLConnection
@@ -78,5 +80,11 @@ object Common {
 
     fun appHasLaunchActivity(context: Context, packageName: String): Boolean {
         return (context.packageManager.getLaunchIntentForPackage(packageName) != null)
+    }
+
+    fun getObjectMapper(): ObjectMapper {
+        val objectMapper = ObjectMapper()
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        return objectMapper
     }
 }

@@ -18,9 +18,7 @@
 package foundation.e.apps.api
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.Constants
@@ -29,7 +27,7 @@ import java.lang.Exception
 class ListCategoriesRequest {
 
     companion object {
-        private val reader = ObjectMapper().readerFor(ListCategoriesResult::class.java)
+        private val reader = Common.getObjectMapper().readerFor(ListCategoriesResult::class.java)
     }
 
     fun request(callback: (Error?, ListCategoriesResult?) -> Unit) {
@@ -44,9 +42,8 @@ class ListCategoriesRequest {
         }
     }
 
-    class ListCategoriesResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
-    constructor(@JsonProperty("success") success: Boolean,
-                @JsonProperty("apps") val appsCategories: Array<String>,
+    class ListCategoriesResult @JsonCreator
+    constructor(@JsonProperty("apps") val appsCategories: Array<String>,
                 @JsonProperty("games") val gamesCategories: Array<String>)
 
 }

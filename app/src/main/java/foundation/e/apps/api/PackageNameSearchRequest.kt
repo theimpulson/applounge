@@ -18,9 +18,7 @@
 package foundation.e.apps.api
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
@@ -30,7 +28,7 @@ import java.net.URLEncoder
 class PackageNameSearchRequest(private val packageName: String) {
 
     companion object {
-        private val reader = ObjectMapper().readerFor(SearchResult::class.java)
+        private val reader = Common.getObjectMapper().readerFor(SearchResult::class.java)
     }
 
     fun request(callback: (Error?, SearchResult?) -> Unit) {
@@ -45,11 +43,8 @@ class PackageNameSearchRequest(private val packageName: String) {
         }
     }
 
-    class SearchResult @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
-    constructor(@JsonProperty("success") success: Boolean,
-                @param:JsonProperty("pages") val pages: Int,
-                @param:JsonProperty("numberOfResults") val resultsNumber: Int,
-                @param:JsonProperty("apps") val appResults: Array<BasicData>) {
+    class SearchResult @JsonCreator
+    constructor(@param:JsonProperty("apps") val appResults: Array<BasicData>) {
 
         fun findOneAppData(packageName: String): BasicData? {
             appResults.forEach {

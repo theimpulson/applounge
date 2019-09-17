@@ -18,14 +18,12 @@
 package foundation.e.apps.api
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.databind.ObjectMapper
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 
 class AppDownloadedRequest(private val id: String) {
     companion object {
-        private val reader = ObjectMapper().readerFor(Result::class.java)
+        private val reader = Common.getObjectMapper().readerFor(Result::class.java)
     }
 
     fun request() {
@@ -39,6 +37,6 @@ class AppDownloadedRequest(private val id: String) {
         }
     }
 
-    class Result @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
+    class Result @JsonCreator
     constructor()
 }

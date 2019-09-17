@@ -18,9 +18,7 @@
 package foundation.e.apps.api
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
@@ -29,7 +27,7 @@ import foundation.e.apps.utils.Error
 class AppDetailRequest(private val id: String) {
 
     companion object {
-        private val reader = ObjectMapper().readerFor(Result::class.java)
+        private val reader = Common.getObjectMapper().readerFor(Result::class.java)
     }
 
     fun request(callback: (Error?, FullData?) -> Unit) {
@@ -44,7 +42,6 @@ class AppDetailRequest(private val id: String) {
         }
     }
 
-    class Result @JsonCreator @JsonIgnoreProperties(ignoreUnknown = true)
-    constructor(@JsonProperty("app") val app: FullData,
-                @JsonProperty("success") private val success: Boolean)
+    class Result @JsonCreator
+    constructor(@JsonProperty("app") val app: FullData)
 }
