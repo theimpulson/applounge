@@ -1,2 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">Apps</string>
+    <string name="app_privacy_score">Privacy</string>
+    <string name="app_ratings_title">Punteggi</string>
+    <string name="action_share">Condividi</string>
+    <string name="action_launch">Apri</string>
+    <string name="action_update_all">Aggiorna tutto</string>
+    <string name="action_update">Aggiorna</string>
+    <string name="state_installing">Sto installando</string>
+    <string name="action_cancel">Annulla</string>
+    <string name="action_install">Installa</string>
+    <string name="app_rating_content_description">Classifica app</string>
+    <string name="app_energy_score_content_description">Punteggio energia app</string>
+    <string name="app_privacy_score_content_description">Punteggio privacy app</string>
+    <string name="app_description_content_description">Descrizione app</string>
+    <string name="app_description_title">Descrizione</string>
+    <string name="app_icon_content_description">Icona app</string>
+    <string name="service_description">Questo servizio è utilizzato da Apps per gestire, scaricare ed installare le app. Fermarlo potrebbe causare un\'interruzione nel dowload delle app.</string>
+    <string name="not_available_full">Non disponibile</string>
+    <string name="not_available">N/A</string>
+    <string name="menu_settings">Impostazioni</string>
+    <string name="menu_search">Cerca</string>
+</resources>
