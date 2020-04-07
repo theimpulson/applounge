@@ -67,7 +67,7 @@
     <string name="no_permissions">Aucune autorisation demandée</string>
     <string name="download_notification_description">Téléchargement en cours</string>
     <string name="app_screenshots_title">Captures d\'écran</string>
-    <string name="app_licence">License</string>
+    <string name="app_licence">Licence</string>
     <string name="app_min_android">Nécessite</string>
     <string name="app_updated_on">Mise à jour le</string>
     <string name="app_version">Version</string>
