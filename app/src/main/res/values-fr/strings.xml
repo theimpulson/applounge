@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_information_title">Information</string>
+    <string name="app_information_title">Informations</string>
     <string name="app_energy_score_content_description">Score énergétique de l\'application</string>
     <string name="not_available">Non Disponible</string>
     <string name="pref_apps_request_app_key">pref_apps_request_app</string>
@@ -77,8 +77,8 @@
     <string name="app_energy_score">Énergie</string>
     <string name="app_rating_description">Score sur 5. Calculé à partir des évaluations des utilisateurs de l\'application.</string>
     <string name="app_rating">Notation</string>
-    <string name="app_privacy_description_short">Calculé à l\'aide des &lt;a href=\"https://exodus-privacy.eu.org\"&gt;analyses d\'Exodus Privacy&lt;/a&gt;.<a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
-    <string name="app_privacy_description">Score sur 10. Calculé à l\'aide des &lt;a href=\"https://exodus-privacy.eu.org\"&gt;analyses d\'Exodus Privacy&lt;/a&gt;, fondées sur les permissions et les pisteurs utilisés dans l\'application.<a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>, based on permissions and trackers used in the app.</string>
+    <string name="app_privacy_description_short">Calculé à l\'aide des <a href="https://exodus-privacy.eu.org">analyses d\'Exodus Privacy</a>.</string>
+    <string name="app_privacy_description">Score sur 10. Calculé à l\'aide des <a href="https://exodus-privacy.eu.org">analyses d\'Exodus Privacy</a>, fondées sur les permissions et les pisteurs utilisés dans l\'application.</string>
     <string name="app_privacy_score">Confidentialité</string>
     <string name="app_ratings_title">Notes</string>
     <string name="action_share">Partager</string>
