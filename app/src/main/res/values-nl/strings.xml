@@ -1,2 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_ratings_title">Waarderingen</string>
+    <string name="action_share">Delen</string>
+    <string name="action_launch">Open</string>
+    <string name="action_update_all">Alles bijwerken</string>
+    <string name="action_update">Bijwerken</string>
+    <string name="state_installing">Installeren</string>
+    <string name="action_cancel">Annuleren</string>
+    <string name="action_install">Installeren</string>
+    <string name="app_rating_content_description">App-beoordeling</string>
+    <string name="app_energy_score_content_description">App energie score</string>
+    <string name="app_privacy_score_content_description">App privacy score</string>
+    <string name="app_description_content_description">App beschrijving</string>
+    <string name="app_description_title">Beschrijving</string>
+    <string name="app_icon_content_description">App icoon</string>
+    <string name="service_description">Deze service wordt gebruikt door Apps voor het beheren, downloaden en installeren van apps. Dit stoppen kan app downloads doen mislukken.</string>
+    <string name="not_available_full">Niet beschikbaar</string>
+</resources>
