@@ -16,7 +16,7 @@
     <string name="error_server_unavailable">"Server nicht verfügbar! Bitter versuche es später noch einmal. "</string>
     <string name="error_no_internet">"Verbindung nicht möglich! Bitte überprüfe die Verbindung und versuche es nochmals. "</string>
     <string name="error_storage_permission_denied">Um Apps herunterzuladen, ist Speicherzugriff erforderlich.</string>
-    <string name="package_name_find_text">Um den Paketnamen einer App zu finden, die auf deinem Gerät installiert ist, gehe zu den Systemeinstellungen&gt;Apps&gt;[deine App]. Der Paketname sollte am unteren Ende der Seite geschrieben stehen. 
+    <string name="package_name_find_text">Um den Paketnamen einer App zu finden, die auf deinem Gerät installiert ist, gehe zu den Systemeinstellungen&gt;Apps&gt;[deine App]. Der Paketname sollte am unteren Ende der Seite geschrieben stehen.
 \n*Dieser Vorgang kann auf manchen Geräten unterschiedlich sein.</string>
     <string name="package_name_find_title">Wie findet man den Paketnamen einer App\?</string>
     <string name="package_name_help_text">Ein Paketname ist eine eindeutige Bezeichnung für eine Android App. Paketnamen sind gewöhnlich kleingeschrieben und haben folgendes Format: \"domain.company.application\".</string>
@@ -42,7 +42,7 @@
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Aktualisierungen</string>
     <string name="updates_notification_unmetered_network_warning">Auf ein unlimitiertes Netzwerk warten</string>
-    <string name="updates_notification_text">App-Aktualisierungen %1$d werden automatisch installiert</string>
+    <string name="updates_notification_text">App-Aktualisierungen %1$s werden automatisch installiert</string>
     <plurals name="updates_notification_title">
         <item quantity="one">%1$d App Aktualisierung ist verfügbar</item>
         <item quantity="other">%1$d App Aktualisierungen sind verfügbar</item>
