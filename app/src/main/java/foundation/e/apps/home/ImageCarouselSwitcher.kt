@@ -18,7 +18,7 @@
 package foundation.e.apps.home
 
 import android.os.Handler
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 
 class ImageCarouselSwitcher(private var imagesCount: Int, private val imageCarousel: ViewPager) {
     private val handler = Handler()

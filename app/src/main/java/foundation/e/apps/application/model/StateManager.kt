@@ -19,9 +19,11 @@ package foundation.e.apps.application.model
 
 import android.content.Context
 import foundation.e.apps.application.model.data.BasicData
+import foundation.e.apps.application.model.data.SearchAppsBasicData
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Error
 import java.util.*
+
 
 class StateManager(private val info: ApplicationInfo, private val app: Application, private val appManager: ApplicationManager) {
     private var listeners = Collections.synchronizedList(ArrayList<ApplicationStateListener>())
@@ -34,12 +36,42 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
         } else if (appManager.isInstalling(app) && app.isInstalling) {
             State.INSTALLING
         } else if (info.isLastVersionInstalled(context,
-                        basicData.lastVersionNumber ?: "")) {
+                        basicData.getLastVersion() ?: "")) {
             State.INSTALLED
         } else if (info.isInstalled(context) && !info.isLastVersionInstalled(context,
-                        basicData.lastVersionNumber ?: "")) {
+                        basicData.getLastVersion() ?: "")) {
             State.NOT_UPDATED
         } else {
+            State.NOT_DOWNLOADED
+        }
+        changeState(state)
+    }
+
+
+    fun searchAppsFind(context: Context, basicData: SearchAppsBasicData) {
+        val state = if (appManager.isInstalling(app) && !app.isInstalling) {
+            State.DOWNLOADING
+        } else if (appManager.isInstalling(app) && app.isInstalling) {
+            State.INSTALLING
+        } else if(info.isLastVersionInstalled(context,
+                        basicData.getLastVersion() ?: "")){
+            State.INSTALLED
+        } else if (info.isInstalled(context) && !info.isLastVersionInstalled(context,
+                        basicData.getLastVersion() ?: "")) {
+            State.NOT_UPDATED
+        }
+        else {
+            State.NOT_DOWNLOADED
+        }
+        changeState(state)
+    }
+    fun pwaFind() {
+        val state = if (appManager.isInstalling(app) && !app.isInstalling) {
+            State.DOWNLOADING
+        } else if (appManager.isInstalling(app) && app.isInstalling) {
+            State.INSTALLING
+        }
+        else {
             State.NOT_DOWNLOADED
         }
         changeState(state)

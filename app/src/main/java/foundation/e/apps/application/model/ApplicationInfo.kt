@@ -22,6 +22,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Environment
 import foundation.e.apps.application.model.data.BasicData
+import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Common
 import java.io.File
 import java.util.regex.Pattern
@@ -67,8 +68,19 @@ class ApplicationInfo(private val packageName: String) {
     }
 
     fun getApkFile(context: Context, data: BasicData): File {
+
         return File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
                 getApkFilename(data))
+    }
+
+    fun getxApkFilename(basicData: BasicData): String {
+        return packageName + "-" + basicData.lastVersionNumber + ".xapk"
+    }
+
+    fun getxApkFile(context: Context, data: BasicData): File {
+
+        return File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+                getxApkFilename(data))
     }
 
     fun launch(context: Context) {
@@ -77,5 +89,25 @@ class ApplicationInfo(private val packageName: String) {
 
     fun install(context: Context, data: BasicData, callback: InstallerInterface) {
         Installer(data.packageName, getApkFile(context, data), callback).install(context)
+    }
+
+    fun isXapk( fullData: FullData, basicData: BasicData?): Boolean {
+        return fullData.getLastVersion()!!.is_xapk && fullData.getLastVersion()?.downloadLink!!.endsWith(".xapk")
+    }
+
+    fun getApkOrXapkFileName(fullData: FullData, basicData: BasicData): String? {
+        if(isXapk(fullData,basicData) )  {
+            return getxApkFilename(basicData)
+        }
+        else
+            return getApkFilename(basicData)
+    }
+
+    fun getApkOrXapkFile(context: Context,fullData: FullData, basicData: BasicData): File {
+        if(isXapk(fullData,basicData)){
+            return getxApkFile(context,basicData)
+        }
+        else
+            return getApkFile(context,basicData)
     }
 }

@@ -20,18 +20,16 @@ package foundation.e.apps.api
 import android.content.Context
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
+import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.categories.model.Category
-import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.ApplicationParser
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
-import java.lang.Exception
+import foundation.e.apps.utils.Error
 
 class HomeRequest {
 
@@ -41,7 +39,8 @@ class HomeRequest {
 
     fun request(callback: (Error?, HomeResult?) -> Unit) {
         try {
-            val url = Constants.BASE_URL + "apps?action=list_home"
+            var appType =mActivity.showApplicationTypePreference()
+            val url = Constants.BASE_URL + "apps?action=list_home&source=$appType&type=$appType"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<HomeResult>(urlConnection.inputStream)
             urlConnection.disconnect()
@@ -61,7 +60,12 @@ class HomeRequest {
         fun getApps(applicationManager: ApplicationManager, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
             val apps = LinkedHashMap<Category, ArrayList<Application>>()
             for (pair in home.apps) {
-                apps[pair.key] = ApplicationParser.parseToApps(applicationManager, context, pair.value.toTypedArray())
+                if(pair.value .isEmpty() ){
+                    apps.remove(pair.key)
+                }else {
+
+                    apps[pair.key] = ApplicationParser.parseToApps(applicationManager, context, pair.value.toTypedArray())
+                }
             }
             return apps
         }
@@ -79,11 +83,22 @@ class HomeRequest {
             apps.forEach {
                 val data = it as LinkedHashMap<*, *>
                 val appData = BasicData(
-                        data["package_name"] as String,
                         data["_id"] as String,
                         data["name"] as String,
-                        data["latest_version_number"] as String?,
+                        data["package_name"] as String,
+                        data["latest_version_number"].toString(),
                         data["latest_downloaded_version"].toString(),
+                        data["x86_64_latest_downloaded_version"].toString(),
+                        data["x86_64_latest_version_number"].toString(),
+                        data["armeabi_latest_downloaded_version"].toString(),
+                        data["armeabi_latest_version_number"].toString(),
+                        data["arm64-v8a_latest_downloaded_version"].toString(),
+                        data["arm64-v8a_latest_version_number"].toString(),
+                        data["x86_latest_downloaded_version"].toString(),
+                        data["x86_latest_version_number"].toString(),
+                        data["armeabi-v7a_latest_downloaded_version"].toString(),
+                        data["armeabi-v7a_latest_version_number"].toString(),
+                        data["architectures"]as List<String> as ArrayList<String>,
                         data["author"] as String,
                         data["icon_image_path"] as String,
                         (data["other_images_path"] as List<String>).toTypedArray(),
@@ -93,7 +108,8 @@ class HomeRequest {
                                         ["usageQualityScore"]!!.toFloat(),
                                 (data["ratings"] as LinkedHashMap<String, Int>)
                                         ["privacyScore"]!!.toFloat()),
-                        data["category"] as String)
+                        data["category"] as String,
+                        data["is_pwa"]as Boolean)
                 appsData.add(appData)
             }
             if (key == "banner_apps") {

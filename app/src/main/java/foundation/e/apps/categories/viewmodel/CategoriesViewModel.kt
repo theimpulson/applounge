@@ -17,10 +17,10 @@
 
 package foundation.e.apps.categories.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.content.Intent
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import foundation.e.apps.categories.category.CategoryActivity
 import foundation.e.apps.categories.model.CategoriesModel
 import foundation.e.apps.categories.model.Category
@@ -36,6 +36,10 @@ class CategoriesViewModel : ViewModel(), CategoriesViewModelInterface {
 
     override fun getGamesCategories(): MutableLiveData<ArrayList<Category>> {
         return categoriesModel.gamesCategoriesList
+    }
+
+    override fun getPwasCategories(): MutableLiveData<ArrayList<Category>> {
+        return categoriesModel.pwasCategoriesList
     }
 
     override fun getScreenError(): MutableLiveData<Error> {

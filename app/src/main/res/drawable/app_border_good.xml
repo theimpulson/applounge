@@ -9,4 +9,6 @@
         android:left="@dimen/layout_padding_medium"
         android:right="@dimen/layout_padding_medium"
         android:top="@dimen/layout_padding_medium" />
+    <solid android:color="@color/colorRatingGood" />
+
 </shape>

@@ -26,7 +26,6 @@ import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Execute
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.Exception
 
 class OutdatedApplicationsFileReader(private val applicationManager: ApplicationManager,
                                      private val callback: UpdatesModelInterface) :

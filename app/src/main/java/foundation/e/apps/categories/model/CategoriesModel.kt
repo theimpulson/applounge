@@ -17,16 +17,17 @@
 
 package foundation.e.apps.categories.model
 
-import android.arch.lifecycle.MutableLiveData
 import android.content.Context
-import foundation.e.apps.utils.Common
+import androidx.lifecycle.MutableLiveData
 import foundation.e.apps.api.ListCategoriesRequest
+import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.Execute
 
 class CategoriesModel : CategoriesModelInterface {
     val applicationsCategoriesList = MutableLiveData<ArrayList<Category>>()
     val gamesCategoriesList = MutableLiveData<ArrayList<Category>>()
+    val pwasCategoriesList = MutableLiveData<ArrayList<Category>>()
     var screenError = MutableLiveData<Error>()
 
     init {
@@ -35,6 +36,9 @@ class CategoriesModel : CategoriesModelInterface {
         }
         if (gamesCategoriesList.value == null) {
             gamesCategoriesList.value = ArrayList()
+        }
+        if (pwasCategoriesList.value == null) {
+            pwasCategoriesList.value = ArrayList()
         }
     }
 

@@ -17,8 +17,8 @@
 
 package foundation.e.apps.settings.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import foundation.e.apps.utils.Error
 
 interface AppRequestViewModelInterface {

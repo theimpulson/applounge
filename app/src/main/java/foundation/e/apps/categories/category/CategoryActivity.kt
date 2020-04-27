@@ -17,21 +17,21 @@
 
 package foundation.e.apps.categories.category
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
@@ -55,6 +55,8 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
     private var applicationList = ArrayList<Application>()
     private var isLoadingMoreApplications = false
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
@@ -62,6 +64,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val extras = intent.extras
         category = intent.getSerializableExtra(CATEGORY_KEY) as Category
         supportActionBar?.title = category.getTitle()
 
@@ -80,14 +83,15 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
                 if (!recyclerView.canScrollVertically(1)) {
                     loadMoreContainer.visibility = View.VISIBLE
                     recyclerView.scrollToPosition(applicationList.size - 1)
-                    if (!isLoadingMoreApplications) {
-                        isLoadingMoreApplications = true
-                        categoryViewModel.loadApplications(this@CategoryActivity)
-                    }
+                        if (!isLoadingMoreApplications) {
+                            isLoadingMoreApplications = true
+                            categoryViewModel.loadApplications(this@CategoryActivity)
+                        }
                 } else {
                     loadMoreContainer.visibility = View.GONE
                 }
             }
+
         })
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
@@ -108,7 +112,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
                 applicationList.clear()
                 applicationList.addAll(it)
                 progressBar.visibility = View.GONE
-                recyclerView.adapter.notifyDataSetChanged()
+                recyclerView.adapter?.notifyDataSetChanged()
                 recyclerView.visibility = View.VISIBLE
                 loadMoreContainer.visibility = View.GONE
                 isLoadingMoreApplications = false

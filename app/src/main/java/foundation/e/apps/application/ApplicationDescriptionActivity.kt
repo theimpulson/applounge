@@ -17,11 +17,11 @@
 
 package foundation.e.apps.application
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.text.util.Linkify
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import foundation.e.apps.R
 import foundation.e.apps.utils.Constants.APPLICATION_DESCRIPTION_KEY
 import kotlinx.android.synthetic.main.activity_application_description.*

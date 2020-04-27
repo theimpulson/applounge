@@ -17,12 +17,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
     -->
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -30,16 +30,17 @@
         android:elevation="@dimen/default_elevation"
         android:padding="@dimen/layout_padding_medium"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:collapseIcon="@drawable/app_border_neutral"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/AlertDialog.AppCompat.Light">
 
-        <android.support.v7.widget.SearchView
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:iconifiedByDefault="false" />
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <View
         android:id="@+id/view"
@@ -77,7 +78,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/app_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -98,4 +99,4 @@
 
     </RelativeLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

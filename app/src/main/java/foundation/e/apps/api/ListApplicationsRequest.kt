@@ -20,6 +20,7 @@ package foundation.e.apps.api
 import android.content.Context
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.applicationmanager.ApplicationManager
@@ -37,11 +38,14 @@ class ListApplicationsRequest(private val category: String, private val page: In
 
     fun request(callback: (Error?, ListApplicationsResult?) -> Unit) {
         try {
-            val url = Constants.BASE_URL + "apps?action=list_apps&category=${URLEncoder.encode(category, "utf-8")}&nres=$resultsPerPage&page=$page"
+            var appType = mActivity.showApplicationTypePreference()
+            val string = URLEncoder.encode(category, "utf-8").toLowerCase()
+            val url = Constants.BASE_URL + "apps?action=list_apps&category=$string&nres=$resultsPerPage&page=$page&type=$appType"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<ListApplicationsResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)
+
         } catch (e: Exception) {
             callback.invoke(Error.findError(e), null)
         }
@@ -54,6 +58,7 @@ class ListApplicationsRequest(private val category: String, private val page: In
             return ApplicationParser.parseToApps(applicationManager, context, apps)
         }
     }
+
 
 
 }

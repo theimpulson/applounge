@@ -18,25 +18,22 @@
 package foundation.e.apps.search
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.database.MatrixCursor
 import android.os.Bundle
 import android.provider.BaseColumns
-import android.support.v4.app.Fragment
-import android.support.v4.widget.CursorAdapter
-import android.support.v4.widget.SimpleCursorAdapter
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.widget.SearchView
+import androidx.cursoradapter.widget.CursorAdapter
+import androidx.cursoradapter.widget.SimpleCursorAdapter
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
@@ -61,6 +58,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
+
         if (applicationManager == null) {
             return null
         }
@@ -73,10 +72,12 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         recyclerView = view.findViewById(R.id.app_list)
         progressBar = view.findViewById(R.id.progress_bar)
         splashContainer = view.findViewById(R.id.splash_container)
+        var error_resolve =view.findViewById<TextView>(R.id.error_resolve)
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
         val loadMoreContainer = view.findViewById<RelativeLayout>(R.id.load_more_container)
 
+        error_resolve.visibility=View.GONE
         searchViewModel.initialise(applicationManager!!)
         recyclerView.visibility = View.GONE
         progressBar.visibility = View.GONE
@@ -132,7 +133,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
                 applicationList.clear()
                 applicationList.addAll(it)
                 progressBar.visibility = View.GONE
-                recyclerView.adapter.notifyDataSetChanged()
+                recyclerView.adapter?.notifyDataSetChanged()
                 if (!isLoadingMoreApplications) {
                     recyclerView.scrollToPosition(0)
                 }
@@ -169,6 +170,9 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         // Handle search queries
         searchView.setOnQueryTextListener(this)
 
+        configureCloseButton(searchView)
+
+
         return view
     }
 
@@ -189,6 +193,16 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             searchViewModel.onSearchQueryChanged(context!!, it.toString())
         }
         return true
+    }
+
+
+
+    private fun configureCloseButton(searchView: SearchView) {
+
+        val searchClose =  searchView.javaClass.getDeclaredField("mCloseButton")
+        searchClose.isAccessible = true
+        val closeImage = searchClose.get(searchView) as ImageView
+        closeImage.setImageResource(R.drawable.ic_close_button) // your image here
     }
 
     override fun onSuggestionSelect(position: Int): Boolean {

@@ -17,25 +17,28 @@
 
 package foundation.e.apps.home
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+//import java.awt.font.ShapeGraphicAttribute.STROKE
+//import java.awt.AlphaComposite.SRC_IN
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewPager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.common.SmallApplicationListAdapter
 import foundation.e.apps.home.viewmodel.HomeViewModel
+
 
 class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
@@ -52,6 +55,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (applicationManager == null) {
             return null
+
         }
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
@@ -81,6 +85,9 @@ class HomeFragment : Fragment() {
         homeViewModel.getBannerApplications().observe(this, Observer {
             if (homeViewModel.getBannerApplications().value!!.isNotEmpty()) {
                 imageCarousel.adapter = ImageCarouselAdapter(activity!!, homeViewModel.getBannerApplications().value!!)
+                imageCarousel.clipToPadding = false;
+                imageCarousel.setPadding(170, 10, 170, 10);
+                imageCarousel.pageMargin =50
                 imageCarousel.setCurrentItem(0, false)
                 imageCarousel.visibility = View.VISIBLE
                 // Automatically switch between images for one round
@@ -152,7 +159,8 @@ class HomeFragment : Fragment() {
                 }
             }
             homeViewModel.getBannerApplications().value!!.forEach {
-                it.application.decrementUses()
+                if(it.application!=null)
+                    it.application!!.decrementUses()
             }
         }
     }

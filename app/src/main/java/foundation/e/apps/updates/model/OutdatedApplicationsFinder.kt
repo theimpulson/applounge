@@ -21,8 +21,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.AsyncTask
 import foundation.e.apps.application.model.Application
-import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.application.model.State
+import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
 
 class OutdatedApplicationsFinder(private val packageManager: PackageManager,

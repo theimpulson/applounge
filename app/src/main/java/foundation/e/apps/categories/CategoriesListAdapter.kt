@@ -17,19 +17,20 @@
 
 package foundation.e.apps.categories
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.support.v7.widget.RecyclerView
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import foundation.e.apps.R
 import foundation.e.apps.categories.category.CategoryActivity
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.utils.Constants
-import kotlin.collections.ArrayList
 
 class CategoriesListAdapter(private var categories: ArrayList<Category>)
     : RecyclerView.Adapter<CategoriesListAdapter.CategoryViewHolder>() {
@@ -56,13 +57,17 @@ class CategoriesListAdapter(private var categories: ArrayList<Category>)
         return categories.size
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        holder.categoryIcon.setImageDrawable(
-                holder.categoryIcon.resources.getDrawable(categories[position].getIconResource()))
+
+
+        holder.categoryIcon.setImageDrawable(holder.categoryIcon.resources.getDrawable(categories[position].getIconResource()))
+        holder.categoryIcon.setColorFilter(Color.parseColor("#0088ED"))
         holder.categoryTitle.text = categories[position].getTitle()
         holder.categoryContainer.setOnClickListener {
             val intent = Intent(holder.categoryContainer.context, CategoryActivity::class.java)
             intent.putExtra(Constants.CATEGORY_KEY, categories[position])
+            intent.putExtra("POSITION",position)
             holder.categoryContainer.context.startActivity(intent)
         }
     }

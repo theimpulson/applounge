@@ -18,16 +18,19 @@
 package foundation.e.apps.application
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import android.text.Html
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
+import android.text.style.ForegroundColorSpan
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Menu
@@ -36,6 +39,12 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import com.google.android.material.snackbar.Snackbar
+import foundation.e.apps.MainActivity.Companion.sharedPreferences
+import foundation.e.apps.PWA.PwaInstaller
 import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.ApplicationStateListener
@@ -43,6 +52,8 @@ import foundation.e.apps.application.model.Downloader
 import foundation.e.apps.application.model.State
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.FullData
+import foundation.e.apps.application.model.data.PwaFullData
+import foundation.e.apps.application.model.data.PwasBasicData
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnection
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnectionCallback
@@ -53,7 +64,6 @@ import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.APPLICATION_DESCRIPTION_KEY
 import foundation.e.apps.utils.Constants.APPLICATION_PACKAGE_NAME_KEY
 import foundation.e.apps.utils.Constants.SELECTED_APPLICATION_SCREENSHOT_KEY
-import foundation.e.apps.utils.Constants.WEB_STORE_URL
 import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.Execute
 import kotlinx.android.synthetic.main.activity_application.*
@@ -65,7 +75,12 @@ class ApplicationActivity :
         ApplicationStateListener,
         ApplicationManagerServiceConnectionCallback,
         Downloader.DownloadProgressCallback,
-        BasicData.IconLoaderCallback {
+        BasicData.IconLoaderCallback,
+        PwasBasicData.IconLoaderCallback{
+
+
+
+
     private lateinit var applicationPackageName: String
     private lateinit var application: Application
     private val applicationManagerServiceConnection =
@@ -74,25 +89,33 @@ class ApplicationActivity :
     private var imageHeight = 0
     private var imageMargin = 0
     private var defaultElevation = 0f
+    private val sharedPrefFile = "kotlinsharedpreference"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_application)
+        good_border.visibility=View.GONE
+        neutral_border.visibility=View.GONE
+        bad_border.visibility=View.GONE
+
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        sharedPreferences = this.getSharedPreferences(sharedPrefFile,Context.MODE_PRIVATE)
+
+        pwa_sympol.visibility = View.GONE
 
         initialiseDimensions()
-
-
         val applicationPackageName: String? = intent.getStringExtra(APPLICATION_PACKAGE_NAME_KEY)
         if (!applicationPackageName.isNullOrEmpty()) {
             this.applicationPackageName = applicationPackageName!!
             applicationManagerServiceConnection.bindService(this)
         }
     }
+
 
     private fun initialiseElevation() {
         if (scroll_view.scrollY == 0) {
@@ -118,6 +141,7 @@ class ApplicationActivity :
             error = application.assertFullData(this)
         }, {
             if (error == null) {
+
                 onApplicationInfoLoaded()
             } else {
                 Snackbar.make(container,
@@ -177,75 +201,356 @@ class ApplicationActivity :
         defaultElevation = Math.ceil(resources.getDimension(R.dimen.default_elevation) * logicalDensity.toDouble()).toFloat()
     }
 
+    @SuppressLint("ResourceAsColor")
+    private fun textColorChange(text: String): SpannableStringBuilder {
+        val builder =  SpannableStringBuilder();
+        val redSpannable= SpannableString(text);
+        redSpannable.setSpan( ForegroundColorSpan(R.color.colorDarkGray), 0, text.length, 0);
+        builder.append(redSpannable);
+        return builder
+    }
+
     private fun onApplicationInfoLoaded() {
         initialiseElevation()
 
-        val basicData = application.basicData!!
-        val fullData = application.fullData!!
+        if (application.basicData != null) {
 
-        // Load the app icon
-        application.loadIcon(this)
+            val basicData = application.basicData!!
+            val fullData = application.fullData!!
+
+            // Load the app icon
+            application.loadIcon(this)
+
+
+            // Set the app title
+            if (basicData.name.isNotEmpty()) {
+                app_title.text = basicData.name
+            } else {
+                app_title.visibility = View.GONE
+            }
+
+
+            // Set the app author
+            if (basicData.author!!.isNotEmpty()) {
+                app_author.text = basicData.author
+            } else {
+                app_author.visibility = View.GONE
+            }
+
+            // Set the app category
+            if (fullData.category.getTitle().isNotEmpty()) {
+                app_category.text = fullData.category.getTitle()
+                app_category.setOnClickListener {
+                    startActivity(Intent(this, CategoryActivity::class.java).apply {
+                        putExtra(Constants.CATEGORY_KEY, fullData.category)
+                    })
+                }
+            } else {
+                app_category.visibility = View.GONE
+            }
+
+            // Set the app description
+            if (fullData.description.isNotEmpty()) {
+                app_description.text = fullData.description
+                app_description_container.isEnabled = true
+            } else {
+                app_description.text = getString(R.string.not_available_full)
+                app_description_container.isEnabled = false
+            }
+
+            // Handle clicks on description
+            app_description_container.setOnClickListener {
+                val intent = Intent(this, ApplicationDescriptionActivity::class.java)
+                intent.putExtra(APPLICATION_DESCRIPTION_KEY, application.fullData!!.description)
+                startActivity(intent)
+            }
+
+            // Set the app rating
+            val builder=textColorChange(getText(R.string.not_available).toString())
+            if (basicData.ratings!!.rating != -1f) {
+                app_rating.text = basicData.ratings.rating.toString() + "/5"
+            } else {
+                app_rating.text = builder
+            }
+            setRatingBorder(basicData.ratings!!.rating)
+
+            app_rating_container.setOnClickListener {
+                val text = R.string.ok
+                val alertDialog = AlertDialog.Builder(this).create()
+
+                alertDialog.setIcon(R.drawable.ic_app_rating)
+                alertDialog.setTitle(R.string.app_rating)
+                alertDialog.setMessage(getString(R.string.app_rating_description))
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok))
+                { _, _ ->
+                    alertDialog.dismiss()
+                }
+                alertDialog.show()
+                var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                b.setTextColor(Color.parseColor("#0088ED"))
+            }
+
+            // TODO Set the app energy score
+            app_energy_container.setOnClickListener {
+                val alertDialog = AlertDialog.Builder(this).create()
+                alertDialog.setIcon(R.drawable.ic_dialog_info)
+                alertDialog.setTitle(R.string.app_energy_score)
+                alertDialog.setMessage(getString(R.string.app_energy_description))
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
+                { _, _ ->
+                    alertDialog.dismiss()
+                }
+                alertDialog.show()
+                var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                b.setTextColor(Color.parseColor("#0088ED"))
+            }
+
+            // Load the app screenshots
+            basicData.loadImagesAsyncly {
+                showImages(it)
+            }
+
+            //Set the app licence
+            if (fullData.licence.isNotEmpty()) {
+                app_licence.text = fullData.licence
+            } else {
+                app_licence.text = getString(R.string.not_available)
+            }
+
+            if (fullData.getLastVersion() != null) {
+                // Set app size
+                if (fullData.getLastVersion()!!.fileSize.isNotEmpty()) {
+                    app_size.text = fullData.getLastVersion()!!.fileSize
+                } else {
+                    app_size.visibility = View.GONE
+                }
+
+                // Set the app privacy rating
+                val builder=textColorChange(getText(R.string.not_available).toString())
+
+                if (fullData.getLastVersion()!!.privacyRating != null &&
+                        fullData.getLastVersion()!!.privacyRating != -1) {
+                    app_privacy_score.text = fullData.getLastVersion()!!.privacyRating.toString() + "/10"
+                    setPrivacyRatingBorder(fullData.getLastVersion()!!.privacyRating!!)
+                } else {
+                    app_privacy_score.text = builder
+                    setPrivacyRatingBorder(-1)
+                }
+                app_privacy_container.setOnClickListener {
+                    val message = layoutInflater.inflate(R.layout.privacy_dialog_message, null) as
+                            TextView
+
+                    @Suppress("DEPRECATION")
+                    message.setText((Html.fromHtml("Score out of 10. Computed using <a href=\'https://exodus-privacy.eu.org\'>Exodus Privacy analyses</a>, based on permissions and trackers used in the app")))
+                    message.setLinkTextColor(Color.parseColor("#0088ED"))
+                    message.setMovementMethod(LinkMovementMethod.getInstance())
+
+                    message.movementMethod = (LinkMovementMethod.getInstance())
+                    val alertDialog = AlertDialog.Builder(this).create()
+                    alertDialog.setIcon(R.drawable.ic_dialog_info)
+                    alertDialog.setTitle(R.string.app_privacy_score)
+                    alertDialog.setView(message)
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
+                    { _, _ ->
+                        alertDialog.dismiss()
+                    }
+                    alertDialog.show()
+                    var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    b.setTextColor(Color.parseColor("#0088ED"))
+                }
+
+                // Set app version
+                if (fullData.getLastVersion()!!.version.isNotEmpty()) {
+                    app_version.text = fullData.getLastVersion()!!.version
+                } else {
+                    app_version.text = getString(R.string.not_available)
+                }
+
+                // Set app update timestamp
+                if (fullData.getLastVersion()!!.createdOn.isNotEmpty()) {
+                    app_updated_on.text = getFormattedTimestamp(fullData.getLastVersion()!!.createdOn)
+                } else {
+                    app_updated_on.text = getString(R.string.not_available)
+                }
+
+                // Set app minimum required Android version
+                if (fullData.getLastVersion()!!.minAndroid.isNotEmpty()) {
+                    app_min_android.text =
+                            getFormattedMinSdkVersion(fullData.getLastVersion()!!.minAndroid)
+                } else {
+                    app_min_android.text = getString(R.string.not_available)
+                }
+            } else {
+                // Set app size
+                app_size.visibility = View.GONE
+
+                // Set app privacy rating
+                val builder=textColorChange(getText(R.string.not_available).toString())
+                app_privacy_score.text = builder
+                setPrivacyRatingBorder(-1)
+                app_privacy_container.setOnClickListener {
+                    val alertDialog = AlertDialog.Builder(this).create()
+                    alertDialog.setIcon(R.drawable.ic_dialog_info)
+                    alertDialog.setTitle(R.string.app_privacy_score)
+                    alertDialog.setMessage(getString(R.string.app_privacy_description))
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
+                    { _, _ ->
+                        alertDialog.dismiss()
+                    }
+                    alertDialog.show()
+                    var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    b.setTextColor(Color.parseColor("#0088ED"))
+                }
+
+                // Set app version
+                app_version.text = getString(R.string.not_available_full)
+
+                // Set app update timestamp
+                app_updated_on.text = getString(R.string.not_available_full)
+
+                // Set app minimum required Android version
+                app_min_android.text = getString(R.string.not_available_full)
+            }
+
+            // Handle clicks on app permissions
+            app_permissions_container.setOnClickListener {
+                val layout = layoutInflater.inflate(R.layout.custom_alert_dialog_layout, null)
+                val message = layout.findViewById<TextView>(R.id.message)
+                val alertDialog = AlertDialog.Builder(this).create()
+                alertDialog.setTitle(R.string.app_permissions_title)
+                if (fullData.getLastVersion() != null &&
+                        fullData.getLastVersion()!!.exodusPermissions != null) {
+                    if (fullData.getLastVersion()!!.exodusPermissions!!.isNotEmpty()) {
+                        var rawMessage = ""
+                        var index = 0
+                        fullData.getLastVersion()!!.exodusPermissions!!.forEach { permission ->
+                            rawMessage += permission
+                            if (index != fullData.getLastVersion()!!.exodusPermissions!!.size - 1) {
+                                rawMessage += "\n"
+                            }
+                            index++
+                        }
+                        message.text = rawMessage
+                    } else {
+                        message.text = getString(R.string.no_permissions)
+                    }
+                } else {
+                    message.text = getString(R.string.not_available_full)
+                }
+                alertDialog.setView(layout)
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
+                { _, _ ->
+                    alertDialog.dismiss()
+                }
+                alertDialog.show()
+                var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                b.setTextColor(Color.parseColor("#0088ED"))
+                layout.findViewById<TextView>(R.id.privacy_message).movementMethod = LinkMovementMethod.getInstance()
+            }
+
+            // Handle clicks on app trackers
+            app_trackers_container.setOnClickListener {
+                val layout = layoutInflater.inflate(R.layout.custom_alert_dialog_layout, null)
+                val message = layout.findViewById<TextView>(R.id.message)
+
+                val linkMessage = layout.findViewById<TextView>(R.id.privacy_message)
+                @Suppress("DEPRECATION")
+                linkMessage.setText((Html.fromHtml("Computed using <a href=\'https://exodus-privacy.eu.org\'>Exodus Privacy analyses</a>.")))
+                linkMessage.setLinkTextColor(Color.parseColor("#0088ED"))
+                linkMessage.setMovementMethod(LinkMovementMethod.getInstance())
+
+                val alertDialog = AlertDialog.Builder(this).create()
+
+                alertDialog.setTitle(R.string.app_trackers_title)
+                if (fullData.getLastVersion() != null &&
+                        fullData.getLastVersion()!!.exodusTrackers != null) {
+                    if (fullData.getLastVersion()!!.exodusTrackers!!.isNotEmpty()) {
+                        var rawMessage = ""
+                        var index = 0
+                        fullData.getLastVersion()!!.exodusTrackers!!.forEach { tracker ->
+                            rawMessage += tracker
+                            if (index != fullData.getLastVersion()!!.exodusTrackers!!.size - 1) {
+                                rawMessage += "\n"
+                            }
+                            index++
+                        }
+                        message.text = rawMessage
+                    } else {
+                        message.text = getString(R.string.no_trackers)
+                    }
+                } else {
+                    message.text = getString(R.string.not_available_full)
+                }
+                alertDialog.setView(layout)
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
+                { _, _ ->
+                    alertDialog.dismiss()
+                }
+                alertDialog.show()
+                var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                b.setTextColor(Color.parseColor("#0088ED"))
+                linkMessage.movementMethod = LinkMovementMethod.getInstance()
+            }
+
+            application.addListener(this)
+            stateChanged(application.state)
+
+            // Handle clicks on app install button
+            app_install.setOnClickListener {
+                onInstallButtonClick(fullData)
+            }
+        } else {
+            onPwaApplicationLoaded()
+        }
+
+    }
+
+    @SuppressLint("NewApi")
+    private fun onPwaApplicationLoaded() {
+
+        application.PwaloadIcon(this)
+        pwa_sympol.visibility = View.VISIBLE
+        Ratings.visibility=View.GONE
+
+
+        val pwasBasicData = application.pwabasicdata
+        val pwaFullData = application.pwaFullData
+
 
         // Set the app title
-        if (basicData.name.isNotEmpty()) {
-            app_title.text = basicData.name
+        if (pwasBasicData!!.name.isNotEmpty()) {
+            app_title.text = pwasBasicData!!.name
         } else {
             app_title.visibility = View.GONE
         }
 
-        // Set the app author
-        if (basicData.author.isNotEmpty()) {
-            app_author.text = basicData.author
-        } else {
-            app_author.visibility = View.GONE
-        }
-
-        // Set the app category
-        if (fullData.category.getTitle().isNotEmpty()) {
-            app_category.text = fullData.category.getTitle()
-            app_category.setOnClickListener {
-                startActivity(Intent(this, CategoryActivity::class.java).apply {
-                    putExtra(Constants.CATEGORY_KEY, fullData.category)
-                })
-            }
-        } else {
-            app_category.visibility = View.GONE
-        }
-
         // Set the app description
-        if (fullData.description.isNotEmpty()) {
-            app_description.text = fullData.description
+        if (pwaFullData!!.description.isNotEmpty()) {
+            app_description.text = pwaFullData.description
             app_description_container.isEnabled = true
         } else {
             app_description.text = getString(R.string.not_available_full)
             app_description_container.isEnabled = false
         }
 
+        if (pwaFullData!!.category.getTitle().isNotEmpty()) {
+            app_category.text = pwaFullData.category.getTitle()
+            app_category.setOnClickListener {
+                startActivity(Intent(this, CategoryActivity::class.java).apply {
+                    putExtra(Constants.CATEGORY_KEY, pwaFullData.category)
+                })
+            }
+        } else {
+            app_category.visibility = View.GONE
+        }
+
         // Handle clicks on description
         app_description_container.setOnClickListener {
             val intent = Intent(this, ApplicationDescriptionActivity::class.java)
-            intent.putExtra(APPLICATION_DESCRIPTION_KEY, application.fullData!!.description)
+            intent.putExtra(APPLICATION_DESCRIPTION_KEY, application.pwaFullData!!.description)
             startActivity(intent)
         }
 
-        // Set the app rating
-        if (basicData.ratings.rating != -1f) {
-            app_rating.text = basicData.ratings.rating.toString() + "/5"
-        } else {
-            app_rating.text = getString(R.string.not_available)
-        }
-        setRatingBorder(basicData.ratings.rating)
-        app_rating_container.setOnClickListener {
-            val alertDialog = AlertDialog.Builder(this).create()
-            alertDialog.setIcon(R.drawable.ic_dialog_info)
-            alertDialog.setTitle(R.string.app_rating)
-            alertDialog.setMessage(getString(R.string.app_rating_description))
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
-            { _, _ ->
-                alertDialog.dismiss()
-            }
-            alertDialog.show()
-        }
 
         // TODO Set the app energy score
         app_energy_container.setOnClickListener {
@@ -261,173 +566,28 @@ class ApplicationActivity :
         }
 
         // Load the app screenshots
-        basicData.loadImagesAsyncly {
+        pwasBasicData.loadImagesAsyncly {
             showImages(it)
         }
 
-        //Set the app licence
-        if (fullData.licence.isNotEmpty()) {
-            app_licence.text = fullData.licence
-        } else {
-            app_licence.text = getString(R.string.not_available)
-        }
-
-        if (fullData.getLastVersion() != null) {
-            // Set app size
-            if (fullData.getLastVersion()!!.fileSize.isNotEmpty()) {
-                app_size.text = fullData.getLastVersion()!!.fileSize
-            } else {
-                app_size.visibility = View.GONE
-            }
-
-            // Set the app privacy rating
-            if (fullData.getLastVersion()!!.privacyRating != null &&
-                    fullData.getLastVersion()!!.privacyRating != -1) {
-                app_privacy_score.text = fullData.getLastVersion()!!.privacyRating.toString() + "/10"
-                setPrivacyRatingBorder(fullData.getLastVersion()!!.privacyRating!!)
-            } else {
-                app_privacy_score.text = getString(R.string.not_available)
-                setPrivacyRatingBorder(-1)
-            }
-            app_privacy_container.setOnClickListener {
-                val message = layoutInflater.inflate(R.layout.privacy_dialog_message, null) as
-                        TextView
-                message.movementMethod = (LinkMovementMethod.getInstance())
-                val alertDialog = AlertDialog.Builder(this).create()
-                alertDialog.setIcon(R.drawable.ic_dialog_info)
-                alertDialog.setTitle(R.string.app_privacy_score)
-                alertDialog.setView(message)
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
-                { _, _ ->
-                    alertDialog.dismiss()
-                }
-                alertDialog.show()
-            }
-
-            // Set app version
-            if (fullData.getLastVersion()!!.version.isNotEmpty()) {
-                app_version.text = fullData.getLastVersion()!!.version
-            } else {
-                app_version.text = getString(R.string.not_available)
-            }
-
-            // Set app update timestamp
-            if (fullData.getLastVersion()!!.createdOn.isNotEmpty()) {
-                app_updated_on.text = getFormattedTimestamp(fullData.getLastVersion()!!.createdOn)
-            } else {
-                app_updated_on.text = getString(R.string.not_available)
-            }
-
-            // Set app minimum required Android version
-            if (fullData.getLastVersion()!!.minAndroid.isNotEmpty()) {
-                app_min_android.text =
-                        getFormattedMinSdkVersion(fullData.getLastVersion()!!.minAndroid)
-            } else {
-                app_min_android.text = getString(R.string.not_available)
-            }
-        } else {
-            // Set app size
-            app_size.visibility = View.GONE
-
-            // Set app privacy rating
-            app_privacy_score.text = getString(R.string.not_available)
-            setPrivacyRatingBorder(-1)
-            app_privacy_container.setOnClickListener {
-                val alertDialog = AlertDialog.Builder(this).create()
-                alertDialog.setIcon(R.drawable.ic_dialog_info)
-                alertDialog.setTitle(R.string.app_privacy_score)
-                alertDialog.setMessage(getString(R.string.app_privacy_description))
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
-                { _, _ ->
-                    alertDialog.dismiss()
-                }
-                alertDialog.show()
-            }
-
-            // Set app version
-            app_version.text = getString(R.string.not_available_full)
-
-            // Set app update timestamp
-            app_updated_on.text = getString(R.string.not_available_full)
-
-            // Set app minimum required Android version
-            app_min_android.text = getString(R.string.not_available_full)
-        }
 
         // Handle clicks on app permissions
-        app_permissions_container.setOnClickListener {
-            val layout = layoutInflater.inflate(R.layout.custom_alert_dialog_layout, null)
-            val message = layout.findViewById<TextView>(R.id.message)
-            val alertDialog = AlertDialog.Builder(this).create()
-            alertDialog.setTitle(R.string.app_permissions_title)
-            if (fullData.getLastVersion() != null &&
-                    fullData.getLastVersion()!!.exodusPermissions != null) {
-                if (fullData.getLastVersion()!!.exodusPermissions!!.isNotEmpty()) {
-                    var rawMessage = ""
-                    var index = 0
-                    fullData.getLastVersion()!!.exodusPermissions!!.forEach { permission ->
-                        rawMessage += permission
-                        if (index != fullData.getLastVersion()!!.exodusPermissions!!.size - 1) {
-                            rawMessage += "\n"
-                        }
-                        index++
-                    }
-                    message.text = rawMessage
-                } else {
-                    message.text = getString(R.string.no_permissions)
-                }
-            } else {
-                message.text = getString(R.string.not_available_full)
-            }
-            alertDialog.setView(layout)
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
-            { _, _ ->
-                alertDialog.dismiss()
-            }
-            alertDialog.show()
-            layout.findViewById<TextView>(R.id.privacy_message).movementMethod = LinkMovementMethod.getInstance()
-        }
+        exodus_info_container.visibility=View.GONE
 
-        // Handle clicks on app trackers
-        app_trackers_container.setOnClickListener {
-            val layout = layoutInflater.inflate(R.layout.custom_alert_dialog_layout, null)
-            val message = layout.findViewById<TextView>(R.id.message)
-            val alertDialog = AlertDialog.Builder(this).create()
-            alertDialog.setTitle(R.string.app_trackers_title)
-            if (fullData.getLastVersion() != null &&
-                    fullData.getLastVersion()!!.exodusTrackers != null) {
-                if (fullData.getLastVersion()!!.exodusTrackers!!.isNotEmpty()) {
-                    var rawMessage = ""
-                    var index = 0
-                    fullData.getLastVersion()!!.exodusTrackers!!.forEach { tracker ->
-                        rawMessage += tracker
-                        if (index != fullData.getLastVersion()!!.exodusTrackers!!.size - 1) {
-                            rawMessage += "\n"
-                        }
-                        index++
-                    }
-                    message.text = rawMessage
-                } else {
-                    message.text = getString(R.string.no_trackers)
-                }
-            } else {
-                message.text = getString(R.string.not_available_full)
-            }
-            alertDialog.setView(layout)
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
-            { _, _ ->
-                alertDialog.dismiss()
-            }
-            alertDialog.show()
-            layout.findViewById<TextView>(R.id.privacy_message).movementMethod = LinkMovementMethod.getInstance()
-        }
+        //app_information details
+        app_information_title.visibility=View.GONE
+        app_version_layout.visibility=View.GONE
+        app_updated_on_layout.visibility=View.GONE
+        app_requires.visibility= View.GONE
+        app_licence_layout.visibility=View.GONE
+
 
         application.addListener(this)
         stateChanged(application.state)
 
         // Handle clicks on app install button
         app_install.setOnClickListener {
-            onInstallButtonClick(fullData)
+            onPwaInstallButtonClick(pwaFullData)
         }
     }
 
@@ -455,13 +615,24 @@ class ApplicationActivity :
 
     private fun onInstallButtonClick(fullData: FullData) {
         // Make sure the APK is available for download
+
+
         if (fullData.getLastVersion() == null) {
             Snackbar.make(container,
                     getString(Error.APK_UNAVAILABLE.description),
                     Snackbar.LENGTH_LONG).show()
             return
         }
+
         application.buttonClicked(this, this)
+    }
+
+    fun onPwaInstallButtonClick(fullData: PwaFullData) {
+
+        val intent=Intent(this, PwaInstaller::class.java)
+        intent.putExtra("NAME",fullData.name)
+        intent.putExtra("URL",fullData.url)
+        this.startActivity(intent)
     }
 
     override fun downloading(downloader: Downloader) {
@@ -515,16 +686,16 @@ class ApplicationActivity :
         })
     }
 
-    private fun setRatingBorder(rating: Float) {
+    private fun setRatingBorder(rating: Float?) {
         when {
-            rating >= 7f -> {
-                app_rating.setBackgroundResource(R.drawable.app_border_good)
+            rating!! >= 7f -> {
+                app_rating.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_cat_green_ellipse,0)
             }
             rating >= 4f -> {
-                app_rating.setBackgroundResource(R.drawable.app_border_neutral)
+                app_rating.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_yellow_ellipse,0)
             }
             else -> {
-                app_rating.setBackgroundResource(R.drawable.app_border_bad)
+                app_rating.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_red_ellipse,0)
             }
         }
     }
@@ -532,13 +703,13 @@ class ApplicationActivity :
     private fun setPrivacyRatingBorder(rating: Int) {
         when {
             rating >= 7 -> {
-                app_privacy_score.setBackgroundResource(R.drawable.app_border_good)
+                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_cat_green_ellipse,0)
             }
             rating >= 4 -> {
-                app_privacy_score.setBackgroundResource(R.drawable.app_border_neutral)
+                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_yellow_ellipse,0)
             }
             else -> {
-                app_privacy_score.setBackgroundResource(R.drawable.app_border_bad)
+                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_red_ellipse,0)
             }
         }
     }

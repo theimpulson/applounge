@@ -20,12 +20,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/small_application_list_item_width"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/small_application_list_item_height"
     android:layout_marginStart="@dimen/layout_margin_small"
-    android:layout_marginEnd="@dimen/layout_margin_small"
-    android:background="?android:selectableItemBackground"
+    android:layout_marginEnd="@dimen/layout_margin_medium"
     android:foreground="@drawable/app_category_border"
-    android:padding="@dimen/layout_padding_small">
+    android:padding="@dimen/layout_padding_medium"
+    android:paddingBottom="@dimen/layout_padding_large"
+    android:background="#FFFFFF">
+
+
+
 
     <ImageView
         android:id="@+id/app_icon"
@@ -35,12 +39,20 @@
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/app_icon_content_description"
         android:src="@drawable/ic_app_default" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_below="@id/app_icon"
+        android:id="@+id/view2"
+        android:layout_height="@dimen/default_divider_height"
+        android:layout_marginStart="@dimen/layout_margin_medium"
+        android:layout_marginTop="@dimen/layout_margin_large"
+        android:layout_marginEnd="@dimen/layout_margin_medium"/>
 
     <TextView
         android:id="@+id/app_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/app_icon"
+        android:layout_below="@id/view2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/layout_margin_small"
         android:ellipsize="end"
@@ -51,12 +63,42 @@
         android:textSize="@dimen/text_size_small"
         tools:text="App title" />
 
-    <include
-        layout="@layout/simple_install_button_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <View
+        android:layout_width="match_parent"
         android:layout_below="@id/app_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/layout_margin_small" />
+        android:id="@+id/view"
+        android:layout_height="@dimen/default_divider_height"
+        android:layout_marginStart="@dimen/layout_margin_medium"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="@dimen/layout_margin_medium"/>
+
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@id/view"
+        layout="@layout/simple_install_button_layout"
+        />
+
+
+    <Space
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:padding="50dp"
+        android:paddingBottom="@dimen/layout_padding_large"
+        android:foregroundGravity="bottom"
+        android:gravity="bottom"
+        android:layout_below="@+id/app_install"/>
+
+    <!--    <View-->
+    <!--        android:layout_width="fill_parent"-->
+    <!--        android:layout_height="30dp"-->
+    <!--        android:ellipsize="end"-->
+    <!--        android:padding="50dp"-->
+    <!--        android:foregroundGravity="bottom"-->
+    <!--        android:layout_below="@+id/app_install"-->
+    <!--        >-->
+    <!--    </View>-->
+
 
 </RelativeLayout>

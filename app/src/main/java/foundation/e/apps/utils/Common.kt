@@ -51,7 +51,7 @@ object Common {
         return connection
     }
 
-    fun isSystemApp(packageManager: PackageManager, packageName: String): Boolean {
+    fun isSystemApp(packageManager: PackageManager, packageName: String?): Boolean {
         try {
             // Get package information for the app
             val appPackageInfo = packageManager.getPackageInfo(
@@ -78,7 +78,7 @@ object Common {
         return false
     }
 
-    fun appHasLaunchActivity(context: Context, packageName: String): Boolean {
+    fun appHasLaunchActivity(context: Context, packageName: String?): Boolean {
         return (context.packageManager.getLaunchIntentForPackage(packageName) != null)
     }
 

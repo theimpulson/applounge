@@ -17,10 +17,10 @@
 
 package foundation.e.apps.application
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.view.ViewPager
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
@@ -66,21 +66,38 @@ class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnec
     }
 
     private fun onApplicationInfoLoaded() {
-        val basicData = application.basicData!!
 
-        screenshotsCarousel = screenshots_carousel
-        screenshotsCarousel.visibility = View.GONE
 
-        basicData.loadImagesAsyncly {
-            if (it.isNotEmpty()) {
-                screenshotsCarousel.adapter = ScreenshotsCarouselAdapter(this, it)
-                screenshotsCarousel.setCurrentItem(lastSelectedScreenshotIndex, false)
-                screenshotsCarousel.visibility = View.VISIBLE
+        val basicData = application.basicData
+        val pwasBasicData =application.pwabasicdata
+
+        if(pwasBasicData!=null) {
+            screenshotsCarousel = screenshots_carousel
+            screenshotsCarousel.visibility = View.GONE
+
+            pwasBasicData!!.loadImagesAsyncly {
+                if (it.isNotEmpty()) {
+                    screenshotsCarousel.adapter = ScreenshotsCarouselAdapter(this, it)
+                    screenshotsCarousel.setCurrentItem(lastSelectedScreenshotIndex, false)
+                    screenshotsCarousel.visibility = View.VISIBLE
+                }
+            }
+        }
+        else {
+            screenshotsCarousel = screenshots_carousel
+            screenshotsCarousel.visibility = View.GONE
+
+            basicData!!.loadImagesAsyncly {
+                if (it.isNotEmpty()) {
+                    screenshotsCarousel.adapter = ScreenshotsCarouselAdapter(this, it)
+                    screenshotsCarousel.setCurrentItem(lastSelectedScreenshotIndex, false)
+                    screenshotsCarousel.visibility = View.VISIBLE
+                }
             }
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (::screenshotsCarousel.isInitialized) {
             outState?.putInt(last_selected_screenshot_key, screenshotsCarousel.currentItem)
