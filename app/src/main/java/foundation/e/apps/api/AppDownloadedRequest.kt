@@ -28,7 +28,8 @@ class AppDownloadedRequest(private val id: String) {
 
     fun request() {
         try {
-            val url = Constants.BASE_URL + "apps?action=download&app_id=$id"
+            val arch = System.getProperty("os.arch")
+            val url = Constants.BASE_URL + "apps?action=download&app_id=$id&architecture=:$arch"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             reader.readValue<Result>(urlConnection.inputStream)
             urlConnection.disconnect()

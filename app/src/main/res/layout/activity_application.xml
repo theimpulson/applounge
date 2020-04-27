@@ -17,7 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
     -->
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
@@ -25,7 +25,7 @@
     android:layout_height="match_parent"
     tools:context=".application.ApplicationActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -67,6 +67,8 @@
                     android:contentDescription="@string/app_icon_content_description"
                     android:src="@drawable/ic_app_default" />
 
+
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -95,21 +97,55 @@
                         android:textSize="@dimen/text_size_medium"
                         tools:text="App author" />
 
-                    <TextView
-                        android:id="@+id/app_category"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/layout_margin_medium"
-                        android:background="@drawable/app_category_border"
-                        android:ellipsize="end"
-                        android:foreground="?android:selectableItemBackground"
-                        android:maxLines="1"
-                        android:textSize="@dimen/text_size_medium"
-                        tools:text="App category" />
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/app_category"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_marginTop="@dimen/layout_margin_medium"-->
+                    <!--                        android:background="@drawable/app_category_border"-->
+                    <!--                        android:ellipsize="end"-->
+                    <!--                        android:foreground="?android:selectableItemBackground"-->
+                    <!--                        android:maxLines="1"-->
+                    <!--                        android:textSize="@dimen/text_size_medium"-->
+                    <!--                        tools:text="App category" />-->
 
                 </LinearLayout>
 
+
+                <TextView
+                    android:id="@+id/pwa_sympol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pwa_icon"
+                    android:textAlignment="center"
+                    android:layout_marginTop="@dimen/layout_padding_medium"
+                    android:ellipsize="end"
+                    android:background="@drawable/app_category_border"
+                    android:layout_marginStart="@dimen/layout_margin_large"
+                    android:foreground="?android:selectableItemBackground"
+                    android:maxLines="1"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:padding="@dimen/layout_padding_medium"
+                    android:textColor="@color/colorInstall"
+                    android:textSize="@dimen/text_size_small" />
+
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/app_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/app_category_border"
+                android:ellipsize="end"
+                android:foreground="?android:selectableItemBackground"
+                android:maxLines="1"
+                android:layout_gravity="right"
+                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/colorInstall"
+                android:layout_marginRight="@dimen/layout_margin_large"
+                tools:text="App category" />
+
 
             <RelativeLayout
                 android:id="@+id/app_install_container"
@@ -118,6 +154,8 @@
                 android:layout_marginTop="@dimen/layout_margin_large"
                 android:paddingStart="@dimen/layout_padding_large"
                 android:paddingEnd="@dimen/layout_padding_large">
+
+
 
                 <LinearLayout
                     android:id="@+id/app_download_container"
@@ -182,13 +220,18 @@
                     android:textSize="@dimen/text_size_small"
                     tools:text="App size" />
 
+
+
                 <include
-                    layout="@layout/install_button_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/install_button_width3"
+                    android:layout_height="@dimen/install_button_height"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/layout_margin_medium" />
+                    android:layout_marginStart="@dimen/layout_margin_medium2"
+                    android:layout_marginTop="@dimen/layout_margin_small"
+                    layout="@layout/install_button_layout"
+
+
+                    />
 
             </RelativeLayout>
 
@@ -196,271 +239,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_divider_height"
                 android:layout_marginStart="@dimen/layout_margin_medium"
-                android:layout_marginTop="@dimen/layout_margin_large"
-                android:layout_marginEnd="@dimen/layout_margin_medium"
-                android:background="@color/colorDivider" />
+                android:layout_marginEnd="@dimen/layout_margin_medium" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/layout_margin_large"
                 android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/layout_margin_large"
-                    android:layout_marginEnd="@dimen/layout_margin_large"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/app_description_title"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_size_large"
-                    android:textStyle="bold" />
-
-                <RelativeLayout
-                    android:id="@+id/app_description_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_margin_medium"
-                    android:background="?android:selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:paddingStart="@dimen/layout_padding_large"
-                    android:paddingTop="@dimen/layout_padding_medium"
-                    android:paddingEnd="@dimen/layout_padding_large"
-                    android:paddingBottom="@dimen/layout_padding_medium">
-
-                    <TextView
-                        android:id="@+id/app_description"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@id/app_expand_description"
-                        android:ellipsize="end"
-                        android:maxLines="4"
-                        android:textSize="@dimen/text_size_medium"
-                        tools:text="App description" />
-
-                    <ImageView
-                        android:id="@+id/app_expand_description"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="@dimen/layout_margin_medium"
-                        android:src="@drawable/ic_app_description_expand" />
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default_divider_height"
-                android:layout_marginStart="@dimen/layout_margin_medium"
-                android:layout_marginTop="@dimen/layout_margin_large"
-                android:layout_marginEnd="@dimen/layout_margin_medium"
-                android:background="@color/colorDivider" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/layout_padding_large">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/app_ratings_title"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_size_large"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_margin_medium"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/app_rating_container"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?android:selectableItemBackground"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="@dimen/layout_padding_medium">
-
-                        <TextView
-                            android:id="@+id/app_rating"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/app_border_good"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/text_size_large"
-                            tools:text="App rating" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/layout_margin_medium"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:contentDescription="@string/app_rating_content_description"
-                                android:src="@drawable/ic_app_rating" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/layout_margin_medium"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:text="@string/app_rating"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/text_size_large" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/app_privacy_container"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/layout_margin_medium"
-                        android:layout_marginEnd="@dimen/layout_margin_medium"
-                        android:background="?android:selectableItemBackground"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="@dimen/layout_padding_medium">
-
-                        <TextView
-                            android:id="@+id/app_privacy_score"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/app_border_good"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/text_size_large"
-                            tools:text="App privacy" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/layout_margin_medium"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:contentDescription="@string/app_privacy_score_content_description"
-                                android:src="@drawable/ic_app_privacy" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/layout_margin_medium"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:text="@string/app_privacy_score"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/text_size_large" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/app_energy_container"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?android:selectableItemBackground"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="@dimen/layout_padding_medium">
-
-                        <!-- TODO Don't set default background to red and text to N/A-->
-                        <TextView
-                            android:id="@+id/app_energy_score"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/app_border_bad"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="@string/not_available"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/text_size_large"
-                            tools:text="App energy" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/layout_margin_medium"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:contentDescription="@string/app_energy_score_content_description"
-                                android:src="@drawable/ic_app_energy" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/layout_margin_medium"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:text="@string/app_energy_score"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/text_size_large" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default_divider_height"
-                android:layout_marginStart="@dimen/layout_margin_medium"
-                android:layout_marginTop="@dimen/layout_margin_large"
-                android:layout_marginEnd="@dimen/layout_margin_medium"
-                android:background="@color/colorDivider" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_margin_large"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/layout_margin_large"
-                    android:layout_marginEnd="@dimen/layout_margin_large"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/app_screenshots_title"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_size_large"
-                    android:textStyle="bold" />
 
                 <HorizontalScrollView
                     android:id="@+id/app_images_scroll_view"
@@ -501,14 +286,326 @@
                     android:layout_marginTop="@dimen/layout_margin_large" />
 
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_divider_height"
+                android:layout_marginStart="@dimen/layout_margin_medium"
+                android:layout_marginEnd="@dimen/layout_margin_medium"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_margin_small"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:id="@+id/app_description_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_margin_medium"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingStart="@dimen/layout_padding_large"
+                    android:paddingTop="@dimen/layout_padding_medium"
+                    android:paddingEnd="@dimen/layout_padding_large"
+                    android:paddingBottom="@dimen/layout_padding_medium">
+
+                    <TextView
+                        android:id="@+id/app_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:ellipsize="end"
+                        android:maxLines="4"
+                        android:textSize="@dimen/text_size_medium"
+                        android:padding="5dp"
+                        tools:text="App description" />
+
+
+                    <TextView
+                        android:id="@+id/app_expand_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:textColor="@color/colorInstall"
+                        android:text="@string/more"
+                        android:padding="5dp"
+                        android:layout_marginEnd="@dimen/layout_margin_medium"
+                        android:layout_marginTop="@dimen/layout_margin_medium"
+                        android:layout_below="@id/app_description"
+                        />
+
+                </RelativeLayout>
+
+
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_divider_height"
                 android:layout_marginStart="@dimen/layout_margin_medium"
                 android:layout_marginTop="@dimen/layout_margin_large"
-                android:layout_marginEnd="@dimen/layout_margin_medium"
-                android:background="@color/colorDivider" />
+                android:layout_marginEnd="@dimen/layout_margin_medium"/>
+<!--                android:background="@color/colorDivider" />-->
+
+            <LinearLayout
+                android:id="@+id/Ratings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/layout_padding_large">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/app_ratings_title"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_margin_medium"
+                    android:weightSum="3"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/app_rating_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/layout_padding_medium">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+<!--                            android:layout_gravity="end">-->
+
+                            <TextView
+                                android:id="@+id/app_rating"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:layout_gravity="left"
+                                android:textColor="@android:color/black"
+                                android:textSize="@dimen/text_size_extra_large"
+                                android:drawableRight="@drawable/app_border_good"
+                                tools:text="App rating" />
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/good_border"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/ic_cat_green_ellipse"
+                                android:ellipsize="end"
+                                android:layout_toRightOf="@+id/app_rating"
+                                />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/layout_margin_medium"
+                            android:layout_gravity="start"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription="@string/app_rating_content_description"
+                                android:src="@drawable/ic_app_rating"
+                                android:tint="@android:color/darker_gray"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/layout_margin_medium"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/app_rating"
+                                android:textColor="@android:color/darker_gray"
+                                android:textSize="@dimen/text_size_small"
+                                android:tint="@android:color/darker_gray"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_toStartOf="@id/app_rating_container"-->
+<!--                        android:orientation="vertical">-->
+<!--                        -->
+<!--                        <Space-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:paddingTop="10dp"/>-->
+
+<!--                    </LinearLayout>-->
+
+
+                    <LinearLayout
+                        android:id="@+id/app_privacy_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:layout_weight="1"
+                        android:background="?android:selectableItemBackground"
+                        android:orientation="vertical"
+                        android:padding="@dimen/layout_padding_medium">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start">
+
+
+                            <TextView
+                                android:id="@+id/app_privacy_score"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:layout_gravity="start"
+                                android:textColor="@android:color/black"
+                                android:textSize="@dimen/text_size_extra_large"
+                                android:drawablePadding="5dp"
+                                android:drawableRight="@drawable/app_border_neutral"
+                                tools:text="App privacy" />
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/neutral_border"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/ic_yellow_ellipse"
+                                android:ellipsize="end"
+                                android:layout_toRightOf="@+id/app_privacy_score"
+                                />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/layout_margin_medium"
+                            android:layout_gravity="start"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription="@string/app_privacy_score_content_description"
+                                android:src="@drawable/ic_app_privacy"
+                                android:tint="@android:color/darker_gray"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/layout_margin_medium"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/app_privacy_score"
+                                android:textColor="@android:color/darker_gray"
+                                android:textSize="@dimen/text_size_small" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:padding="20dp"/>-->
+
+                    <LinearLayout
+                        android:id="@+id/app_energy_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/layout_padding_medium">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start">
+
+
+                            <!-- TODO Don't set default background to red and text to N/A-->
+                            <TextView
+                                android:id="@+id/app_energy_score"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:layout_gravity="start"
+                                android:text="@string/not_available"
+                                android:textColor="@color/colorDarkGray"
+                                android:textSize="@dimen/text_size_extra_large"
+                                android:drawablePadding="5dp"
+                                android:drawableRight="@drawable/app_border_bad"
+                                tools:text="App energy" />
+
+
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/bad_border"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/app_border_bad"
+                                android:ellipsize="end"
+                                android:layout_gravity="center"
+                                android:layout_toRightOf="@+id/app_energy_score"
+                                />
+                        </RelativeLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/layout_margin_medium"
+                            android:layout_gravity="start"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:contentDescription="@string/app_energy_score_content_description"
+                                android:src="@drawable/ic_app_energy"
+                                android:tint="@android:color/darker_gray"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/layout_margin_medium"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/app_energy_score"
+                                android:textColor="@android:color/darker_gray"
+                                android:textSize="@dimen/text_size_small" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_divider_height"
+                android:layout_marginStart="@dimen/layout_margin_medium"
+                android:layout_marginTop="@dimen/layout_margin_large"
+                android:layout_marginEnd="@dimen/layout_margin_medium"/>
 
             <LinearLayout
                 android:id="@+id/exodus_info_container"
@@ -604,6 +701,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/Information_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_divider_height"
                 android:layout_marginStart="@dimen/layout_margin_medium"
@@ -619,6 +717,7 @@
                 android:paddingEnd="@dimen/layout_padding_large">
 
                 <TextView
+                    android:id="@+id/app_information_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -635,6 +734,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/app_version_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -669,6 +769,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/app_updated_on_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_margin_medium"
@@ -709,6 +810,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/app_requires"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_margin_medium"
@@ -749,6 +851,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/app_licence_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_margin_medium"
@@ -800,4 +903,4 @@
         android:background="@color/colorDivider"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,7 +36,7 @@
         android:textStyle="bold"
         tools:text="Top updated games" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/application_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

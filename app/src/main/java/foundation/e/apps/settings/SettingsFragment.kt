@@ -17,35 +17,42 @@
 
 package foundation.e.apps.settings
 
+import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.preference.CheckBoxPreference
-import android.support.v7.preference.ListPreference
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.CheckBoxPreference
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import foundation.e.apps.MainActivity
 import foundation.e.apps.R
 import foundation.e.apps.updates.UpdatesManager
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+
 
 class SettingsFragment : PreferenceFragmentCompat() {
+     private var oldCheckedPreference: RadioButtonPreference? = null
 
+
+    @SuppressLint("RestrictedApi")
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         // Create preferences
-        addPreferencesFromResource(R.xml.preferences)
+        setPreferencesFromResource(R.xml.preferences, rootKey)
 
         // Handle update check interval changes
         val updateCheckInterval =
-                preferenceManager.findPreference(getString(R.string.pref_update_interval_key)) as ListPreference
+                preferenceManager.findPreference<Preference>(getString(R.string.pref_update_interval_key)) as ListPreference
         updateCheckInterval.setOnPreferenceChangeListener { _, newValue ->
             UpdatesManager(activity!!.applicationContext).replaceWorker(newValue.toString().toInt())
             true
         }
 
         // Disable auto update on WiFi preference if auto update is un-checked
-        val automaticallyInstallUpdates =
-                preferenceManager.findPreference(
-                        getString(R.string.pref_update_install_automatically_key)) as CheckBoxPreference
-        val onlyOnWifi =
-                preferenceManager.findPreference(getString(R.string.pref_update_wifi_only_key)) as CheckBoxPreference
+        val automaticallyInstallUpdates = preferenceManager.findPreference<Preference>(getString(R.string.pref_update_install_automatically_key)) as CheckBoxPreference
+
+        val onlyOnWifi = preferenceManager.findPreference<Preference>(getString(R.string.pref_update_wifi_only_key)) as CheckBoxPreference
         onlyOnWifi.isEnabled = automaticallyInstallUpdates.isChecked
         automaticallyInstallUpdates.setOnPreferenceChangeListener { _, newValue ->
             onlyOnWifi.isEnabled = newValue.toString().toBoolean()
@@ -54,11 +61,69 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // Launch AppRequestActivity when "Request app" preference is clicked
         val requestApp =
-                preferenceManager.findPreference(getString(R.string.pref_apps_request_app_key))
+                preferenceManager.findPreference<Preference>(getString(R.string.pref_apps_request_app_key))
                         as Preference
-        requestApp.setOnPreferenceClickListener {_ ->
+        requestApp.setOnPreferenceClickListener { _ ->
             startActivity(Intent(context, AppRequestActivity::class.java))
             true
+        }
+
+        //Show all apps when checked
+        var x = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.Show_all_apps)) as RadioButtonPreference
+        //Show only open-source apps when checked
+        var y = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.show_only_open_source_apps_key)) as RadioButtonPreference
+        //Show only pwas when checked
+        var z = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.show_only_pwa_apps_key)) as RadioButtonPreference
+
+        x.setOnPreferenceChangeListener { _, newValue ->
+            y.isChecked = false
+            z.isChecked = false
+            backToMainActivity()
+            true
+        }
+
+        y.setOnPreferenceChangeListener { _, newValue ->
+            x.isChecked = false
+            z.isChecked = false
+            backToMainActivity()
+            true
+        }
+
+        z.setOnPreferenceChangeListener { _, newValue ->
+            y.isChecked = false
+            x.isChecked = false
+            backToMainActivity()
+            true
+        }
+    }
+
+
+    private var working_dialog: ProgressDialog? = null
+
+    fun backToMainActivity(){
+        showWorkingDialog()
+        val worker = Executors.newSingleThreadScheduledExecutor()
+        val task =  Runnable {
+            run {
+                removeWorkingDialog()
+                val intent= Intent(activity,MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                activity!!.finish()
+            }
+        }
+        worker.schedule(task, 1, TimeUnit.SECONDS)
+    }
+
+    private fun showWorkingDialog() {
+        working_dialog = ProgressDialog.show(context, "", "Applying Settings...", true)
+    }
+
+    private fun removeWorkingDialog() {
+        if (working_dialog != null) {
+            working_dialog!!.dismiss()
+            working_dialog = null
         }
     }
 }

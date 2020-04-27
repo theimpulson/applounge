@@ -20,23 +20,56 @@ package foundation.e.apps.api
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.application.model.data.FullData
+import foundation.e.apps.application.model.data.PwaFullData
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
 
 class AppDetailRequest(private val id: String) {
 
+    val sb = StringBuilder()
+
     companion object {
         private val reader = Common.getObjectMapper().readerFor(Result::class.java)
+        private val Pwareader = Common.getObjectMapper().readerFor(PwaResult::class.java)
+    }
+
+    init {
+        val arch = android.os.Build.SUPPORTED_ABIS.toList()
+        var size = 0
+        for (v in arch) {
+            if (size < arch.size - 1) {
+                sb.append("'$v',")
+            } else {
+                sb.append("'$v']")
+            }
+            size++
+        }
     }
 
     fun request(callback: (Error?, FullData?) -> Unit) {
         try {
-            val url = Constants.BASE_URL + "apps?action=app_detail&id=$id"
+            val url = Constants.BASE_URL + "apps?action=app_detail&id=$id&architectures=[$sb"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<Result>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result.app)
+
+
+        } catch (e: Exception) {
+            callback.invoke(Error.findError(e), null)
+        }
+    }
+
+
+    fun Pwarequest(callback: (Error?, PwaFullData?) -> Unit) {
+        try {
+            val url = Constants.BASE_URL + "apps?action=app_detail&id=$id&architectures=[$sb"
+            val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
+            val PwaResult = Pwareader.readValue<PwaResult>(urlConnection.inputStream)
+            urlConnection.disconnect()
+            callback.invoke(null, PwaResult.app)
+
         } catch (e: Exception) {
             callback.invoke(Error.findError(e), null)
         }
@@ -44,4 +77,9 @@ class AppDetailRequest(private val id: String) {
 
     class Result @JsonCreator
     constructor(@JsonProperty("app") val app: FullData)
+
+    class PwaResult @JsonCreator
+    constructor(@JsonProperty("app") val app: PwaFullData)
 }
+
+

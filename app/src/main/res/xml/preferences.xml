@@ -20,44 +20,86 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <PreferenceCategory android:title="@string/preference_updates_title">
 
+        <Preference
+            android:layout="@layout/preference_space"/>
+
         <ListPreference
+            android:id="@+id/id_update"
             android:defaultValue="@string/preference_update_interval_default"
             android:dialogTitle="@string/preference_update_interval_title"
             android:entries="@array/update_interval_names"
             android:entryValues="@array/update_interval_values"
             android:key="@string/pref_update_interval_key"
             android:summary="%s"
-            android:title="@string/preference_update_interval_title" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/pref_update_notify_key"
-            android:summary="@string/preference_update_notify_available_description"
-            android:title="@string/preference_update_notify_available_title" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/pref_update_install_automatically_key"
-            android:summary="@string/preference_update_install_automatically_description"
-            android:title="@string/preference_update_install_automatically_title" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/pref_update_wifi_only_key"
-            android:summary="@string/preference_update_wifi_only_description"
-            android:title="@string/preference_update_wifi_only_title" />
-
+            android:title="@string/preference_update_interval_title"
+            android:iconSpaceReserved="true"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/preference_apps_title">
+    <Preference
+        android:selectable="false"
+        android:layout="@layout/preference_divider"/>
 
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/pref_update_notify_key"
+        android:summary="@string/preference_update_notify_available_description"
+        android:title="@string/preference_update_notify_available_title"
+        />
+
+    <Preference
+        android:selectable="false"
+        android:layout="@layout/preference_divider"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/pref_update_install_automatically_key"
+        android:summary="@string/preference_update_install_automatically_description"
+        android:title="@string/preference_update_install_automatically_title"
+        />
+
+    <Preference
+        android:selectable="false"
+        android:layout="@layout/preference_divider"/>
+
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/pref_update_wifi_only_key"
+        android:summary="@string/preference_update_wifi_only_description"
+        android:title="@string/preference_update_wifi_only_title"
+        />
+
+    <Preference
+        android:selectable="false"
+        android:layout="@layout/preference_divider"/>
+
+    <Preference
+        android:key="@string/pref_apps_request_app_key"
+        android:summary="@string/preference_apps_request_app_summary"
+        android:title="@string/preference_apps_request_app_title" />
+
+
+    <PreferenceCategory android:title="@string/Show_applications">
         <Preference
-            android:key="@string/pref_apps_request_app_key"
-            android:summary="@string/preference_apps_request_app_summary"
-            android:title="@string/preference_apps_request_app_title" />
+            android:selectable="false"
+            android:layout="@layout/preference_space"
+            />
+        <foundation.e.apps.settings.RadioButtonPreference
+            android:key="@string/Show_all_apps"
+            android:title="@string/Show_all_apps"
+            android:defaultValue="true"/>
 
+        <foundation.e.apps.settings.RadioButtonPreference
+            android:key="@string/show_only_open_source_apps_key"
+            android:title="@string/show_only_open_source_apps" />
+        <foundation.e.apps.settings.RadioButtonPreference
+            android:key="@string/show_only_pwa_apps_key"
+            android:title="@string/show_only_pwa_apps" />
     </PreferenceCategory>
+
 </PreferenceScreen>
+
+

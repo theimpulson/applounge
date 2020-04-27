@@ -42,7 +42,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/layout_margin_medium"
         android:layout_marginEnd="@dimen/layout_margin_medium"
-        android:layout_toStartOf="@id/app_install_container"
+        android:layout_toStartOf="@id/app_pwa"
         android:layout_toEndOf="@id/app_icon"
         android:orientation="vertical">
 
@@ -95,7 +95,38 @@
 
         </LinearLayout>
 
+
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/app_pwa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_toStartOf="@id/app_install_container"
+        android:layout_toRightOf="@id/app_data_container"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/pwa_sympol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pwa_icon"
+            android:textAlignment="center"
+            android:background="@drawable/app_pwa_border_simple"
+            android:ellipsize="end"
+            android:layout_marginStart="@dimen/layout_margin_small"
+            android:layout_marginEnd="@dimen/layout_margin_small"
+            android:layout_marginTop="@dimen/layout_margin_small"
+            android:foreground="?android:selectableItemBackground"
+            android:maxLines="1"
+            android:padding="@dimen/layout_padding_small"
+            android:textColor="@color/colorInstall"
+            android:textSize="@dimen/text_size_extra_small" />
+
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/app_install_container"
@@ -105,7 +136,17 @@
         android:layout_centerVertical="true"
         android:orientation="vertical">
 
-        <include layout="@layout/simple_install_button_layout" />
+        <include
+            android:layout_width="@dimen/install_button_width2"
+            android:layout_height="@dimen/install_button_height"
+            android:layout_marginTop="@dimen/layout_margin_medium2"
+            layout="@layout/simple_install_button_layout"
+
+            />
+        <!--        <include-->
+        <!--            layout="@layout/simple_update_button_layout"-->
+        <!--            android:id="@+id/app_update"-->
+        <!--            />-->
 
         <LinearLayout
             android:layout_width="wrap_content"

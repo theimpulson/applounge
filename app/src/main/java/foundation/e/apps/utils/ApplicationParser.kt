@@ -19,21 +19,13 @@ package foundation.e.apps.utils
 
 import android.content.Context
 import foundation.e.apps.application.model.Application
-import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.application.model.data.BasicData
-import foundation.e.apps.application.model.data.FullData
+import foundation.e.apps.application.model.data.PwasBasicData
+import foundation.e.apps.application.model.data.SearchAppsBasicData
+import foundation.e.apps.applicationmanager.ApplicationManager
 
 class ApplicationParser {
     companion object {
-        fun parseToApps(applicationManager: ApplicationManager, context: Context, apps: Array<FullData>): ArrayList<Application> {
-            val result = ArrayList<Application>()
-            apps.forEach {
-                val application = applicationManager.findOrCreateApp(it.packageName)
-                application.update(it, context)
-                result.add(application)
-            }
-            return result
-        }
 
         fun parseToApps(applicationManager: ApplicationManager, context: Context, apps: Array<BasicData>): ArrayList<Application> {
             val result = ArrayList<Application>()
@@ -44,5 +36,28 @@ class ApplicationParser {
             }
             return result
         }
+
+        fun PwaParseToApps(applicationManager: ApplicationManager, context: Context, apps: Array<PwasBasicData>): ArrayList<Application> {
+
+             val result = ArrayList<Application>()
+                apps.forEach {
+                    val application = applicationManager.findOrCreateApp(it.name)
+                    application.Pwaupdate(it, context)
+                    result.add(application)
+                }
+                return result
+
+        }
+
+        fun SearchAppsparseToApps(applicationManager: ApplicationManager, context: Context, apps: Array<SearchAppsBasicData>): ArrayList<Application> {
+            val result = ArrayList<Application>()
+            apps.forEach {
+                val application = applicationManager.findOrCreateApp(it.packageName)
+                application.searchUpdate(it, context)
+                result.add(application)
+            }
+            return result
+        }
+
     }
 }

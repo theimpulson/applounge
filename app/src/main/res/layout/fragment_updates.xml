@@ -17,12 +17,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
     -->
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_gravity="center"
-                android:background="@drawable/app_install_border"
+                android:background="@color/colorPrimary"
                 android:ellipsize="end"
                 android:foreground="?android:selectableItemBackground"
                 android:maxWidth="@dimen/install_button_width"
@@ -52,14 +52,25 @@
                 android:minHeight="0dp"
                 android:padding="@dimen/layout_padding_medium"
                 android:text="@string/action_update_all"
-                android:textColor="?android:textColorPrimaryInverse"
+                android:textColor="@color/colorInstall"
+                android:textAllCaps="false"
                 android:textSize="@dimen/text_size_medium" />
+
+
+
+            <!--            <include-->
+            <!--                layout="@layout/update_all_icon"-->
+            <!--                -->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_alignParentEnd="true"-->
+            <!--                android:layout_toRightOf="@+id/update_all" />-->
 
         </RelativeLayout>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/app_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -94,4 +105,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,16 +17,21 @@
 
 package foundation.e.apps.home
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.view.PagerAdapter
+import android.graphics.*
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.viewpager.widget.PagerAdapter
+import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.R
 import foundation.e.apps.application.viewmodel.ApplicationViewModel
 import foundation.e.apps.home.model.BannerApplication
 import kotlinx.android.synthetic.main.image_carousel_item.view.*
+
 
 class ImageCarouselAdapter(context: Context, private val bannerApplications: ArrayList<BannerApplication>) : PagerAdapter() {
 
@@ -44,10 +49,14 @@ class ImageCarouselAdapter(context: Context, private val bannerApplications: Arr
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = layoutInflater.inflate(R.layout.image_carousel_item, container, false)
         val wideImage = view.image
-
-        wideImage.setImageBitmap(bannerApplications[position].image)
+        val image = getRoundedCornerBitmap(bannerApplications[position].image,mActivity)
+//        val resizedImage=reSizeImage(image)
+        wideImage.setImageBitmap(image)
         wideImage.setOnClickListener {
-            applicationViewModel.onApplicationClick(view.context, bannerApplications[position].application)
+           if(mActivity.showApplicationTypePreference()=="open" || mActivity.showApplicationTypePreference()=="pwa"){
+               return@setOnClickListener
+           }
+            applicationViewModel.onApplicationClick(view.context, bannerApplications[position].application!!)
         }
 
         container.addView(view)
@@ -56,5 +65,38 @@ class ImageCarouselAdapter(context: Context, private val bannerApplications: Arr
 
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
         container.removeView(obj as LinearLayout)
+    }
+
+    @SuppressLint("ResourceAsColor")
+    fun getRoundedCornerBitmap(bitmap: Bitmap,context:Context): Bitmap {
+        val output = Bitmap.createBitmap(bitmap.width, bitmap.height,
+                Bitmap.Config.ARGB_8888)
+
+        val canvas = Canvas(output)
+        val borderSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1.toFloat(),
+                context.getResources().getDisplayMetrics()).toInt()
+        val cornerSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8.toFloat(),
+                context.getResources().getDisplayMetrics()).toInt()
+        val paint = Paint()
+        val rect = Rect(0, 0, output.width, output.height)
+        val rectF = RectF(rect)
+
+        // prepare canvas for transfer
+        paint.setAntiAlias(true)
+        paint.setColor(-0x1)
+        paint.setStyle(Paint.Style.FILL)
+        canvas.drawARGB(0, 0, 0, 0)
+        canvas.drawRoundRect(rectF, cornerSizePx.toFloat(), cornerSizePx.toFloat(), paint)
+
+        // draw bitmap
+        paint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.SRC_IN))
+        canvas.drawBitmap(bitmap, rect, rect, paint)
+
+        // draw border
+        paint.setColor(R.color.colorDivider)
+        paint.setStyle(Paint.Style.STROKE)
+        paint.setStrokeWidth(borderSizePx.toFloat())
+        canvas.drawRoundRect(rectF, cornerSizePx.toFloat(), cornerSizePx.toFloat(), paint)
+        return output
     }
 }

@@ -19,11 +19,11 @@ package foundation.e.apps.application
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.viewpager.widget.PagerAdapter
 import foundation.e.apps.R
 import kotlinx.android.synthetic.main.screenshots_carousel_item.view.*
 

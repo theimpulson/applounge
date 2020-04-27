@@ -33,7 +33,7 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/layout_margin_medium"
-        android:src="@drawable/ic_category_default"
+        android:src="@drawable/ic_cat_default"
         android:tint="@color/color_category_icon" />
 
     <TextView

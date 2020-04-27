@@ -26,10 +26,9 @@ class Version(val downloadFlag: String?,
               val signature: String,
               val fileSize: String,
               val updateDate: String,
-              val sourceDownload: String,
-              val whatsNew: String?,
               val updateName: String,
               val privacyRating: Int?,
               val exodusPermissions: ArrayList<String>?,
               val exodusTrackers: ArrayList<String>?,
-              val apkArchitecture: String?)
+              val apkArchitecture: String?,
+              val is_xapk :Boolean)

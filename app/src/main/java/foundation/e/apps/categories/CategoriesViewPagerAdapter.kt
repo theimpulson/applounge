@@ -17,16 +17,19 @@
 
 package foundation.e.apps.categories
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 
 class CategoriesViewPagerAdapter(fragmentManager: FragmentManager, private val numberOfTabs: Int) :
         FragmentStatePagerAdapter(fragmentManager) {
+
     private val applicationsFragment = ApplicationsFragment()
     private val gamesFragment = GamesFragment()
+    private val pwasFragment = PwasFragment()
 
-    override fun getItem(position: Int): Fragment? {
+
+    override fun getItem(position: Int): Fragment {
         when (position) {
             0 -> {
                 return applicationsFragment
@@ -34,8 +37,11 @@ class CategoriesViewPagerAdapter(fragmentManager: FragmentManager, private val n
             1 -> {
                 return gamesFragment
             }
+            2 -> {
+                return pwasFragment
+            }
         }
-        return null
+        return pwasFragment
     }
 
     override fun getCount(): Int {

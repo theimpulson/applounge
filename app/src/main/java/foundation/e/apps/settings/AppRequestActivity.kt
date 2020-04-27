@@ -17,15 +17,15 @@
 
 package foundation.e.apps.settings
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import foundation.e.apps.R
 import foundation.e.apps.settings.viewmodel.AppRequestViewModel
 import foundation.e.apps.utils.Error

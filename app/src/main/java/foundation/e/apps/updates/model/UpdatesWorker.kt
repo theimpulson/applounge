@@ -42,10 +42,10 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
     private var notifyAvailable = true
     private var installAutomatically = true
     private var wifiOnly = false
+    val applicationManager = ApplicationManager()
 
     override fun doWork(): Result {
         Log.i(TAG, "Checking for app updates")
-        val applicationManager = ApplicationManager()
         applicationManager.start(applicationContext)
         loadOutdatedApplications(applicationManager)
         Log.i(TAG, "Ids of apps with pending updates written to file")
@@ -83,6 +83,7 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
                 applications.forEach { application ->
                     it.write((application.basicData!!.packageName + "\n").toByteArray())
                 }
+
                 it.close()
             }
             val isConnectedToUnmeteredNetwork = isConnectedToUnmeteredNetwork(applicationContext)

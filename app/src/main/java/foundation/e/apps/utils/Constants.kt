@@ -20,7 +20,7 @@ package foundation.e.apps.utils
 object Constants {
 
     // Global
-    const val BASE_URL = "https://api.cleanapk.org/"
+    const val BASE_URL = "https://api.cleanapk.org/v2/"
     const val DOWNLOAD_URL = "https://apk.cleanapk.org/"
     const val STORAGE_PERMISSION_REQUEST_CODE = 0
     const val CONNECT_TIMEOUT = 5000 // 5 seconds
@@ -55,4 +55,5 @@ object Constants {
     const val AUTOMATICALLY_INSTALL_UPDATES = "will"
     const val MANUALLY_INSTALL_UPDATES = "will not"
     const val UPDATES_NOTIFICATION_CLICK_EXTRA = "updates_notification_click_extra"
+
 }

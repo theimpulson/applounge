@@ -19,10 +19,10 @@ package foundation.e.apps.api
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.utils.Common
-import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.Constants
-import java.lang.Exception
+import foundation.e.apps.utils.Error
 
 class ListCategoriesRequest {
 
@@ -32,7 +32,8 @@ class ListCategoriesRequest {
 
     fun request(callback: (Error?, ListCategoriesResult?) -> Unit) {
         try {
-            val url = Constants.BASE_URL + "apps?action=list_cat"
+            var appType = mActivity.showApplicationTypePreference()
+            val url = Constants.BASE_URL + "apps?action=list_cat&type=$appType"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<ListCategoriesResult>(urlConnection.inputStream)
             urlConnection.disconnect()
@@ -45,5 +46,4 @@ class ListCategoriesRequest {
     class ListCategoriesResult @JsonCreator
     constructor(@JsonProperty("apps") val appsCategories: Array<String>,
                 @JsonProperty("games") val gamesCategories: Array<String>)
-
 }

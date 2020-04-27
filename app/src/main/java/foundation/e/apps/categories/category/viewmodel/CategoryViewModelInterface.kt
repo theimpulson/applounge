@@ -17,8 +17,8 @@
 
 package foundation.e.apps.categories.category.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Error

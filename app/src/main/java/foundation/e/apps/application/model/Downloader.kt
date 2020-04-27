@@ -18,16 +18,16 @@
 package foundation.e.apps.application.model
 
 import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Environment
 import foundation.e.apps.R
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Constants
-import android.content.Intent
-import android.content.BroadcastReceiver
-import android.content.IntentFilter
-import android.os.AsyncTask
 
 class Downloader(private val applicationInfo: ApplicationInfo, private val fullData: FullData,
                  private val downloaderInterface: DownloaderInterface) :
@@ -78,6 +78,7 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
     }
 
     private fun initialiseDownloadManagerRequest(context: Context) {
+
         request = DownloadManager.Request(
                 Uri.parse(
                         Constants.DOWNLOAD_URL + fullData.getLastVersion()!!.downloadLink))
@@ -87,9 +88,10 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
                     setDestinationInExternalFilesDir(
                             context,
                             Environment.DIRECTORY_DOWNLOADS,
-                            applicationInfo.getApkFilename(fullData.basicData))
+                            applicationInfo.getApkOrXapkFileName(fullData,fullData.basicData))
                 }
     }
+
 
     private fun handleDownloadUpdates() {
         notifier.start()
