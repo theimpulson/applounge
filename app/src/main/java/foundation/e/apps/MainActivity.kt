@@ -17,16 +17,22 @@
 
 package foundation.e.apps
 
+//import androidx.fragment.app.ListFragment
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.design.internal.BottomNavigationItemView
-import android.support.design.internal.BottomNavigationMenuView
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import android.os.Handler
+import android.preference.PreferenceManager
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnection
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnectionCallback
@@ -40,23 +46,47 @@ import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.CURRENTLY_SELECTED_FRAGMENT_KEY
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
         ApplicationManagerServiceConnectionCallback {
+
     private var currentFragmentId = 0
     private val homeFragment = HomeFragment()
     private val searchFragment = SearchFragment()
     private val updatesFragment = UpdatesFragment()
     private val applicationManagerServiceConnection =
             ApplicationManagerServiceConnection(this)
+    private val codeRequestPermissions = 9527
+    var doubleBackToExitPressedOnce = false;
+
+
+
+    companion object {
+        lateinit var mActivity: MainActivity
+        var sharedPreferences : SharedPreferences?=null
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mActivity = this
+        disableCategoryIfOpenSource()
 
-        bottom_navigation_view.setOnNavigationItemSelectedListener(this)
+
+        bottom_navigation_view.setOnNavigationItemSelectedListener{
+            if (selectFragment(it.itemId,it)) {
+                disableCategoryIfOpenSource()
+                currentFragmentId = it.itemId
+                return@setOnNavigationItemSelectedListener true
+            }
+            return@setOnNavigationItemSelectedListener false
+        }
+
         disableShiftingOfNabBarItems()
 
         initialiseUpdatesWorker()
+
 
         // Show the home fragment by default
         currentFragmentId = if (savedInstanceState != null &&
@@ -73,11 +103,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     private fun initialiseUpdatesWorker() {
         UpdatesManager(applicationContext).startWorker()
+
+
     }
 
     override fun onServiceBind(applicationManager: ApplicationManager) {
         initialiseFragments(applicationManager)
-        selectFragment(currentFragmentId)
+        selectFragment(currentFragmentId, null)
     }
 
     private fun initialiseFragments(applicationManager: ApplicationManager) {
@@ -87,32 +119,53 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        if (selectFragment(item.itemId)) {
+        if (selectFragment(item.itemId,item)) {
             currentFragmentId = item.itemId
             return true
         }
         return false
     }
 
-    private fun selectFragment(fragmentId: Int): Boolean {
+    fun showApplicationTypePreference(): String {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(mActivity)
+        var showAllApps = preferences.getBoolean(mActivity.getString(R.string.Show_all_apps), true)
+        var showAllOpenSourceApps = preferences.getBoolean(mActivity.getString(R.string.show_only_open_source_apps_key), false)
+        var showAllPwaApps = preferences.getBoolean(mActivity.getString(R.string.show_only_pwa_apps_key), false)
+        if (showAllOpenSourceApps) {
+            return "open"
+        } else if (showAllApps) {
+            return "any"
+        } else if (showAllPwaApps) {
+            return "pwa"
+        }
+        return "any"
+    }
+
+
+    private fun selectFragment(fragmentId: Int, item: MenuItem?): Boolean {
         when (fragmentId) {
             R.id.menu_home -> {
+                item?.setIcon(R.drawable.ic_menu_home)
                 showFragment(homeFragment)
                 return true
             }
             R.id.menu_categories -> {
+                item?.setIcon(R.drawable.ic_menu_categories)
                 showFragment(CategoriesFragment())
                 return true
             }
             R.id.menu_search -> {
+                item?.setIcon(R.drawable.ic_menu_search)
                 showFragment(searchFragment)
                 return true
             }
             R.id.menu_updates -> {
+                item?.setIcon(R.drawable.ic_menu_updates)
                 showFragment(updatesFragment)
                 return true
             }
             R.id.menu_settings -> {
+                item?.setIcon(R.drawable.ic_menu_settings)
                 showFragment(SettingsFragment())
                 return true
             }
@@ -144,8 +197,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         for (i in 0 until menuView.childCount) {
             val itemView = menuView.getChildAt(i) as BottomNavigationItemView
-            itemView.setShiftingMode(false)
-            itemView.setChecked(itemView.itemData.isChecked)
+            itemView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);            itemView.setChecked(itemView.itemData.isChecked)
+        }
+    }
+
+    private fun disableCategoryIfOpenSource(){
+        if(showApplicationTypePreference()=="open") {
+            bottom_navigation_view.menu.removeItem(R.id.menu_categories)
         }
     }
 
@@ -158,7 +216,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState?.putInt(CURRENTLY_SELECTED_FRAGMENT_KEY, currentFragmentId)
     }
@@ -169,5 +227,21 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         searchFragment.decrementApplicationUses()
         updatesFragment.decrementApplicationUses()
         applicationManagerServiceConnection.unbindService(this)
+    }
+
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed()
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        Handler().postDelayed(Runnable() {
+            run {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000)
     }
 }

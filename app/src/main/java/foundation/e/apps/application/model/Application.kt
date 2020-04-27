@@ -21,13 +21,16 @@ import android.Manifest
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import foundation.e.apps.MainActivity.Companion.mActivity
+import foundation.e.apps.PWA.PwaInstaller
+import foundation.e.apps.XAPK.XAPKFile
 import foundation.e.apps.api.AppDetailRequest
 import foundation.e.apps.api.AppDownloadedRequest
 import foundation.e.apps.api.PackageNameSearchRequest
 import foundation.e.apps.application.model.State.*
-import foundation.e.apps.application.model.data.BasicData
-import foundation.e.apps.application.model.data.FullData
+import foundation.e.apps.application.model.data.*
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
@@ -36,14 +39,20 @@ import foundation.e.apps.utils.Execute
 import java.util.concurrent.atomic.AtomicInteger
 
 class Application(val packageName: String, private val applicationManager: ApplicationManager) :
-        DownloaderInterface, InstallerInterface {
+        DownloaderInterface, InstallerInterface{
+
+
+
 
     private val uses = AtomicInteger(0)
     private val info = ApplicationInfo(packageName)
     private val stateManager = StateManager(info, this, applicationManager)
-
     var basicData: BasicData? = null
     var fullData: FullData? = null
+    var pwabasicdata : PwasBasicData? = null
+    var pwaFullData: PwaFullData? = null
+    var searchAppsBasicData : SearchAppsBasicData? =null
+
 
     fun addListener(listener: ApplicationStateListener) {
         stateManager.addListener(listener)
@@ -72,7 +81,44 @@ class Application(val packageName: String, private val applicationManager: Appli
         if (basicData != null) {
             stateManager.find(context, basicData!!)
         }
+        else if(searchAppsBasicData !=null){
+            if(searchAppsBasicData!!.is_pwa){
+//                stateManager.pwaFind()
+            }
+            else{
+                stateManager.searchAppsFind(context, searchAppsBasicData!!)
+            }
+        }
+        else if(pwabasicdata!=null){
+//              stateManager.pwaFind()
+        }
     }
+
+
+    fun pwaInstall(context: Context) {
+        var error: Error? = null
+
+        Thread(Runnable  {
+            error=assertFullData(context)
+
+            mActivity.runOnUiThread(Runnable{
+                run {
+
+                    if (error == null) {
+                        val intent=Intent(context, PwaInstaller::class.java)
+                        intent.putExtra("NAME",pwaFullData!!.name)
+                        intent.putExtra("URL",pwaFullData!!.url)
+                        context.startActivity(intent)
+                    } else {
+                        stateManager.notifyError(error!!)
+                    }
+                }
+            })
+
+        }).start()
+
+    }
+
 
     @Synchronized
     fun buttonClicked(context: Context, activity: Activity?) {
@@ -149,6 +195,7 @@ class Application(val packageName: String, private val applicationManager: Appli
         } else {
             true
         }
+        true
     }
 
     override fun onDownloadComplete(context: Context, status: Int) {
@@ -156,13 +203,25 @@ class Application(val packageName: String, private val applicationManager: Appli
             Execute({
                 AppDownloadedRequest(basicData!!.id).request()
             }, {})
-            install(context)
+            if(info.isXapk(fullData!!,basicData)){
+                XAPKFile(info.getxApkFile(context,basicData!!))
+                downloader = null
+                onInstallationComplete(context)
+            }
+            else {
+                install(context)
+            }
         } else {
             synchronized(blocker) {
                 blocker.notify()
             }
-            info.getApkFile(context, basicData!!).delete()
-            applicationManager.stopInstalling(context, this)
+            if(basicData!=null) {
+                info.getApkFile(context, basicData!!).delete()
+                applicationManager.stopInstalling(context, this)
+            }
+            else{
+                applicationManager.stopInstalling(context, this)
+            }
         }
         downloader = null
     }
@@ -196,13 +255,25 @@ class Application(val packageName: String, private val applicationManager: Appli
         if (fullData != null) {
             return null
         }
+        else if(pwabasicdata != null){
+            return findPwaFullData(context)
+        }
+
+        else if(searchAppsBasicData!=null){
+            if(searchAppsBasicData!!.is_pwa){
+                return findSearchResultPwaFulldata(context)
+            }
+            else{
+                findSearchAppsFullData(context)
+            }
+        }
         return findFullData(context)
     }
 
     private fun findBasicData(context: Context): Error? {
         var error: Error? = null
         if (Common.isNetworkAvailable(context)) {
-            PackageNameSearchRequest(packageName).request { applicationError, searchResult ->
+            PackageNameSearchRequest(packageName!!).request { applicationError, searchResult ->
                 when (applicationError) {
                     null -> {
                         error = Error.NO_RESULTS
@@ -231,7 +302,35 @@ class Application(val packageName: String, private val applicationManager: Appli
         }
         var error: Error? = null
         if (Common.isNetworkAvailable(context)) {
-            AppDetailRequest(basicData!!.id).request { applicationError, fullData ->
+            AppDetailRequest(basicData!!.id).request { applicationError, fullData->
+                when (applicationError) {
+                    null -> {
+                        error = Error.NO_RESULTS
+                        fullData!!.let {
+                            update(fullData, context)
+                            error = null
+                        }
+                    }
+                    else -> {
+                        error = applicationError
+                    }
+                }
+            }
+        } else {
+            error = Error.NO_INTERNET
+        }
+        return error
+    }
+    private fun findSearchAppsFullData(context: Context): Error? {
+        if (searchAppsBasicData == null) {
+            val error = findBasicData(context)
+            if (error != null) {
+                return error
+            }
+        }
+        var error: Error? = null
+        if (Common.isNetworkAvailable(context)) {
+            AppDetailRequest(searchAppsBasicData!!.id).request { applicationError, fullData->
                 when (applicationError) {
                     null -> {
                         error = Error.NO_RESULTS
@@ -251,8 +350,77 @@ class Application(val packageName: String, private val applicationManager: Appli
         return error
     }
 
+
+    private fun findPwaFullData(context: Context): Error? {
+        if (pwabasicdata == null) {
+            val error = findBasicData(context)
+            if (error != null) {
+                return error
+            }
+        }
+        var error: Error? = null
+        if (Common.isNetworkAvailable(context)) {
+            AppDetailRequest(pwabasicdata!!.id ).Pwarequest { applicationError, PwaFullData ->
+                when (applicationError) {
+                    null -> {
+                        error = Error.NO_RESULTS
+                        PwaFullData!!.let {
+                            Pwaupdate(PwaFullData, context)
+                            error = null
+                        }
+                    }
+                    else -> {
+                        error = applicationError
+                    }
+                }
+            }
+        } else {
+            error = Error.NO_INTERNET
+        }
+        return error
+    }
+
+    private fun findSearchResultPwaFulldata(context: Context): Error? {
+        if (searchAppsBasicData == null) {
+            val error = findBasicData(context)
+            if (error != null) {
+                return error
+            }
+        }
+        var error: Error? = null
+        if (Common.isNetworkAvailable(context)) {
+            AppDetailRequest(searchAppsBasicData!!.id ).Pwarequest { applicationError, PwaFullData ->
+                when (applicationError) {
+                    null -> {
+                        error = Error.NO_RESULTS
+                        PwaFullData!!.let {
+                            Pwaupdate(PwaFullData, context)
+                            error = null
+                        }
+                    }
+                    else -> {
+                        error = applicationError
+                    }
+                }
+            }
+        } else {
+            error = Error.NO_INTERNET
+        }
+        return error
+    }
+
+
+
     fun loadIcon(iconLoaderCallback: BasicData.IconLoaderCallback) {
         basicData?.loadIconAsync(this, iconLoaderCallback)
+    }
+
+    fun PwaloadIcon(iconLoaderCallback: PwasBasicData.IconLoaderCallback) {
+        pwabasicdata?.loadIconAsync(this, iconLoaderCallback)
+    }
+
+    fun SearchAppsloadIcon(iconLoaderCallback: BasicData.IconLoaderCallback) {
+        searchAppsBasicData?.loadIconAsync(this, iconLoaderCallback)
     }
 
     fun update(basicData: BasicData, context: Context) {
@@ -261,9 +429,27 @@ class Application(val packageName: String, private val applicationManager: Appli
         checkForStateUpdate(context)
     }
 
+    fun searchUpdate(basicData: SearchAppsBasicData, context: Context) {
+        this.searchAppsBasicData?.let { basicData.updateLoadedImages(it) }
+        this.searchAppsBasicData = basicData
+        checkForStateUpdate(context)
+    }
+
+    fun Pwaupdate(basicData: PwasBasicData, context: Context) {
+        this.pwabasicdata?.let { basicData.updateLoadedImages(it) }
+        this.pwabasicdata = basicData
+        checkForStateUpdate(context)
+    }
+
     fun update(fullData: FullData, context: Context) {
         this.fullData = fullData
         update(fullData.basicData, context)
         fullData.basicData = basicData!!
+    }
+
+    fun Pwaupdate(pwaFullData: PwaFullData, context: Context) {
+        this.pwaFullData = pwaFullData
+        Pwaupdate(pwaFullData.pwabasicdata, context)
+        pwaFullData.pwabasicdata = pwabasicdata!!
     }
 }

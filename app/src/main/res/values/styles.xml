@@ -28,6 +28,9 @@
 
         <item name="autoCompleteTextViewStyle">@style/SearchSuggestionTheme</item>
         <item name="textAppearanceSearchResultTitle">@style/SearchSuggestionTextTheme</item>
+
+        <item name="colorControlNormal">@color/colorInstall</item>
+        <item name="colorControlActivated">@color/colorInstall</item>
     </style>
 
     <style name="AppTheme" parent="BaseTheme" />
@@ -47,6 +50,15 @@
 
     <style name="BottomNavigationViewTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorAccent</item>
+    </style>
+
+    <style name="CustomAppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="titleTextAppearance">@style/Toolbar_TextAppearance_White</item>
+    </style>
+
+    <style name="Toolbar_TextAppearance_White" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
 </resources>

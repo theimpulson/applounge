@@ -17,9 +17,9 @@
 
 package foundation.e.apps.settings.model
 
-import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.os.AsyncTask
+import androidx.lifecycle.MutableLiveData
 import foundation.e.apps.api.AppRequestRequest
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Error

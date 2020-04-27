@@ -25,31 +25,49 @@ import foundation.e.apps.categories.model.Category
 
 class FullData @JsonCreator
 constructor(
-        @JsonProperty("package_name") packageName: String,
         @JsonProperty("_id") id: String,
         @JsonProperty("name") name: String,
+        @JsonProperty("package_name") packageName: String,
         @JsonProperty("latest_version_number") latestVersionNumber: String?,
-        @JsonProperty("latest_downloaded_version") latestDownloadableUpdate: String,
-        @JsonProperty("author") author: String,
+        @JsonProperty("latest_downloaded_version") latestDownloadableUpdate: String?,
+        @JsonProperty("x86_64_latest_downloaded_version") val x86_64_latestDownloadableUpdate: String?,
+        @JsonProperty("x86_64_latest_version_number") val x86_64_lastVersionNumber: String?,
+        @JsonProperty("armeabi_latest_downloaded_version") val armeabi_latestDownloadableUpdate: String?,
+        @JsonProperty("armeabi_latest_version_number") val armeabi_lastVersionNumber: String?,
+        @JsonProperty("arm64-v8a_latest_downloaded_version") val arm64_v8a_latest_latestDownloadableUpdate: String?,
+        @JsonProperty("arm64-v8a_latest_version_number") val arm64_v8a_lastVersionNumber: String?,
+        @JsonProperty("x86_latest_downloaded_version") val x86_latestDownloadableUpdate: String?,
+        @JsonProperty("x86_latest_version_number") val x86_lastVersionNumber: String?,
+        @JsonProperty("armeabi-v7a_latest_downloaded_version") val armeabi_v7a_latestDownloadableUpdate: String?,
+        @JsonProperty("armeabi-v7a_latest_version_number") val armeabi_v7a_lastVersionNumber: String?,
+        @JsonProperty("architectures") val apkArchitecture: ArrayList<String>?,
+        @JsonProperty("author") author: String?,
         @JsonProperty("icon_image_path") iconUri: String,
         @JsonProperty("other_images_path") imagesUri: Array<String>,
         @JsonProperty("category") categoryId: String,
         @JsonProperty("description") val description: String,
         @JsonProperty("licence") val licence: String,
-        @JsonProperty("ratings") ratings: BasicData.Ratings?) {
+        @JsonProperty("ratings") ratings: BasicData.Ratings?,
+        @JsonProperty("is_pwa ") val is_pwa: Boolean){
+
 
     var basicData = if (ratings == null) {
-        BasicData(packageName, id, name, latestVersionNumber, latestDownloadableUpdate, author,
-                iconUri, imagesUri, null,
-                BasicData.Ratings(-1f, -1f), categoryId)
+        BasicData(id, name,packageName, latestVersionNumber, latestDownloadableUpdate,
+                x86_64_latestDownloadableUpdate,x86_64_lastVersionNumber,armeabi_latestDownloadableUpdate,
+                armeabi_lastVersionNumber,arm64_v8a_latest_latestDownloadableUpdate,arm64_v8a_lastVersionNumber,
+                x86_latestDownloadableUpdate,x86_lastVersionNumber,armeabi_v7a_latestDownloadableUpdate,armeabi_v7a_lastVersionNumber,apkArchitecture,
+                author,iconUri, imagesUri, null,BasicData.Ratings(-1f, -1f), categoryId,is_pwa)
     } else {
-        BasicData(packageName, id, name, latestVersionNumber, latestDownloadableUpdate, author,
-                iconUri, imagesUri, ratings.privacyRating, ratings, categoryId)
+        BasicData(id, name,packageName, latestVersionNumber, latestDownloadableUpdate,
+                x86_64_latestDownloadableUpdate,x86_64_lastVersionNumber,armeabi_latestDownloadableUpdate,
+                armeabi_lastVersionNumber,arm64_v8a_latest_latestDownloadableUpdate,arm64_v8a_lastVersionNumber,
+                x86_latestDownloadableUpdate,x86_lastVersionNumber,armeabi_v7a_latestDownloadableUpdate,armeabi_v7a_lastVersionNumber,apkArchitecture,
+                author,iconUri, imagesUri, ratings.privacyRating, ratings, categoryId,is_pwa)
     }
 
-    private var latestVersion: Version? = null;
+    var latestVersion: Version? = null;
     val packageName: String
-        get() = basicData.packageName
+        get() = basicData.packageName!!
 
     fun getLastVersion(): Version? {
         return if (basicData.latestDownloadableUpdate != "-1") {
@@ -71,7 +89,7 @@ constructor(
         if (name == basicData.latestDownloadableUpdate) {
             val result = value as LinkedHashMap<*, *>
             latestVersion = Version(result["downloaded_flag"] as String?,
-                    result["eelo_download_link"] as String,
+                    result["download_link"] as String,
                     result["min_android"] as String,
                     result["apk_file_sha1"] as String?,
                     result["created_on"] as String,
@@ -79,13 +97,12 @@ constructor(
                     result["signature"] as String,
                     result["apk_file_size"] as String,
                     result["update_on"] as String,
-                    result["source_apk_download"] as String,
-                    result["whats_new"] as String?,
                     name,
                     result["exodus_score"] as Int?,
                     getPermissions(result["exodus_perms"] as ArrayList<String>?),
                     getTrackers(result["exodus_trackers"] as ArrayList<LinkedHashMap<String, String>>?),
-                    result["architecture"] as String?)
+                    result["architecture"] as String?,
+                    result["is_xapk"] as Boolean)
         }
     }
 

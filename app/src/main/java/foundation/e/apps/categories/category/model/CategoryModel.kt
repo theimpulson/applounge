@@ -17,9 +17,11 @@
 
 package foundation.e.apps.categories.category.model
 
-import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
+import foundation.e.apps.MainActivity
 import foundation.e.apps.api.ListApplicationsRequest
+import foundation.e.apps.api.ListPwasRequest
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
@@ -31,7 +33,7 @@ class CategoryModel : CategoryModelInterface {
 
     lateinit var applicationManager: ApplicationManager
     lateinit var category: String
-    private var page = 1
+    private var page = 0
     val categoryApplicationsList = MutableLiveData<ArrayList<Application>>()
     var screenError = MutableLiveData<Error>()
     private var error: Error? = null
@@ -66,9 +68,30 @@ class CategoryModel : CategoryModelInterface {
         }
     }
 
-    private fun loadApplicationsSynced(context: Context): ArrayList<Application>? {
+      fun loadApplicationsSynced(context: Context): ArrayList<Application>? {
         var listApplications: ListApplicationsRequest.ListApplicationsResult? = null
-        ListApplicationsRequest(category, page, Constants.RESULTS_PER_PAGE)
+        var listPwas: ListPwasRequest.ListPwasResult? = null
+         var appType = MainActivity.mActivity.showApplicationTypePreference()
+
+         if(appType=="pwa"){
+            ListPwasRequest(category,page,Constants.RESULTS_PER_PAGE)
+                .request { applicationError, listPwasResult ->
+                    when (applicationError) {
+                        null -> {
+                            listPwas = listPwasResult!!
+                        }
+                        else -> {
+                            error = applicationError
+                        }
+                    }
+                }
+            return if (listPwas != null) {
+                listPwas!!.getApplications(applicationManager, context)
+            } else {
+                null
+            }
+        }
+        ListApplicationsRequest(category,page,Constants.RESULTS_PER_PAGE)
                 .request { applicationError, listApplicationsResult ->
                     when (applicationError) {
                         null -> {

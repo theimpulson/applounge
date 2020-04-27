@@ -28,9 +28,9 @@ class ApplicationManager {
     private val queue = LinkedBlockingQueue<Application>()
 
     @Synchronized
-    fun findOrCreateApp(packageName: String): Application {
+    fun findOrCreateApp(packageName: String?): Application {
         if (!apps.containsKey(packageName)) {
-            apps[packageName] = Application(packageName, this)
+            apps[packageName!!] = Application(packageName, this)
         }
         val app = apps[packageName]!!
         app.incrementUses()

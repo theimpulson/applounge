@@ -17,7 +17,10 @@
 
 package foundation.e.apps.home.model
 
+import android.graphics.BitmapFactory
 import android.os.AsyncTask
+import foundation.e.apps.MainActivity.Companion.mActivity
+import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.utils.ImagesLoader
 
@@ -33,14 +36,23 @@ class BannerApplicationLoader(private val apps: ArrayList<Application>, private 
 
     private fun loadBannerImages(): ArrayList<BannerApplication> {
         val bannerApplications = ArrayList<BannerApplication>()
-        apps.forEach { application ->
-            if (application.basicData!!.imagesUri.isNotEmpty()) {
-                val image = Array(1) { application.basicData!!.imagesUri[0] }
-                ImagesLoader(image).loadImages().forEach {
+
+//      Show App logo if "Show only open Source apps"  or "Show pwa apps " condition is checked
+        if(apps.isEmpty()){
+            val icon = BitmapFactory.decodeResource(mActivity.getResources(),
+                R.mipmap.ic_launcher2)
+                bannerApplications.add(BannerApplication(null, icon))
+        }
+        else{
+            apps.forEach { application ->
+                if (application.basicData!!.imagesUri.isNotEmpty()) {
+                    val image = Array(1) { application.basicData!!.imagesUri[0] }
+                    ImagesLoader(image).loadImages().forEach {
                     bannerApplications.add(BannerApplication(application, it))
+                    }
+                } else {
+                    application.decrementUses()
                 }
-            } else {
-                application.decrementUses()
             }
         }
         return bannerApplications

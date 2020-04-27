@@ -30,7 +30,8 @@
         android:id="@+id/error_icon"
         android:layout_width="@dimen/app_icon_size"
         android:layout_height="@dimen/app_icon_size"
-        android:src="@drawable/ic_error" />
+        android:src="@drawable/ic_error"
+        android:tint="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/error_description"
@@ -39,7 +40,7 @@
         android:layout_marginTop="@dimen/layout_margin_large"
         android:maxLines="2"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/darker_gray"
         android:textSize="@dimen/text_size_large" />
 
     <Button

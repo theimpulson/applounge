@@ -19,27 +19,49 @@ package foundation.e.apps.home.model
 
 import android.content.Context
 import android.os.AsyncTask
+import foundation.e.apps.MainActivity.Companion.mActivity
+import foundation.e.apps.api.HomePwaRequest
 import foundation.e.apps.api.HomeRequest
 import foundation.e.apps.application.model.Application
+import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.utils.Error
 
-class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, Any, LinkedHashMap<Category, ArrayList<Application>>>() {
+class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, Any, LinkedHashMap<Category, ArrayList<Application>>>(){
+
 
     private lateinit var bannerApps: ArrayList<Application>
     private var error: Error? = null
+    lateinit var applicationManager: ApplicationManager
+
 
     override fun doInBackground(vararg params: Context): LinkedHashMap<Category, ArrayList<Application>> {
         val context = params[0]
         var applications = LinkedHashMap<Category, ArrayList<Application>>()
-        HomeRequest().request { applicationError, homeResult ->
-            when (applicationError) {
-                null -> {
-                    bannerApps = homeResult!!.getBannerApps(homeModel.getInstallManager(), context)
-                    applications = loadApplications(homeResult, context)
+
+        if(mActivity.showApplicationTypePreference()=="pwa") {
+            HomePwaRequest().request{applicationError,pwaHomeResult ->
+                when (applicationError) {
+                    null -> {
+                        bannerApps = pwaHomeResult!!.getBannerApps(homeModel.getInstallManager(), context)
+                        applications = pwaLoadApplications(pwaHomeResult, context)
+                    }
+                    else -> {
+                        error = applicationError
+                    }
                 }
-                else -> {
-                    error = applicationError
+            }
+        }
+        else {
+            HomeRequest().request { applicationError, homeResult ->
+                when (applicationError) {
+                    null -> {
+                        bannerApps = homeResult!!.getBannerApps(homeModel.getInstallManager(), context)
+                        applications = loadApplications(homeResult, context)
+                    }
+                    else -> {
+                        error = applicationError
+                    }
                 }
             }
         }
@@ -56,6 +78,15 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
     }
 
     private fun loadApplications(result: HomeRequest.HomeResult, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
+        val parsedApplications = result.getApps(homeModel.getInstallManager(), context)
+        val applications = LinkedHashMap<Category, ArrayList<Application>>()
+        for (parsedApplication in parsedApplications) {
+            applications[parsedApplication.key] = parsedApplication.value
+        }
+        return applications
+    }
+
+    private fun pwaLoadApplications(result: HomePwaRequest.HomeResult, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
         val parsedApplications = result.getApps(homeModel.getInstallManager(), context)
         val applications = LinkedHashMap<Category, ArrayList<Application>>()
         for (parsedApplication in parsedApplications) {
