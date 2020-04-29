@@ -96,4 +96,27 @@
     <string name="service_description">Ce service est utilisé par Apps pour gérer, télécharger et installer des applis. L\'arrêter peut entraîner une erreur d\'installation.</string>
     <string name="not_available_full">Non disponible</string>
     <string name="action_install">Installer</string>
+    <string name="featured">En vedette</string>
+    <string name="test_string">&lt;font color=#FAFAFA&lt;b&gt;METTRE À JOUR&gt;&lt;/font&gt;</string>
+    <string name="more">plus</string>
+    <string name="pick_up_apk_file">pick_up_apk_file</string>
+    <string name="pwa_icon">PWA</string>
+    <string name="offline_description">Appuyez ici pour réessayer !</string>
+    <string name="offline_heading">Vous êtes hors ligne.</string>
+    <string name="show_only_pwa_apps">Afficher uniquement les PWA (Applications Web Progressives)</string>
+    <string name="show_only_pwa_apps_description">Applications Web offrant une expérience similaire à celle de l\'application native à l\'aide d\'un navigateur</string>
+    <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
+    <string name="show_only_open_source_apps">Afficher uniquement les applications open-source</string>
+    <string name="show_only_open_source_apps_description">Les applications dont le code source est librement accessible aux utilisateurs</string>
+    <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
+    <string name="Show_all_apps">Afficher toutes les applications</string>
+    <string name="Show_all_apps_key">Show_all_apps</string>
+    <string name="Show_applications">Afficher les applications :</string>
+    <string name="shouldRefreshOnResume">Catégories</string>
+    <string name="pwas_categories_title">PWAs</string>
+    <string name="some_text"><font color="#FAFAFA">Un</font> texte <font color="#FAFAFA">aléatoire</font></string>
+    <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
+    <string name="app_privacy_description1">Score sur 10. Calculé en utilisant</string>
+    <string name="action_installing">Installation</string>
+    <string name="action_add_to_home_screen">Ajouter à l\'écran d\'accueil</string>
 </resources>
