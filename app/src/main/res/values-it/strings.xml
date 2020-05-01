@@ -114,4 +114,9 @@
     <string name="featured">In Evidenza</string>
     <string name="action_installing">Sto installando</string>
     <string name="action_add_to_home_screen">Aggiungi a Schermata Home</string>
+    <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
+    <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
+    <string name="Show_all_apps_key">Show_all_apps</string>
+    <string name="some_text"><font color="#FAFAFA">Un</font> testo <font color="#FAFAFA">a caso</font></string>
+    <string name="pick_up_apk_file">pick_up_apk_file</string>
 </resources>
