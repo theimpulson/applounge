@@ -236,7 +236,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.exit, Toast.LENGTH_SHORT).show();
 
         Handler().postDelayed(Runnable() {
             run {
