@@ -96,4 +96,27 @@
     <string name="app_rating">Punteggio</string>
     <string name="app_privacy_description_short">Calcolato utilizzando <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
     <string name="app_privacy_description">Punteggio su scala di 10. Calcolato utilizzando <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>, basato su permessi e trackers utilizzati nell\'app.</string>
+    <string name="pwa_icon">PWA</string>
+    <string name="offline_description">Tocca qui per riprovare!</string>
+    <string name="offline_heading">Sei offline.</string>
+    <string name="show_only_pwa_apps">Mostra solo le progressive web apps</string>
+    <string name="show_only_pwa_apps_description">Le Web App consentono un\'esperienza come se fossero App Reali girando in un Browser</string>
+    <string name="show_only_open_source_apps">Mostra solo le app open-source</string>
+    <string name="show_only_open_source_apps_description">App con Codice Sorgente disponibile liberamente agli utenti</string>
+    <string name="Show_all_apps">Mostra tutte le app</string>
+    <string name="Show_applications">Mostra app:</string>
+    <string name="shouldRefreshOnResume">Categorie</string>
+    <string name="pwas_categories_title">Pwa</string>
+    <string name="more">Altro</string>
+    <string name="test_string">&lt;font color=#FAFAFA&lt;b&gt;AGGIORNA&gt;&lt;/font&gt;</string>
+    <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
+    <string name="app_privacy_description1">Punteggio su scala di 10. Calcolato utilizzando</string>
+    <string name="featured">In Evidenza</string>
+    <string name="action_installing">Sto installando</string>
+    <string name="action_add_to_home_screen">Aggiungi a Schermata Home</string>
+    <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
+    <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
+    <string name="Show_all_apps_key">Show_all_apps</string>
+    <string name="some_text"><font color="#FAFAFA">Un</font> testo <font color="#FAFAFA">a caso</font></string>
+    <string name="pick_up_apk_file">pick_up_apk_file</string>
 </resources>

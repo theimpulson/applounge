@@ -146,7 +146,7 @@
     <string name="show_only_open_source_apps">Show only open-source apps</string>
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
     <string name="show_only_pwa_apps_description">Web Apps providing Native App experiences using a browser</string>
-    <string name="show_only_pwa_apps">Show only progressive web apps</string>
+    <string name="show_only_pwa_apps">Show only PWAs</string>
 
 
 
