@@ -119,4 +119,5 @@
     <string name="app_privacy_description1">Score sur 10. Calculé en utilisant</string>
     <string name="action_installing">Installation</string>
     <string name="action_add_to_home_screen">Ajouter à l\'écran d\'accueil</string>
+    <string name="exit">Merci de cliquer sur RETOUR à nouveau pour quitter</string>
 </resources>
