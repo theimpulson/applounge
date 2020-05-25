@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.NetworkInfo
 import android.os.AsyncTask
 import android.preference.PreferenceManager
 import android.util.Log
@@ -125,14 +126,10 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
             PackageManager.PERMISSION_GRANTED)
 
     private fun isConnectedToUnmeteredNetwork(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as
-                ConnectivityManager
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            val network = connectivityManager.activeNetwork
-            val capabilities = connectivityManager.getNetworkCapabilities(network)
-            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
-        } else {
-            Common.isNetworkAvailable(context)
-        }
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
+        return if (connectivityManager is ConnectivityManager) {
+            val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
+            networkInfo?.isConnected ?: false
+        } else false
     }
 }
