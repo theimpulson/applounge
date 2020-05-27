@@ -97,7 +97,6 @@ class ApplicationActivity :
         setContentView(R.layout.activity_application)
         good_border.visibility=View.GONE
         neutral_border.visibility=View.GONE
-        bad_border.visibility=View.GONE
 
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -282,21 +281,6 @@ class ApplicationActivity :
                 alertDialog.setTitle(R.string.app_rating)
                 alertDialog.setMessage(getString(R.string.app_rating_description))
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok))
-                { _, _ ->
-                    alertDialog.dismiss()
-                }
-                alertDialog.show()
-                var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                b.setTextColor(Color.parseColor("#0088ED"))
-            }
-
-            // TODO Set the app energy score
-            app_energy_container.setOnClickListener {
-                val alertDialog = AlertDialog.Builder(this).create()
-                alertDialog.setIcon(R.drawable.ic_dialog_info)
-                alertDialog.setTitle(R.string.app_energy_score)
-                alertDialog.setMessage(getString(R.string.app_energy_description))
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
                 { _, _ ->
                     alertDialog.dismiss()
                 }
@@ -549,20 +533,6 @@ class ApplicationActivity :
             val intent = Intent(this, ApplicationDescriptionActivity::class.java)
             intent.putExtra(APPLICATION_DESCRIPTION_KEY, application.pwaFullData!!.description)
             startActivity(intent)
-        }
-
-
-        // TODO Set the app energy score
-        app_energy_container.setOnClickListener {
-            val alertDialog = AlertDialog.Builder(this).create()
-            alertDialog.setIcon(R.drawable.ic_dialog_info)
-            alertDialog.setTitle(R.string.app_energy_score)
-            alertDialog.setMessage(getString(R.string.app_energy_description))
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
-            { _, _ ->
-                alertDialog.dismiss()
-            }
-            alertDialog.show()
         }
 
         // Load the app screenshots
