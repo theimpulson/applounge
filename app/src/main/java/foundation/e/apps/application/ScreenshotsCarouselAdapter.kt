@@ -42,7 +42,7 @@ class ScreenshotsCarouselAdapter(context: Context, private val screenshots: List
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = layoutInflater.inflate(R.layout.screenshots_carousel_item, container, false)
 
-        view.image.setImageBitmap(screenshots[position])
+        view.photo_view.setImageBitmap(screenshots[position])
 
         container.addView(view)
         return view
