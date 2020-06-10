@@ -28,6 +28,7 @@ class SearchAppsBasicData@JsonCreator
                 @param:JsonProperty("armeabi-v7a_latest_version_number") val armeabi_v7a_lastVersionNumber: String?,
                 @param:JsonProperty("architectures") val apkArchitecture: ArrayList<String>?,
                 @param:JsonProperty("is_pwa") val is_pwa: Boolean,
+                @param:JsonProperty("author") val author: String?,
                 @param:JsonProperty("is_web_app") val is_web_app: Boolean,
                 @param:JsonProperty("category") val category: String,
                 @param:JsonProperty("icon_image_path") val icon_uri: String,

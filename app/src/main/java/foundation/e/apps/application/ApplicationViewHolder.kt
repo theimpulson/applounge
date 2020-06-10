@@ -125,7 +125,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
                     }
                     application!!.SearchAppsloadIcon(this)
                     title.text = application!!.searchAppsBasicData!!.name
-
+                    author.text = application!!.searchAppsBasicData!!.author
                 } else {
                     application!!.PwaloadIcon(this)
                     title.text = application!!.pwabasicdata!!.name
