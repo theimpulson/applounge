@@ -18,53 +18,28 @@
 package foundation.e.apps.updates.model
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.AsyncTask
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
+import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Execute
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class OutdatedApplicationsFileReader(private val applicationManager: ApplicationManager,
+class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
+                                     private val applicationManager: ApplicationManager,
                                      private val callback: UpdatesModelInterface) :
         AsyncTask<Context, Void, ArrayList<Application>>() {
     override fun doInBackground(vararg context: Context): ArrayList<Application> {
         val applications = ArrayList<Application>()
-        var totalLines = 0
-        var requestsComplete = 0
-        val blocker = Object()
         try {
-            context[0].openFileInput(Constants.OUTDATED_APPLICATIONS_FILENAME).use {
-                BufferedReader(InputStreamReader(it)).forEachLine {
-                    totalLines++
-                }
-            }
-            if (totalLines > 0) {
-                context[0].openFileInput(Constants.OUTDATED_APPLICATIONS_FILENAME).use {
-                    BufferedReader(InputStreamReader(it)).forEachLine { packageName ->
-                        Execute({
-                            val application = applicationManager.findOrCreateApp(packageName)
-                            val error = application.assertBasicData(context[0])
-                            if (error == null) {
-                                if (application.state == State.NOT_UPDATED) {
-                                    applications.add(application)
-                                }
-                            }
-                        }, {
-                            requestsComplete++
-                            if (requestsComplete == totalLines) {
-                                synchronized(blocker) {
-                                    blocker.notify()
-                                }
-                            }
-                        })
-                    }
-                    synchronized(blocker) {
-                        blocker.wait()
-                    }
-                }
+            val installedApplications = getInstalledApplications()
+            installedApplications.forEach { packageName ->
+                val application = applicationManager.findOrCreateApp(packageName)
+                verifyApplication(application, applications, context)
             }
         } catch (exception: Exception) {
             exception.printStackTrace()
@@ -75,4 +50,25 @@ class OutdatedApplicationsFileReader(private val applicationManager: Application
     override fun onPostExecute(result: ArrayList<Application>) {
         callback.onAppsFound(result)
     }
+
+    private fun getInstalledApplications(): ArrayList<String> {
+        val result = ArrayList<String>()
+        packageManager.getInstalledApplications(0).forEach { app ->
+            if (!Common.isSystemApp(packageManager, app.packageName)) {
+                result.add(app.packageName)
+            }
+        }
+        return result
+    }
+
+    private fun verifyApplication(application: Application, apps: ArrayList<Application>,
+                                  context: Array<out Context>) {
+        val error = application.assertBasicData(context[0])
+        if (error == null && application.state == State.NOT_UPDATED) {
+            apps.add(application)
+        } else {
+            application.decrementUses()
+        }
+    }
+
 }

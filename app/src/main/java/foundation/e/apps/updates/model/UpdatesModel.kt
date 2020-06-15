@@ -33,7 +33,7 @@ class UpdatesModel : UpdatesModelInterface {
 
     override fun loadApplicationList(context: Context) {
         if (Common.isNetworkAvailable(context)) {
-            OutdatedApplicationsFileReader(applicationManager!!, this)
+            OutdatedApplicationsFileReader(context.packageManager,applicationManager!!, this)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
         } else {
             screenError.value = Error.NO_INTERNET
