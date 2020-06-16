@@ -44,14 +44,26 @@ class Category(val id: String) : Serializable {
         return when (categoryId) {
             "comics" ->
                 R.drawable.ic_cat_comics
+            "connectivity" ->
+                R.drawable.ic_cat_connectivity
+            "development" ->
+                R.drawable.ic_cat_development
             "education" ->
                 R.drawable.ic_cat_education
+            "graphics" ->
+                R.drawable.ic_cat_graphics
+            "internet" ->
+                R.drawable.ic_cat_internet
             "music_and_audio" ->
                 R.drawable.ic_cat_music_and_audio
             "entertainment" ->
                 R.drawable.ic_cat_entertainment
             "tools" ->
                 R.drawable.ic_cat_tools
+            "security" ->
+                R.drawable.ic_cat_security
+            "system" ->
+                R.drawable.ic_cat_system
             "communication" ->
                 R.drawable.ic_cat_communication
             "medical" ->
@@ -142,6 +154,8 @@ class Category(val id: String) : Serializable {
                 R.drawable.ic_cat_game_trivia
             "game_word" ->
                 R.drawable.ic_cat_game_word
+            "game_open_games" ->
+                R.drawable.ic_cat_open_games
             "pwa_education" ->
                 R.drawable.ic_cat_education
             "pwa_entertainment" ->
