@@ -18,6 +18,7 @@
 package foundation.e.apps.updates
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,6 +60,7 @@ class UpdatesFragment : Fragment() {
         val updateAll = view.findViewById<Button>(R.id.update_all)
         val splashContainer = view.findViewById<LinearLayout>(R.id.splash_container)
         val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
+        val reloadProgressBar = view.findViewById<ProgressBar>(R.id.progress_bar2)
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
 
@@ -74,6 +76,7 @@ class UpdatesFragment : Fragment() {
             }
         }
         progressBar.visibility = View.VISIBLE
+        reloadProgressBar.visibility = View.GONE
         errorContainer.visibility = View.GONE
         splashContainer.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
@@ -90,9 +93,12 @@ class UpdatesFragment : Fragment() {
         // Bind recycler view adapter to outdated applications list in view model
         updatesViewModel.getApplications().observe(this, Observer {
             if (it != null) {
+
+
                 applicationList.clear()
                 applicationList.addAll(it)
                 progressBar.visibility = View.GONE
+                reloadProgressBar.visibility=View.GONE
                 recyclerView.adapter?.notifyDataSetChanged()
                 recyclerView.scrollToPosition(0)
                 if (applicationList.isEmpty()) {
@@ -114,28 +120,34 @@ class UpdatesFragment : Fragment() {
                 errorContainer.visibility = View.VISIBLE
                 updateAll.isEnabled = false
                 progressBar.visibility = View.GONE
+                reloadProgressBar.visibility = View.GONE
+
                 splashContainer.visibility = View.GONE
                 recyclerView.visibility = View.GONE
             } else {
                 errorContainer.visibility = View.GONE
             }
         })
+        updatesViewModel.loadApplicationList(context!!)
 
-        if (updatesViewModel.getApplications().value == null ||
-                updatesViewModel.getApplications().value!!.isEmpty()) {
-            updatesViewModel.loadApplicationList(context!!)
-        }
 
         return view
     }
 
     override fun onResume() {
         super.onResume()
+        val progressBar2 = view!!.findViewById<ProgressBar>(R.id.progress_bar2)
         if (::updatesViewModel.isInitialized) {
             updatesViewModel.getApplications().value?.let {
                 it.forEach { application ->
+                    progressBar2.visibility=View.VISIBLE
                     application.checkForStateUpdate(context!!)
                 }
+                val handler = Handler()
+                handler.postDelayed({
+                    progressBar2.visibility=View.GONE
+                }, 10000)
+
             }
         }
     }
