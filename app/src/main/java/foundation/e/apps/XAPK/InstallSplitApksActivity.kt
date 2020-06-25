@@ -13,8 +13,8 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import com.makeramen.roundedimageview.BuildConfig
 import com.makeramen.roundedimageview.RoundedImageView
-import foundation.e.apps.BuildConfig
 import foundation.e.apps.R
 import java.io.File
 import java.io.FileInputStream
@@ -22,7 +22,7 @@ import java.io.IOException
 
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class InstallSplitApksActivity : IBaseActivity() {
+class InstallSplitApksActivity : BaseActivity() {
     private  var apksBean: ApksBean?=null
 
     companion object{
@@ -37,10 +37,6 @@ class InstallSplitApksActivity : IBaseActivity() {
         }
     }
 
-    override fun getLayout(): Int {
-        return R.layout.activity_install_split_apks
-    }
-
     override fun nextStep() {
         super.nextStep()
         apksBean = intent.getParcelableExtra(KEY_PARAM)
@@ -50,25 +46,6 @@ class InstallSplitApksActivity : IBaseActivity() {
 //            SimpleToast.defaultShow(mContext, R.string.install_failed)
             finish()
             return
-        }
-        val iconRiv: RoundedImageView = findViewById(R.id.icon_riv)
-        val titleTv: TextView = findViewById(R.id.title_tv)
-        titleTv.text = apksBean!!.label
-        val apkAssetType = apksBean!!.apkAssetType
-        val iconUrl = apksBean!!.iconPath
-        if (!TextUtils.isEmpty(iconUrl) && apkAssetType != null) {
-            iconRiv.visibility = View.VISIBLE
-//            if (apkAssetType == ApkAssetType.XAPK) {
-//                ImageLoader.Builder(mContext, XApkIconUrl(iconUrl))
-//                    .setRequestOptions(ImageLoader.defaultRequestOptions(R.color.placeholder_color))
-//                    .build(iconRiv)
-//            } else if (apkAssetType == ApkAssetType.Apks) {
-//                ImageLoader.Builder(mContext, ApkIconUrl(iconUrl, -1))
-//                    .setRequestOptions(ImageLoader.defaultRequestOptions(R.color.placeholder_color))
-//                    .build(iconRiv)
-//            }
-        } else {
-            iconRiv.visibility = View.GONE
         }
         Handler(Looper.getMainLooper()).postDelayed({ this.install() }, 500)
     }
@@ -93,6 +70,7 @@ class InstallSplitApksActivity : IBaseActivity() {
             val statusReceiver = pendingIntent.intentSender
             // Commit the session (this will start the installation workflow).
             session!!.commit(statusReceiver)
+            finish()
         } catch (e: IOException) {
             e.printStackTrace()
             finish()
@@ -165,19 +143,17 @@ class InstallSplitApksActivity : IBaseActivity() {
                         FsUtils.deleteFileOrDir(it)
                     }
                 }
-                findViewById<View>(R.id.installing_status_view).visibility = View.GONE
-                findViewById<View>(R.id.installed_status_view).visibility = View.VISIBLE
             }
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        return if (keyCode == KeyEvent.KEYCODE_BACK) {
-            true
-        } else {
-            super.onKeyDown(keyCode, event)
-        }
-    }
+//    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+//        return if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            true
+//        } else {
+//            super.onKeyDown(keyCode, event)
+//        }
+//    }
 
 }
 

@@ -5,14 +5,15 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.MainThread
 import foundation.e.apps.R
+import foundation.e.apps.application.model.InstallerInterface
 import java.io.File
 
 
 object ViewUtils {
 
     @MainThread
-    fun installXApk(mContext: Context, xApkInfo: XApkInfo) {
-        XApkInstallUtils.installXApk(File(xApkInfo.path), object : XApkInstallUtils.XApkInstallProgressCallback {
+    fun installXApk(mContext: Context, xApkInfo: XApkInfo, callback: InstallerInterface) {
+        XApkInstallUtils.installXApk(File(xApkInfo.path),callback, object : XApkInstallUtils.XApkInstallProgressCallback {
             private var progressDialog: ProgressDialog? = null
             override fun onStart() {
                 // progress dialog if needed
@@ -45,7 +46,7 @@ object ViewUtils {
                 IntentUtils.installedApk(mContext, apkFile.absolutePath)
             }
 
-            override fun onCompedApks(apksBean: ApksBean) {
+            override fun onCompedApks(apksBean: ApksBean, callback: InstallerInterface) {
                 progressDialog?.apply {
                     if (this.isShowing) {
                         this.dismiss()
@@ -54,7 +55,7 @@ object ViewUtils {
                 when {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> LaunchUtils.startInstallSplitApksActivity(
                             mContext,
-                            apksBean
+                            apksBean,callback
                     )
                     apksBean.splitApkPaths?.size == 1 -> IntentUtils.installedApk(mContext, apksBean.splitApkPaths!![0])
                     else -> onError(XApkInstallUtils.InstallError.LowerSdkError)

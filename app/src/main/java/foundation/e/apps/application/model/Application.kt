@@ -204,9 +204,8 @@ class Application(val packageName: String, private val applicationManager: Appli
                 AppDownloadedRequest(basicData!!.id).request()
             }, {})
             if(info.isXapk(fullData!!,basicData)){
-                XAPKFile(info.getxApkFile(context,basicData!!))
-                downloader = null
-                onInstallationComplete(context)
+                isInstalling=true
+                XAPKFile(info.getxApkFile(context,basicData!!),this)
             }
             else {
                 install(context)

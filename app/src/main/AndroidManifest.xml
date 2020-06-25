@@ -23,7 +23,8 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:largeHeap="true"
-        android:launchMode="singleTask"
+        android:launchMode="singleInstance"
+        android:alwaysRetainTaskState="true"
         android:theme="@style/AppTheme">
 <!--        <activity android:name=".application.PwaInstaller"/>-->
         <activity android:name=".settings.AppRequestActivity" />
@@ -63,9 +64,9 @@
         <activity
             android:name=".XAPK.InstallSplitApksActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="XAPK Installer"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize" />
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme1"/>
     </application>
 
 </manifest>

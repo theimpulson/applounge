@@ -11,11 +11,9 @@ abstract class BaseActivity : RxAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        init()
         nextStep()
+        finish()
     }
-
-    protected open fun init() {}
 
     protected open fun nextStep() {}
 }

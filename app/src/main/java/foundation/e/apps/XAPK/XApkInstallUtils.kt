@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
+import foundation.e.apps.application.model.InstallerInterface
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -22,7 +23,7 @@ object XApkInstallUtils {
     }
 
     @MainThread
-    fun installXApk(xApkFile: File, xApkInstallProgressCallback: XApkInstallProgressCallback?) {
+    fun installXApk(xApkFile: File, callback: InstallerInterface, xApkInstallProgressCallback: XApkInstallProgressCallback?) {
         Thread(Runnable {
             var zipFile: ZipFile? = null
             try {
@@ -48,7 +49,7 @@ object XApkInstallUtils {
                             installXApkObb(zipFile!!, this, xApkInstallProgressCallback)
                         }
                         if (this.useSplitApks()) {
-                            installSplitApks(xApkFile, zipFile!!, this, xApkInstallProgressCallback)
+                            installSplitApks(xApkFile, zipFile!!,callback, this, xApkInstallProgressCallback)
                         }
 //                        else {
 //                            installApk(zipFile!!, this, xApkInstallProgressCallback)
@@ -81,7 +82,7 @@ object XApkInstallUtils {
         fun onCompedApk(apkFile: File)
 
         @MainThread
-        fun onCompedApks(apksBean: ApksBean)
+        fun onCompedApks(apksBean: ApksBean, callback: InstallerInterface)
 
         @MainThread
         fun onError(installError: InstallError)
@@ -153,7 +154,8 @@ object XApkInstallUtils {
             }
         }
     }
-    private fun installSplitApks(xApkFile: File, zipFile: ZipFile, xApkManifest: XApkManifest,
+    private fun installSplitApks(xApkFile: File, zipFile: ZipFile, callback: InstallerInterface,
+                                 xApkManifest: XApkManifest,
                                  xApkInstallProgressCallback: XApkInstallProgressCallback?){
         val fileList= arrayListOf<String>()
         if (xApkManifest.useSplitApks()){
@@ -192,7 +194,7 @@ object XApkInstallUtils {
                         this.outputFileDir = AppFolder.getXApkInstallTempFolder(packageName).absolutePath
                         this.iconPath = xApkFile.absolutePath
                         this.apkAssetType = ApkAssetType.XAPK
-                    })
+                    },callback)
                 }
             } else {
                 handler.post {
