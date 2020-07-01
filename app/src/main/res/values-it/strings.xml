@@ -99,7 +99,7 @@
     <string name="pwa_icon">PWA</string>
     <string name="offline_description">Tocca qui per riprovare!</string>
     <string name="offline_heading">Sei offline.</string>
-    <string name="show_only_pwa_apps">Mostra solo le progressive web apps</string>
+    <string name="show_only_pwa_apps">Mostra solo le Progressive Web App</string>
     <string name="show_only_pwa_apps_description">Le Web App consentono un\'esperienza come se fossero App Reali girando in un Browser</string>
     <string name="show_only_open_source_apps">Mostra solo le app open-source</string>
     <string name="show_only_open_source_apps_description">App con Codice Sorgente disponibile liberamente agli utenti</string>
