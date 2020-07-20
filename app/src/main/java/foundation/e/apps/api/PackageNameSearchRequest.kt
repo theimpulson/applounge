@@ -19,6 +19,8 @@ package foundation.e.apps.api
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import foundation.e.apps.MainActivity
+import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
@@ -33,7 +35,7 @@ class PackageNameSearchRequest(private val packageName: String) {
 
     fun request(callback: (Error?, SearchResult?) -> Unit) {
         try {
-            val url = Constants.BASE_URL + "apps?action=search&keyword=${URLEncoder.encode(packageName, "utf-8")}&by=package_name"
+            val url = mActivity.BASE_URL() + "apps?action=search&keyword=${URLEncoder.encode(packageName, "utf-8")}&by=package_name"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<SearchResult>(urlConnection.inputStream)
             urlConnection.disconnect()

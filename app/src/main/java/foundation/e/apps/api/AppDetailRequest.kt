@@ -19,6 +19,8 @@ package foundation.e.apps.api
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import foundation.e.apps.MainActivity
+import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.application.model.data.PwaFullData
 import foundation.e.apps.utils.Common
@@ -49,7 +51,7 @@ class AppDetailRequest(private val id: String) {
 
     fun request(callback: (Error?, FullData?) -> Unit) {
         try {
-            val url = Constants.BASE_URL + "apps?action=app_detail&id=$id&architectures=[$sb"
+            val url = mActivity.BASE_URL() + "apps?action=app_detail&id=$id&architectures=[$sb"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<Result>(urlConnection.inputStream)
             urlConnection.disconnect()
@@ -64,7 +66,7 @@ class AppDetailRequest(private val id: String) {
 
     fun Pwarequest(callback: (Error?, PwaFullData?) -> Unit) {
         try {
-            val url = Constants.BASE_URL + "apps?action=app_detail&id=$id&architectures=[$sb"
+            val url = mActivity.BASE_URL() + "apps?action=app_detail&id=$id&architectures=[$sb"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val PwaResult = Pwareader.readValue<PwaResult>(urlConnection.inputStream)
             urlConnection.disconnect()

@@ -112,6 +112,22 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         selectFragment(currentFragmentId, null)
     }
 
+    fun BASE_URL(): String {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(mActivity)
+        var showAllApps:Boolean
+        if(android.os.Build.TAGS=="test-keys"){
+            showAllApps = preferences.getBoolean(getString(R.string.build_type), false)
+            if(showAllApps){
+                return "https://api.cleanapk.org/v2/"
+            }
+            else {
+                return "https://api.test.cleanapk.org/v2/"
+            }
+        }else{
+            return "https://api.cleanapk.org/v2/"
+        }
+    }
+
     private fun initialiseFragments(applicationManager: ApplicationManager) {
         homeFragment.initialise(applicationManager)
         searchFragment.initialise(applicationManager)

@@ -95,6 +95,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
             backToMainActivity()
             true
         }
+
+        val build_type = preferenceManager.findPreference<Preference>(getString(R.string.build_type)) as CheckBoxPreference
+        if(android.os.Build.TAGS=="test-keys"){
+            build_type.isVisible = true
+            build_type.setOnPreferenceChangeListener{ _, newValue ->
+                backToMainActivity()
+                true
+            }
+        }
     }
 
 

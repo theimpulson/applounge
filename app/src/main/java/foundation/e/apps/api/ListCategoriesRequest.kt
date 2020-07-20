@@ -33,7 +33,7 @@ class ListCategoriesRequest {
     fun request(callback: (Error?, ListCategoriesResult?) -> Unit) {
         try {
             var appType = mActivity.showApplicationTypePreference()
-            val url = Constants.BASE_URL + "apps?action=list_cat&type=$appType"
+            val url = mActivity.BASE_URL() + "apps?action=list_cat&type=$appType"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<ListCategoriesResult>(urlConnection.inputStream)
             urlConnection.disconnect()

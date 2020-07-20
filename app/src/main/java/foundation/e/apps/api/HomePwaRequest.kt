@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.MainActivity
+import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.data.PwasBasicData
 import foundation.e.apps.applicationmanager.ApplicationManager
@@ -23,7 +24,7 @@ class HomePwaRequest {
     fun request(callback: (Error?, HomeResult?) -> Unit) {
         try {
             var appType = MainActivity.mActivity.showApplicationTypePreference()
-            val url = Constants.BASE_URL + "apps?action=list_home&type=$appType"
+            val url = mActivity.BASE_URL() + "apps?action=list_home&type=$appType"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<HomeResult>(urlConnection.inputStream)
             urlConnection.disconnect()

@@ -20,6 +20,8 @@ package foundation.e.apps.utils
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
+import foundation.e.apps.MainActivity
+import foundation.e.apps.MainActivity.Companion.mActivity
 import java.net.URL
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
@@ -73,7 +75,7 @@ class ImagesLoader(private val imagesUri: Array<String>) {
         override fun doInBackground(vararg params: BlockingQueue<Image>): Any? {
             val queue = params[0]
             try {
-                val url = URL(Constants.BASE_URL + "media/" + uri)
+                val url = URL(mActivity.BASE_URL() + "media/" + uri)
                 val urlConnection = url.openConnection() as HttpsURLConnection
                 urlConnection.requestMethod = Constants.REQUEST_METHOD_GET
                 urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT

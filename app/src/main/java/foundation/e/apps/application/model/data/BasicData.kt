@@ -21,9 +21,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import foundation.e.apps.MainActivity
+import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.utils.Constants
-import foundation.e.apps.utils.Constants.BASE_URL
 import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.Execute
 import foundation.e.apps.utils.ImagesLoader
@@ -99,7 +100,7 @@ constructor(@param:JsonProperty("_id") val id: String,
     private fun loadIconSynced(): Error? {
         if (icon == null) {
             try {
-                val url = URL(BASE_URL + "media/" + iconUri)
+                val url = URL(mActivity.BASE_URL() + "media/" + iconUri)
                 val urlConnection = url.openConnection() as HttpsURLConnection
                 urlConnection.requestMethod = Constants.REQUEST_METHOD_GET
                 urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT

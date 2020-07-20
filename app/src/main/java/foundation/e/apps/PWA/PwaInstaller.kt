@@ -64,7 +64,7 @@ class PwaInstaller : AppCompatActivity() {
                     Looper.prepare();//Call looper.prepare()
                 try {
                     var uri = PwasBasicData.thisActivity!!.uri
-                    val url = URL(Constants.BASE_URL + "media/" + uri)
+                    val url = URL(mActivity.BASE_URL() + "media/" + uri)
                     val urlConnection = url.openConnection() as HttpsURLConnection
                     urlConnection.requestMethod = Constants.REQUEST_METHOD_GET
                     urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT

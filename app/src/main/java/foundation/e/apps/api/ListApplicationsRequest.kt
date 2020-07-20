@@ -40,7 +40,7 @@ class ListApplicationsRequest(private val category: String, private val page: In
         try {
             var appType = mActivity.showApplicationTypePreference()
             val string = URLEncoder.encode(category, "utf-8").toLowerCase()
-            val url = Constants.BASE_URL + "apps?action=list_apps&category=$string&nres=$resultsPerPage&page=$page&type=$appType"
+            val url = mActivity.BASE_URL() + "apps?action=list_apps&category=$string&nres=$resultsPerPage&page=$page&type=$appType"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<ListApplicationsResult>(urlConnection.inputStream)
             urlConnection.disconnect()

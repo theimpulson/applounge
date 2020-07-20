@@ -17,6 +17,8 @@
 
 package foundation.e.apps.api
 
+import foundation.e.apps.MainActivity
+import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
@@ -29,7 +31,7 @@ class AppRequestRequest {
         val requestBody = JSONObject()
         requestBody.put("package_name", packageName)
         try {
-            val url = Constants.BASE_URL + "app_suggestions"
+            val url = mActivity.BASE_URL() + "app_suggestions"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_POST)
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8")
 

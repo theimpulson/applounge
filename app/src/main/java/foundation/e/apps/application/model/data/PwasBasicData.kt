@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import foundation.e.apps.MainActivity
+import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
@@ -94,7 +96,7 @@ constructor(@param:JsonProperty("_id") val id: String,
     internal fun loadIconSynced(): Error? {
         if (icon == null) {
             try {
-                val url = URL(Constants.BASE_URL + "media/" + icon_uri)
+                val url = URL(mActivity.BASE_URL() + "media/" + icon_uri)
                 val urlConnection = url.openConnection() as HttpsURLConnection
                 urlConnection.requestMethod = Constants.REQUEST_METHOD_GET
                 urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT

@@ -40,7 +40,7 @@ class HomeRequest {
     fun request(callback: (Error?, HomeResult?) -> Unit) {
         try {
             var appType =mActivity.showApplicationTypePreference()
-            val url = Constants.BASE_URL + "apps?action=list_home&source=$appType&type=$appType"
+            val url = mActivity.BASE_URL() + "apps?action=list_home&source=$appType&type=$appType"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<HomeResult>(urlConnection.inputStream)
             urlConnection.disconnect()
