@@ -66,7 +66,6 @@ class SearchModel : SearchModelInterface {
             app.decrementUses()
         }
         loadMore(context)
-        applicationList.value=null
     }
 
     override fun loadMore(context: Context) {
