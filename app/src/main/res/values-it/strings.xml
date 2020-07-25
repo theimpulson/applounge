@@ -63,10 +63,10 @@
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Aggiornamenti</string>
     <string name="updates_notification_unmetered_network_warning">In attesa di collegamento WiFi</string>
-    <string name="updates_notification_text">%1$s aggiornamenti app saranno installati automaticamente</string>
+    <string name="updates_notification_text">Gli aggiornamenti app verranno installati automaticamente</string>
     <plurals name="updates_notification_title">
-        <item quantity="one">E\' disponibile %1$d aggiornamento app</item>
-        <item quantity="other">Sono disponibili %1$d aggiornamenti app</item>
+        <item quantity="one">E\' disponibile un aggiornamento app</item>
+        <item quantity="other">Sono disponibili aggiornamenti app</item>
     </plurals>
     <string name="updates_splash_title">Tutte le app sono aggiornate</string>
     <string name="search_splash_title">Cerca una app</string>
@@ -90,12 +90,12 @@
     <string name="app_trackers_title">Trackers</string>
     <string name="app_permissions_title">Autorizzazioni</string>
     <string name="app_privacy_title">Analisi privacy</string>
-    <string name="app_energy_description">Punteggio su scala di 10. Calcolato utilizzando l\'utilizzo batteria dell\'app come misurato con dispositivi in un laboratorio dedicato. In arrivo.</string>
+    <string name="app_energy_description">Valore su scala di 10. Calcolato utilizzando l\'utilizzo batteria dell\'app come misurato con dispositivi in un laboratorio dedicato. In arrivo.</string>
     <string name="app_energy_score">Energia</string>
-    <string name="app_rating_description">Punteggio su scala di 5. Calcolato utilizzando i punteggi degli utilizzatori dell\'app.</string>
+    <string name="app_rating_description">Valore su scala di 5. Calcolato utilizzando i punteggi degli utilizzatori dell\'app.</string>
     <string name="app_rating">Punteggio</string>
     <string name="app_privacy_description_short">Calcolato utilizzando <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
-    <string name="app_privacy_description">Punteggio su scala di 10. Calcolato utilizzando <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>, basato su permessi e trackers utilizzati nell\'app.</string>
+    <string name="app_privacy_description">Punteggio su scala di 10. Calcolato utilizzando <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>, che si basa su permessi e trackers usati nell\'app.</string>
     <string name="pwa_icon">PWA</string>
     <string name="offline_description">Tocca qui per riprovare!</string>
     <string name="offline_heading">Sei offline.</string>
