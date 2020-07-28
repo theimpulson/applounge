@@ -60,8 +60,8 @@
     <string name="error_install_failed">App kon niet geïnstalleerd worden! Probeer het later opnieuw.</string>
     <string name="error_apk_incompatible">Deze app is niet compatibel met jouw apparaat.</string>
     <plurals name="updates_notification_title">
-        <item quantity="one">Er zijn %1$d app-updates beschikbaar</item>
-        <item quantity="other"></item>
+        <item quantity="one">Er is %1$d app-update beschikbaar</item>
+        <item quantity="other">Er zijn %1$d app-updates beschikbaar</item>
     </plurals>
     <string name="updates_splash_title">Alle apps zijn bijgewerkt</string>
     <string name="search_splash_title">Zoek voor een app</string>
