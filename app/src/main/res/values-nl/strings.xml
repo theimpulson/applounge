@@ -46,7 +46,7 @@
     <string name="preference_update_wifi_only_description">Update apps automatisch over netwerken zonder datalimiet zoals via Wi-Fi</string>
     <string name="preference_update_wifi_only_title">Alleen op netwerken met datalimiet</string>
     <string name="preference_update_interval_title">Update controle interval</string>
-    <string name="updates_notification_unmetered_network_warning">Wachten voor een netwerk zonder data limiet</string>
+    <string name="updates_notification_unmetered_network_warning">Wachten op niet-gemeten netwerk</string>
     <string name="not_available">N.V.T.</string>
     <string name="package_name_help_text">Een pakket name is een uniek identificatie voor een Android App. Pakket namen zijn meestal in kleine letters, en geschreven in het volgende formaat: \"domein.bedrijf.applicatie\"</string>
     <string name="error_no_screenshots_available">Geen screenshots beschikbaar</string>
