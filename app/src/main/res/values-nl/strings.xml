@@ -10,7 +10,7 @@
     <string name="action_install">Installeren</string>
     <string name="app_rating_content_description">App-beoordeling</string>
     <string name="app_energy_score_content_description">App energie score</string>
-    <string name="app_privacy_score_content_description">App privacy score</string>
+    <string name="app_privacy_score_content_description">App-privacyscore</string>
     <string name="app_description_content_description">App beschrijving</string>
     <string name="app_description_title">Beschrijving</string>
     <string name="app_icon_content_description">App icoon</string>
@@ -40,12 +40,12 @@
     <string name="submit_button_text">Indienen</string>
     <string name="preference_apps_request_app_title">Vraag een applicatie aan</string>
     <string name="preference_apps_title">Apps</string>
-    <string name="preference_update_notify_available_description">Toon een notificatie wanneer er app updates beschikbaar zijn</string>
-    <string name="preference_update_install_automatically_description">Download en installeer app updates op de achtergrond</string>
+    <string name="preference_update_notify_available_description">Toon een melding wanneer app-updates beschikbaar zijn</string>
+    <string name="preference_update_install_automatically_description">Download en installeer app-updates op de achtergrond</string>
     <string name="preference_update_install_automatically_title">Updates automatisch installeren</string>
-    <string name="preference_update_wifi_only_description">Update apps automatisch over netwerken zonder datalimiet zoals via Wi-Fi</string>
-    <string name="preference_update_wifi_only_title">Alleen op netwerken met datalimiet</string>
-    <string name="preference_update_interval_title">Update controle interval</string>
+    <string name="preference_update_wifi_only_description">Update apps automatisch alleen op niet-gemeten netwerken zoals wifi</string>
+    <string name="preference_update_wifi_only_title">Alleen op niet-gemeten netwerken</string>
+    <string name="preference_update_interval_title">Controle-interval bijwerken</string>
     <string name="updates_notification_unmetered_network_warning">Wachten op niet-gemeten netwerk</string>
     <string name="not_available">N.V.T.</string>
     <string name="package_name_help_text">Een pakket naam is een unieke identificatie voor een Android App. Pakket namen zijn meestal in kleine letters, en geschreven in het volgende formaat: \"domein.bedrijf.applicatie\"</string>
