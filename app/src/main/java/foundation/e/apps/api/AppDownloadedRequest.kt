@@ -21,15 +21,14 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 
-class AppDownloadedRequest(private val id: String) {
+class AppDownloadedRequest(private val id: String, private val apkArchitecture: String?) {
     companion object {
         private val reader = Common.getObjectMapper().readerFor(Result::class.java)
     }
 
     fun request() {
         try {
-            val arch = System.getProperty("os.arch")
-            val url = Constants.BASE_URL + "apps?action=download&app_id=$id&architecture=:$arch"
+            val url = Constants.BASE_URL + "apps?action=download&app_id=$id&architecture=$apkArchitecture"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             reader.readValue<Result>(urlConnection.inputStream)
             urlConnection.disconnect()
