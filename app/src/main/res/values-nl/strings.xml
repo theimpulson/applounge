@@ -47,7 +47,7 @@
     <string name="preference_update_wifi_only_title">Alleen op niet-gemeten netwerken</string>
     <string name="preference_update_interval_title">Controle-interval bijwerken</string>
     <string name="updates_notification_unmetered_network_warning">Wachten op niet-gemeten netwerk</string>
-    <string name="not_available">N.V.T.</string>
+    <string name="not_available">n.v.t.</string>
     <string name="package_name_help_text">Een pakket naam is een unieke identificatie voor een Android App. Pakket namen zijn meestal in kleine letters, en geschreven in het volgende formaat: \"domein.bedrijf.applicatie\"</string>
     <string name="error_no_screenshots_available">Geen screenshots beschikbaar</string>
     <string name="error_apk_corrupt">Download was onderbroken! Probeer het later opnieuw.</string>
