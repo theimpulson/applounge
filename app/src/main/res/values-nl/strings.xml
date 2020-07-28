@@ -85,7 +85,7 @@
     <string name="app_information_title">Informatie</string>
     <string name="app_trackers_title">Trackers</string>
     <string name="app_permissions_title">Machtigingen</string>
-    <string name="app_energy_description">Score uit 10. Berekend met het batterijgebruik van de app, gemeten op apparaten in een speciaal laboratorium. Komt binnenkort.</string>
+    <string name="app_energy_description">Score op 10. Berekend met het batterijgebruik van de app, gemeten op apparaten in een speciaal laboratorium. Binnenkort verwacht.</string>
     <string name="app_energy_score">Energie</string>
     <string name="app_rating_description">Score uit 5. Berekend op basis van gebruikersbeoordelingen van de app.</string>
     <string name="app_privacy_description_short">Berekend met behulp van <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
