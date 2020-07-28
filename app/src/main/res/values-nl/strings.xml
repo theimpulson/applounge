@@ -35,7 +35,7 @@
     <string name="preference_updates_title">Updates</string>
     <string name="app_privacy_title">Privacy-analyses</string>
     <string name="app_rating">Beoordelingen</string>
-    <string name="app_privacy_description">Score uit 10. Berekend met <a href="https://exodus-privacy.eu.org"> Exodus Privacy-analyses </a>, gebaseerd op toestemmingen en trackers die in de app worden gebruikt.</string>
+    <string name="app_privacy_description">Score op 10. Berekend met <a href="https://exodus-privacy.eu.org"> Exodus Privacy-analyses </a>, gebaseerd op toestemmingen en trackers die in de app worden gebruikt.</string>
     <string name="app_request_successful_text">App verzoek is succesvol geplaatst!</string>
     <string name="submit_button_text">Indienen</string>
     <string name="preference_apps_request_app_title">Vraag een applicatie aan</string>
@@ -88,7 +88,7 @@
     <string name="app_energy_description">Score uit 10. Berekend met het batterijgebruik van de app, gemeten op apparaten in een speciaal laboratorium. Komt binnenkort.</string>
     <string name="app_energy_score">Energie</string>
     <string name="app_rating_description">Score op 5. Berekend met de app beoordelingen van gebruikers.</string>
-    <string name="app_privacy_description_short">Berekend met <a href="https://exodus-privacy.eu.org"> Exodus Privacy-analyses </a>.</string>
+    <string name="app_privacy_description_short">Berekend met behulp van <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
     <string name="app_privacy_score">Privacy</string>
     <string name="app_name">Apps</string>
 </resources>
