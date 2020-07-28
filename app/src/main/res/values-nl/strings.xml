@@ -67,7 +67,7 @@
     <string name="search_splash_title">Zoek naar een app</string>
     <string name="games_categories_title">Spelletjes</string>
     <string name="applications_categories_title">Apps</string>
-    <string name="app_store_banner_content_description">App Store-banner</string>
+    <string name="app_store_banner_content_description">App Store banner</string>
     <string name="menu_settings">Instellingen</string>
     <string name="menu_updates">Updates</string>
     <string name="menu_search">Zoeken</string>
@@ -75,10 +75,10 @@
     <string name="application_description_activity_title">Beschrijving</string>
     <string name="action_ok">Ok</string>
     <string name="no_trackers">Geen trackers gebruikt</string>
-    <string name="no_permissions">Geen machtigingen vereist</string>
+    <string name="no_permissions">Geen toestemmingen gevraagd</string>
     <string name="download_notification_description">Downloaden</string>
     <string name="app_screenshots_title">Screenshots</string>
-    <string name="app_licence">Licenties</string>
+    <string name="app_licence">Licentie</string>
     <string name="app_min_android">Vereist</string>
     <string name="app_updated_on">Bijgewerkt op</string>
     <string name="app_version">Versie</string>
