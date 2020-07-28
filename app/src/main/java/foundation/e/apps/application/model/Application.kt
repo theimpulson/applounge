@@ -201,7 +201,7 @@ class Application(val packageName: String, private val applicationManager: Appli
     override fun onDownloadComplete(context: Context, status: Int) {
         if (status == DownloadManager.STATUS_SUCCESSFUL) {
             Execute({
-                AppDownloadedRequest(basicData!!.id).request()
+                AppDownloadedRequest(basicData!!.id,fullData!!.getLastVersion()?.apkArchitecture).request()
             }, {})
             if(info.isXapk(fullData!!,basicData)){
                 isInstalling=true
