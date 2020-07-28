@@ -151,6 +151,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         searchViewModel.getScreenError().observe(this, Observer {
             if (it != null) {
                 if (!isLoadingMoreApplications) {
+                    applicationList.clear()
                     errorDescription.text = activity!!.getString(it.description)
                     errorContainer.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
