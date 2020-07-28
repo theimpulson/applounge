@@ -18,7 +18,7 @@
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="error_no_error">Geen fout.</string>
     <string name="error_package_already_exists">Deze app is al beschikbaar of werd reeds verzocht.</string>
-    <string name="error_invalid_package_name">Verzoek indienen is niet mogelijk. Vul een geldige pakket naam in.</string>
+    <string name="error_invalid_package_name">Verzoek indienen niet gelukt. Vul een geldige pakket naam in.</string>
     <string name="error_resolve">Opnieuw proberen</string>
     <string name="error_apk_download_failed">App kon niet gedownload worden! Probeer het later opnieuw.</string>
     <string name="error_unknown">Er ging iets verkeerd! Probeer het later opnieuw.</string>
@@ -91,13 +91,13 @@
     <string name="app_privacy_description_short">Berekend met behulp van <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
     <string name="app_privacy_score">Privacy</string>
     <string name="app_name">Apps</string>
-    <string name="pref_update_notify_key"></string>
-    <string name="pref_update_install_automatically_key"></string>
-    <string name="pref_update_wifi_only_key"></string>
-    <string name="pref_update_interval_key"></string>
-    <string name="pick_up_apk_file"></string>
-    <string name="Show_all_apps_key"></string>
-    <string name="pref_apps_request_app_key"></string>
+    <string name="pref_update_notify_key"/>
+    <string name="pref_update_install_automatically_key"/>
+    <string name="pref_update_wifi_only_key"/>
+    <string name="pref_update_interval_key"/>
+    <string name="pick_up_apk_file"/>
+    <string name="Show_all_apps_key"/>
+    <string name="pref_apps_request_app_key"/>
     <string name="pwa_icon">PWA</string>
     <string name="exit">Klik aub nogmaals op TERUG om af te sluiten</string>
     <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
