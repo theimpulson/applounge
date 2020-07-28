@@ -28,7 +28,7 @@
     <string name="package_name_find_text">Om de pakket naam van een app die geïnstalleerd is op je apparaat te vinden, ga je naar Systeem Instellingen &gt; Applicaties &gt; [Je app]. De pakket name zou onderaan de lijst moeten staan.
 \n*Dit proces kan variëren op sommige apparaten.</string>
     <string name="updates_notification_text">App-updates %1$s worden automatisch geïnstalleerd</string>
-    <string name="menu_home">Onderste navigatiebalk</string>
+    <string name="menu_home">Home</string>
     <string name="preference_apps_request_app_summary">Verzoek een app die momenteel niet beschikbaar is</string>
     <string name="preference_update_notify_available_title">Toon beschikbare updates</string>
     <string name="preference_update_interval_default">24</string>
@@ -58,7 +58,7 @@
     <string name="error_no_internet">Kan niet verbinden! Controleer uw internet verbinding en probeer het opnieuw.</string>
     <string name="error_no_results">Geen applicaties gevonden.</string>
     <string name="error_install_failed">App kon niet geïnstalleerd worden! Probeer het later opnieuw.</string>
-    <string name="error_apk_incompatible">Deze app is niet compatible met je apparaat.</string>
+    <string name="error_apk_incompatible">Deze app is niet compatibel met jouw apparaat.</string>
     <plurals name="updates_notification_title">
         <item quantity="one">%1$d app update is beschikbaar</item>
         <item quantity="other">%1$d app updates zijn beschikbaar</item>
