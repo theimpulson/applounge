@@ -14,7 +14,7 @@
     <string name="app_description_content_description">App beschrijving</string>
     <string name="app_description_title">Beschrijving</string>
     <string name="app_icon_content_description">App icoon</string>
-    <string name="service_description">Deze service wordt gebruikt door Apps voor het beheren, downloaden en installeren van apps. Dit stoppen kan app downloads doen mislukken.</string>
+    <string name="service_description">Deze service wordt door apps gebruikt om apps te beheren, downloaden en installeren. Als u dit stopt, kan het downloaden van apps mislukken.</string>
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="error_no_error">Geen fout.</string>
     <string name="error_package_already_exists">Deze app is al beschikbaar of wordt nog opgevraagd.</string>
