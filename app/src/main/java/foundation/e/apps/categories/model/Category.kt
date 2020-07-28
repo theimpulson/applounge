@@ -20,7 +20,7 @@ package foundation.e.apps.categories.model
 import foundation.e.apps.R
 import java.io.Serializable
 
-class Category(val id: String) : Serializable {
+class Category(val id: String, val defaultTitle: String? = "") : Serializable {
     private val title: String
     private val iconResource: Int
 
@@ -31,6 +31,8 @@ class Category(val id: String) : Serializable {
     }
 
     private fun getCategoryTitle(categoryId: String): String {
+        if(defaultTitle!!.isNotEmpty()) return defaultTitle.toString()
+
         val title = categoryId.replace("_", " ")
         if (title.contains("game ")) {
             return title.removePrefix("game ").capitalize()

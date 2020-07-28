@@ -23,8 +23,8 @@ object Constants {
     const val BASE_URL = "https://api.cleanapk.org/v2/"
     const val DOWNLOAD_URL = "https://apk.cleanapk.org/"
     const val STORAGE_PERMISSION_REQUEST_CODE = 0
-    const val CONNECT_TIMEOUT = 5000 // 5 seconds
-    const val READ_TIMEOUT = 10000 // 10 seconds
+    const val CONNECT_TIMEOUT = 30000 // 30 seconds
+    const val READ_TIMEOUT = 60000 // 60 seconds
     const val REQUEST_METHOD_GET = "GET"
     const val REQUEST_METHOD_POST = "POST"
 

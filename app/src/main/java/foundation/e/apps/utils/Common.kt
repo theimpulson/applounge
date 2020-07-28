@@ -27,6 +27,8 @@ import java.net.URL
 import java.util.concurrent.Executors
 import javax.net.ssl.HttpsURLConnection
 import kotlin.math.roundToInt
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+
 
 object Common {
 
@@ -85,6 +87,7 @@ object Common {
     fun getObjectMapper(): ObjectMapper {
         val objectMapper = ObjectMapper()
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        objectMapper.registerKotlinModule()
         return objectMapper
     }
 }

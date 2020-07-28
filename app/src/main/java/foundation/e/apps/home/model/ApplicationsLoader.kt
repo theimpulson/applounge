@@ -56,8 +56,9 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
             HomeRequest().request { applicationError, homeResult ->
                 when (applicationError) {
                     null -> {
-                        bannerApps = homeResult!!.getBannerApps(homeModel.getInstallManager(), context)
-                        applications = loadApplications(homeResult, context)
+                        homeResult!!
+                        bannerApps = homeResult.home.getBannerApps(homeModel.getInstallManager(), context)
+                        applications = loadApplications(homeResult.home, context)
                     }
                     else -> {
                         error = applicationError
@@ -77,13 +78,8 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
         }
     }
 
-    private fun loadApplications(result: HomeRequest.HomeResult, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
-        val parsedApplications = result.getApps(homeModel.getInstallManager(), context)
-        val applications = LinkedHashMap<Category, ArrayList<Application>>()
-        for (parsedApplication in parsedApplications) {
-            applications[parsedApplication.key] = parsedApplication.value
-        }
-        return applications
+    private fun loadApplications(home: HomeRequest.Home, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
+        return home.getApps(homeModel.getInstallManager(), context)
     }
 
     private fun pwaLoadApplications(result: HomePwaRequest.HomeResult, context: Context): LinkedHashMap<Category, ArrayList<Application>> {

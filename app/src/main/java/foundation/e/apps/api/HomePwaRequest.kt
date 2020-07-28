@@ -3,6 +3,7 @@ package foundation.e.apps.api
 import android.content.Context
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.MainActivity
 import foundation.e.apps.application.model.Application
@@ -54,6 +55,7 @@ class HomePwaRequest {
     }
 
     class PwasSubHomeResult @JsonCreator constructor() {
+        @JsonIgnore
         val apps = LinkedHashMap<Category, ArrayList<PwasBasicData>>()
         lateinit var bannerApps: Array<PwasBasicData>
 

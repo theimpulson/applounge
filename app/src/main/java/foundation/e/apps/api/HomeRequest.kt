@@ -18,8 +18,6 @@
 package foundation.e.apps.api
 
 import android.content.Context
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.application.model.Application
@@ -34,89 +32,76 @@ import foundation.e.apps.utils.Error
 class HomeRequest {
 
     companion object {
-        private val reader = Common.getObjectMapper().readerFor(HomeResult::class.java)
+        private val mapper = Common.getObjectMapper()
     }
 
-    fun request(callback: (Error?, HomeResult?) -> Unit) {
+    fun request(callback: (Error?, Result?) -> Unit) {
         try {
-            var appType =mActivity.showApplicationTypePreference()
+            val appType = mActivity.showApplicationTypePreference()
             val url = Constants.BASE_URL + "apps?action=list_home&source=$appType&type=$appType"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
-            val result = reader.readValue<HomeResult>(urlConnection.inputStream)
+            val result = mapper.readValue(urlConnection.inputStream, Result::class.java)
             urlConnection.disconnect()
             callback.invoke(null, result)
         } catch (e: Exception) {
+            e.printStackTrace()
             callback.invoke(Error.findError(e), null)
         }
     }
 
-    class HomeResult @JsonCreator
-    constructor(@JsonProperty("home") private val home: SubHomeResult) {
+
+
+    data class Result(val success: Boolean, val home: Home)
+
+    data class Home(
+            @JsonProperty(BANNER_APPS_KEY)
+            val bannerApps: List<BasicData>,
+            @JsonProperty(TOP_UPDATED_APPS_KEY)
+            val topUpdatedApps: List<BasicData>,
+            @JsonProperty(TOP_UPDATED_GAMES_KEY)
+            val topUpdatedGames: List<BasicData>,
+            @JsonProperty(POPULAR_APPS_24_HOUR_KEY)
+            val popularAppsIn24Hours: List<BasicData>,
+            @JsonProperty(POPULAR_GAMES_24_HOUR_KEY)
+            val popularGamesIn24Hours: List<BasicData>,
+            @JsonProperty(DISCOVER_KEY)
+            val discover: List<BasicData>
+    ) {
+
+        companion object {
+            private const val BANNER_APPS_KEY = "banner_apps"
+            private const val TOP_UPDATED_APPS_KEY = "top_updated_apps"
+            private const val TOP_UPDATED_GAMES_KEY = "top_updated_games"
+            private const val POPULAR_APPS_24_HOUR_KEY = "popular_apps_in_last_24_hours"
+            private const val POPULAR_GAMES_24_HOUR_KEY = "popular_games_in_last_24_hours"
+            private const val DISCOVER_KEY = "discover"
+            private val KEYS = setOf(TOP_UPDATED_APPS_KEY,
+                    TOP_UPDATED_GAMES_KEY, POPULAR_APPS_24_HOUR_KEY,
+                    POPULAR_GAMES_24_HOUR_KEY, DISCOVER_KEY)
+        }
+
 
         fun getBannerApps(applicationManager: ApplicationManager, context: Context): ArrayList<Application> {
-            return ApplicationParser.parseToApps(applicationManager, context, home.bannerApps)
+            return ApplicationParser.parseToApps(applicationManager, context, bannerApps.toTypedArray())
+
         }
 
         fun getApps(applicationManager: ApplicationManager, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
             val apps = LinkedHashMap<Category, ArrayList<Application>>()
-            for (pair in home.apps) {
-                if(pair.value .isEmpty() ){
-                    apps.remove(pair.key)
-                }else {
-
-                    apps[pair.key] = ApplicationParser.parseToApps(applicationManager, context, pair.value.toTypedArray())
+            KEYS.forEach {
+                val parsedApps = when (it) {
+                    TOP_UPDATED_APPS_KEY -> ApplicationParser.parseToApps(applicationManager, context, topUpdatedApps.toTypedArray())
+                    TOP_UPDATED_GAMES_KEY -> ApplicationParser.parseToApps(applicationManager, context, topUpdatedGames.toTypedArray())
+                    POPULAR_APPS_24_HOUR_KEY -> ApplicationParser.parseToApps(applicationManager, context, popularAppsIn24Hours.toTypedArray())
+                    POPULAR_GAMES_24_HOUR_KEY -> ApplicationParser.parseToApps(applicationManager, context, popularGamesIn24Hours.toTypedArray())
+                    DISCOVER_KEY -> ApplicationParser.parseToApps(applicationManager, context, discover.toTypedArray())
+                    else -> throw IllegalArgumentException("Unrecognised key $it encountered")
                 }
+                apps[Category(it)] = parsedApps
+
             }
             return apps
         }
 
-    }
-
-    class SubHomeResult @JsonCreator constructor() {
-        val apps = LinkedHashMap<Category, ArrayList<BasicData>>()
-        lateinit var bannerApps: Array<BasicData>
-
-        @JsonAnySetter
-        fun append(key: String, value: Any) {
-            val apps = value as ArrayList<*>
-            val appsData = ArrayList<BasicData>()
-            apps.forEach {
-                val data = it as LinkedHashMap<*, *>
-                val appData = BasicData(
-                        data["_id"] as String,
-                        data["name"] as String,
-                        data["package_name"] as String,
-                        data["latest_version_number"].toString(),
-                        data["latest_downloaded_version"].toString(),
-                        data["x86_64_latest_downloaded_version"].toString(),
-                        data["x86_64_latest_version_number"].toString(),
-                        data["armeabi_latest_downloaded_version"].toString(),
-                        data["armeabi_latest_version_number"].toString(),
-                        data["arm64-v8a_latest_downloaded_version"].toString(),
-                        data["arm64-v8a_latest_version_number"].toString(),
-                        data["x86_latest_downloaded_version"].toString(),
-                        data["x86_latest_version_number"].toString(),
-                        data["armeabi-v7a_latest_downloaded_version"].toString(),
-                        data["armeabi-v7a_latest_version_number"].toString(),
-                        data["architectures"]as List<String> as ArrayList<String>,
-                        data["author"] as String,
-                        data["icon_image_path"] as String,
-                        (data["other_images_path"] as List<String>).toTypedArray(),
-                        data["exodus_score"].toString().toFloat(),
-                        BasicData.Ratings(
-                                (data["ratings"] as LinkedHashMap<String, Int>)
-                                        ["usageQualityScore"]!!.toFloat(),
-                                (data["ratings"] as LinkedHashMap<String, Int>)
-                                        ["privacyScore"]!!.toFloat()),
-                        data["category"] as String,
-                        data["is_pwa"]as Boolean)
-                appsData.add(appData)
-            }
-            if (key == "banner_apps") {
-                bannerApps = appsData.toTypedArray()
-            } else {
-                this.apps[Category(key)] = appsData
-            }
-        }
     }
 }
