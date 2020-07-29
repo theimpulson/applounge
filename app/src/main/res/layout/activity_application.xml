@@ -150,7 +150,7 @@
             <RelativeLayout
                 android:id="@+id/app_install_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_marginTop="@dimen/layout_margin_large"
                 android:paddingStart="@dimen/layout_padding_large"
                 android:paddingEnd="@dimen/layout_padding_large">
@@ -211,11 +211,12 @@
                 <TextView
                     android:id="@+id/app_size"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
                     android:layout_marginStart="@dimen/layout_margin_medium"
                     android:layout_toStartOf="@id/app_install"
                     android:ellipsize="end"
+                    android:gravity="center"
                     android:maxLines="1"
                     android:textSize="@dimen/text_size_small"
                     tools:text="App size" />
@@ -226,12 +227,13 @@
                     android:layout_width="@dimen/install_button_width3"
                     android:layout_height="@dimen/install_button_height"
                     android:layout_alignParentEnd="true"
+                    android:ellipsize="end"
+                    android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/layout_margin_medium2"
-                    android:layout_marginTop="@dimen/layout_margin_small"
-                    layout="@layout/install_button_layout"
+                    layout="@layout/install_button_layout" />
 
 
-                    />
+
 
             </RelativeLayout>
 
@@ -828,3 +830,4 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

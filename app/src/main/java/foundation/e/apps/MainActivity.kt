@@ -18,8 +18,9 @@
 package foundation.e.apps
 
 //import androidx.fragment.app.ListFragment
+
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -27,6 +28,7 @@ import android.preference.PreferenceManager
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
@@ -83,6 +85,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             return@setOnNavigationItemSelectedListener false
         }
 
+
         disableShiftingOfNabBarItems()
 
         initialiseUpdatesWorker()
@@ -97,7 +100,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         } else {
             R.id.menu_home
         }
-
+        setupLangReceiver()
         applicationManagerServiceConnection.bindService(this)
     }
 
@@ -172,13 +175,27 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }
         return false
     }
+    private var mLangReceiver: BroadcastReceiver? = null
+    protected fun setupLangReceiver(): BroadcastReceiver? {
+        if (mLangReceiver == null) {
+            mLangReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context?, intent: Intent?) {
+                    finish()
+//                    selectFragment(currentFragmentId,null)
+                }
+            }
+            val filter = IntentFilter(Intent.ACTION_LOCALE_CHANGED)
+            registerReceiver(mLangReceiver, filter)
+        }
+        return mLangReceiver
+    }
 
     private fun showFragment(fragment: Fragment) {
         bottom_navigation_view.menu.findItem(currentFragmentId).isChecked = true
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment)
-                .commit()
+                .commitAllowingStateLoss();
     }
 
     @SuppressLint("RestrictedApi")

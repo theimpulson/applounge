@@ -16,23 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
     -->
-
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/app_install"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/install_button_height2"
-    android:layout_gravity="center"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
     android:background="@drawable/app_install_border"
-    android:ellipsize="end"
+    android:gravity="center"
     android:maxLines="1"
-    android:minWidth="@dimen/install_button_width"
-    android:minHeight="@dimen/install_button_height3"
     android:text="@string/action_install"
-    android:textColor="?android:textColorPrimaryInverse"
-    android:textAllCaps="false"
     android:textAlignment="center"
-    android:textSize="@dimen/text_size_large"
-    />
-
+    android:textAllCaps="false"
+    android:textColor="?android:textColorPrimaryInverse"
+    android:layout_centerVertical="true"
+    android:textSize="@dimen/text_size_large"/>
 
 

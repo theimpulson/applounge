@@ -43,8 +43,8 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
             HomePwaRequest().request{applicationError,pwaHomeResult ->
                 when (applicationError) {
                     null -> {
-                        bannerApps = pwaHomeResult!!.getBannerApps(homeModel.getInstallManager(), context)
-                        applications = pwaLoadApplications(pwaHomeResult, context)
+                        bannerApps = pwaHomeResult!!.home.getBannerApps(homeModel.getInstallManager(), context)
+                        applications = pwaLoadApplications(pwaHomeResult.home, context)
                     }
                     else -> {
                         error = applicationError
@@ -59,6 +59,7 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
                         homeResult!!
                         bannerApps = homeResult.home.getBannerApps(homeModel.getInstallManager(), context)
                         applications = loadApplications(homeResult.home, context)
+
                     }
                     else -> {
                         error = applicationError
@@ -82,12 +83,9 @@ class ApplicationsLoader(private val homeModel: HomeModel) : AsyncTask<Context, 
         return home.getApps(homeModel.getInstallManager(), context)
     }
 
-    private fun pwaLoadApplications(result: HomePwaRequest.HomeResult, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
-        val parsedApplications = result.getApps(homeModel.getInstallManager(), context)
-        val applications = LinkedHashMap<Category, ArrayList<Application>>()
-        for (parsedApplication in parsedApplications) {
-            applications[parsedApplication.key] = parsedApplication.value
-        }
-        return applications
+
+    private fun pwaLoadApplications(home: HomePwaRequest.Home, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
+        return home.getApps(homeModel.getInstallManager(), context)
+
     }
 }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.MainActivity
 import foundation.e.apps.application.model.Application
+import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.PwasBasicData
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.categories.model.Category
@@ -18,15 +19,15 @@ import foundation.e.apps.utils.Error
 class HomePwaRequest {
 
     companion object {
-        private val reader = Common.getObjectMapper().readerFor(HomeResult::class.java)
+        private val mapper = Common.getObjectMapper()
     }
 
-    fun request(callback: (Error?, HomeResult?) -> Unit) {
+    fun request(callback: (Error?, Result?) -> Unit) {
         try {
             var appType = MainActivity.mActivity.showApplicationTypePreference()
             val url = Constants.BASE_URL + "apps?action=list_home&type=$appType"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
-            val result = reader.readValue<HomeResult>(urlConnection.inputStream)
+            val result = mapper.readValue(urlConnection.inputStream, Result::class.java)
             urlConnection.disconnect()
             callback.invoke(null, result)
         } catch (e: Exception) {
@@ -34,56 +35,50 @@ class HomePwaRequest {
         }
     }
 
-    class HomeResult @JsonCreator
-    constructor(@JsonProperty("home") private val home: PwasSubHomeResult) {
+
+    data class Result(val success: Boolean, val home: Home)
+
+    data class Home(
+            @JsonProperty("headings")
+            val headings: Map<String, String>?,
+            @JsonProperty(BANNER_APPS_KEY)
+            val bannerApps: List<BasicData>,
+            @JsonProperty(POPULAR_APPS_KEY)
+            val topUpdatedApps: List<BasicData>,
+            @JsonProperty(POPULAR_GAMES_KEY)
+            val topUpdatedGames: List<BasicData>,
+            @JsonProperty(DISCOVER_KEY)
+            val discover: List<BasicData>
+    ) {
+
+        companion object {
+            private const val BANNER_APPS_KEY = "banner_apps"
+            private const val POPULAR_APPS_KEY = "popular_apps"
+            private const val POPULAR_GAMES_KEY = "popular_games"
+            private const val DISCOVER_KEY = "discover"
+            private val KEYS = setOf(POPULAR_APPS_KEY,
+                    POPULAR_GAMES_KEY, DISCOVER_KEY)
+        }
+
         fun getBannerApps(applicationManager: ApplicationManager, context: Context): ArrayList<Application> {
-            return ApplicationParser.PwaParseToApps(applicationManager, context, home.bannerApps)
+            return ApplicationParser.parseToApps(applicationManager, context, bannerApps.toTypedArray())
         }
 
         fun getApps(applicationManager: ApplicationManager, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
             val apps = LinkedHashMap<Category, ArrayList<Application>>()
-            for (pair in home.apps) {
-                if(pair.value .isEmpty() ){
-                    apps.remove(pair.key)
-                }else {
-
-                    apps[pair.key] = ApplicationParser.PwaParseToApps(applicationManager, context, pair.value.toTypedArray())
+            KEYS.forEach {
+                var heading = headings?.get(it)
+                heading = heading
+                        ?: "" // Use default heading as empty to let it generate from the key itself.
+                val parsedApps = when (it) {
+                    POPULAR_APPS_KEY -> ApplicationParser.parseToApps(applicationManager, context, topUpdatedApps.toTypedArray())
+                    POPULAR_GAMES_KEY -> ApplicationParser.parseToApps(applicationManager, context, topUpdatedGames.toTypedArray())
+                    DISCOVER_KEY -> ApplicationParser.parseToApps(applicationManager, context, discover.toTypedArray())
+                    else -> throw IllegalArgumentException("Unrecognised key $it encountered")
                 }
+                apps[Category(it, heading)] = parsedApps
             }
             return apps
-        }
-    }
-
-    class PwasSubHomeResult @JsonCreator constructor() {
-        @JsonIgnore
-        val apps = LinkedHashMap<Category, ArrayList<PwasBasicData>>()
-        lateinit var bannerApps: Array<PwasBasicData>
-
-        @JsonAnySetter
-        fun append(key: String, value: Any) {
-            val apps = value as ArrayList<*>
-            val appsData = ArrayList<PwasBasicData>()
-            apps.forEach {
-                val data = it as LinkedHashMap<*, *>
-                val appData = PwasBasicData(
-                        data["_id"] as String,
-                        data["name"] as String,
-                        data["description"] as String?,
-                        data["is_pwa"] as Boolean,
-                        data["is_web_app"] as Boolean,
-                        data["has_https"] as Boolean,
-                        data["url"] as String?,
-                        data["category"] as String,
-                        data["icon_image_path"] as String,
-                        (data["other_images_path"]as List<String>).toTypedArray(),
-                        data["created_on"] as String?)
-                appsData.add(appData)
-            }
-            if (key == "banner_apps") {
-                bannerApps = appsData.toTypedArray()
-            } else {
-                this.apps[Category(key)] = appsData
-            }
         }
     }
 }

@@ -18,6 +18,7 @@
     -->
 
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/app_install"
     android:layout_width="wrap_content"
     android:layout_height="@dimen/install_button_height2"
@@ -32,6 +33,7 @@
     android:textColor="@color/colorInstall"
     android:textSize="@dimen/text_size_large"
     android:textAllCaps="false"
-    android:gravity="top"
-    />
-    <!--    android:padding="@dimen/layout_padding_medium"-->
+    android:gravity="center"
+    app:autoSizeMaxTextSize="18sp"
+    app:autoSizeMinTextSize="8sp"
+    app:autoSizeTextType="uniform" />

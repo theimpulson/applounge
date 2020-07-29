@@ -54,6 +54,8 @@ class HomeRequest {
     data class Result(val success: Boolean, val home: Home)
 
     data class Home(
+            @JsonProperty("headings")
+            val headings: Map<String, String>?,
             @JsonProperty(BANNER_APPS_KEY)
             val bannerApps: List<BasicData>,
             @JsonProperty(TOP_UPDATED_APPS_KEY)
@@ -80,15 +82,16 @@ class HomeRequest {
                     POPULAR_GAMES_24_HOUR_KEY, DISCOVER_KEY)
         }
 
-
         fun getBannerApps(applicationManager: ApplicationManager, context: Context): ArrayList<Application> {
             return ApplicationParser.parseToApps(applicationManager, context, bannerApps.toTypedArray())
-
         }
 
         fun getApps(applicationManager: ApplicationManager, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
             val apps = LinkedHashMap<Category, ArrayList<Application>>()
             KEYS.forEach {
+                var heading = headings?.get(it)
+                heading = heading
+                        ?: "" // Use default heading as empty to let it generate from the key itself.
                 val parsedApps = when (it) {
                     TOP_UPDATED_APPS_KEY -> ApplicationParser.parseToApps(applicationManager, context, topUpdatedApps.toTypedArray())
                     TOP_UPDATED_GAMES_KEY -> ApplicationParser.parseToApps(applicationManager, context, topUpdatedGames.toTypedArray())
@@ -97,11 +100,9 @@ class HomeRequest {
                     DISCOVER_KEY -> ApplicationParser.parseToApps(applicationManager, context, discover.toTypedArray())
                     else -> throw IllegalArgumentException("Unrecognised key $it encountered")
                 }
-                apps[Category(it)] = parsedApps
-
+                apps[Category(it, heading)] = parsedApps
             }
             return apps
         }
-
     }
 }
