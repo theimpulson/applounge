@@ -86,7 +86,7 @@ constructor(
     val category: Category
 
     init {
-        this.category = Category(categoryId)
+        this.category = Category(categoryId, "")
     }
 
     @Suppress("unused")

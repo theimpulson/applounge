@@ -20,7 +20,7 @@ package foundation.e.apps.categories.model
 import foundation.e.apps.R
 import java.io.Serializable
 
-class Category(val id: String, val defaultTitle: String? = "") : Serializable {
+class Category(val id: String, val result: String = "") : Serializable {
     private val title: String
     private val iconResource: Int
 
@@ -31,15 +31,12 @@ class Category(val id: String, val defaultTitle: String? = "") : Serializable {
     }
 
     private fun getCategoryTitle(categoryId: String): String {
-        if(defaultTitle!!.isNotEmpty()) return defaultTitle.toString()
+        if(result.isNotEmpty()) return result
 
-        val title = categoryId.replace("_", " ")
-        if (title.contains("game ")) {
-            return title.removePrefix("game ").capitalize()
-        }else if(title.contains("pwa ")){
-            return title.removePrefix("pwa ").capitalize()
+        else{
+            val title = categoryId.replace("_", " ")
+            return title.capitalize()
         }
-        return title.capitalize()
     }
 
     private fun getCategoryIconResource(categoryId: String): Int {
@@ -199,3 +196,4 @@ class Category(val id: String, val defaultTitle: String? = "") : Serializable {
         return iconResource
     }
 }
+

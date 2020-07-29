@@ -20,14 +20,16 @@ package foundation.e.apps.api
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.MainActivity.Companion.mActivity
+import foundation.e.apps.categories.model.Category
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
+import java.io.Serializable
 
 class ListCategoriesRequest {
 
     companion object {
-        private val reader = Common.getObjectMapper().readerFor(ListCategoriesResult::class.java)
+        private val mapper = Common.getObjectMapper()
     }
 
     fun request(callback: (Error?, ListCategoriesResult?) -> Unit) {
@@ -35,15 +37,37 @@ class ListCategoriesRequest {
             var appType = mActivity.showApplicationTypePreference()
             val url = Constants.BASE_URL + "apps?action=list_cat&type=$appType"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
-            val result = reader.readValue<ListCategoriesResult>(urlConnection.inputStream)
+            val result = mapper.readValue(urlConnection.inputStream, ListCategoriesResult::class.java)
             urlConnection.disconnect()
             callback.invoke(null, result)
         } catch (e: Exception) {
+            e.printStackTrace()
             callback.invoke(Error.findError(e), null)
         }
     }
 
     class ListCategoriesResult @JsonCreator
     constructor(@JsonProperty("apps") val appsCategories: Array<String>,
-                @JsonProperty("games") val gamesCategories: Array<String>)
+                @JsonProperty("games") val gamesCategories: Array<String>,
+                @JsonProperty ("translations") val translations : Map <String,String>) : Serializable {
+
+
+        fun appsParseResult(): ArrayList<Category> {
+            val appCategories = ArrayList<Category>()
+            appsCategories.forEach { id ->
+                val translations = translations[id]
+                appCategories.add(Category(id, translations!!))
+            }
+            return appCategories
+        }
+
+        fun gameParseResult(): ArrayList<Category> {
+            val gameCategories = ArrayList<Category>()
+            gamesCategories.forEach { id ->
+                val translations = translations[id]
+                gameCategories.add(Category(id, translations!!))
+            }
+            return gameCategories
+        }
+    }
 }

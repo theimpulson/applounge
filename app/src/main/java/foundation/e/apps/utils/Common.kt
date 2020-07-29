@@ -21,9 +21,19 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.core.os.LocaleListCompat
+import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.KeyDeserializer
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import foundation.e.apps.categories.model.Category
 import java.net.URL
+import java.nio.file.Paths
+import java.util.*
 import java.util.concurrent.Executors
 import javax.net.ssl.HttpsURLConnection
 import kotlin.math.roundToInt
@@ -46,7 +56,9 @@ object Common {
     }
 
     fun createConnection(url: String, requestMethod: String): HttpsURLConnection {
+        val preferredLanguage =getAcceptedLanguageHeaderValue()
         val connection = URL(url).openConnection() as HttpsURLConnection
+        connection.setRequestProperty("Accept-Language", preferredLanguage)
         connection.requestMethod = requestMethod
         connection.connectTimeout = Constants.CONNECT_TIMEOUT
         connection.readTimeout = Constants.READ_TIMEOUT
@@ -86,8 +98,40 @@ object Common {
 
     fun getObjectMapper(): ObjectMapper {
         val objectMapper = ObjectMapper()
+        var simpleModule =  SimpleModule()
+        simpleModule.addKeyDeserializer(Category::class.java,keyDeserializer())
+        objectMapper.registerModule(simpleModule);
+        objectMapper.registerKotlinModule()
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         objectMapper.registerKotlinModule()
         return objectMapper
     }
+
+    fun getAcceptedLanguageHeaderValue(): String {
+        var weight = 1.0F
+        return getPreferredLocaleList()
+                .map { it.toLanguageTag() }
+                .reduce { accumulator, languageTag ->
+                    weight -= 0.1F
+                    "$accumulator,$languageTag;q=$weight"
+                }
+    }
+
+    fun getPreferredLocaleList(): List<Locale> {
+        val adjustedLocaleListCompat = LocaleListCompat.getAdjustedDefault()
+        val preferredLocaleList = mutableListOf<Locale>()
+        for (index in 0 until adjustedLocaleListCompat.size()) {
+            preferredLocaleList.add(adjustedLocaleListCompat.get(index))
+        }
+        return preferredLocaleList
+    }
+}
+
+class keyDeserializer : KeyDeserializer() {
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun deserializeKey(p0: String?, p1: DeserializationContext?): Any? {
+        return Paths.get(p0)
+    }
+
+
 }
