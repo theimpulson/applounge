@@ -170,7 +170,7 @@
     <string name="error_no_error">No error.</string>
     <string name="error_apk_incompatible">This app is incompatible with your device.</string>
 
-    //pwa
+    <!-- pwa -->
     <string name="offline_heading">You are offline.</string>
     <string name="offline_description">Tap here to retry!</string>
     <string name="pwa_icon">PWA</string>

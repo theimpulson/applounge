@@ -24,7 +24,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import foundation.e.apps.MainActivity.Companion.mActivity
-import foundation.e.apps.PWA.PwaInstaller
+import foundation.e.apps.pwa.PwaInstaller
 import foundation.e.apps.XAPK.XAPKFile
 import foundation.e.apps.api.AppDetailRequest
 import foundation.e.apps.api.AppDownloadedRequest

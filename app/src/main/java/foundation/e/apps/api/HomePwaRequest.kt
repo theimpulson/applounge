@@ -1,6 +1,7 @@
 package foundation.e.apps.api
 
 import android.content.Context
+import android.util.Log
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
