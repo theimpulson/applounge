@@ -10,11 +10,13 @@
         android:name="android.permission.INSTALL_PACKAGES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-    <uses-permission android:name="com.google.android.launcher.permission.READ_SETTINGS"/>
-    <uses-permission android:name="com.google.android.launcher.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="com.google.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.google.android.launcher.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="foundation.e.pwaplayer.provider.READ_WRITE"/>
 
     <application
         android:allowBackup="true"
@@ -59,7 +61,7 @@
             android:name=".application.ScreenshotsActivity"
             android:theme="@style/FullScreenTheme" />
         <activity
-            android:name=".PWA.PwaInstaller"
+            android:name=".pwa.PwaInstaller"
             android:theme="@style/FullScreenTheme" />
         <activity
             android:name=".XAPK.InstallSplitApksActivity"

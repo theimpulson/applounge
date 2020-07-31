@@ -44,7 +44,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.MainActivity.Companion.sharedPreferences
-import foundation.e.apps.PWA.PwaInstaller
+import foundation.e.apps.pwa.PwaInstaller
 import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.ApplicationStateListener
