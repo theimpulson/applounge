@@ -1,2 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
+    <string name="show_only_open_source_apps">Erakutsi soilik kode irekiko aplikazioak</string>
+    <string name="show_only_open_source_apps_description">Iturburu-kodeak erabiltzaileentzat eskuragarri dituzten aplikazioak</string>
+    <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
+    <string name="Show_all_apps">Erakutsi aplikazio guztiak</string>
+    <string name="Show_applications">Erakutsi aplikazioak:</string>
+    <string name="Show_all_apps_key">Show_all_apps</string>
+    <string name="package_name_find_text">Zure gailuan instalatua dagoen aplikazio baten pakete-izena aurkitzeko, jarraitu Ezarpenak &gt; Aplikazioak &gt; [zure aplikazioa]. Pakete-izenak hor nonbait egon beharko luke.
+\n*Prozesu hau ezberdina izan daiteke gailuaren arabera.</string>
+    <string name="package_name_find_title">Nola aurkitu aplikazio baten pakete-izena\?</string>
+    <string name="package_name_help_text">Pakete-izena Androiderako aplikazioen identifikatzaile bakarra da. Pakete-izenak letra xehez eta honako formatuan idatziak izan ohi dira: \"domeinua.enpresa.aplikazioa\"</string>
+    <string name="package_name_help_title">Zer da pakete-izena\?</string>
+    <string name="app_request_successful_text">Aplikazio-eskaera behar bezala burutu da!</string>
+    <string name="submit_button_text">Bidali</string>
+    <string name="edit_text_hint">Pakete-izena</string>
+    <string name="preference_apps_request_app_summary">Eskatu eskuragarri ez dagoen aplikazio bat</string>
+    <string name="preference_apps_request_app_title">Eskatu aplikazioa</string>
+    <string name="pref_apps_request_app_key">pref_apps_request_app</string>
+    <string name="preference_apps_title">Aplikazioak</string>
+    <string name="pref_update_notify_key">pref_update_notify</string>
+    <string name="pref_update_install_automatically_key">pref_update_install_automatically</string>
+    <string name="pref_update_wifi_only_key">pref_update_wifi_only</string>
+    <string name="pref_update_interval_key">pref_update_interval</string>
+    <string name="preference_update_install_automatically_title">Automatikoki instalatu eguneraketak</string>
+    <string name="preference_update_interval_default">24</string>
+    <string name="preference_updates_title">Eguneraketak</string>
+    <string name="updates_notification_text">%1$s aplikazioaren eguneraketak automatikoki instalatuko dira</string>
+    <plurals name="updates_notification_title">
+        <item quantity="one">Aplikazio-eguneraketa %1$d eskuragarri dago</item>
+        <item quantity="other">%1$d aplikazio-eguneraketa eskuragarri daude</item>
+    </plurals>
+    <string name="updates_splash_title">Aplikazio guztiak eguneratuta daude</string>
+    <string name="search_splash_title">Bilatu aplikazioa</string>
+    <string name="shouldRefreshOnResume">Kategoriak</string>
+    <string name="pwas_categories_title">PWAk</string>
+    <string name="games_categories_title">Jolasak</string>
+    <string name="applications_categories_title">Aplikazioak</string>
+    <string name="menu_settings">Ezarpenak</string>
+    <string name="menu_updates">Eguneraketak</string>
+    <string name="menu_search">Bilatu</string>
+    <string name="menu_categories">Kategoriak</string>
+    <string name="menu_home">Hasiera</string>
+    <string name="more">gehiago</string>
+    <string name="application_description_activity_title">Deskribapena</string>
+    <string name="test_string">&lt;font color=#FAFAFA&lt;b&gt;EGUNERATU&gt;&lt;/font&gt;</string>
+    <string name="some_text">&lt;font color=\'#FAFAFA\'&gt;Zorizko&lt;/font&gt;testuren&lt;font color=\'#FAFAFA\'&gt;bat&lt;/font&gt;</string>
+    <string name="pick_up_apk_file">pick_up_apk_file</string>
+    <string name="exit">Ukitu berriz ATZERA irteteko</string>
+    <string name="ok">&lt;font fgcolor=\"#FF0088ED\"&gt;ADOS&lt;/font&gt;<font fgcolor="#FF0088ED">OK</font></string>
+    <string name="action_ok">Ados</string>
+    <string name="no_permissions">Ez da baimenik eskatu</string>
+    <string name="download_notification_description">Deskargatzen</string>
+    <string name="app_screenshots_title">Pantaila-argazkiak</string>
+    <string name="app_licence">Lizentzia</string>
+    <string name="app_min_android">Beharrezkoa du</string>
+    <string name="app_version">Bertsioa</string>
+    <string name="app_information_title">Informazioa</string>
+    <string name="app_permissions_title">Baimenak</string>
+    <string name="app_privacy_title">Pribatutasun analisiak</string>
+    <string name="app_energy_score">Energia</string>
+    <string name="app_rating">Puntuazioa</string>
+    <string name="app_privacy_description_short">&lt;a href=\"https://exodus-privacy.eu.org\"&gt;Exodus Pribatutasun analisiak&lt;/a&gt; erabiliz kalkulatua.<a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
+    <string name="app_privacy_score">Pribatutasuna</string>
+    <string name="app_ratings_title">Puntuazioak</string>
+    <string name="action_share">Partekatu</string>
+    <string name="action_launch">Ireki</string>
+    <string name="action_update_all">Eguneratu guztiak</string>
+    <string name="action_update">Eguneratu</string>
+    <string name="state_installing">Instalatzen</string>
+    <string name="featured">Nabarmendua</string>
+    <string name="action_installing">Instalatzen</string>
+    <string name="action_cancel">Utzi</string>
+    <string name="action_add_to_home_screen">Gehitu hasierako pantailan</string>
+    <string name="action_install">Instalatu</string>
+    <string name="app_rating_content_description">Aplikazioaren puntuazioa</string>
+    <string name="app_energy_score_content_description">Aplikazioaren energia-puntuazioa</string>
+    <string name="app_privacy_score_content_description">Aplikazioaren pribatutasun-puntuazioa</string>
+    <string name="app_description_content_description">Aplikazioaren deskribapena</string>
+    <string name="app_description_title">Deskribapena</string>
+    <string name="app_icon_content_description">Aplikazioaren ikonoa</string>
+    <string name="service_description">Aplikazioak administratzeko, deskargatzeko eta instalatzeko erabiltzen du zerbitzu hau Aplikazioak-ek. Geldiarazteak aplikazioen deskargek huts egitea eragin dezake.</string>
+    <string name="not_available_full">Ez erabilgarri</string>
+    <string name="not_available">E/E</string>
+    <string name="app_name">Aplikazioak</string>
+</resources>
