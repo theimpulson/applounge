@@ -115,4 +115,5 @@
     <string name="no_trackers">Ez da aztarnaririk erabiltzen</string>
     <string name="app_updated_on">Eguneratze-data:</string>
     <string name="app_trackers_title">Aztarnariak</string>
+    <string name="app_privacy_description">Puntuazioa 10etik. <a href="https://exodus-privacy.eu.org">Exodus pribatutasun-analisiak</a>erabiliz kalkulatuta, aplikazioan erabilitako baimen eta aztarnetan oinarrituta.</string>
 </resources>
