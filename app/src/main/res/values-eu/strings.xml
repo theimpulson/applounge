@@ -115,5 +115,8 @@
     <string name="no_trackers">Ez da aztarnaririk erabiltzen</string>
     <string name="app_updated_on">Eguneratze-data:</string>
     <string name="app_trackers_title">Aztarnariak</string>
-    <string name="app_privacy_description">Puntuazioa 10etik. <a href="https://exodus-privacy.eu.org">Exodus pribatutasun-analisiak</a>erabiliz kalkulatuta, aplikazioan erabilitako baimen eta aztarnetan oinarrituta.</string>
+    <string name="app_privacy_description">Puntuazioa 10etik. <a href="https://exodus-privacy.eu.org">Exodus Privacy analisiak</a> erabiliz kalkulatuta, aplikazioan erabilitako baimen eta aztarnarietan oinarrituta.</string>
+    <string name="app_energy_description">Puntuazioa 10etik. Aplikazioen bateria-erabilera kalkulatuta, laborategi dedikatu bateko gailuetan. Laster erabilgarri.</string>
+    <string name="app_rating_description">Puntuazioa 5etik. Erabiltzaileek aplikazioari emandako puntuazioarekin kalkulatuta.</string>
+    <string name="app_privacy_description1">Puntuazioa 10etik. Hau erabiliz kalkulatuta:</string>
 </resources>
