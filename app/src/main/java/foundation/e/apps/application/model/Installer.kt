@@ -26,6 +26,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import foundation.e.apps.XAPK.FsUtils.deleteFileOrDir
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -138,6 +139,10 @@ class Installer(private val packageName: String,
             if (p1.action == Intent.ACTION_PACKAGE_ADDED &&
                     (p1.data.encodedSchemeSpecificPart == packageName)) {
                 Log.i(TAG, "Broadcast received")
+                var path = apk.absolutePath.split("Download")
+                //delete all APK file after install
+                deleteFileOrDir(path[0]+"Download");
+
                 callback.onInstallationComplete(p0)
             }
         }
