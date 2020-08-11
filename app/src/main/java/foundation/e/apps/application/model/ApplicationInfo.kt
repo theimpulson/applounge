@@ -69,7 +69,7 @@ class ApplicationInfo(private val packageName: String) {
 
     fun getApkFile(context: Context, data: BasicData): File {
 
-        return File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+        return File(context.getExternalFilesDir("."+Environment.DIRECTORY_DOWNLOADS),
                 getApkFilename(data))
     }
 
@@ -79,7 +79,7 @@ class ApplicationInfo(private val packageName: String) {
 
     fun getxApkFile(context: Context, data: BasicData): File {
 
-        return File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+        return File(context.getExternalFilesDir("."+Environment.DIRECTORY_DOWNLOADS),
                 getxApkFilename(data))
     }
 

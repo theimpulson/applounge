@@ -87,7 +87,7 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
                     setDescription(context.getString(R.string.download_notification_description))
                     setDestinationInExternalFilesDir(
                             context,
-                            Environment.DIRECTORY_DOWNLOADS,
+                            "."+Environment.DIRECTORY_DOWNLOADS,
                             applicationInfo.getApkOrXapkFileName(fullData,fullData.basicData))
                 }
     }
