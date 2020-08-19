@@ -28,7 +28,6 @@ import android.preference.PreferenceManager
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
@@ -60,6 +59,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             ApplicationManagerServiceConnection(this)
     private val codeRequestPermissions = 9527
     var doubleBackToExitPressedOnce = false;
+    private var isReceiverRegistered = false
 
 
 
@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         setContentView(R.layout.activity_main)
         mActivity = this
         disableCategoryIfOpenSource()
-
 
         bottom_navigation_view.setOnNavigationItemSelectedListener{
             if (selectFragment(it.itemId,it)) {
@@ -181,11 +180,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             mLangReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     finish()
-//                    selectFragment(currentFragmentId,null)
                 }
             }
             val filter = IntentFilter(Intent.ACTION_LOCALE_CHANGED)
             registerReceiver(mLangReceiver, filter)
+            isReceiverRegistered = true;
         }
         return mLangReceiver
     }
@@ -240,6 +239,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onDestroy() {
         super.onDestroy()
+        if (isReceiverRegistered) {
+            unregisterReceiver(mLangReceiver)
+            isReceiverRegistered = false // set it back to false.
+        }
         homeFragment.decrementApplicationUses()
         searchFragment.decrementApplicationUses()
         updatesFragment.decrementApplicationUses()

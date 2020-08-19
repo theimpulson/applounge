@@ -32,6 +32,7 @@ class HomePwaRequest {
             urlConnection.disconnect()
             callback.invoke(null, result)
         } catch (e: Exception) {
+            e.printStackTrace()
             callback.invoke(Error.findError(e), null)
         }
     }
@@ -43,13 +44,13 @@ class HomePwaRequest {
             @JsonProperty("headings")
             val headings: Map<String, String>?,
             @JsonProperty(BANNER_APPS_KEY)
-            val bannerApps: List<BasicData>,
+            val bannerApps: List<PwasBasicData>,
             @JsonProperty(POPULAR_APPS_KEY)
-            val topUpdatedApps: List<BasicData>,
+            val topUpdatedApps: List<PwasBasicData>,
             @JsonProperty(POPULAR_GAMES_KEY)
-            val topUpdatedGames: List<BasicData>,
+            val topUpdatedGames: List<PwasBasicData>,
             @JsonProperty(DISCOVER_KEY)
-            val discover: List<BasicData>
+            val discover: List<PwasBasicData>
     ) {
 
         companion object {
@@ -62,7 +63,7 @@ class HomePwaRequest {
         }
 
         fun getBannerApps(applicationManager: ApplicationManager, context: Context): ArrayList<Application> {
-            return ApplicationParser.parseToApps(applicationManager, context, bannerApps.toTypedArray())
+            return ApplicationParser.PwaParseToApps(applicationManager, context, bannerApps.toTypedArray())
         }
 
         fun getApps(applicationManager: ApplicationManager, context: Context): LinkedHashMap<Category, ArrayList<Application>> {
@@ -72,9 +73,9 @@ class HomePwaRequest {
                 heading = heading
                         ?: "" // Use default heading as empty to let it generate from the key itself.
                 val parsedApps = when (it) {
-                    POPULAR_APPS_KEY -> ApplicationParser.parseToApps(applicationManager, context, topUpdatedApps.toTypedArray())
-                    POPULAR_GAMES_KEY -> ApplicationParser.parseToApps(applicationManager, context, topUpdatedGames.toTypedArray())
-                    DISCOVER_KEY -> ApplicationParser.parseToApps(applicationManager, context, discover.toTypedArray())
+                    POPULAR_APPS_KEY -> ApplicationParser.PwaParseToApps(applicationManager, context, topUpdatedApps.toTypedArray())
+                    POPULAR_GAMES_KEY -> ApplicationParser.PwaParseToApps(applicationManager, context, topUpdatedGames.toTypedArray())
+                    DISCOVER_KEY -> ApplicationParser.PwaParseToApps(applicationManager, context, discover.toTypedArray())
                     else -> throw IllegalArgumentException("Unrecognised key $it encountered")
                 }
                 apps[Category(it, heading)] = parsedApps
