@@ -20,7 +20,6 @@ package foundation.e.apps.application.model
 import android.content.Context
 import android.os.AsyncTask
 import foundation.e.apps.application.model.data.FullData
-import org.apache.commons.codec.binary.Hex
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.openpgp.PGPCompressedData
 import org.bouncycastle.openpgp.PGPPublicKeyRingCollection
@@ -65,7 +64,7 @@ class IntegrityVerificationTask(
         integrityVerificationCallback.onIntegrityVerified(context, verificationSuccessful)
     }
 
-    private fun getApkFileSha1(file: File): String {
+    private fun getApkFileSha1(file: File): String?{
         val messageDigest = MessageDigest.getInstance("SHA-1")
         val fileInputStream = FileInputStream(file)
         var length = 0
@@ -76,7 +75,12 @@ class IntegrityVerificationTask(
                 messageDigest.update(buffer, 0, length)
             }
         }
-        return String(Hex.encodeHex(messageDigest.digest()))
+        return byteArrayToHex(messageDigest.digest())
+    }
+    private fun byteArrayToHex(a: ByteArray): String? {
+        val sb = StringBuilder(a.size * 2)
+        for (b in a) sb.append(String.format("%02x", b))
+        return sb.toString()
     }
 
     private fun verifyAPKSignature(
