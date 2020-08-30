@@ -42,7 +42,7 @@
     <string name="preference_apps_title">Apps</string>
     <string name="preference_update_notify_available_description">Toon een melding wanneer er app-updates beschikbaar zijn</string>
     <string name="preference_update_install_automatically_description">Download en installeer app-updates op de achtergrond</string>
-    <string name="preference_update_install_automatically_title">Updates automatisch installeren</string>
+    <string name="preference_update_install_automatically_title">Installeer automatisch updates</string>
     <string name="preference_update_wifi_only_description">Update apps automatisch alleen op niet-gemeten netwerken zoals wifi</string>
     <string name="preference_update_wifi_only_title">Alleen op niet-gemeten netwerken</string>
     <string name="preference_update_interval_title">Controle-interval bijwerken</string>
