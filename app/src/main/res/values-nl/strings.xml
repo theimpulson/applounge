@@ -75,7 +75,7 @@
     <string name="application_description_activity_title">Beschrijving</string>
     <string name="action_ok">Ok</string>
     <string name="no_trackers">Geen trackers gebruikt</string>
-    <string name="no_permissions">Geen toestemming gevraagd</string>
+    <string name="no_permissions">Geen toestemmingen gevraagd</string>
     <string name="download_notification_description">Downloaden</string>
     <string name="app_screenshots_title">Screenshots</string>
     <string name="app_licence">Licentie</string>
