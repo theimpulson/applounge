@@ -1,2 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_ratings_title">Hodnotenia</string>
+    <string name="action_share">Zdieľať</string>
+    <string name="action_launch">Otvoriť</string>
+    <string name="action_update_all">Aktualizovať všetko</string>
+    <string name="action_update">Aktualizovať</string>
+    <string name="state_installing">Inštaluje sa</string>
+    <string name="featured">Odporúčané</string>
+    <string name="action_installing">Inštaluje sa</string>
+    <string name="action_cancel">Zrušiť</string>
+    <string name="action_add_to_home_screen">Pridať na domovskú obrazovku</string>
+    <string name="action_install">Nainštalovať</string>
+    <string name="app_rating_content_description">Hodnotenie aplikácie</string>
+    <string name="app_description_content_description">Popis aplikácie</string>
+    <string name="app_description_title">Popis</string>
+    <string name="app_icon_content_description">Ikona aplikácie</string>
+    <string name="app_name">Aplikácie</string>
+</resources>
