@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
-    <string name="show_only_open_source_apps">Erakutsi soilik kode irekiko aplikazioak</string>
+    <string name="show_only_open_source_apps">Erakutsi soilik kode irekikoak</string>
     <string name="show_only_open_source_apps_description">Iturburu-kodeak erabiltzaileentzat eskuragarri dituzten aplikazioak</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
     <string name="Show_all_apps">Erakutsi aplikazio guztiak</string>
