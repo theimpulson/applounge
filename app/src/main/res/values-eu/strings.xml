@@ -104,7 +104,7 @@
     <string name="error_no_internet">Ezin da konektatu! Egiaztatu interneteko konexioa eta saiatu berriro.</string>
     <string name="error_storage_permission_denied">Biltegiratze baimena beharrezkoa da aplikazioak deskargatzeko.</string>
     <string name="show_only_pwa_apps">Erakutsi soilik PWAk</string>
-    <string name="show_only_pwa_apps_description">Web-aplikazioak, arakatzaile baten bidez aplikazio natiboen esperientzia eskaintzen dutenak</string>
+    <string name="show_only_pwa_apps_description">Web-aplikazioak, nabigatzaile baten bidez aplikazio natiboen esperientzia eskaintzen dutenak</string>
     <string name="preference_update_notify_available_description">Erakutsi jakinarazpena aplikazioen eguneraketak eskuragarri daudenean</string>
     <string name="preference_update_notify_available_title">Erakutsi eguneraketa eskuragarriak</string>
     <string name="preference_update_install_automatically_description">Deskargatu eta instalatu aplikazioen eguneraketak atzeko planoan</string>
