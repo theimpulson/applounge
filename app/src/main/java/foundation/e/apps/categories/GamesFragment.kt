@@ -17,6 +17,7 @@
 
 package foundation.e.apps.categories
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,8 +32,10 @@ import foundation.e.apps.categories.viewmodel.CategoriesViewModel
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_games_categories.view.*
 
-class GamesFragment : Fragment() {
+class GamesFragment(color: Int?) : Fragment() {
     private lateinit var categoriesViewModel: CategoriesViewModel
+
+    var color=color;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         categoriesViewModel = ViewModelProviders.of(activity!!).get(CategoriesViewModel::class.java)
@@ -47,11 +50,16 @@ class GamesFragment : Fragment() {
             view.progress_bar.visibility = View.VISIBLE
             categoriesViewModel.loadCategories(context!!)
         }
+        view.error_resolve.setTextColor(Color.parseColor("#ffffff"))
+        if (color != null) {
+            view.error_resolve.setBackgroundColor(color!!)
+        }
+
 
         // Bind to the list of games categories
         categoriesViewModel.getGamesCategories().observe(this, Observer {
             if (it!!.isNotEmpty()) {
-                view.categories_list.adapter = CategoriesListAdapter(it)
+                view.categories_list.adapter = CategoriesListAdapter(it, color)
                 view.categories_list.visibility = View.VISIBLE
                 view.progress_bar.visibility = View.GONE
             }

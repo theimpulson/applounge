@@ -17,6 +17,9 @@
 
 package foundation.e.apps.updates
 
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -37,15 +40,20 @@ import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.common.ApplicationListAdapter
 import foundation.e.apps.updates.viewmodel.UpdatesViewModel
+import kotlinx.android.synthetic.main.error_layout.*
+import kotlinx.android.synthetic.main.fragment_updates.*
 
-class UpdatesFragment : Fragment() {
+
+class UpdatesFragment() : Fragment() {
     private lateinit var updatesViewModel: UpdatesViewModel
     private var applicationManager: ApplicationManager? = null
     private lateinit var recyclerView: RecyclerView
     private var applicationList = ArrayList<Application>()
+    var accentColorOS=0;
 
-    fun initialise(applicationManager: ApplicationManager) {
+    fun initialise(applicationManager: ApplicationManager, accentColorOS: Int) {
         this.applicationManager = applicationManager
+        this.accentColorOS=accentColorOS;
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -58,11 +66,21 @@ class UpdatesFragment : Fragment() {
         updatesViewModel = ViewModelProviders.of(activity!!).get(UpdatesViewModel::class.java)
         recyclerView = view.findViewById(R.id.app_list)
         val updateAll = view.findViewById<Button>(R.id.update_all)
+        updateAll.setTextColor(accentColorOS)
         val splashContainer = view.findViewById<LinearLayout>(R.id.splash_container)
         val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
+        progressBar.getIndeterminateDrawable().setColorFilter(accentColorOS, android.graphics.PorterDuff.Mode.MULTIPLY);
         val reloadProgressBar = view.findViewById<ProgressBar>(R.id.progress_bar2)
+        //progressBar.setProgressTintList(ColorStateList.valueOf(accentColorOS));
+        reloadProgressBar.getIndeterminateDrawable().setColorFilter(accentColorOS, android.graphics.PorterDuff.Mode.MULTIPLY);
+
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
+
+        //set accent color to Error button (Retry )
+        view.findViewById<TextView>(R.id.error_resolve).setTextColor(Color.parseColor("#ffffff"))
+        view.findViewById<TextView>(R.id.error_resolve).setBackgroundColor(accentColorOS)
+
 
         // Initialise UI elements
         updatesViewModel.initialise(applicationManager!!)
@@ -88,7 +106,7 @@ class UpdatesFragment : Fragment() {
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList)
+        recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList, accentColorOS)
 
         // Bind recycler view adapter to outdated applications list in view model
         updatesViewModel.getApplications().observe(this, Observer {

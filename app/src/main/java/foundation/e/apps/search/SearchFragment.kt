@@ -19,6 +19,7 @@ package foundation.e.apps.search
 
 import android.app.Activity
 import android.database.MatrixCursor
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.view.LayoutInflater
@@ -52,9 +53,11 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     private var applicationList = ArrayList<Application>()
     private var applicationManager: ApplicationManager? = null
     private var isLoadingMoreApplications = false
+    var accentColorOS=0;
 
-    fun initialise(applicationManager: ApplicationManager) {
+    fun initialise(applicationManager: ApplicationManager, accentColorOS: Int) {
         this.applicationManager = applicationManager
+        this.accentColorOS=accentColorOS;
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -76,6 +79,10 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
         val loadMoreContainer = view.findViewById<RelativeLayout>(R.id.load_more_container)
+//set accent color to Error button (Retry )
+        error_resolve.setTextColor(Color.parseColor("#ffffff"))
+        error_resolve.setBackgroundColor(accentColorOS)
+
 
         error_resolve.visibility=View.GONE
         searchViewModel.initialise(applicationManager!!)
@@ -104,7 +111,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList)
+        recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList, 0)
         loadMoreContainer.visibility = View.GONE
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

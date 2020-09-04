@@ -18,11 +18,16 @@
 package foundation.e.apps.application.model
 
 import android.Manifest
+import android.R
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.util.Log
+import android.util.TypedValue
+import androidx.annotation.ColorInt
+import androidx.appcompat.view.ContextThemeWrapper
 import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.pwa.PwaInstaller
 import foundation.e.apps.XAPK.XAPKFile
@@ -39,9 +44,7 @@ import foundation.e.apps.utils.Execute
 import java.util.concurrent.atomic.AtomicInteger
 
 class Application(val packageName: String, private val applicationManager: ApplicationManager) :
-        DownloaderInterface, InstallerInterface{
-
-
+        DownloaderInterface, InstallerInterface {
 
 
     private val uses = AtomicInteger(0)
@@ -49,9 +52,9 @@ class Application(val packageName: String, private val applicationManager: Appli
     private val stateManager = StateManager(info, this, applicationManager)
     var basicData: BasicData? = null
     var fullData: FullData? = null
-    var pwabasicdata : PwasBasicData? = null
+    var pwabasicdata: PwasBasicData? = null
     var pwaFullData: PwaFullData? = null
-    var searchAppsBasicData : SearchAppsBasicData? =null
+    var searchAppsBasicData: SearchAppsBasicData? = null
 
 
     fun addListener(listener: ApplicationStateListener) {
@@ -80,16 +83,13 @@ class Application(val packageName: String, private val applicationManager: Appli
     fun checkForStateUpdate(context: Context) {
         if (basicData != null) {
             stateManager.find(context, basicData!!)
-        }
-        else if(searchAppsBasicData !=null){
-            if(searchAppsBasicData!!.is_pwa){
+        } else if (searchAppsBasicData != null) {
+            if (searchAppsBasicData!!.is_pwa) {
 //                stateManager.pwaFind()
-            }
-            else{
+            } else {
                 stateManager.searchAppsFind(context, searchAppsBasicData!!)
             }
-        }
-        else if(pwabasicdata!=null){
+        } else if (pwabasicdata != null) {
 //              stateManager.pwaFind()
         }
     }
@@ -98,16 +98,16 @@ class Application(val packageName: String, private val applicationManager: Appli
     fun pwaInstall(context: Context) {
         var error: Error? = null
 
-        Thread(Runnable  {
-            error=assertFullData(context)
+        Thread(Runnable {
+            error = assertFullData(context)
 
-            mActivity.runOnUiThread(Runnable{
+            mActivity.runOnUiThread(Runnable {
                 run {
 
                     if (error == null) {
-                        val intent=Intent(context, PwaInstaller::class.java)
-                        intent.putExtra("NAME",pwaFullData!!.name)
-                        intent.putExtra("URL",pwaFullData!!.url)
+                        val intent = Intent(context, PwaInstaller::class.java)
+                        intent.putExtra("NAME", pwaFullData!!.name)
+                        intent.putExtra("URL", pwaFullData!!.url)
                         context.startActivity(intent)
                     } else {
                         stateManager.notifyError(error!!)
@@ -201,24 +201,22 @@ class Application(val packageName: String, private val applicationManager: Appli
     override fun onDownloadComplete(context: Context, status: Int) {
         if (status == DownloadManager.STATUS_SUCCESSFUL) {
             Execute({
-                AppDownloadedRequest(basicData!!.id,fullData!!.getLastVersion()?.apkArchitecture).request()
+                AppDownloadedRequest(basicData!!.id, fullData!!.getLastVersion()?.apkArchitecture).request()
             }, {})
-            if(info.isXapk(fullData!!,basicData)){
-                isInstalling=true
-                XAPKFile(info.getxApkFile(context,basicData!!),this)
-            }
-            else {
+            if (info.isXapk(fullData!!, basicData)) {
+                isInstalling = true
+                XAPKFile(info.getxApkFile(context, basicData!!), this)
+            } else {
                 install(context)
             }
         } else {
             synchronized(blocker) {
                 blocker.notify()
             }
-            if(basicData!=null) {
+            if (basicData != null) {
                 info.getApkFile(context, basicData!!).delete()
                 applicationManager.stopInstalling(context, this)
-            }
-            else{
+            } else {
                 applicationManager.stopInstalling(context, this)
             }
         }
@@ -253,16 +251,12 @@ class Application(val packageName: String, private val applicationManager: Appli
     fun assertFullData(context: Context): Error? {
         if (fullData != null) {
             return null
-        }
-        else if(pwabasicdata != null){
+        } else if (pwabasicdata != null) {
             return findPwaFullData(context)
-        }
-
-        else if(searchAppsBasicData!=null){
-            if(searchAppsBasicData!!.is_pwa){
+        } else if (searchAppsBasicData != null) {
+            if (searchAppsBasicData!!.is_pwa) {
                 return findSearchResultPwaFulldata(context)
-            }
-            else{
+            } else {
                 findSearchAppsFullData(context)
             }
         }
@@ -301,7 +295,7 @@ class Application(val packageName: String, private val applicationManager: Appli
         }
         var error: Error? = null
         if (Common.isNetworkAvailable(context)) {
-            AppDetailRequest(basicData!!.id).request { applicationError, fullData->
+            AppDetailRequest(basicData!!.id).request { applicationError, fullData ->
                 when (applicationError) {
                     null -> {
                         error = Error.NO_RESULTS
@@ -320,6 +314,7 @@ class Application(val packageName: String, private val applicationManager: Appli
         }
         return error
     }
+
     private fun findSearchAppsFullData(context: Context): Error? {
         if (searchAppsBasicData == null) {
             val error = findBasicData(context)
@@ -329,7 +324,7 @@ class Application(val packageName: String, private val applicationManager: Appli
         }
         var error: Error? = null
         if (Common.isNetworkAvailable(context)) {
-            AppDetailRequest(searchAppsBasicData!!.id).request { applicationError, fullData->
+            AppDetailRequest(searchAppsBasicData!!.id).request { applicationError, fullData ->
                 when (applicationError) {
                     null -> {
                         error = Error.NO_RESULTS
@@ -359,7 +354,7 @@ class Application(val packageName: String, private val applicationManager: Appli
         }
         var error: Error? = null
         if (Common.isNetworkAvailable(context)) {
-            AppDetailRequest(pwabasicdata!!.id ).Pwarequest { applicationError, PwaFullData ->
+            AppDetailRequest(pwabasicdata!!.id).Pwarequest { applicationError, PwaFullData ->
                 when (applicationError) {
                     null -> {
                         error = Error.NO_RESULTS
@@ -388,7 +383,7 @@ class Application(val packageName: String, private val applicationManager: Appli
         }
         var error: Error? = null
         if (Common.isNetworkAvailable(context)) {
-            AppDetailRequest(searchAppsBasicData!!.id ).Pwarequest { applicationError, PwaFullData ->
+            AppDetailRequest(searchAppsBasicData!!.id).Pwarequest { applicationError, PwaFullData ->
                 when (applicationError) {
                     null -> {
                         error = Error.NO_RESULTS
@@ -407,7 +402,6 @@ class Application(val packageName: String, private val applicationManager: Appli
         }
         return error
     }
-
 
 
     fun loadIcon(iconLoaderCallback: BasicData.IconLoaderCallback) {
@@ -450,5 +444,20 @@ class Application(val packageName: String, private val applicationManager: Appli
         this.pwaFullData = pwaFullData
         Pwaupdate(pwaFullData.pwabasicdata, context)
         pwaFullData.pwabasicdata = pwabasicdata!!
+    }
+
+    /*
+   * get Accent color from OS
+   *
+   */
+    fun getAccentColor(context: Context): Int {
+        val typedValue = TypedValue()
+        val contextThemeWrapper = ContextThemeWrapper(context,
+                R.style.Theme_DeviceDefault)
+        contextThemeWrapper.getTheme().resolveAttribute(android.R.attr.colorAccent,
+                typedValue, true)
+        @ColorInt val color = typedValue.data
+        return color;
+
     }
 }
