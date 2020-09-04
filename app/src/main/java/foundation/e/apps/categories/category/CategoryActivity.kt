@@ -18,20 +18,25 @@
 package foundation.e.apps.categories.category
 
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import foundation.e.apps.MainActivity
 import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
@@ -43,6 +48,7 @@ import foundation.e.apps.common.ApplicationListAdapter
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.CATEGORY_KEY
 import kotlinx.android.synthetic.main.activity_category.*
+import kotlinx.android.synthetic.main.error_layout.*
 
 class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectionCallback {
 
@@ -54,7 +60,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
             ApplicationManagerServiceConnection(this)
     private var applicationList = ArrayList<Application>()
     private var isLoadingMoreApplications = false
-
+    var accentColorOS=0;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +80,11 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         progressBar = findViewById(R.id.progress_bar)
         val errorContainer = findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = findViewById<TextView>(R.id.error_description)
+
+        //set accent color to Error button (Retry )
+        findViewById<TextView>(R.id.error_resolve).setTextColor(Color.parseColor("#ffffff"))
+        findViewById<TextView>(R.id.error_resolve).setBackgroundColor(accentColorOS)
+
 
         // Initialise UI elements
         recyclerView.visibility = View.GONE
@@ -104,7 +115,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = ApplicationListAdapter(this, applicationList)
+        recyclerView.adapter = ApplicationListAdapter(this, applicationList, 0)
 
         // Bind to the list of applications in this activity's category
         categoryViewModel.getApplications().observe(this, Observer {
@@ -182,5 +193,20 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
             }
         }
         applicationManagerServiceConnection.unbindService(this)
+    }
+
+    /*
+   * get Accent color from OS
+   *
+   *  */
+    private fun getAccentColor() {
+
+        val typedValue = TypedValue()
+        val contextThemeWrapper = ContextThemeWrapper(this,
+                android.R.style.Theme_DeviceDefault)
+        contextThemeWrapper.getTheme().resolveAttribute(android.R.attr.colorAccent,
+                typedValue, true)
+        @ColorInt val color = typedValue.data
+        accentColorOS=color;
     }
 }

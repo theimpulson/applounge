@@ -19,15 +19,24 @@ package foundation.e.apps
 
 //import androidx.fragment.app.ListFragment
 
+
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.util.TypedValue
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
@@ -60,7 +69,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private val codeRequestPermissions = 9527
     var doubleBackToExitPressedOnce = false;
     private var isReceiverRegistered = false
-
+    var accentColorOS = 0
 
 
     companion object {
@@ -70,11 +79,15 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //ThemeColors(this);
         setContentView(R.layout.activity_main)
         mActivity = this
         disableCategoryIfOpenSource()
+
+
 
         bottom_navigation_view.setOnNavigationItemSelectedListener{
             if (selectFragment(it.itemId,it)) {
@@ -102,6 +115,28 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }
         setupLangReceiver()
         applicationManagerServiceConnection.bindService(this)
+
+        getAccentColor();
+        bottom_navigation_view_color()
+    }
+
+    private fun bottom_navigation_view_color() {
+        val iconsColorStates =
+                ColorStateList(arrayOf(intArrayOf(-android.R.attr.state_checked),
+                        intArrayOf(android.R.attr.state_checked)), intArrayOf(
+                        Color.parseColor("#C4CFD9"),
+                        accentColorOS
+        ))
+
+        val textColorStates = ColorStateList(arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)), intArrayOf(
+                Color.parseColor("#C4CFD9"),
+                accentColorOS
+
+        ))
+
+        bottom_navigation_view.setItemIconTintList(iconsColorStates)
+        bottom_navigation_view.setItemTextColor(textColorStates)
+
     }
 
     private fun initialiseUpdatesWorker() {
@@ -116,9 +151,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun initialiseFragments(applicationManager: ApplicationManager) {
-        homeFragment.initialise(applicationManager)
-        searchFragment.initialise(applicationManager)
-        updatesFragment.initialise(applicationManager)
+        homeFragment.initialise(applicationManager, accentColorOS)
+        searchFragment.initialise(applicationManager, accentColorOS)
+        updatesFragment.initialise(applicationManager, accentColorOS)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -144,17 +179,28 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return "any"
     }
 
+    fun tintMenuIcon(context: Context, item: MenuItem, @ColorRes color: Int) {
+        val normalDrawable = item.icon
+        val wrapDrawable = DrawableCompat.wrap(normalDrawable)
+
+        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(context, color))//context.resources.getColor(color))
+        item.icon = wrapDrawable
+    }
 
     private fun selectFragment(fragmentId: Int, item: MenuItem?): Boolean {
+
         when (fragmentId) {
+
             R.id.menu_home -> {
                 item?.setIcon(R.drawable.ic_menu_home)
                 showFragment(homeFragment)
+
                 return true
             }
             R.id.menu_categories -> {
                 item?.setIcon(R.drawable.ic_menu_categories)
                 showFragment(CategoriesFragment())
+
                 return true
             }
             R.id.menu_search -> {
@@ -265,4 +311,20 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
         }, 2000)
     }
+
+    /*
+    * get Accent color from OS
+    *
+    *  */
+    private fun getAccentColor() {
+
+        val typedValue = TypedValue()
+        val contextThemeWrapper = ContextThemeWrapper(this,
+                android.R.style.Theme_DeviceDefault)
+        contextThemeWrapper.getTheme().resolveAttribute(android.R.attr.colorAccent,
+                typedValue, true)
+        @ColorInt val color = typedValue.data
+        accentColorOS=color;
+    }
+
 }

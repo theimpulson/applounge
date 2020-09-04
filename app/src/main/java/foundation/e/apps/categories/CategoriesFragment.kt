@@ -17,10 +17,16 @@
 
 package foundation.e.apps.categories
 
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
@@ -28,17 +34,26 @@ import foundation.e.apps.R
 
 class CategoriesFragment : Fragment() {
 
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         val viewPager = view.findViewById<ViewPager>(R.id.view_pager)
-
-        viewPager.adapter = CategoriesViewPagerAdapter(activity!!.supportFragmentManager, tabLayout.tabCount)
+        var color = getAccentColor(activity!!);
+        viewPager.adapter = CategoriesViewPagerAdapter(activity!!.supportFragmentManager, tabLayout.tabCount, color)
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
+
+        if (color != null) {
+            tabLayout.setSelectedTabIndicatorColor(color);
+            tabLayout.setTabTextColors(Color.parseColor("#000000"), color);
+
+        };
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 viewPager.currentItem = tab.position
+
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {
@@ -50,5 +65,20 @@ class CategoriesFragment : Fragment() {
             }
         })
         return view
+    }
+
+    /*
+  * get Accent color from OS
+  *
+  */
+    fun getAccentColor(context: Context): Int {
+        val typedValue = TypedValue()
+        val contextThemeWrapper = ContextThemeWrapper(context,
+                android.R.style.Theme_DeviceDefault)
+        contextThemeWrapper.getTheme().resolveAttribute(android.R.attr.colorAccent,
+                typedValue, true)
+        @ColorInt val color = typedValue.data
+        return color;
+
     }
 }
