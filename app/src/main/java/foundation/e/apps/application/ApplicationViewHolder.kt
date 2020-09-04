@@ -45,17 +45,17 @@ import kotlinx.android.synthetic.main.application_list_item.view.*
 import kotlinx.android.synthetic.main.install_button_layout.view.*
 
 
-class ApplicationViewHolder(private val activity: Activity, private val view: View) :
+class ApplicationViewHolder(private val activity: Activity, private val view: View, accentColorOS: Int) :
         RecyclerView.ViewHolder(view),
         ApplicationStateListener,
         Downloader.DownloadProgressCallback,
         BasicData.IconLoaderCallback,
-        PwasBasicData.IconLoaderCallback{
+        PwasBasicData.IconLoaderCallback {
 
 
     private val icon: ImageView = view.app_icon
     private val title: TextView = view.app_title
-    private val pwa_icon :TextView =view.pwa_sympol
+    private val pwa_icon: TextView = view.pwa_sympol
     private val author: TextView = view.app_author
     private val ratingBar: RatingBar = view.app_rating_bar
     private val rating: TextView = view.app_rating
@@ -64,13 +64,19 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
     private var application: Application? = null
     private val applicationViewModel = ApplicationViewModel()
     private var downloader: Downloader? = null
-
+var accentColorOS=accentColorOS;
     init {
-        pwa_icon.visibility=View.GONE
+        pwa_icon.visibility = View.GONE
         view.setOnClickListener {
             if (application != null) {
                 applicationViewModel.onApplicationClick(view.context, application!!)
             }
+        }
+
+
+        installButton.setTextColor(Color.parseColor("#ffffff"))
+        if(0!=this.accentColorOS){
+            installButton.setBackgroundColor(this.accentColorOS)
         }
         installButton?.setOnClickListener {
             if (application?.fullData != null &&
@@ -78,13 +84,12 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
                 Snackbar.make(view, activity.getString(
                         Error.APK_UNAVAILABLE.description),
                         Snackbar.LENGTH_LONG).show()
-            } else if(application?.pwabasicdata!=null){
+            } else if (application?.pwabasicdata != null) {
                 application?.pwaInstall(activity)
 
-            }else if(application?.searchAppsBasicData!=null &&application?.searchAppsBasicData!!.is_pwa){
+            } else if (application?.searchAppsBasicData != null && application?.searchAppsBasicData!!.is_pwa) {
                 application?.pwaInstall(activity)
-            }
-            else {
+            } else {
                 application?.buttonClicked(activity, activity)
             }
         }
@@ -92,46 +97,46 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
 
     fun createApplicationView(app: Application) {
 
-            pwa_icon.visibility = View.GONE
+        pwa_icon.visibility = View.GONE
+        this.application = app
+
+        if (app.basicData != null) {
+            this.application?.removeListener(this)
             this.application = app
-
-            if (app.basicData != null) {
-                this.application?.removeListener(this)
-                this.application = app
-                icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
-                application!!.loadIcon(this)
-                application!!.addListener(this)
-                title.text = application!!.basicData!!.name
-                author.text = application!!.basicData!!.author
-                ratingBar.rating = application!!.basicData!!.ratings!!.rating!!
-                if (application!!.basicData!!.ratings!!.rating != -1f) {
-                    rating.text = application!!.basicData!!.ratings!!.rating.toString()
-                } else {
-                    rating.text = activity.getString(R.string.not_available)
-                }
-                if (application!!.basicData!!.privacyRating != null && application!!.basicData!!.privacyRating != -1f) {
-                    privacyScore.text = application!!.basicData!!.privacyRating.toString()
-                } else {
-                    privacyScore.text = activity.getString(R.string.not_available)
-                }
-            }else{
-                this.application?.removeListener(this)
-                this.application = app
-                icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
-                application!!.addListener(this)
-                if (application!!.searchAppsBasicData != null) {
-                    if (application!!.searchAppsBasicData!!.is_pwa) {
-                        pwa_icon.visibility = View.VISIBLE
-                    }
-                    application!!.SearchAppsloadIcon(this)
-                    title.text = application!!.searchAppsBasicData!!.name
-                    author.text = application!!.searchAppsBasicData!!.author
-                } else {
-                    application!!.PwaloadIcon(this)
-                    title.text = application!!.pwabasicdata!!.name
-
-                }
+            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+            application!!.loadIcon(this)
+            application!!.addListener(this)
+            title.text = application!!.basicData!!.name
+            author.text = application!!.basicData!!.author
+            ratingBar.rating = application!!.basicData!!.ratings!!.rating!!
+            if (application!!.basicData!!.ratings!!.rating != -1f) {
+                rating.text = application!!.basicData!!.ratings!!.rating.toString()
+            } else {
+                rating.text = activity.getString(R.string.not_available)
             }
+            if (application!!.basicData!!.privacyRating != null && application!!.basicData!!.privacyRating != -1f) {
+                privacyScore.text = application!!.basicData!!.privacyRating.toString()
+            } else {
+                privacyScore.text = activity.getString(R.string.not_available)
+            }
+        } else {
+            this.application?.removeListener(this)
+            this.application = app
+            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+            application!!.addListener(this)
+            if (application!!.searchAppsBasicData != null) {
+                if (application!!.searchAppsBasicData!!.is_pwa) {
+                    pwa_icon.visibility = View.VISIBLE
+                }
+                application!!.SearchAppsloadIcon(this)
+                title.text = application!!.searchAppsBasicData!!.name
+                author.text = application!!.searchAppsBasicData!!.author
+            } else {
+                application!!.PwaloadIcon(this)
+                title.text = application!!.pwabasicdata!!.name
+
+            }
+        }
         stateChanged(application!!.state)
     }
 
@@ -143,12 +148,19 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
 
     override fun stateChanged(state: State) {
         Execute({}, {
-            installButton.setBackgroundResource(R.drawable.app_install_border_simple)
+
+           // installButton.setBackgroundResource(R.drawable.app_install_border_simple)
             installButton?.text = activity.getString(state.installButtonTextId)
             when (state) {
 
-                State.NOT_DOWNLOADED ->{
-                    installButton.setTextColor(Color.parseColor("#0088ED"))
+                State.NOT_DOWNLOADED -> {
+                    if(0!=this.accentColorOS){
+                        installButton.setTextColor(this.accentColorOS)
+                    }
+                    else{
+
+                        installButton.setTextColor(Color.parseColor("#0088ED"))
+                    }
                     installButton.setBackgroundResource(R.drawable.app_install_border_simple)
                     installButton.isEnabled = true
                 }
@@ -156,15 +168,27 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
                 State.INSTALLED -> {
                     installButton?.isEnabled =
                             Common.appHasLaunchActivity(activity, application!!.packageName)
+                    if(0!=this.accentColorOS){
+                        installButton!!.setBackgroundColor(this.accentColorOS)
+                    }
+                    else{
+                        installButton!!.setBackgroundResource(R.drawable.app_install_border)
+                    }
                     installButton.setTextColor(Color.parseColor("#FAFAFA"))
-                    installButton!!.setBackgroundResource(R.drawable.app_install_border)
+
                 }
                 State.INSTALLING -> {
                     installButton?.isEnabled = false
                 }
                 State.NOT_UPDATED -> {
                     installButton.setTextColor(Color.parseColor("#FAFAFA"))
-                    installButton!!.setBackgroundResource(R.drawable.app_install_border)
+                    //installButton!!.setBackgroundResource(R.drawable.app_install_border)
+                    if(0!=this.accentColorOS){
+                        installButton!!.setBackgroundColor(this.accentColorOS)
+                    }
+                    else{
+                        installButton!!.setBackgroundResource(R.drawable.app_install_border)
+                    }
                     installButton?.isEnabled = true
                 }
                 else -> {
@@ -172,6 +196,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
                     installButton?.isEnabled = true
                 }
             }
+
         })
     }
 
@@ -198,4 +223,5 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         downloader?.removeListener(this)
         downloader = null
     }
+
 }
