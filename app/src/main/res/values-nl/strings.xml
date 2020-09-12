@@ -108,7 +108,7 @@
     <string name="test_string">&lt;font color=#FAFAFA&lt;b&gt;UPDATE&gt;&lt;/font&gt;</string>
     <string name="some_text"><font color="#FAFAFA">Een</font> willekeurige <font color="#FAFAFA">tekst</font></string>
     <string name="app_privacy_description1">Score op 10. Berekend met behulp van</string>
-    <string name="featured">In de kijker</string>
+    <string name="featured">Uitgelicht</string>
     <string name="action_installing">Aan het installeren</string>
     <string name="action_add_to_home_screen">Toevoegen aan startscherm</string>
     <string name="show_only_pwa_apps">Toon enkel PWAs (Progressive Web Applications)</string>
