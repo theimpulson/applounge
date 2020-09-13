@@ -35,7 +35,7 @@
     <string name="preference_update_notify_available_description">Zeige eine Benachrichtigung, wenn App-Aktualisierungen verfügbar sind</string>
     <string name="preference_update_notify_available_title">Zeige verfügbare Aktualisierungen</string>
     <string name="preference_update_install_automatically_description">App-Aktualisierungen werden im Hintergrund heruntergeladen und installiert</string>
-    <string name="preference_update_install_automatically_title">Installiert Aktualisierungen automatisch</string>
+    <string name="preference_update_install_automatically_title">Aktualisierungen automatisch installieren</string>
     <string name="preference_update_wifi_only_description">Aktualisiert Apps automatisch nur in unlimitierten Netzwerken wie WLAN</string>
     <string name="preference_update_wifi_only_title">Nur in unbegrenzten Netzwerken</string>
     <string name="preference_update_interval_title">Überprüfungsintervall für Aktualisierungen</string>
