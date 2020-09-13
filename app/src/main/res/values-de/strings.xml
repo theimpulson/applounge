@@ -114,4 +114,9 @@
     <string name="test_string">&lt;font color=#FAFAFA&lt;b&gt;AKTUALISIERUNG&gt;&lt;/font&gt;</string>
     <string name="ok"><font fgcolor="#FF0088ED">Ok</font></string>
     <string name="action_installing">wird installiert</string>
+    <string name="offline_heading">Sie sind offline.</string>
+    <string name="show_only_pwa_apps_description">Web-Apps, die das Anwendungserlebnis einer nativen App im Browser bieten</string>
+    <string name="pwas_categories_title">PWAs</string>
+    <string name="more">mehr</string>
+    <string name="app_privacy_description1">Bewertung von 1 bis 10. Wird berechnet aus</string>
 </resources>
