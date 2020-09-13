@@ -14,7 +14,7 @@
     <string name="error_unknown">"Etwas ist schiefgelaufen! Bitte versuche es später noch einmal. "</string>
     <string name="error_request_timeout">"Der Server braucht zu lange zum Antworten! Versuche es später noch einmal. "</string>
     <string name="error_server_unavailable">"Server nicht verfügbar! Bitter versuche es später noch einmal. "</string>
-    <string name="error_no_internet">"Verbindung nicht möglich! Bitte überprüfe die Verbindung und versuche es nochmals. "</string>
+    <string name="error_no_internet">Verbindung nicht möglich! Bitte überprüfe die Internet-Verbindung und versuche es nochmals.</string>
     <string name="error_storage_permission_denied">Um Apps herunterzuladen, ist Speicherzugriff erforderlich.</string>
     <string name="package_name_find_text">Um den Paketnamen einer App zu finden, die auf deinem Gerät installiert ist, gehe zu den Systemeinstellungen&gt;Apps&gt;[deine App]. Der Paketname sollte am unteren Ende der Seite geschrieben stehen.
 \n*Dieser Vorgang kann auf manchen Geräten unterschiedlich sein.</string>
