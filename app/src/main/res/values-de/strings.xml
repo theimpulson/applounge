@@ -102,7 +102,7 @@
     <string name="show_only_pwa_apps_key">zeige_nur_PWAs</string>
     <string name="show_only_open_source_apps">Nur Open-Source-Apps anzeigen</string>
     <string name="show_only_open_source_apps_description">Apps, deren Quellcode frei zugänglich ist</string>
-    <string name="show_only_open_source_apps_key">zeige_nur_quelloffene_Apps</string>
+    <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
     <string name="Show_all_apps">Alle Apps anzeigen</string>
     <string name="Show_applications">Apps zeigen:</string>
     <string name="Show_all_apps_key">Show_all_apps</string>
