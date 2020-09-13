@@ -67,7 +67,7 @@
     <string name="app_min_android">Benötigt</string>
     <string name="app_updated_on">Aktualisiert am</string>
     <string name="app_version">Version</string>
-    <string name="app_information_title">" Information"</string>
+    <string name="app_information_title">Information</string>
     <string name="app_trackers_title">Tracker</string>
     <string name="app_permissions_title">Berechtigungen</string>
     <string name="app_privacy_title">Datenschutzanalysen</string>
