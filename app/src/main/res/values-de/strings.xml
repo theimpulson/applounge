@@ -41,7 +41,7 @@
     <string name="preference_update_interval_title">Überprüfungsintervall für Aktualisierungen</string>
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Aktualisierungen</string>
-    <string name="updates_notification_unmetered_network_warning">Auf ein unlimitiertes Netzwerk warten</string>
+    <string name="updates_notification_unmetered_network_warning">Warten auf ein ungetaktetes Netzwerk</string>
     <string name="updates_notification_text">App-Aktualisierungen %1$s werden automatisch installiert</string>
     <plurals name="updates_notification_title">
         <item quantity="one">%1$d App-Aktualisierung ist verfügbar</item>
