@@ -107,7 +107,7 @@
     <string name="Show_applications">Zeige Apps an:</string>
     <string name="Show_all_apps_key">Zeige_alle_Apps</string>
     <string name="shouldRefreshOnResume">Kategorien</string>
-    <string name="some_text"><font color="#FAFAFA">Some</font> Zufälliger <font color="#FAFAFA">Text</font></string>
+    <string name="some_text"><font color="#FAFAFA">Irgendein</font> zufälliger <font color="#FAFAFA">Text</font></string>
     <string name="pick_up_apk_file">pick_up_apk_file</string>
     <string name="featured">Empfohlen</string>
     <string name="action_add_to_home_screen">Zum Startbildschirm hinzufügen</string>
