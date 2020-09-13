@@ -104,7 +104,7 @@
     <string name="show_only_open_source_apps_description">Apps, deren Quellcode frei zugänglich ist</string>
     <string name="show_only_open_source_apps_key">zeige_nur_quelloffene_Apps</string>
     <string name="Show_all_apps">Alle Apps anzeigen</string>
-    <string name="Show_applications">Zeige Apps an:</string>
+    <string name="Show_applications">Apps zeigen:</string>
     <string name="Show_all_apps_key">Show_all_apps</string>
     <string name="shouldRefreshOnResume">Kategorien</string>
     <string name="some_text"><font color="#FAFAFA">Irgendein</font> zufälliger <font color="#FAFAFA">Text</font></string>
