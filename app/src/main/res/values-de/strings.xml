@@ -19,7 +19,7 @@
     <string name="package_name_find_text">Um den Paketnamen einer App zu finden, die auf deinem Gerät installiert ist, gehe zu den Systemeinstellungen&gt;Apps&gt;[deine App]. Der Paketname sollte am unteren Ende der Seite geschrieben stehen.
 \n*Dieser Vorgang kann auf manchen Geräten unterschiedlich sein.</string>
     <string name="package_name_find_title">Wie findet man den Paketnamen einer App\?</string>
-    <string name="package_name_help_text">Ein Paketname ist eine eindeutige Bezeichnung für eine Android App. Paketnamen sind gewöhnlich kleingeschrieben und haben folgendes Format: \"domain.company.application\".</string>
+    <string name="package_name_help_text">Ein Paketname ist eine eindeutige Bezeichnung für eine Android-App. Paketnamen sind gewöhnlich kleingeschrieben und haben folgendes Format: \"domain.company.application\"</string>
     <string name="package_name_help_title">Was ist ein Paketname\?</string>
     <string name="app_request_successful_text">App-Anfrage wurde erfolgreich eingereicht!</string>
     <string name="submit_button_text">Einreichen</string>
