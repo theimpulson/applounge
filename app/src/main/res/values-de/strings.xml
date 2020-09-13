@@ -25,7 +25,7 @@
     <string name="submit_button_text">Einreichen</string>
     <string name="edit_text_hint">Paketname</string>
     <string name="preference_apps_request_app_summary">Erfordert eine App, die zurzeit nicht verfügbar ist</string>
-    <string name="preference_apps_request_app_title">Erfordert eine App</string>
+    <string name="preference_apps_request_app_title">App anfordern</string>
     <string name="pref_apps_request_app_key">pref_apps_request_app</string>
     <string name="preference_apps_title">Apps</string>
     <string name="pref_update_notify_key">pref_update_notify</string>
