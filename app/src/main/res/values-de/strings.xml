@@ -87,7 +87,7 @@
     <string name="action_cancel">Abbrechen</string>
     <string name="action_install">Installieren</string>
     <string name="app_rating_content_description">App-Bewertung</string>
-    <string name="app_energy_score_content_description">App Energieeffizienz Wertung</string>
+    <string name="app_energy_score_content_description">App-Energiebewertung</string>
     <string name="app_privacy_score_content_description">App-Datenschutzwertung</string>
     <string name="app_description_content_description">App-Beschreibung</string>
     <string name="app_description_title">Beschreibung</string>
@@ -119,4 +119,5 @@
     <string name="pwas_categories_title">PWAs</string>
     <string name="more">mehr</string>
     <string name="app_privacy_description1">Bewertung von 1 bis 10. Wird berechnet aus</string>
+    <string name="exit">Bitte erneut auf ZURÜCK tippen um zu beenden</string>
 </resources>
