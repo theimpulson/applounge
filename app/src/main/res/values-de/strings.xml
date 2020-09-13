@@ -96,4 +96,19 @@
     <string name="not_available_full">Nicht verfügbar</string>
     <string name="not_available">Nicht verfügbar</string>
     <string name="app_name">Apps</string>
+    <string name="pwa_icon">PWA</string>
+    <string name="offline_description">Hier tippen, um erneut zu versuchen!</string>
+    <string name="show_only_pwa_apps">Nur PWAs anzeigen</string>
+    <string name="show_only_pwa_apps_key">zeige_nur_PWAs</string>
+    <string name="show_only_open_source_apps">Nur Open-Source-Apps anzeigen</string>
+    <string name="show_only_open_source_apps_description">Apps, deren Quellcode frei zugänglich ist</string>
+    <string name="show_only_open_source_apps_key">zeige_nur_quelloffene_Apps</string>
+    <string name="Show_all_apps">Alle Apps anzeigen</string>
+    <string name="Show_applications">Zeige Apps an:</string>
+    <string name="Show_all_apps_key">Zeige_alle_Apps</string>
+    <string name="shouldRefreshOnResume">Kategorien</string>
+    <string name="some_text"><font color="#FAFAFA">Some</font> Zufälliger <font color="#FAFAFA">Text</font></string>
+    <string name="pick_up_apk_file">pick_up_apk_file</string>
+    <string name="featured">Empfohlen</string>
+    <string name="action_add_to_home_screen">Zum Startbildschirm hinzufügen</string>
 </resources>
