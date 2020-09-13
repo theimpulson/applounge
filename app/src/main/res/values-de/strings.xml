@@ -99,7 +99,7 @@
     <string name="pwa_icon">PWA</string>
     <string name="offline_description">Hier tippen, um erneut zu versuchen!</string>
     <string name="show_only_pwa_apps">Nur PWAs anzeigen</string>
-    <string name="show_only_pwa_apps_key">zeige_nur_PWAs</string>
+    <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
     <string name="show_only_open_source_apps">Nur Open-Source-Apps anzeigen</string>
     <string name="show_only_open_source_apps_description">Apps, deren Quellcode frei zugänglich ist</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
