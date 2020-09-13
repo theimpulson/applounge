@@ -44,8 +44,8 @@
     <string name="updates_notification_unmetered_network_warning">Auf ein unlimitiertes Netzwerk warten</string>
     <string name="updates_notification_text">App-Aktualisierungen %1$s werden automatisch installiert</string>
     <plurals name="updates_notification_title">
-        <item quantity="one">%1$d App Aktualisierung ist verfügbar</item>
-        <item quantity="other">%1$d App Aktualisierungen sind verfügbar</item>
+        <item quantity="one">" %1$d App-Aktualisierung ist verfügbar"</item>
+        <item quantity="other">" %1$d App-Aktualisierungen sind verfügbar"</item>
     </plurals>
     <string name="updates_splash_title">Alle Apps sind aktuell</string>
     <string name="search_splash_title">Eine App suchen</string>
