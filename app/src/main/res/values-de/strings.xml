@@ -113,7 +113,7 @@
     <string name="action_add_to_home_screen">Zum Startbildschirm hinzufügen</string>
     <string name="test_string">&lt;font color=#FAFAFA&lt;b&gt;AKTUALISIERUNG&gt;&lt;/font&gt;</string>
     <string name="ok"><font fgcolor="#FF0088ED">Ok</font></string>
-    <string name="action_installing">wird installiert</string>
+    <string name="action_installing">Wird installiert</string>
     <string name="offline_heading">Sie sind offline.</string>
     <string name="show_only_pwa_apps_description">Web-Apps, die das Anwendungserlebnis einer nativen App im Browser bieten</string>
     <string name="pwas_categories_title">PWAs</string>
