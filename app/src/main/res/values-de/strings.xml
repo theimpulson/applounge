@@ -76,7 +76,7 @@
     <string name="app_rating_description">Bewertung von 1 bis 5. Sie wird aus Benutzerbewertungen dieser App berechnet.</string>
     <string name="app_rating">Bewertung</string>
     <string name="app_privacy_description_short">Berechnet aus &lt;a href=\"https://exodus-privacy.eu.org\"&gt;Exodus Datenschutz Analysen&lt;/a&gt;.<a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
-    <string name="app_privacy_description">Bewertung von 1 bis 10. Sie wird berechnet aus &lt;a href=\"https://exodus-privacy.eu.org\"&gt;Exodus Datenschutz Analysen&lt;/a&gt;, die auf Berechtigungen und Tracker der App beruhen.<a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>, based on permissions and trackers used in the app.</string>
+    <string name="app_privacy_description">Bewertung von 1 bis 10. Sie wird berechnet aus <a href="https://exodus-privacy.eu.org">Exodus Datenschutz Analysen</a>, die auf Berechtigungen und Trackern der App beruhen.</string>
     <string name="app_privacy_score">Datenschutz</string>
     <string name="app_ratings_title">Bewertungen</string>
     <string name="action_share">Teilen</string>
