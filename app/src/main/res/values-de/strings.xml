@@ -60,7 +60,7 @@
     <string name="application_description_activity_title">Beschreibung</string>
     <string name="action_ok">Ok</string>
     <string name="no_trackers">Keine Tracker benutzt</string>
-    <string name="no_permissions">Keine Berechtigungen erfordert</string>
+    <string name="no_permissions">Keine Berechtigungen erforderlich</string>
     <string name="download_notification_description">Wird heruntergeladen</string>
     <string name="app_screenshots_title">Screenshots</string>
     <string name="app_licence">Lizenz</string>
