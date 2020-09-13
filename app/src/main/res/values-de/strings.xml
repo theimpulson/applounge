@@ -37,11 +37,11 @@
     <string name="preference_update_install_automatically_description">App-Aktualisierungen werden im Hintergrund heruntergeladen und installiert</string>
     <string name="preference_update_install_automatically_title">Installiert Aktualisierungen automatisch</string>
     <string name="preference_update_wifi_only_description">Aktualisiert Apps automatisch nur in unlimitierten Netzwerken wie WLAN</string>
-    <string name="preference_update_wifi_only_title">Nur in unlimitierten Netzwerken</string>
+    <string name="preference_update_wifi_only_title">Nur in unbegrenzten Netzwerken</string>
     <string name="preference_update_interval_title">Überprüfungsintervall für Aktualisierungen</string>
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Aktualisierungen</string>
-    <string name="updates_notification_unmetered_network_warning">Warten auf ein ungetaktetes Netzwerk</string>
+    <string name="updates_notification_unmetered_network_warning">Warten auf ein unbegrenztes Netzwerk</string>
     <string name="updates_notification_text">App-Aktualisierungen %1$s werden automatisch installiert</string>
     <plurals name="updates_notification_title">
         <item quantity="one">%1$d App-Aktualisierung ist verfügbar</item>
