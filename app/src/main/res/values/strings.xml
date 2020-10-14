@@ -103,7 +103,10 @@
         <item quantity="one">%1$d app update is available</item>
         <item quantity="other">%1$d app updates are available</item>
     </plurals>
-    <string name="updates_notification_text">App updates %1$s be installed automatically</string>
+
+    <string name="AUTOMATICALLY_INSTALL_updates_notification_text">App updates will be installed automatically</string>
+    <string name="MANUALLY_INSTALL_updates_notification_text">App updates will not be installed automatically</string>
+
     <string name="updates_notification_unmetered_network_warning">Waiting for un-metered network</string>
 
     <!-- Settings Fragment -->

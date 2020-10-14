@@ -53,15 +53,13 @@ class UpdatesNotifier {
                     numberOfApps))
         }
         if (installAutomatically) {
-            notificationBuilder.setContentText(context.getString(R.string.updates_notification_text,
-                    Constants.AUTOMATICALLY_INSTALL_UPDATES))
+            notificationBuilder.setContentText(context.getString(R.string.AUTOMATICALLY_INSTALL_updates_notification_text))
             if (unmeteredNetworkOnly && !isConnectedToUnmeteredNetwork) {
                 notificationBuilder.setSubText(context
                         .getString(R.string.updates_notification_unmetered_network_warning))
             }
         } else {
-            notificationBuilder.setContentText(context.getString(R.string.updates_notification_text,
-                    Constants.MANUALLY_INSTALL_UPDATES))
+            notificationBuilder.setContentText(context.getString(R.string.MANUALLY_INSTALL_updates_notification_text))
         }
         notificationBuilder.setContentIntent(getClickIntent(context))
         notificationBuilder.setAutoCancel(true)

@@ -42,7 +42,10 @@
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Aktualisierungen</string>
     <string name="updates_notification_unmetered_network_warning">Warten auf ein unbegrenztes Netzwerk</string>
-    <string name="updates_notification_text">App-Aktualisierungen %1$s werden automatisch installiert</string>
+
+    <string name="AUTOMATICALLY_INSTALL_updates_notification_text">App-Updates werden automatisch installiert</string>
+    <string name="MANUALLY_INSTALL_updates_notification_text">App-Updates werden nicht automatisch installiert</string>
+
     <plurals name="updates_notification_title">
         <item quantity="one">%1$d App-Aktualisierung ist verfügbar</item>
         <item quantity="other">%1$d App-Aktualisierungen sind verfügbar</item>
