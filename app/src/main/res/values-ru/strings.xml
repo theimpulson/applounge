@@ -40,7 +40,10 @@
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Обновления</string>
     <string name="updates_notification_unmetered_network_warning">В ожидании безлимитной сети</string>
-    <string name="updates_notification_text">%1$s Приложений будет обновлено автоматически</string>
+
+    <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Обновления приложений будут устанавливаться автоматически</string>
+    <string name="MANUALLY_INSTALL_updates_notification_text">Обновления приложений не будут устанавливаться автоматически</string>
+
     <plurals name="updates_notification_title">
         <item quantity="one">%1$d обновление доступно</item>
         <item quantity="few">%1$d обновления доступно</item>

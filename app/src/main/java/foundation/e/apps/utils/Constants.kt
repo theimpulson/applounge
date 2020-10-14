@@ -52,8 +52,6 @@ object Constants {
     const val UPDATES_NOTIFICATION_ID = 76
     const val UPDATES_NOTIFICATION_CHANNEL_ID = "updates_notification"
     const val UPDATES_NOTIFICATION_CHANNEL_TITLE = "App updates"
-    const val AUTOMATICALLY_INSTALL_UPDATES = "will"
-    const val MANUALLY_INSTALL_UPDATES = "will not"
     const val UPDATES_NOTIFICATION_CLICK_EXTRA = "updates_notification_click_extra"
 
 }

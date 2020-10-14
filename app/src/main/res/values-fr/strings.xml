@@ -46,7 +46,9 @@
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Mises à jour</string>
     <string name="updates_notification_unmetered_network_warning">En attente d\'un réseau non-limité</string>
-    <string name="updates_notification_text">Les mises à jour d\'application %1$s être installées automatiquement</string>
+
+    <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Les mises à jour de l application seront installées automatiquement</string>
+    <string name="MANUALLY_INSTALL_updates_notification_text">Les mises à jour de l application ne seront pas installées automatiquement</string>
     <plurals name="updates_notification_title">
         <item quantity="one">%1$d mise à jour disponible</item>
         <item quantity="other">%1$d mises à jour disponibles</item>

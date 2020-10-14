@@ -27,7 +27,10 @@
     <string name="edit_text_hint">Pakket naam</string>
     <string name="package_name_find_text">Om de pakket naam van een app die geïnstalleerd is op je apparaat te vinden, ga je naar Systeem Instellingen &gt; Applicaties &gt; [Je app]. De pakket naam zou onderaan de lijst moeten staan. 
 \n*Dit proces kan variëren op sommige apparaten.</string>
-    <string name="updates_notification_text">App-updates %1$s worden automatisch geïnstalleerd</string>
+
+    <string name="AUTOMATICALLY_INSTALL_updates_notification_text">App updates will be installed automatically</string>
+    <string name="MANUALLY_INSTALL_updates_notification_text">App updates will not be installed automatically</string>
+
     <string name="menu_home">Home</string>
     <string name="preference_apps_request_app_summary">Verzoek een app die momenteel niet beschikbaar is</string>
     <string name="preference_update_notify_available_title">Toon beschikbare updates</string>
