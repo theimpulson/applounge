@@ -762,12 +762,6 @@ class ApplicationActivity :
     }
 
     private fun getAccentColor() {
-        val typedValue = TypedValue()
-        val contextThemeWrapper = ContextThemeWrapper(this,
-                android.R.style.Theme_DeviceDefault)
-        contextThemeWrapper.getTheme().resolveAttribute(android.R.attr.colorAccent,
-                typedValue, true)
-        @ColorInt val color = typedValue.data
-        accentColorOS=color;
+        accentColorOS=this.resources.getColor(R.color.colorAccent);
     }
 }

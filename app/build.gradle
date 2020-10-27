@@ -36,6 +36,10 @@ android {
     androidExtensions {
         experimental = true
     }
+    aaptOptions{
+        additionalParameters '-I', 'app/e-ui-sdk.jar'
+    }
+
 }
 
 dependencies {
@@ -84,4 +88,6 @@ dependencies {
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1"
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+    compileOnly files("e-ui-sdk.jar")
 }
