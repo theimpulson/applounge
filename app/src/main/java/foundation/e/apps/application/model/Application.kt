@@ -479,12 +479,8 @@ class Application(val packageName: String, private val applicationManager: Appli
    *
    */
     fun getAccentColor(context: Context): Int {
-        val typedValue = TypedValue()
-        val contextThemeWrapper = ContextThemeWrapper(context,
-                R.style.Theme_DeviceDefault)
-        contextThemeWrapper.getTheme().resolveAttribute(android.R.attr.colorAccent,
-                typedValue, true)
-        @ColorInt val color = typedValue.data
+
+        val color =context.resources.getColor(foundation.e.apps.R.color.colorAccent);
         return color;
 
     }
