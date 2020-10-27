@@ -72,12 +72,10 @@ class CategoriesFragment : Fragment() {
   *
   */
     fun getAccentColor(context: Context): Int {
-        val typedValue = TypedValue()
-        val contextThemeWrapper = ContextThemeWrapper(context,
-                android.R.style.Theme_DeviceDefault)
-        contextThemeWrapper.getTheme().resolveAttribute(android.R.attr.colorAccent,
-                typedValue, true)
-        @ColorInt val color = typedValue.data
+
+        val color =context.resources.getColor(R.color.colorAccent);
+
+
         return color;
 
     }
