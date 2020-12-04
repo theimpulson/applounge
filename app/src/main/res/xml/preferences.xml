@@ -22,8 +22,7 @@
     android:layout_height="match_parent">
     <PreferenceCategory android:title="@string/preference_updates_title">
 
-        <Preference
-            android:layout="@layout/preference_space"/>
+        <Preference android:layout="@layout/preference_space" />
 
         <ListPreference
             android:id="@+id/id_update"
@@ -31,66 +30,65 @@
             android:dialogTitle="@string/preference_update_interval_title"
             android:entries="@array/update_interval_names"
             android:entryValues="@array/update_interval_values"
+            android:iconSpaceReserved="true"
             android:key="@string/pref_update_interval_key"
             android:summary="%s"
-            android:title="@string/preference_update_interval_title"
-            android:iconSpaceReserved="true"/>
+            android:title="@string/preference_update_interval_title" />
     </PreferenceCategory>
 
     <Preference
-        android:selectable="false"
-        android:layout="@layout/preference_divider"/>
+        android:layout="@layout/preference_divider"
+        android:selectable="false" />
 
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/pref_update_notify_key"
         android:summary="@string/preference_update_notify_available_description"
-        android:title="@string/preference_update_notify_available_title"
-        />
+        android:title="@string/preference_update_notify_available_title" />
 
     <Preference
-        android:selectable="false"
-        android:layout="@layout/preference_divider"/>
+        android:layout="@layout/preference_divider"
+        android:selectable="false" />
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/pref_update_install_automatically_key"
         android:summary="@string/preference_update_install_automatically_description"
-        android:title="@string/preference_update_install_automatically_title"
-        />
+        android:title="@string/preference_update_install_automatically_title" />
 
     <Preference
-        android:selectable="false"
-        android:layout="@layout/preference_divider"/>
+        android:layout="@layout/preference_divider"
+        android:selectable="false" />
 
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/pref_update_wifi_only_key"
         android:summary="@string/preference_update_wifi_only_description"
-        android:title="@string/preference_update_wifi_only_title"
-        />
+        android:title="@string/preference_update_wifi_only_title" />
 
     <Preference
-        android:selectable="false"
-        android:layout="@layout/preference_divider"/>
+        android:layout="@layout/preference_divider"
+        android:selectable="false" />
 
     <Preference
         android:key="@string/pref_apps_request_app_key"
         android:summary="@string/preference_apps_request_app_summary"
         android:title="@string/preference_apps_request_app_title" />
 
+    <Preference
+        android:layout="@layout/preference_divider"
+        android:selectable="false" />
 
     <PreferenceCategory android:title="@string/Show_applications">
         <Preference
-            android:selectable="false"
             android:layout="@layout/preference_space"
-            />
+            android:selectable="false" />
         <foundation.e.apps.settings.RadioButtonPreference
+            android:defaultValue="true"
             android:key="@string/Show_all_apps"
-            android:title="@string/Show_all_apps"
-            android:defaultValue="true"/>
+            android:title="@string/Show_all_apps" />
 
         <foundation.e.apps.settings.RadioButtonPreference
             android:key="@string/show_only_open_source_apps_key"

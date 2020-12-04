@@ -21,6 +21,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
     }
     dataBinding {
         enabled = true
@@ -36,10 +37,6 @@ android {
     androidExtensions {
         experimental = true
     }
-    aaptOptions{
-        additionalParameters '-I', 'app/e-ui-sdk.jar'
-    }
-
 }
 
 dependencies {
@@ -87,7 +84,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:2.11.1"
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1"
 
-    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    implementation 'com.android.volley:volley:1.1.1'
 
-    compileOnly files("e-ui-sdk.jar")
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 }

@@ -26,9 +26,9 @@ import foundation.e.apps.categories.model.Category
 class FullData @JsonCreator
 constructor(
         @JsonProperty("_id") id: String,
-        @JsonProperty("name") name: String,
+        @JsonProperty("name") var name: String,
         @JsonProperty("package_name") packageName: String,
-        @JsonProperty("latest_version_number") latestVersionNumber: String,
+        @JsonProperty("latest_version_number") var latestVersionNumber: String,
         @JsonProperty("latest_version_code") lastVersionCode: Long,
         @JsonProperty("latest_downloaded_version") latestDownloadableUpdate: String,
         @JsonProperty("x86_64_latest_downloaded_version") val x86_64_latestDownloadableUpdate: String = "-1",
@@ -54,21 +54,22 @@ constructor(
         @JsonProperty("description") val description: String,
         @JsonProperty("licence") val licence: String,
         @JsonProperty("ratings") ratings: BasicData.Ratings?,
-        @JsonProperty("is_pwa ") val is_pwa: Boolean){
+        @JsonProperty("is_pwa ") val is_pwa: Boolean,
+        var downloadUrl: String? = null) {
 
 
     var basicData = if (ratings == null) {
-        BasicData(id, name,packageName, latestVersionNumber,lastVersionCode, latestDownloadableUpdate,
-                x86_64_latestDownloadableUpdate,x86_64_lastVersionNumber,x86_64_lastVersionCode,armeabi_latestDownloadableUpdate,
-                armeabi_lastVersionNumber,armeabi_lastVersionCode,arm64_v8a_latest_latestDownloadableUpdate,arm64_v8a_lastVersionNumber,arm64_v8a_lastVersionCode,
-                x86_latestDownloadableUpdate,x86_lastVersionNumber,x86_lastVersionCode,armeabi_v7a_latestDownloadableUpdate,armeabi_v7a_lastVersionNumber,armeabi_v7a_lastVersionCode,apkArchitecture,
-                author,iconUri, imagesUri, null,BasicData.Ratings(-1f, -1f), categoryId,is_pwa)
+        BasicData(id, name, packageName, latestVersionNumber, lastVersionCode, latestDownloadableUpdate,
+                x86_64_latestDownloadableUpdate, x86_64_lastVersionNumber, x86_64_lastVersionCode, armeabi_latestDownloadableUpdate,
+                armeabi_lastVersionNumber, armeabi_lastVersionCode, arm64_v8a_latest_latestDownloadableUpdate, arm64_v8a_lastVersionNumber, arm64_v8a_lastVersionCode,
+                x86_latestDownloadableUpdate, x86_lastVersionNumber, x86_lastVersionCode, armeabi_v7a_latestDownloadableUpdate, armeabi_v7a_lastVersionNumber, armeabi_v7a_lastVersionCode, apkArchitecture,
+                author, iconUri, imagesUri, null, BasicData.Ratings(-1f, -1f), categoryId, is_pwa)
     } else {
-        BasicData(id, name,packageName, latestVersionNumber,lastVersionCode, latestDownloadableUpdate,
-                x86_64_latestDownloadableUpdate,x86_64_lastVersionNumber,x86_64_lastVersionCode,armeabi_latestDownloadableUpdate,
-                armeabi_lastVersionNumber,armeabi_lastVersionCode,arm64_v8a_latest_latestDownloadableUpdate,arm64_v8a_lastVersionNumber,arm64_v8a_lastVersionCode,
-                x86_latestDownloadableUpdate,x86_lastVersionNumber,x86_lastVersionCode,armeabi_v7a_latestDownloadableUpdate,armeabi_v7a_lastVersionNumber,armeabi_v7a_lastVersionCode,apkArchitecture,
-                author,iconUri, imagesUri, ratings.privacyRating, ratings, categoryId,is_pwa)
+        BasicData(id, name, packageName, latestVersionNumber, lastVersionCode, latestDownloadableUpdate,
+                x86_64_latestDownloadableUpdate, x86_64_lastVersionNumber, x86_64_lastVersionCode, armeabi_latestDownloadableUpdate,
+                armeabi_lastVersionNumber, armeabi_lastVersionCode, arm64_v8a_latest_latestDownloadableUpdate, arm64_v8a_lastVersionNumber, arm64_v8a_lastVersionCode,
+                x86_latestDownloadableUpdate, x86_lastVersionNumber, x86_lastVersionCode, armeabi_v7a_latestDownloadableUpdate, armeabi_v7a_lastVersionNumber, armeabi_v7a_lastVersionCode, apkArchitecture,
+                author, iconUri, imagesUri, ratings.privacyRating, ratings, categoryId, is_pwa)
     }
 
     var latestVersion: Version? = null;

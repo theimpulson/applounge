@@ -22,6 +22,7 @@ import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.PwasBasicData
 import foundation.e.apps.application.model.data.SearchAppsBasicData
+import foundation.e.apps.application.model.release.ReleaseData
 import foundation.e.apps.applicationmanager.ApplicationManager
 
 class ApplicationParser {
@@ -39,13 +40,13 @@ class ApplicationParser {
 
         fun PwaParseToApps(applicationManager: ApplicationManager, context: Context, apps: Array<PwasBasicData>): ArrayList<Application> {
 
-             val result = ArrayList<Application>()
-                apps.forEach {
-                    val application = applicationManager.findOrCreateApp(it.name)
-                    application.Pwaupdate(it, context)
-                    result.add(application)
-                }
-                return result
+            val result = ArrayList<Application>()
+            apps.forEach {
+                val application = applicationManager.findOrCreateApp(it.name)
+                application.Pwaupdate(it, context)
+                result.add(application)
+            }
+            return result
 
         }
 
@@ -56,6 +57,14 @@ class ApplicationParser {
                 application.searchUpdate(it, context)
                 result.add(application)
             }
+            return result
+        }
+
+        fun parseSystemAppData(applicationManager: ApplicationManager, context: Context, apps: BasicData): ArrayList<Application> {
+            val result = ArrayList<Application>()
+            val application = applicationManager.findOrCreateApp(Constants.MICROG_PACKAGE)
+            application.update(apps, context)
+            result.add(application)
             return result
         }
 

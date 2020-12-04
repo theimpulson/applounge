@@ -16,19 +16,19 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <uses-permission android:name="foundation.e.pwaplayer.provider.READ_WRITE"/>
+    <uses-permission android:name="foundation.e.pwaplayer.provider.READ_WRITE" />
 
     <application
         android:allowBackup="true"
+        android:alwaysRetainTaskState="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher"
-        android:supportsRtl="true"
         android:largeHeap="true"
         android:launchMode="singleInstance"
-        android:alwaysRetainTaskState="true"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<!--        <activity android:name=".application.PwaInstaller"/>-->
+        <!--        <activity android:name=".application.PwaInstaller"/>-->
         <activity android:name=".settings.AppRequestActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -40,7 +40,6 @@
         <activity android:name=".application.ApplicationActivity" />
         <activity android:name=".categories.category.CategoryActivity" />
 
-
         <service
             android:name=".applicationmanager.ApplicationManagerService"
             android:description="@string/service_description"
@@ -48,7 +47,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="foundation.e.apps.provider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -67,8 +66,8 @@
             android:name=".XAPK.InstallSplitApksActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:launchMode="singleInstance"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme1"/>
+            android:theme="@style/AppTheme1"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

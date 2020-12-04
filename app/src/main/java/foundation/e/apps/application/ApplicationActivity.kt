@@ -32,7 +32,6 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
 import android.util.DisplayMetrics
-import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -40,10 +39,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.MainActivity.Companion.sharedPreferences
@@ -93,7 +90,7 @@ class ApplicationActivity :
     private var imageMargin = 0
     private var defaultElevation = 0f
     private val sharedPrefFile = "kotlinsharedpreference"
-    var accentColorOS = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,14 +113,6 @@ class ApplicationActivity :
             this.applicationPackageName = applicationPackageName!!
             applicationManagerServiceConnection.bindService(this)
         }
-
-        getAccentColor()
-        app_install.setTextColor(Color.parseColor("#ffffff"))
-        app_install.setBackgroundColor(accentColorOS)
-        app_category.setTextColor(accentColorOS)
-        app_expand_description.setTextColor(accentColorOS)
-
-
     }
 
 
@@ -759,9 +748,5 @@ class ApplicationActivity :
             application.decrementUses()
             applicationManagerServiceConnection.unbindService(this)
         }
-    }
-
-    private fun getAccentColor() {
-        accentColorOS=this.resources.getColor(R.color.colorAccent);
     }
 }

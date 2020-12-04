@@ -31,9 +31,8 @@ class Category(val id: String, val result: String = "") : Serializable {
     }
 
     private fun getCategoryTitle(categoryId: String): String {
-        if(result.isNotEmpty()) return result
-
-        else{
+        if (result.isNotEmpty()) return result
+        else {
             val title = categoryId.replace("_", " ")
             return title.capitalize()
         }
@@ -63,6 +62,8 @@ class Category(val id: String, val result: String = "") : Serializable {
                 R.drawable.ic_cat_security
             "system" ->
                 R.drawable.ic_cat_system
+            "system_apps" ->
+                R.drawable.ic_cat_system
             "communication" ->
                 R.drawable.ic_cat_communication
             "medical" ->
@@ -77,7 +78,7 @@ class Category(val id: String, val result: String = "") : Serializable {
                 R.drawable.ic_cat_productivity
             "house_and_home" ->
                 R.drawable.ic_cat_house_and_home
-            "art_and_design"->
+            "art_and_design" ->
                 R.drawable.ic_art_and_design
             "photography" ->
                 R.drawable.ic_cat_photography

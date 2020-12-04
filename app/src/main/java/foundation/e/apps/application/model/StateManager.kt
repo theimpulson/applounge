@@ -18,19 +18,76 @@
 package foundation.e.apps.application.model
 
 import android.content.Context
+import android.util.Log
+import foundation.e.apps.R
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.SearchAppsBasicData
 import foundation.e.apps.applicationmanager.ApplicationManager
+import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
+import foundation.e.apps.utils.PreferenceStorage
 import java.util.*
 
 
 class StateManager(private val info: ApplicationInfo, private val app: Application, private val appManager: ApplicationManager) {
     private var listeners = Collections.synchronizedList(ArrayList<ApplicationStateListener>())
+
     var state = State.NOT_DOWNLOADED
         private set
 
     fun find(context: Context, basicData: BasicData) {
+        if (basicData.name == Constants.MICROG) {
+            Log.e("MicroGStatus", PreferenceStorage(context).getBoolean(context.getString(R.string.prefs_microg_vrsn_installed), false).toString())
+            val state = if (appManager.isInstalling(app) && !app.isInstalling) {
+                State.DOWNLOADING
+            } else if (appManager.isInstalling(app) && app.isInstalling) {
+                State.INSTALLING
+            } else if (PreferenceStorage(context).getBoolean(context.getString(R.string.prefs_microg_vrsn_installed), false)) {
+                if (info.isLastVersionInstalled(context, basicData.lastVersionNumber ?: "")) {
+                    State.NOT_UPDATED
+                } else {
+                    State.INSTALLED
+                }
+            } else {
+                State.NOT_DOWNLOADED // not installed
+            }
+            changeState(state)
+        } else {
+            val state = if (appManager.isInstalling(app) && !app.isInstalling) {
+                State.DOWNLOADING
+            } else if (appManager.isInstalling(app) && app.isInstalling) {
+                State.INSTALLING
+            } else if (info.isLastVersionInstalled(context,
+                            basicData.getLastVersion() ?: "")) {
+                State.INSTALLED
+            } else if (info.isInstalled(context) && !info.isLastVersionInstalled(context,
+                            basicData.getLastVersion() ?: "")) {
+                State.NOT_UPDATED
+            } else {
+                State.NOT_DOWNLOADED
+            }
+            changeState(state)
+        }
+    }
+
+    fun findSystemApp(context: Context, basicData: BasicData) {
+        val state = if (appManager.isInstalling(app) && !app.isInstalling) {
+            State.DOWNLOADING
+        } else if (appManager.isInstalling(app) && app.isInstalling) {
+            State.INSTALLING
+        } else if (PreferenceStorage(context).getBoolean(context.getString(R.string.prefs_microg_vrsn_installed), false)) {
+            if (info.isLastVersionInstalled(context, basicData.lastVersionNumber ?: "")) {
+                State.NOT_UPDATED
+            } else {
+                State.INSTALLED
+            }
+        } else {
+            State.NOT_DOWNLOADED
+        }
+        changeState(state)
+    }
+
+    fun searchAppsFind(context: Context, basicData: SearchAppsBasicData) {
         val state = if (appManager.isInstalling(app) && !app.isInstalling) {
             State.DOWNLOADING
         } else if (appManager.isInstalling(app) && app.isInstalling) {
@@ -47,31 +104,12 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
         changeState(state)
     }
 
-
-    fun searchAppsFind(context: Context, basicData: SearchAppsBasicData) {
-        val state = if (appManager.isInstalling(app) && !app.isInstalling) {
-            State.DOWNLOADING
-        } else if (appManager.isInstalling(app) && app.isInstalling) {
-            State.INSTALLING
-        } else if(info.isLastVersionInstalled(context,
-                        basicData.getLastVersion() ?: "")){
-            State.INSTALLED
-        } else if (info.isInstalled(context) && !info.isLastVersionInstalled(context,
-                        basicData.getLastVersion() ?: "")) {
-            State.NOT_UPDATED
-        }
-        else {
-            State.NOT_DOWNLOADED
-        }
-        changeState(state)
-    }
     fun pwaFind() {
         val state = if (appManager.isInstalling(app) && !app.isInstalling) {
             State.DOWNLOADING
         } else if (appManager.isInstalling(app) && app.isInstalling) {
             State.INSTALLING
-        }
-        else {
+        } else {
             State.NOT_DOWNLOADED
         }
         changeState(state)

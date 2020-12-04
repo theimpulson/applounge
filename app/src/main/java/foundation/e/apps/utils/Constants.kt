@@ -21,12 +21,22 @@ object Constants {
 
     // Global
     const val BASE_URL = "https://api.cleanapk.org/v2/"
+    const val SYSTEM_APP_DOWNLOAD_URL = "https://gitlab.e.foundation/api/v4/projects/"
+    const val RELEASE_API = "https://gitlab.e.foundation/api/v4/projects/"
+    const val RELEASE_ENDPOINT = "/releases"
     const val DOWNLOAD_URL = "https://apk.cleanapk.org/"
     const val STORAGE_PERMISSION_REQUEST_CODE = 0
     const val CONNECT_TIMEOUT = 30000 // 30 seconds
     const val READ_TIMEOUT = 60000 // 60 seconds
     const val REQUEST_METHOD_GET = "GET"
     const val REQUEST_METHOD_POST = "POST"
+
+    //microG Package
+    const val MICROG_PACKAGE = "com.google.android.gms"
+    const val MICROG_ID = 149
+    const val MICROG = "microG Exposure Notification version"
+    const val MICROG_ICON_URI = "https://gitlab.e.foundation/uploads/-/system/project/avatar/149/ic_core_service_app.png?width=64"
+
 
     // Search
     const val MIN_SEARCH_TERM_LENGTH = 3;
@@ -42,6 +52,7 @@ object Constants {
 
     // Categories
     const val CATEGORY_KEY = "category_key"
+    const val SYSTEM_APPS = "System Apps"
 
     // Home
     const val CURRENTLY_SELECTED_FRAGMENT_KEY = "currently_selected_fragment"

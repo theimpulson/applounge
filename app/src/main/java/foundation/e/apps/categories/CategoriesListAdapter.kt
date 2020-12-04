@@ -32,14 +32,12 @@ import foundation.e.apps.categories.category.CategoryActivity
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.utils.Constants
 
-class CategoriesListAdapter(private var categories: ArrayList<Category>, color: Int?)
+class CategoriesListAdapter(private var categories: ArrayList<Category>)
     : RecyclerView.Adapter<CategoriesListAdapter.CategoryViewHolder>() {
 
-    val color = color;
     init {
         categories = ArrayList(categories.sortedWith(
                 compareBy({ it.getTitle() }, { it.getTitle() })))
-
     }
 
     class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -64,15 +62,12 @@ class CategoriesListAdapter(private var categories: ArrayList<Category>, color: 
 
 
         holder.categoryIcon.setImageDrawable(holder.categoryIcon.resources.getDrawable(categories[position].getIconResource()))
-        //holder.categoryIcon.setColorFilter(Color.parseColor("#0088ED"))
-        if (color != null) {
-            holder.categoryIcon.setColorFilter(color)
-        }
+        holder.categoryIcon.setColorFilter(Color.parseColor("#0088ED"))
         holder.categoryTitle.text = categories[position].getTitle()
         holder.categoryContainer.setOnClickListener {
             val intent = Intent(holder.categoryContainer.context, CategoryActivity::class.java)
             intent.putExtra(Constants.CATEGORY_KEY, categories[position])
-            intent.putExtra("POSITION",position)
+            intent.putExtra("POSITION", position)
             holder.categoryContainer.context.startActivity(intent)
         }
     }

@@ -53,7 +53,6 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
         BasicData.IconLoaderCallback,
         PwasBasicData.IconLoaderCallback{
 
-
     private val icon: ImageView = view.app_icon
     private val title: TextView = view.app_title
     private val installButton: Button = view.app_install
@@ -68,7 +67,6 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
                 applicationViewModel.onApplicationClick(view.context, application!!)
             }
         }
-
         installButton.setOnClickListener {
             if (application?.fullData != null &&
                     application!!.fullData!!.getLastVersion() == null) {
@@ -84,6 +82,7 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
             }
         }
     }
+
     fun createApplicationView(app: Application) {
         if(app.basicData!=null) {
             this.application?.removeListener(this)
@@ -117,14 +116,11 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
             installButton.text = activity.getString(state.installButtonTextId)
             installButton.clearAnimation()
             installButton.clearFocus();
-            var color = application?.getAccentColor(activity);
             when (state) {
-                State.NOT_DOWNLOADED ->{
-                    installButton.setBackgroundResource(R.drawable.app_install_border_simple)
-                    if (color != null) {
 
-                        installButton.setTextColor(color)
-                    };
+                State.NOT_DOWNLOADED ->{
+                    installButton.setTextColor(Color.parseColor("#0088ED"))
+                    installButton.setBackgroundResource(R.drawable.app_install_border_simple)
                     installButton.isEnabled = true
                 }
 
@@ -132,10 +128,7 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
                     installButton.isEnabled =
                             Common.appHasLaunchActivity(activity, application!!.packageName)
                     installButton.setTextColor(Color.parseColor("#FAFAFA"))
-                    if (color != null) {
-                        //installButton!!.setBackgroundResource(R.drawable.app_install_border)
-                        installButton.setBackgroundColor(color)
-                    };
+                    installButton!!.setBackgroundResource(R.drawable.app_install_border)
                 }
                 State.INSTALLING -> {
                     installButton.isEnabled = false
@@ -144,11 +137,7 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
                 }
                 State.NOT_UPDATED -> {
                     installButton.setTextColor(Color.parseColor("#FAFAFA"))
-                   // installButton!!.setBackgroundResource(R.drawable.app_install_border)
-                    if (color != null) {
-                        //installButton!!.setBackgroundResource(R.drawable.app_install_border)
-                        installButton.setBackgroundColor(color)
-                    };
+                    installButton!!.setBackgroundResource(R.drawable.app_install_border)
                     installButton.isEnabled = true
                 }
                 else -> {

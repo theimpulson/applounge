@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Environment
+import android.util.Log
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Common
@@ -31,21 +32,40 @@ class ApplicationInfo(private val packageName: String) {
 
     fun isLastVersionInstalled(context: Context, lastVersionNumber: String): Boolean {
         val packageInfo = getPackageInfo(context) ?: return false
-        if (lastVersionNumber.isBlank() ||
-                !lastVersionNumber.contains("(") ||
-                !lastVersionNumber.contains(")")) {
-            return true
-        }
-        if (!Common.isSystemApp(context.packageManager, packageName)) {
-            try {
-                val pattern = Pattern.compile("[(]\\d+[)]")
-                val matcher = pattern.matcher(lastVersionNumber)
-                matcher.find()
-                val updateVersionCode = matcher.group()
-                        .replace("(", "")
-                        .replace(")", "")
-                return (updateVersionCode.toInt() <= packageInfo.versionCode)
-            } catch (exception: Exception) {
+
+        if (Common.isSystemApp(context.packageManager, packageName)) {
+
+            if (lastVersionNumber.isBlank())
+                return true
+            else {
+                val currentVersion = packageInfo.versionName.replace(".", "").replace("-", "")
+                val currentVersionFiltered = currentVersion.filter { it.isDigit() }
+                // val regex = "-v(.*)-".toRegex()
+                val tagVersion = lastVersionNumber.filter { it.isDigit() }
+                try {
+                    return tagVersion.toBigInteger() > currentVersionFiltered.toBigInteger()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        } else {
+
+            if (lastVersionNumber.isBlank() ||
+                    !lastVersionNumber.contains("(") ||
+                    !lastVersionNumber.contains(")")) {
+                return true
+            }
+            if (!Common.isSystemApp(context.packageManager, packageName)) {
+                try {
+                    val pattern = Pattern.compile("[(]\\d+[)]")
+                    val matcher = pattern.matcher(lastVersionNumber)
+                    matcher.find()
+                    val updateVersionCode = matcher.group()
+                            .replace("(", "")
+                            .replace(")", "")
+                    return (updateVersionCode.toInt() <= packageInfo.versionCode)
+                } catch (exception: Exception) {
+                }
             }
         }
         return true
@@ -91,23 +111,21 @@ class ApplicationInfo(private val packageName: String) {
         Installer(data.packageName, getApkFile(context, data), callback).install(context)
     }
 
-    fun isXapk( fullData: FullData, basicData: BasicData?): Boolean {
+    fun isXapk(fullData: FullData, basicData: BasicData?): Boolean {
         return fullData.getLastVersion()!!.is_xapk && fullData.getLastVersion()?.downloadLink!!.endsWith(".xapk")
     }
 
     fun getApkOrXapkFileName(fullData: FullData, basicData: BasicData): String? {
-        if(isXapk(fullData,basicData) )  {
+        if (isXapk(fullData, basicData)) {
             return getxApkFilename(basicData)
-        }
-        else
+        } else
             return getApkFilename(basicData)
     }
 
-    fun getApkOrXapkFile(context: Context,fullData: FullData, basicData: BasicData): File {
-        if(isXapk(fullData,basicData)){
-            return getxApkFile(context,basicData)
-        }
-        else
-            return getApkFile(context,basicData)
+    fun getApkOrXapkFile(context: Context, fullData: FullData, basicData: BasicData): File {
+        if (isXapk(fullData, basicData)) {
+            return getxApkFile(context, basicData)
+        } else
+            return getApkFile(context, basicData)
     }
 }
