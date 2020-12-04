@@ -77,10 +77,6 @@
         android:summary="@string/preference_apps_request_app_summary"
         android:title="@string/preference_apps_request_app_title" />
 
-    <Preference
-        android:layout="@layout/preference_divider"
-        android:selectable="false" />
-
     <PreferenceCategory android:title="@string/Show_applications">
         <Preference
             android:layout="@layout/preference_space"
@@ -99,5 +95,3 @@
     </PreferenceCategory>
 
 </PreferenceScreen>
-
-
