@@ -20,6 +20,7 @@ package foundation.e.apps.application.model
 import android.content.Context
 import android.os.AsyncTask
 import foundation.e.apps.application.model.data.FullData
+import foundation.e.apps.utils.Constants
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.openpgp.PGPCompressedData
 import org.bouncycastle.openpgp.PGPPublicKeyRingCollection
@@ -43,19 +44,21 @@ class IntegrityVerificationTask(
     private var verificationSuccessful: Boolean = false
 
     override fun doInBackground(vararg context: Context): Context {
-//        var file= (applicationInfo.getApkFile(context[0],
-//                fullData.basicData).absolutePath).length
-        verificationSuccessful = if (!fullData.getLastVersion()!!.apkSHA.isNullOrEmpty()) {
-            getApkFileSha1(applicationInfo.getApkOrXapkFile(context[0],fullData,fullData.basicData)) ==
-                    fullData.getLastVersion()!!.apkSHA
+        if (fullData.packageName == Constants.MICROG_PACKAGE) {
+            verificationSuccessful = true
         } else {
-            Security.addProvider(BouncyCastleProvider())
-            verifyAPKSignature(
-                    BufferedInputStream(FileInputStream(
-                            applicationInfo.getApkFile(context[0],
-                                    fullData.basicData).absolutePath)),
-                    fullData.getLastVersion()!!.signature.byteInputStream(Charsets.UTF_8),
-                    context[0].assets.open("f-droid.org-signing-key.gpg"))
+            verificationSuccessful = if (!fullData.getLastVersion()!!.apkSHA.isNullOrEmpty()) {
+                getApkFileSha1(applicationInfo.getApkOrXapkFile(context[0], fullData, fullData.basicData)) ==
+                        fullData.getLastVersion()!!.apkSHA
+            } else {
+                Security.addProvider(BouncyCastleProvider())
+                verifyAPKSignature(
+                        BufferedInputStream(FileInputStream(
+                                applicationInfo.getApkFile(context[0],
+                                        fullData.basicData).absolutePath)),
+                        fullData.getLastVersion()!!.signature.byteInputStream(Charsets.UTF_8),
+                        context[0].assets.open("f-droid.org-signing-key.gpg"))
+            }
         }
         return context[0]
     }
@@ -64,7 +67,7 @@ class IntegrityVerificationTask(
         integrityVerificationCallback.onIntegrityVerified(context, verificationSuccessful)
     }
 
-    private fun getApkFileSha1(file: File): String?{
+    private fun getApkFileSha1(file: File): String? {
         val messageDigest = MessageDigest.getInstance("SHA-1")
         val fileInputStream = FileInputStream(file)
         var length = 0
@@ -77,6 +80,7 @@ class IntegrityVerificationTask(
         }
         return byteArrayToHex(messageDigest.digest())
     }
+
     private fun byteArrayToHex(a: ByteArray): String? {
         val sb = StringBuilder(a.size * 2)
         for (b in a) sb.append(String.format("%02x", b))
@@ -88,43 +92,43 @@ class IntegrityVerificationTask(
             apkSignatureInputStream: InputStream,
             publicKeyInputStream: InputStream): Boolean {
 
-            var jcaPGPObjectFactory =
-                    JcaPGPObjectFactory(PGPUtil.getDecoderStream(apkSignatureInputStream))
-            val pgpSignatureList: PGPSignatureList
+        var jcaPGPObjectFactory =
+                JcaPGPObjectFactory(PGPUtil.getDecoderStream(apkSignatureInputStream))
+        val pgpSignatureList: PGPSignatureList
 
-            val pgpObject = jcaPGPObjectFactory.nextObject()
-            if (pgpObject is PGPCompressedData) {
-                jcaPGPObjectFactory = JcaPGPObjectFactory(pgpObject.dataStream)
-                pgpSignatureList = jcaPGPObjectFactory.nextObject() as PGPSignatureList
-            } else {
-                pgpSignatureList = pgpObject as PGPSignatureList
-            }
-
-            val pgpPublicKeyRingCollection =
-                    PGPPublicKeyRingCollection(
-                            PGPUtil.getDecoderStream(publicKeyInputStream),
-                            JcaKeyFingerprintCalculator())
-
-            val signature = pgpSignatureList.get(0)
-            val key = pgpPublicKeyRingCollection.getPublicKey(signature.keyID)
-
-            signature.init(BcPGPContentVerifierBuilderProvider(), key)
-
-            val buff = ByteArray(1024)
-            var read = apkInputStream.read(buff)
-            while (read != -1) {
-                signature.update(buff, 0, read)
-                read = apkInputStream.read(buff)
-            }
-
-            apkInputStream.close()
-            apkSignatureInputStream.close()
-            publicKeyInputStream.close()
-
-            return signature.verify()
-
+        val pgpObject = jcaPGPObjectFactory.nextObject()
+        if (pgpObject is PGPCompressedData) {
+            jcaPGPObjectFactory = JcaPGPObjectFactory(pgpObject.dataStream)
+            pgpSignatureList = jcaPGPObjectFactory.nextObject() as PGPSignatureList
+        } else {
+            pgpSignatureList = pgpObject as PGPSignatureList
         }
+
+        val pgpPublicKeyRingCollection =
+                PGPPublicKeyRingCollection(
+                        PGPUtil.getDecoderStream(publicKeyInputStream),
+                        JcaKeyFingerprintCalculator())
+
+        val signature = pgpSignatureList.get(0)
+        val key = pgpPublicKeyRingCollection.getPublicKey(signature.keyID)
+
+        signature.init(BcPGPContentVerifierBuilderProvider(), key)
+
+        val buff = ByteArray(1024)
+        var read = apkInputStream.read(buff)
+        while (read != -1) {
+            signature.update(buff, 0, read)
+            read = apkInputStream.read(buff)
+        }
+
+        apkInputStream.close()
+        apkSignatureInputStream.close()
+        publicKeyInputStream.close()
+
+        return signature.verify()
+
     }
+}
 
 interface IntegrityVerificationCallback {
     fun onIntegrityVerified(context: Context, verificationSuccessful: Boolean)

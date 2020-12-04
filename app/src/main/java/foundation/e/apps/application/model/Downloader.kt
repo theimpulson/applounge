@@ -25,13 +25,18 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Environment
+import android.util.Log
 import foundation.e.apps.R
+import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Constants
 
-class Downloader(private val applicationInfo: ApplicationInfo, private val fullData: FullData,
+class Downloader(private val applicationInfo: ApplicationInfo,
+                 private val fullData: FullData,
                  private val downloaderInterface: DownloaderInterface) :
         IntegrityVerificationCallback {
+
+
     private lateinit var downloadManager: DownloadManager
     private lateinit var request: DownloadManager.Request
     private var downloadId: Long = 0
@@ -55,7 +60,7 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
     }
 
     fun download(context: Context) {
-        if (fullData.getLastVersion() != null) {
+        if (fullData?.getLastVersion() != null) {
             downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             registerReceivers(context)
             initialiseDownloadManagerRequest(context)
@@ -66,6 +71,16 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
         } else {
             downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
         }
+    }
+
+    fun downloadSystemApp(context: Context) {
+        downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        registerReceivers(context)
+        initialiseDownloadManagerRequestForSystemApps(context)
+        downloadId = downloadManager.enqueue(request)
+        Thread {
+            handleDownloadUpdates()
+        }.start()
     }
 
     private fun registerReceivers(context: Context) {
@@ -81,14 +96,29 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
 
         request = DownloadManager.Request(
                 Uri.parse(
-                        Constants.DOWNLOAD_URL + fullData.getLastVersion()!!.downloadLink))
+                        Constants.DOWNLOAD_URL + fullData?.getLastVersion()!!.downloadLink))
                 .apply {
                     setTitle(fullData.basicData.name)
                     setDescription(context.getString(R.string.download_notification_description))
                     setDestinationInExternalFilesDir(
                             context,
                             Environment.DIRECTORY_DOWNLOADS,
-                            applicationInfo.getApkOrXapkFileName(fullData,fullData.basicData))
+                            applicationInfo.getApkOrXapkFileName(fullData, fullData.basicData))
+                }
+    }
+
+    private fun initialiseDownloadManagerRequestForSystemApps(context: Context) {
+
+        request = DownloadManager.Request(
+                Uri.parse(
+                        fullData.downloadUrl))
+                .apply {
+                    setTitle(fullData.name)
+                    setDescription(context.getString(R.string.download_notification_description))
+                    setDestinationInExternalFilesDir(
+                            context,
+                            Environment.DIRECTORY_DOWNLOADS,
+                            fullData.basicData.let { applicationInfo.getApkFilename(it) })
                 }
     }
 
@@ -128,11 +158,13 @@ class Downloader(private val applicationInfo: ApplicationInfo, private val fullD
             unregisterReceivers(context)
             val status = getDownloadStatus()
             if (status != null && status == DownloadManager.STATUS_SUCCESSFUL) {
-                IntegrityVerificationTask(
-                        applicationInfo,
-                        fullData,
-                        this@Downloader)
-                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
+                fullData?.let {
+                    IntegrityVerificationTask(
+                            applicationInfo,
+                            it,
+                            this@Downloader)
+                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
+                }
             } else {
                 downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)
             }

@@ -19,6 +19,7 @@ package foundation.e.apps.application
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.view.Gravity
@@ -39,23 +40,25 @@ import foundation.e.apps.application.model.data.PwasBasicData
 import foundation.e.apps.application.viewmodel.ApplicationViewModel
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Common.toMiB
+import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.Execute
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import kotlinx.android.synthetic.main.install_button_layout.view.*
+import java.lang.Exception
 
 
-class ApplicationViewHolder(private val activity: Activity, private val view: View, accentColorOS: Int) :
+class ApplicationViewHolder(private val activity: Activity, private val view: View) :
         RecyclerView.ViewHolder(view),
         ApplicationStateListener,
         Downloader.DownloadProgressCallback,
         BasicData.IconLoaderCallback,
-        PwasBasicData.IconLoaderCallback {
+        PwasBasicData.IconLoaderCallback{
 
 
     private val icon: ImageView = view.app_icon
     private val title: TextView = view.app_title
-    private val pwa_icon: TextView = view.pwa_sympol
+    private val pwa_icon :TextView =view.pwa_sympol
     private val author: TextView = view.app_author
     private val ratingBar: RatingBar = view.app_rating_bar
     private val rating: TextView = view.app_rating
@@ -64,19 +67,14 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
     private var application: Application? = null
     private val applicationViewModel = ApplicationViewModel()
     private var downloader: Downloader? = null
-var accentColorOS=accentColorOS;
+
     init {
-        pwa_icon.visibility = View.GONE
+        pwa_icon.visibility=View.GONE
         view.setOnClickListener {
             if (application != null) {
-                applicationViewModel.onApplicationClick(view.context, application!!)
+                if (application!!.packageName != Constants.MICROG_PACKAGE)
+                    applicationViewModel.onApplicationClick(view.context, application!!)
             }
-        }
-
-
-        installButton.setTextColor(Color.parseColor("#ffffff"))
-        if(0!=this.accentColorOS){
-            installButton.setBackgroundColor(this.accentColorOS)
         }
         installButton?.setOnClickListener {
             if (application?.fullData != null &&
@@ -84,12 +82,13 @@ var accentColorOS=accentColorOS;
                 Snackbar.make(view, activity.getString(
                         Error.APK_UNAVAILABLE.description),
                         Snackbar.LENGTH_LONG).show()
-            } else if (application?.pwabasicdata != null) {
+            } else if(application?.pwabasicdata!=null){
                 application?.pwaInstall(activity)
 
-            } else if (application?.searchAppsBasicData != null && application?.searchAppsBasicData!!.is_pwa) {
+            }else if(application?.searchAppsBasicData!=null &&application?.searchAppsBasicData!!.is_pwa){
                 application?.pwaInstall(activity)
-            } else {
+            }
+            else {
                 application?.buttonClicked(activity, activity)
             }
         }
@@ -97,46 +96,46 @@ var accentColorOS=accentColorOS;
 
     fun createApplicationView(app: Application) {
 
-        pwa_icon.visibility = View.GONE
-        this.application = app
+            pwa_icon.visibility = View.GONE
+            this.application = app
 
-        if (app.basicData != null) {
-            this.application?.removeListener(this)
-            this.application = app
-            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
-            application!!.loadIcon(this)
-            application!!.addListener(this)
-            title.text = application!!.basicData!!.name
-            author.text = application!!.basicData!!.author
-            ratingBar.rating = application!!.basicData!!.ratings!!.rating!!
-            if (application!!.basicData!!.ratings!!.rating != -1f) {
-                rating.text = application!!.basicData!!.ratings!!.rating.toString()
-            } else {
-                rating.text = activity.getString(R.string.not_available)
-            }
-            if (application!!.basicData!!.privacyRating != null && application!!.basicData!!.privacyRating != -1f) {
-                privacyScore.text = application!!.basicData!!.privacyRating.toString()
-            } else {
-                privacyScore.text = activity.getString(R.string.not_available)
-            }
-        } else {
-            this.application?.removeListener(this)
-            this.application = app
-            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
-            application!!.addListener(this)
-            if (application!!.searchAppsBasicData != null) {
-                if (application!!.searchAppsBasicData!!.is_pwa) {
-                    pwa_icon.visibility = View.VISIBLE
+            if (app.basicData != null) {
+                this.application?.removeListener(this)
+                this.application = app
+                icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+                application!!.loadIcon(this)
+                application!!.addListener(this)
+                title.text = application!!.basicData!!.name
+                author.text = application!!.basicData!!.author
+                ratingBar.rating = application!!.basicData!!.ratings!!.rating!!
+                if (application!!.basicData!!.ratings!!.rating != -1f) {
+                    rating.text = application!!.basicData!!.ratings!!.rating.toString()
+                } else {
+                    rating.text = activity.getString(R.string.not_available)
                 }
-                application!!.SearchAppsloadIcon(this)
-                title.text = application!!.searchAppsBasicData!!.name
-                author.text = application!!.searchAppsBasicData!!.author
-            } else {
-                application!!.PwaloadIcon(this)
-                title.text = application!!.pwabasicdata!!.name
+                if (application!!.basicData!!.privacyRating != null && application!!.basicData!!.privacyRating != -1f) {
+                    privacyScore.text = application!!.basicData!!.privacyRating.toString()
+                } else {
+                    privacyScore.text = activity.getString(R.string.not_available)
+                }
+            }else{
+                this.application?.removeListener(this)
+                this.application = app
+                icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+                application!!.addListener(this)
+                if (application!!.searchAppsBasicData != null) {
+                    if (application!!.searchAppsBasicData!!.is_pwa) {
+                        pwa_icon.visibility = View.VISIBLE
+                    }
+                    application!!.SearchAppsloadIcon(this)
+                    title.text = application!!.searchAppsBasicData!!.name
+                    author.text = application!!.searchAppsBasicData!!.author
+                } else {
+                    application!!.PwaloadIcon(this)
+                    title.text = application!!.pwabasicdata!!.name
 
+                }
             }
-        }
         stateChanged(application!!.state)
     }
 
@@ -148,47 +147,30 @@ var accentColorOS=accentColorOS;
 
     override fun stateChanged(state: State) {
         Execute({}, {
-
-           // installButton.setBackgroundResource(R.drawable.app_install_border_simple)
+            installButton.setBackgroundResource(R.drawable.app_install_border_simple)
             installButton?.text = activity.getString(state.installButtonTextId)
+
             when (state) {
 
-                State.NOT_DOWNLOADED -> {
-                    if(0!=this.accentColorOS){
-                        installButton.setTextColor(this.accentColorOS)
-                    }
-                    else{
-
-                        installButton.setTextColor(Color.parseColor("#0088ED"))
-                    }
+                State.NOT_DOWNLOADED ->{
+                    installButton.setTextColor(Color.parseColor("#0088ED"))
                     installButton.setBackgroundResource(R.drawable.app_install_border_simple)
                     installButton.isEnabled = true
                 }
 
                 State.INSTALLED -> {
+
                     installButton?.isEnabled =
                             Common.appHasLaunchActivity(activity, application!!.packageName)
-                    if(0!=this.accentColorOS){
-                        installButton!!.setBackgroundColor(this.accentColorOS)
-                    }
-                    else{
-                        installButton!!.setBackgroundResource(R.drawable.app_install_border)
-                    }
                     installButton.setTextColor(Color.parseColor("#FAFAFA"))
-
+                    installButton!!.setBackgroundResource(R.drawable.app_install_border)
                 }
                 State.INSTALLING -> {
                     installButton?.isEnabled = false
                 }
                 State.NOT_UPDATED -> {
                     installButton.setTextColor(Color.parseColor("#FAFAFA"))
-                    //installButton!!.setBackgroundResource(R.drawable.app_install_border)
-                    if(0!=this.accentColorOS){
-                        installButton!!.setBackgroundColor(this.accentColorOS)
-                    }
-                    else{
-                        installButton!!.setBackgroundResource(R.drawable.app_install_border)
-                    }
+                    installButton!!.setBackgroundResource(R.drawable.app_install_border)
                     installButton?.isEnabled = true
                 }
                 else -> {
@@ -196,7 +178,6 @@ var accentColorOS=accentColorOS;
                     installButton?.isEnabled = true
                 }
             }
-
         })
     }
 
@@ -223,5 +204,4 @@ var accentColorOS=accentColorOS;
         downloader?.removeListener(this)
         downloader = null
     }
-
 }

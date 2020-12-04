@@ -28,18 +28,27 @@ import androidx.preference.PreferenceFragmentCompat
 import foundation.e.apps.MainActivity
 import foundation.e.apps.R
 import foundation.e.apps.updates.UpdatesManager
+import foundation.e.apps.utils.PreferenceStorage
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
-     private var oldCheckedPreference: RadioButtonPreference? = null
+    private var oldCheckedPreference: RadioButtonPreference? = null
 
 
     @SuppressLint("RestrictedApi")
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         // Create preferences
         setPreferencesFromResource(R.xml.preferences, rootKey)
+
+
+        val microGInstallState = preferenceManager.findPreference<Preference>(getString(R.string.prefs_microg_vrsn_installed))
+        microGInstallState?.summary = if (context?.let { PreferenceStorage(it).getBoolean(getString(R.string.prefs_microg_vrsn_installed), false) }!!) {
+            getString(R.string.microg_installed)
+        } else {
+            getString(R.string.microg_not_installed)
+        }
 
         // Handle update check interval changes
         val updateCheckInterval =
@@ -100,13 +109,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private var working_dialog: ProgressDialog? = null
 
-    fun backToMainActivity(){
+    fun backToMainActivity() {
         showWorkingDialog()
         val worker = Executors.newSingleThreadScheduledExecutor()
-        val task =  Runnable {
+        val task = Runnable {
             run {
                 removeWorkingDialog()
-                val intent= Intent(activity,MainActivity::class.java)
+                val intent = Intent(activity, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                 Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)

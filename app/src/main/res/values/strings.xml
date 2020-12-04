@@ -177,5 +177,10 @@
     <string name="offline_heading">You are offline.</string>
     <string name="offline_description">Tap here to retry!</string>
     <string name="pwa_icon">PWA</string>
+    <string name="system_apps">System Apps</string>
+    <string name="microg_covid_vrsn_installed">microG Exposure Notification version</string>
+    <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
+    <string name="microg_not_installed">Not Installed</string>
+    <string name="microg_installed">Installed</string>
 
 </resources>

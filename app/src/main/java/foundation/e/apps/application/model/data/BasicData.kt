@@ -55,12 +55,13 @@ constructor(@param:JsonProperty("_id") val id: String,
             @param:JsonProperty("armeabi-v7a_latest_version_code") var armeabi_v7a_lastVersionCode: Long = -1,
             @param:JsonProperty("architectures") val apkArchitecture: ArrayList<String>?,
             @param:JsonProperty("author") val author: String,
-            @param:JsonProperty("icon_image_path") private val iconUri: String,
+            @param:JsonProperty("icon_image_path") val iconUri: String,
             @param:JsonProperty("other_images_path") val imagesUri: Array<String>,
             @param:JsonProperty("exodus_score") val privacyRating: Float?,
             @param:JsonProperty("ratings") val ratings: Ratings,
             @param:JsonProperty("category") val category: String,
-            @param:JsonProperty("is_pwa") val is_pwa: Boolean){
+            @param:JsonProperty("is_pwa") val is_pwa: Boolean,
+            var downloadUrl: String? = null) {
 
 
     private var icon: Bitmap? = null
@@ -102,11 +103,32 @@ constructor(@param:JsonProperty("_id") val id: String,
         }
     }
 
+    fun loadSystemAppIconAsync(application: Application, iconLoaderCallback: IconLoaderCallback) {
+        if (icon == null) {
+            var error: Error? = null
+            Execute({
+                error = loadIconSynced()
+            }, {
+                if (error == null) {
+                    icon?.let {
+                        iconLoaderCallback.onIconLoaded(application, it)
+                    }
+                }
+            })
+        } else {
+            iconLoaderCallback.onIconLoaded(application, icon!!)
+        }
+    }
+
     @Synchronized
     private fun loadIconSynced(): Error? {
         if (icon == null) {
             try {
-                val url = URL(BASE_URL + "media/" + iconUri)
+                var url = URL(BASE_URL + "media/" + iconUri)
+
+                if (iconUri.contains("http"))
+                    url = URL(iconUri)
+
                 val urlConnection = url.openConnection() as HttpsURLConnection
                 urlConnection.requestMethod = Constants.REQUEST_METHOD_GET
                 urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT
@@ -138,11 +160,11 @@ constructor(@param:JsonProperty("_id") val id: String,
     }
 
     fun getLastVersion(): String? {
-        if(apkArchitecture!=null) {
+        if (apkArchitecture != null) {
 
             //An ordered list of ABIs supported by this device. The most preferred ABI is the first element in the list.
             val arch = android.os.Build.SUPPORTED_ABIS.toList()
-            when(arch[0]) {
+            when (arch[0]) {
                 "arm64-v8a" -> {
                     return largestVersion(Pair(arm64_v8a_lastVersionNumber, arm64_v8a_lastVersionCode),
                             Pair(armeabi_v7a_lastVersionNumber, armeabi_v7a_lastVersionCode),
@@ -190,8 +212,6 @@ constructor(@param:JsonProperty("_id") val id: String,
         }
         return largestVersion.first
     }
-
-
 
 
 }

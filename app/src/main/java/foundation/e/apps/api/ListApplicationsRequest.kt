@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.data.BasicData
+import foundation.e.apps.application.model.release.ReleaseData
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.ApplicationParser
 import foundation.e.apps.utils.Common
@@ -58,7 +59,5 @@ class ListApplicationsRequest(private val category: String, private val page: In
             return ApplicationParser.parseToApps(applicationManager, context, apps)
         }
     }
-
-
 
 }

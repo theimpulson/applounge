@@ -26,7 +26,10 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import foundation.e.apps.R
 import foundation.e.apps.XAPK.FsUtils.deleteFileOrDir
+import foundation.e.apps.utils.Constants
+import foundation.e.apps.utils.PreferenceStorage
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -141,9 +144,14 @@ class Installer(private val packageName: String,
                 Log.i(TAG, "Broadcast received")
                 var path = apk.absolutePath.split("Download")
                 //delete all APK file after install
-                deleteFileOrDir(path[0]+"Download");
+                deleteFileOrDir(path[0] + "Download");
 
                 callback.onInstallationComplete(p0)
+
+                if (packageName == Constants.MICROG_PACKAGE) {
+                    PreferenceStorage(p0).save(p0.getString(R.string.prefs_microg_vrsn_installed), true)
+                }
+
             }
         }
     }

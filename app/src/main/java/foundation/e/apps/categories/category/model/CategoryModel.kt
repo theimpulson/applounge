@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import foundation.e.apps.MainActivity
 import foundation.e.apps.api.ListApplicationsRequest
 import foundation.e.apps.api.ListPwasRequest
+import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
@@ -46,52 +47,91 @@ class CategoryModel : CategoryModelInterface {
     override fun loadApplications(context: Context) {
         var apps: ArrayList<Application>? = null
         if (Common.isNetworkAvailable(context)) {
-            Execute({
-                apps = loadApplicationsSynced(context)
-            }, {
-                if (error == null && apps != null) {
-                    val result = ArrayList<Application>()
-                    categoryApplicationsList.value?.let {
-                        result.addAll(it)
+            if (category == "system_apps") {
+                Execute({
+                    apps = loadApplicationsSynced(context)
+                }, {
+                    if (error == null && apps != null) {
+                        val result = ArrayList<Application>()
+                        result.addAll(apps!!)
+                        if (apps!!.size != 0) {
+                            categoryApplicationsList.value = result
+                        }
+                    } else {
+                        screenError.value = error
                     }
-                    result.addAll(apps!!)
-                    if (apps!!.size != 0) {
-                        categoryApplicationsList.value = result
+                })
+
+            } else {
+
+                Execute({
+                    apps = loadApplicationsSynced(context)
+                }, {
+                    if (error == null && apps != null) {
+                        val result = ArrayList<Application>()
+                        categoryApplicationsList.value?.let {
+                            result.addAll(it)
+                        }
+                        result.addAll(apps!!)
+                        if (apps!!.size != 0) {
+                            categoryApplicationsList.value = result
+                        }
+                    } else {
+                        screenError.value = error
                     }
-                } else {
-                    screenError.value = error
-                }
-            })
-            page++
+                })
+                page++
+            }
         } else {
             screenError.value = Error.NO_INTERNET
         }
     }
 
-      fun loadApplicationsSynced(context: Context): ArrayList<Application>? {
+    fun loadApplicationsSynced(context: Context): ArrayList<Application>? {
         var listApplications: ListApplicationsRequest.ListApplicationsResult? = null
+        var gitlabData: GitlabDataRequest.GitlabDataResult? = null
         var listPwas: ListPwasRequest.ListPwasResult? = null
-         var appType = MainActivity.mActivity.showApplicationTypePreference()
+        val appType = MainActivity.mActivity.showApplicationTypePreference()
+        if (category == "system_apps") {
+            GitlabDataRequest()
+                    .requestGmsCoreRelease { applicationError, listGitlabData ->
 
-         if(appType=="pwa"){
-            ListPwasRequest(category,page,Constants.RESULTS_PER_PAGE)
-                .request { applicationError, listPwasResult ->
-                    when (applicationError) {
-                        null -> {
-                            listPwas = listPwasResult!!
-                        }
-                        else -> {
-                            error = applicationError
+                        when (applicationError) {
+                            null -> {
+                                gitlabData = listGitlabData!!
+                            }
+                            else -> {
+                                error = applicationError
+                            }
                         }
                     }
-                }
+            return if (gitlabData != null) {
+                gitlabData!!.getApplications(applicationManager, context)
+            } else {
+                null
+            }
+
+        }
+
+        if (appType == "pwa") {
+            ListPwasRequest(category, page, Constants.RESULTS_PER_PAGE)
+                    .request { applicationError, listPwasResult ->
+                        when (applicationError) {
+                            null -> {
+                                listPwas = listPwasResult!!
+                            }
+                            else -> {
+                                error = applicationError
+                            }
+                        }
+                    }
             return if (listPwas != null) {
                 listPwas!!.getApplications(applicationManager, context)
             } else {
                 null
             }
         }
-        ListApplicationsRequest(category,page,Constants.RESULTS_PER_PAGE)
+        ListApplicationsRequest(category, page, Constants.RESULTS_PER_PAGE)
                 .request { applicationError, listApplicationsResult ->
                     when (applicationError) {
                         null -> {
@@ -107,6 +147,7 @@ class CategoryModel : CategoryModelInterface {
         } else {
             null
         }
+
     }
 
 

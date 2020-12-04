@@ -19,12 +19,10 @@ package foundation.e.apps.home
 
 //import java.awt.font.ShapeGraphicAttribute.STROKE
 //import java.awt.AlphaComposite.SRC_IN
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -40,8 +38,6 @@ import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.common.SmallApplicationListAdapter
 import foundation.e.apps.home.viewmodel.HomeViewModel
-import kotlinx.android.synthetic.main.error_layout.*
-import kotlinx.android.synthetic.main.install_button_layout.*
 
 
 class HomeFragment : Fragment() {
@@ -51,11 +47,9 @@ class HomeFragment : Fragment() {
     private lateinit var categoryList: LinearLayout
     private lateinit var progressBar: ProgressBar
     private var applicationManager: ApplicationManager? = null
-    var accentColorOS=0;
 
-    fun initialise(applicationManager: ApplicationManager, accentColorOS: Int) {
+    fun initialise(applicationManager: ApplicationManager) {
         this.applicationManager = applicationManager
-        this.accentColorOS=accentColorOS;
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -65,10 +59,6 @@ class HomeFragment : Fragment() {
         }
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-       /* if(accentColorOS!=0){
-
-            view.findViewById<TextView>(R.id.tv_featured).setTextColor(accentColorOS);
-        }*/
 
         homeViewModel = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
         imageCarousel = view.findViewById(R.id.image_carousel)
@@ -77,10 +67,6 @@ class HomeFragment : Fragment() {
         progressBar = view.findViewById(R.id.progress_bar)
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
-        //set accent color to Error button (Retry )
-
-        view.findViewById<TextView>(R.id.error_resolve).setTextColor(Color.parseColor("#ffffff"))
-        view.findViewById<TextView>(R.id.error_resolve).setBackgroundColor(accentColorOS)
 
         // Initialise UI elements
         homeViewModel.initialise(applicationManager!!)
