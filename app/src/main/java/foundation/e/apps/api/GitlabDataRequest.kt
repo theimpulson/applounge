@@ -18,7 +18,6 @@
 package foundation.e.apps.api
 
 import android.content.Context
-import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import foundation.e.apps.application.model.Application
@@ -41,8 +40,8 @@ class GitlabDataRequest {
         val releaseList: List<ReleaseData> = Gson().fromJson(element.toString(),
                 Array<ReleaseData>::class.java).toList()
         urlConnection.disconnect()
-        var buildTag = Build.TAGS.split("-").toTypedArray();
-        val osReleaseType = buildTag[0];
+
+        val osReleaseType = OsInfo().getOSReleaseType()
         var releaseUrl = ""
 
         releaseList[0].assets.links.forEach {
@@ -50,7 +49,6 @@ class GitlabDataRequest {
                 releaseUrl = it.url
             }
         }
-
 
         callback.invoke(null, GitlabDataResult(SystemAppDataSource.createDataSource(Constants.MICROG_ID.toString(),
                 releaseList[0].tag_name, Constants.MICROG_ICON_URI, releaseUrl)))
