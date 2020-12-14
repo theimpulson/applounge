@@ -126,7 +126,7 @@ class PwaInstaller : AppCompatActivity() {
                     val installer = Intent()
                     installer.putExtra("android.intent.extra.shortcut.INTENT", intent)
                     installer.putExtra("android.intent.extra.shortcut.NAME", name)
-                    installer.putExtra(Intent.EXTRA_SHORTCUT_ICON, scaledBitmap)
+                    installer.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon)
                     installer.putExtra("duplicate", false)
                     installer.action = "com.android.launcher.action.INSTALL_SHORTCUT"
                     mActivity.sendBroadcast(installer)
