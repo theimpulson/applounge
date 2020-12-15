@@ -95,4 +95,6 @@
     <string name="app_energy_score">Spotreba energie</string>
     <string name="app_rating">Hodnotenie</string>
     <string name="app_privacy_score">Súkromie</string>
+    <string name="MANUALLY_INSTALL_updates_notification_text">Aktualizácie aplikácií sa nenainštalujú automaticky</string>
+    <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Aktualizácie aplikácií sa nainštalujú automaticky</string>
 </resources>
