@@ -63,10 +63,8 @@
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Aggiornamenti</string>
     <string name="updates_notification_unmetered_network_warning">In attesa di collegamento WiFi</string>
-
     <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Gli aggiornamenti delle app verranno installati automaticamente</string>
     <string name="MANUALLY_INSTALL_updates_notification_text">Gli aggiornamenti delle app non verranno installati automaticamente</string>
-
     <plurals name="updates_notification_title">
         <item quantity="one">E\' disponibile un aggiornamento app</item>
         <item quantity="other">Sono disponibili aggiornamenti app</item>
@@ -123,4 +121,9 @@
     <string name="some_text"><font color="#FAFAFA">Un</font> testo <font color="#FAFAFA">a caso</font></string>
     <string name="pick_up_apk_file">pick_up_apk_file</string>
     <string name="exit">Tocca ancora INDIETRO per uscire</string>
+    <string name="microg_installed">Installato</string>
+    <string name="microg_not_installed">Non installato</string>
+    <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
+    <string name="microg_covid_vrsn_installed">Versione di microG Exposure Notification</string>
+    <string name="system_apps">App di Sistema</string>
 </resources>
