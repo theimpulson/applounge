@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Apps</string>
+    <string name="app_name">App</string>
     <string name="app_privacy_score">Privacy</string>
     <string name="app_ratings_title">Voti</string>
     <string name="action_share">Condividi</string>
