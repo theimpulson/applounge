@@ -214,7 +214,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.menu_settings -> {
-                item?.setIcon(R.drawable.ic_menu_settings)
+                item?.setIcon(lineageos.platform.R.drawable.ic_camera_settings)
                 showFragment(SettingsFragment())
                 return true
             }
