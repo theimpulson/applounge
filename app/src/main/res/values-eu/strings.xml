@@ -26,7 +26,6 @@
     <string name="preference_update_install_automatically_title">Automatikoki instalatu eguneraketak</string>
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Eguneraketak</string>
-
     <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Aplikazioen eguneratzeak automatikoki instalatuko dira</string>
     <string name="MANUALLY_INSTALL_updates_notification_text">Aplikazioen eguneratzeak ez dira automatikoki instalatuko</string>
     <plurals name="updates_notification_title">
@@ -122,4 +121,9 @@
     <string name="app_rating_description">Puntuazioa 5etik. Erabiltzaileek aplikazioari emandako puntuazioarekin kalkulatuta.</string>
     <string name="app_privacy_description1">Puntuazioa 10etik. Hau erabiliz kalkulatuta:</string>
     <string name="app_store_banner_content_description">Aplikazio-biltegiaren iragarki-banda</string>
+    <string name="microg_installed">Instalatuta</string>
+    <string name="microg_not_installed">Instalatu gabe</string>
+    <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
+    <string name="microg_covid_vrsn_installed">microG Exposure Notification-en bertsioa</string>
+    <string name="system_apps">Sistemako aplikazioak</string>
 </resources>
