@@ -27,10 +27,8 @@
     <string name="edit_text_hint">Pakket naam</string>
     <string name="package_name_find_text">Om de pakket naam van een app die geïnstalleerd is op je apparaat te vinden, ga je naar Systeem Instellingen &gt; Applicaties &gt; [Je app]. De pakket naam zou onderaan de lijst moeten staan. 
 \n*Dit proces kan variëren op sommige apparaten.</string>
-
-    <string name="AUTOMATICALLY_INSTALL_updates_notification_text">App updates will be installed automatically</string>
-    <string name="MANUALLY_INSTALL_updates_notification_text">App updates will not be installed automatically</string>
-
+    <string name="AUTOMATICALLY_INSTALL_updates_notification_text">App updates zullen automatisch geïnstalleerd worden</string>
+    <string name="MANUALLY_INSTALL_updates_notification_text">App updates zullen niet automatisch geïnstalleerd worden</string>
     <string name="menu_home">Home</string>
     <string name="preference_apps_request_app_summary">Verzoek een app die momenteel niet beschikbaar is</string>
     <string name="preference_update_notify_available_title">Toon beschikbare updates</string>
@@ -111,7 +109,7 @@
     <string name="test_string">&lt;font color=#FAFAFA&lt;b&gt;UPDATE&gt;&lt;/font&gt;</string>
     <string name="some_text"><font color="#FAFAFA">Een</font> willekeurige <font color="#FAFAFA">tekst</font></string>
     <string name="app_privacy_description1">Score op 10. Berekend met behulp van</string>
-    <string name="featured">Uitgelicht</string>
+    <string name="featured">Aanbevolen</string>
     <string name="action_installing">Aan het installeren</string>
     <string name="action_add_to_home_screen">Toevoegen aan startscherm</string>
     <string name="show_only_pwa_apps">Toon enkel PWAs (Progressive Web Applications)</string>
@@ -120,7 +118,11 @@
     <string name="Show_all_apps">Toon alle apps</string>
     <string name="Show_applications">Toon applicaties:</string>
     <string name="pwas_categories_title">PWAs</string>
-    <string name="show_only_pwa_apps_description">Web Apps bieden een gelijkaardige gebruikservaring als gewone apps met gebruik van een browser</string>
+    <string name="show_only_pwa_apps_description">Web Apps die dezelfde gebruikservaring als gewone apps bieden, met gebruik van een browser</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
+    <string name="microg_covid_vrsn_installed">microG Exposure Notification versie</string>
+    <string name="microg_installed">Geïnstalleerd</string>
+    <string name="microg_not_installed">Niet Geïnstalleerd</string>
+    <string name="system_apps">Systeem Apps</string>
 </resources>
