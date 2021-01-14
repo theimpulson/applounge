@@ -74,4 +74,8 @@
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
+    <style name="ToolbarTheme" parent="Widget.AppCompat.Toolbar">
+        <item name="colorControlNormal">@lineageos.platform:color/color_default_accent</item>
+    </style>
+
 </resources>

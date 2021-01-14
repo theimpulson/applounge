@@ -28,6 +28,7 @@
 
     <color name="color_default_primary_text">@lineageos.platform:color/color_default_primary_text</color>
     <color name="color_default_secondary_text">@lineageos.platform:color/color_default_secondary_text</color>
+    <color name="color_default_gray1">@lineageos.platform:color/color_default_gray1</color>
 
     <color name="colorDivider">#CFD8DC</color>
     <color name="color_category_icon">#78909C</color>
