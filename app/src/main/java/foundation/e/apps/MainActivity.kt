@@ -204,7 +204,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.menu_search -> {
-                item?.setIcon(R.drawable.ic_menu_search)
+                item?.setIcon(lineageos.platform.R.drawable.ic_search)
                 showFragment(searchFragment)
                 return true
             }
@@ -214,7 +214,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.menu_settings -> {
-                item?.setIcon(lineageos.platform.R.drawable.ic_camera_settings)
+                item?.setIcon(lineageos.platform.R.drawable.ic_settings)
                 showFragment(SettingsFragment())
                 return true
             }
