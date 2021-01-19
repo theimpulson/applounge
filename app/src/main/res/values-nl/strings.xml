@@ -118,7 +118,7 @@
     <string name="Show_all_apps">Toon alle apps</string>
     <string name="Show_applications">Toon applicaties:</string>
     <string name="pwas_categories_title">PWAs</string>
-    <string name="show_only_pwa_apps_description">Web Apps die dezelfde gebruikservaring als gewone apps bieden, met gebruik van een browser</string>
+    <string name="show_only_pwa_apps_description">Web Apps bieden dezelfde gebruikservaring als gewone apps, met gebruik van een browser</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
     <string name="microg_covid_vrsn_installed">microG Exposure Notification versie</string>
