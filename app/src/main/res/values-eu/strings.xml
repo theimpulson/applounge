@@ -23,14 +23,14 @@
     <string name="pref_update_install_automatically_key">pref_update_install_automatically</string>
     <string name="pref_update_wifi_only_key">pref_update_wifi_only</string>
     <string name="pref_update_interval_key">pref_update_interval</string>
-    <string name="preference_update_install_automatically_title">Automatikoki instalatu eguneraketak</string>
+    <string name="preference_update_install_automatically_title">Automatikoki instalatu eguneratzeak</string>
     <string name="preference_update_interval_default">24</string>
-    <string name="preference_updates_title">Eguneraketak</string>
+    <string name="preference_updates_title">Eguneratzeak</string>
     <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Aplikazioen eguneratzeak automatikoki instalatuko dira</string>
     <string name="MANUALLY_INSTALL_updates_notification_text">Aplikazioen eguneratzeak ez dira automatikoki instalatuko</string>
     <plurals name="updates_notification_title">
-        <item quantity="one">Aplikazio-eguneraketa %1$d eskuragarri dago</item>
-        <item quantity="other">%1$d aplikazio-eguneraketa eskuragarri daude</item>
+        <item quantity="one">Aplikazio-eguneratze %1$d eskuragarri dago</item>
+        <item quantity="other">%1$d aplikazio-eguneratze eskuragarri daude</item>
     </plurals>
     <string name="updates_splash_title">Aplikazio guztiak eguneratuta daude</string>
     <string name="search_splash_title">Bilatu aplikazioa</string>
@@ -39,7 +39,7 @@
     <string name="games_categories_title">Jolasak</string>
     <string name="applications_categories_title">Aplikazioak</string>
     <string name="menu_settings">Ezarpenak</string>
-    <string name="menu_updates">Eguneraketak</string>
+    <string name="menu_updates">Eguneratzeak</string>
     <string name="menu_search">Bilatu</string>
     <string name="menu_categories">Kategoriak</string>
     <string name="menu_home">Hasiera</string>
@@ -106,13 +106,13 @@
     <string name="error_storage_permission_denied">Biltegiratze baimena beharrezkoa da aplikazioak deskargatzeko.</string>
     <string name="show_only_pwa_apps">Erakutsi soilik PWAk</string>
     <string name="show_only_pwa_apps_description">Web-aplikazioak, nabigatzaile baten bidez aplikazio natiboen esperientzia eskaintzen dutenak</string>
-    <string name="preference_update_notify_available_description">Erakutsi jakinarazpena aplikazioen eguneraketak eskuragarri daudenean</string>
-    <string name="preference_update_notify_available_title">Erakutsi eguneraketa eskuragarriak</string>
-    <string name="preference_update_install_automatically_description">Deskargatu eta instalatu aplikazioen eguneraketak atzeko planoan</string>
+    <string name="preference_update_notify_available_description">Erakutsi jakinarazpena aplikazioen eguneratzeak eskuragarri daudenean</string>
+    <string name="preference_update_notify_available_title">Erakutsi eguneratze eskuragarriak</string>
+    <string name="preference_update_install_automatically_description">Deskargatu eta instalatu aplikazioen eguneratzeak atzeko planoan</string>
     <string name="preference_update_wifi_only_description">Eguneratu aplikazioak automatikoki soilik muga gabeko sareetan, WiFian adibidez</string>
     <string name="preference_update_wifi_only_title">Soilik muga gabeko sareetan</string>
     <string name="updates_notification_unmetered_network_warning">Muga gabeko sare baten zain</string>
-    <string name="preference_update_interval_title">Eguneraketak egiaztatzeko tartea</string>
+    <string name="preference_update_interval_title">Eguneratzeak egiaztatzeko tartea</string>
     <string name="no_trackers">Ez da aztarnaririk erabiltzen</string>
     <string name="app_updated_on">Eguneratze-data:</string>
     <string name="app_trackers_title">Aztarnariak</string>
