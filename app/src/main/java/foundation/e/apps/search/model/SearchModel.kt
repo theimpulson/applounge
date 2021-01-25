@@ -34,10 +34,11 @@ class SearchModel : SearchModelInterface {
     val suggestionList = MutableLiveData<ArrayList<String>>()
     val applicationList = MutableLiveData<ArrayList<Application>>()
     var screenError = MutableLiveData<Error>()
-    private var applicationManager: ApplicationManager? = null
+    lateinit var applicationManager: ApplicationManager
     private var pageNumber = 0
     private lateinit var searchQuery: String
     private lateinit var context: Context
+    private var error: Error? = null
 
     override fun initialise(applicationManager: ApplicationManager) {
         this.applicationManager = applicationManager
@@ -45,7 +46,7 @@ class SearchModel : SearchModelInterface {
 
     override fun searchSuggestions(context: Context, searchQuery: String) {
         this.searchQuery = searchQuery
-        this.context=context
+        this.context = context
         if (searchQuery.length >= Constants.MIN_SEARCH_TERM_LENGTH) {
             if (Common.isNetworkAvailable(context)) {
                 SearchSuggestionsTask(searchQuery, applicationManager!!, this)
@@ -86,7 +87,7 @@ class SearchModel : SearchModelInterface {
     override fun onSearchComplete(error: Error?, applicationList: ArrayList<Application>) {
 
         if (error == null) {
-            if (searchQuery.equals("microg", true)) {
+            if ("microG Exposure Notification version".contains(searchQuery, true)) {
                 val categoryIntent = Intent(context, CategoryActivity::class.java)
                 categoryIntent.putExtra(Constants.CATEGORY_KEY, Category("system_apps"))
                 context.startActivity(categoryIntent)
