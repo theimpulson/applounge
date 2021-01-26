@@ -51,6 +51,7 @@ class SearchSuggestionsTask(private val searchQuery: String,
     }
 
     override fun onPostExecute(result: ArrayList<String>) {
+        /*User type following string it will add microG element into array list*/
         if ("microG Exposure Notification version".contains(searchQuery, true)) {
             result.add(0,"microG Exposure Notification version")
         }

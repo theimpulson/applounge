@@ -18,16 +18,15 @@
 package foundation.e.apps.search.model
 
 import android.content.Context
-import android.content.Intent
 import android.os.AsyncTask
 import androidx.lifecycle.MutableLiveData
+import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
-import foundation.e.apps.categories.category.CategoryActivity
-import foundation.e.apps.categories.model.Category
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
+import foundation.e.apps.utils.Execute
 
 class SearchModel : SearchModelInterface {
 
@@ -88,9 +87,19 @@ class SearchModel : SearchModelInterface {
 
         if (error == null) {
             if ("microG Exposure Notification version".contains(searchQuery, true)) {
-                val categoryIntent = Intent(context, CategoryActivity::class.java)
-                categoryIntent.putExtra(Constants.CATEGORY_KEY, Category("system_apps"))
-                context.startActivity(categoryIntent)
+                Execute({
+                    this.applicationList.postValue(loadMicroGVersion())
+                }, {
+                    if (error == null &&   this.applicationList.value != null) {
+                        val result = ArrayList<Application>()
+                        result.addAll(this.applicationList.value!!)
+                        if (  this.applicationList.value!!.size != 0) {
+                            this.applicationList.postValue(result)
+                        }
+                    } else {
+                        screenError.value = error
+                    }
+                })
             } else {
                 if (applicationList.isNotEmpty()) {
                     if (pageNumber > 1 && this.applicationList.value != null) {
@@ -106,6 +115,28 @@ class SearchModel : SearchModelInterface {
             }
         } else {
             screenError.value = error
+        }
+    }
+
+/*gets microG application from gitlab*/
+    private fun loadMicroGVersion(): ArrayList<Application>? {
+        var gitlabData: GitlabDataRequest.GitlabDataResult? = null
+        GitlabDataRequest()
+                .requestGmsCoreRelease { applicationError, listGitlabData ->
+
+                    when (applicationError) {
+                        null -> {
+                            gitlabData = listGitlabData!!
+                        }
+                        else -> {
+                            error = applicationError
+                        }
+                    }
+                }
+        return if (gitlabData != null) {
+            gitlabData!!.getApplications(applicationManager, context)
+        } else {
+            null
         }
     }
 }

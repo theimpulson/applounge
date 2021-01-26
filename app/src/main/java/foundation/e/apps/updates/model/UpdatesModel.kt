@@ -20,27 +20,74 @@ package foundation.e.apps.updates.model
 import android.content.Context
 import android.os.AsyncTask
 import androidx.lifecycle.MutableLiveData
+import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
+import foundation.e.apps.application.model.ApplicationInfo
+import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Error
+import foundation.e.apps.utils.Execute
 
 class UpdatesModel : UpdatesModelInterface {
     val applicationList = MutableLiveData<ArrayList<Application>>()
     var screenError = MutableLiveData<Error>()
-
+    private lateinit var context: Context
     var applicationManager: ApplicationManager? = null
+    private var error: Error? = null
 
     override fun loadApplicationList(context: Context) {
+        this.context = context
         if (Common.isNetworkAvailable(context)) {
-            OutdatedApplicationsFileReader(context.packageManager,applicationManager!!, this)
+            OutdatedApplicationsFileReader(context.packageManager, applicationManager!!, this)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
         } else {
             screenError.value = Error.NO_INTERNET
         }
+
+        Execute({
+            var application: Application? = loadMicroGVersion()?.get(0)
+            if (application!!.state != State.INSTALLED) {
+                this.applicationList.postValue(loadMicroGVersion())
+            }
+
+
+        }, {
+            if (error == null && this.applicationList.value != null) {
+                val result = ArrayList<Application>()
+                result.addAll(this.applicationList.value!!)
+                if (this.applicationList.value!!.size != 0) {
+                    this.applicationList.postValue(result)
+                }
+            } else {
+                screenError.value = error
+            }
+        })
     }
 
     override fun onAppsFound(applications: ArrayList<Application>) {
         applicationList.value = applications
+    }
+
+
+    private fun loadMicroGVersion(): ArrayList<Application>? {
+        var gitlabData: GitlabDataRequest.GitlabDataResult? = null
+        GitlabDataRequest()
+                .requestGmsCoreRelease { applicationError, listGitlabData ->
+
+                    when (applicationError) {
+                        null -> {
+                            gitlabData = listGitlabData!!
+                        }
+                        else -> {
+                            error = applicationError
+                        }
+                    }
+                }
+        return if (gitlabData != null) {
+            gitlabData!!.getApplications(applicationManager!!, context)
+        } else {
+            null
+        }
     }
 }
