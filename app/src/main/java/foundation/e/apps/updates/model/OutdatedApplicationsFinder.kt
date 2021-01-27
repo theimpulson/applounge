@@ -24,6 +24,7 @@ import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
+import foundation.e.apps.utils.Constants
 
 class OutdatedApplicationsFinder(private val packageManager: PackageManager,
                                  private val callback: UpdatesWorkerInterface,
@@ -64,6 +65,10 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
     private fun getInstalledApplications(): ArrayList<String> {
         val result = ArrayList<String>()
         packageManager.getInstalledApplications(0).forEach { app ->
+            if (Common.isSystemApp(packageManager, app.packageName)) {
+                if (app.packageName == Constants.MICROG_PACKAGE)
+                    result.add(app.packageName)
+            }
             if (!Common.isSystemApp(packageManager, app.packageName)) {
                 result.add(app.packageName)
             }

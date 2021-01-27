@@ -61,8 +61,8 @@ class ApplicationsFragment(color: Int?) : Fragment() {
         categoriesViewModel.getApplicationsCategories().observe(this, Observer {
             if (it!!.isNotEmpty()) {
                 //Add New Category
-                it.add(Category("system_apps"))
-
+                if (!it.any { Category -> Category.id == "system_apps" })
+                    it.add(Category("system_apps"))
                 view.categories_list.adapter = CategoriesListAdapter(it, color)
                 view.categories_list.visibility = View.VISIBLE
                 view.progress_bar.visibility = View.GONE

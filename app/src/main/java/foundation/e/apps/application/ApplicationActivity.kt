@@ -32,7 +32,6 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
 import android.util.DisplayMetrics
-import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -40,14 +39,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.MainActivity.Companion.sharedPreferences
-import foundation.e.apps.pwa.PwaInstaller
 import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.ApplicationStateListener
@@ -61,6 +57,7 @@ import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnection
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnectionCallback
 import foundation.e.apps.categories.category.CategoryActivity
+import foundation.e.apps.pwa.PwaInstaller
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Common.toMiB
 import foundation.e.apps.utils.Constants
@@ -79,9 +76,7 @@ class ApplicationActivity :
         ApplicationManagerServiceConnectionCallback,
         Downloader.DownloadProgressCallback,
         BasicData.IconLoaderCallback,
-        PwasBasicData.IconLoaderCallback{
-
-
+        PwasBasicData.IconLoaderCallback {
 
 
     private lateinit var applicationPackageName: String
@@ -98,15 +93,15 @@ class ApplicationActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_application)
-        good_border.visibility=View.GONE
-        neutral_border.visibility=View.GONE
+        good_border.visibility = View.GONE
+        neutral_border.visibility = View.GONE
 
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        sharedPreferences = this.getSharedPreferences(sharedPrefFile,Context.MODE_PRIVATE)
+        sharedPreferences = this.getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
 
         pwa_sympol.visibility = View.GONE
 
@@ -213,9 +208,9 @@ class ApplicationActivity :
 
     @SuppressLint("ResourceAsColor")
     private fun textColorChange(text: String): SpannableStringBuilder {
-        val builder =  SpannableStringBuilder();
-        val redSpannable= SpannableString(text);
-        redSpannable.setSpan( ForegroundColorSpan(R.color.colorDarkGray), 0, text.length, 0);
+        val builder = SpannableStringBuilder();
+        val redSpannable = SpannableString(text);
+        redSpannable.setSpan(ForegroundColorSpan(R.color.colorDarkGray), 0, text.length, 0);
         builder.append(redSpannable);
         return builder
     }
@@ -276,7 +271,7 @@ class ApplicationActivity :
             }
 
             // Set the app rating
-            val builder=textColorChange(getText(R.string.not_available).toString())
+            val builder = textColorChange(getText(R.string.not_available).toString())
             if (basicData.ratings!!.rating != -1f) {
                 app_rating.text = basicData.ratings.rating.toString() + "/5"
             } else {
@@ -321,7 +316,7 @@ class ApplicationActivity :
                 }
 
                 // Set the app privacy rating
-                val builder=textColorChange(getText(R.string.not_available).toString())
+                val builder = textColorChange(getText(R.string.not_available).toString())
 
                 if (fullData.getLastVersion()!!.privacyRating != null &&
                         fullData.getLastVersion()!!.privacyRating != -1) {
@@ -360,6 +355,12 @@ class ApplicationActivity :
                 } else {
                     app_version.text = getString(R.string.not_available)
                 }
+                // Set app package name.
+                if (fullData.packageName.isNotEmpty()) {
+                    app_package_name.text = fullData.packageName
+                } else {
+                    app_package_name.text = getString(R.string.not_available)
+                }
 
                 // Set app update timestamp
                 if (fullData.getLastVersion()!!.createdOn.isNotEmpty()) {
@@ -380,7 +381,7 @@ class ApplicationActivity :
                 app_size.visibility = View.GONE
 
                 // Set app privacy rating
-                val builder=textColorChange(getText(R.string.not_available).toString())
+                val builder = textColorChange(getText(R.string.not_available).toString())
                 app_privacy_score.text = builder
                 setPrivacyRatingBorder(-1)
                 app_privacy_container.setOnClickListener {
@@ -505,7 +506,7 @@ class ApplicationActivity :
 
         application.PwaloadIcon(this)
         pwa_sympol.visibility = View.VISIBLE
-        Ratings.visibility=View.GONE
+        Ratings.visibility = View.GONE
 
 
         val pwasBasicData = application.pwabasicdata
@@ -553,14 +554,15 @@ class ApplicationActivity :
 
 
         // Handle clicks on app permissions
-        exodus_info_container.visibility=View.GONE
+        exodus_info_container.visibility = View.GONE
 
         //app_information details
-        app_information_title.visibility=View.GONE
-        app_version_layout.visibility=View.GONE
-        app_updated_on_layout.visibility=View.GONE
-        app_requires.visibility= View.GONE
-        app_licence_layout.visibility=View.GONE
+        app_information_title.visibility = View.GONE
+        app_version_layout.visibility = View.GONE
+        app_updated_on_layout.visibility = View.GONE
+        app_requires.visibility = View.GONE
+        app_licence_layout.visibility = View.GONE
+        app_package_name_layout.visibility =View.GONE
 
 
         application.addListener(this)
@@ -610,9 +612,9 @@ class ApplicationActivity :
 
     fun onPwaInstallButtonClick(fullData: PwaFullData) {
 
-        val intent=Intent(this, PwaInstaller::class.java)
-        intent.putExtra("NAME",fullData.name)
-        intent.putExtra("URL",fullData.url)
+        val intent = Intent(this, PwaInstaller::class.java)
+        intent.putExtra("NAME", fullData.name)
+        intent.putExtra("URL", fullData.url)
         this.startActivity(intent)
     }
 
@@ -670,13 +672,13 @@ class ApplicationActivity :
     private fun setRatingBorder(rating: Float?) {
         when {
             rating!! >= 7f -> {
-                app_rating.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_cat_green_ellipse,0)
+                app_rating.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cat_green_ellipse, 0)
             }
             rating >= 4f -> {
-                app_rating.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_yellow_ellipse,0)
+                app_rating.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_yellow_ellipse, 0)
             }
             else -> {
-                app_rating.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_red_ellipse,0)
+                app_rating.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_red_ellipse, 0)
             }
         }
     }
@@ -684,13 +686,13 @@ class ApplicationActivity :
     private fun setPrivacyRatingBorder(rating: Int) {
         when {
             rating >= 7 -> {
-                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_cat_green_ellipse,0)
+                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cat_green_ellipse, 0)
             }
             rating >= 4 -> {
-                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_yellow_ellipse,0)
+                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_yellow_ellipse, 0)
             }
             else -> {
-                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_red_ellipse,0)
+                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_red_ellipse, 0)
             }
         }
     }
@@ -762,6 +764,6 @@ class ApplicationActivity :
     }
 
     private fun getAccentColor() {
-        accentColorOS=this.resources.getColor(R.color.colorAccent);
+        accentColorOS = this.resources.getColor(R.color.colorAccent);
     }
 }
