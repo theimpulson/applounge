@@ -67,7 +67,7 @@
     <string name="app_ratings_title">Puntuazioak</string>
     <string name="action_share">Partekatu</string>
     <string name="action_launch">Ireki</string>
-    <string name="action_update_all">Eguneratu guztiak</string>
+    <string name="action_update_all">Guztiak eguneratu</string>
     <string name="action_update">Eguneratu</string>
     <string name="state_installing">Instalatzen</string>
     <string name="featured">Nabarmendua</string>
