@@ -833,7 +833,7 @@
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/ic_app_licence" />
+                            android:src="@drawable/ic_package_icon" />
 
                         <TextView
                             android:layout_width="wrap_content"

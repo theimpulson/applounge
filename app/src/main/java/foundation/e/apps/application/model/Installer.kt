@@ -132,9 +132,9 @@ class Installer(private val packageName: String,
         }
         context.registerReceiver(receiver, IntentFilter().apply {
             addAction(Intent.ACTION_PACKAGE_ADDED)
+            addAction(Intent.ACTION_PACKAGE_REMOVED)
             addDataScheme("package")
         })
-        Log.i(TAG, "Registered new broadcast receiver")
     }
 
     private var receiver = object : BroadcastReceiver() {
@@ -149,7 +149,12 @@ class Installer(private val packageName: String,
                 callback.onInstallationComplete(p0)
 
                 if (packageName == Constants.MICROG_PACKAGE) {
-                    PreferenceStorage(p0).save(p0.getString(R.string.prefs_microg_vrsn_installed), true)
+                  if (PreferenceStorage(p0).getBoolean(p0.getString(R.string.prefs_microg_vrsn_installed),false)){
+                      PreferenceStorage(p0).save(p0.getString(R.string.prefs_microg_vrsn_installed), false)
+                  }else{
+                      PreferenceStorage(p0).save(p0.getString(R.string.prefs_microg_vrsn_installed), true)
+                  }
+
                 }
 
             }

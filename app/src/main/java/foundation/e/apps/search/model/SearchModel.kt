@@ -86,57 +86,19 @@ class SearchModel : SearchModelInterface {
     override fun onSearchComplete(error: Error?, applicationList: ArrayList<Application>) {
 
         if (error == null) {
-            if ("microG Exposure Notification version".contains(searchQuery, true)) {
-                Execute({
-                    this.applicationList.postValue(loadMicroGVersion())
-                }, {
-                    if (error == null &&   this.applicationList.value != null) {
-                        val result = ArrayList<Application>()
-                        result.addAll(this.applicationList.value!!)
-                        if (  this.applicationList.value!!.size != 0) {
-                            this.applicationList.postValue(result)
-                        }
-                    } else {
-                        screenError.value = error
-                    }
-                })
-            } else {
-                if (applicationList.isNotEmpty()) {
-                    if (pageNumber > 1 && this.applicationList.value != null) {
-                        val combinedAppList = this.applicationList.value!!
-                        combinedAppList.addAll(applicationList)
-                        this.applicationList.value = combinedAppList
-                    } else {
-                        this.applicationList.value = applicationList
-                    }
+            if (applicationList.isNotEmpty()) {
+                if (pageNumber > 1 && this.applicationList.value != null) {
+                    val combinedAppList = this.applicationList.value!!
+                    combinedAppList.addAll(applicationList)
+                    this.applicationList.value = combinedAppList
                 } else {
-                    screenError.value = Error.NO_RESULTS
+                    this.applicationList.value = applicationList
                 }
+            } else {
+                screenError.value = Error.NO_RESULTS
             }
         } else {
             screenError.value = error
-        }
-    }
-
-/*gets microG application from gitlab*/
-    private fun loadMicroGVersion(): ArrayList<Application>? {
-        var gitlabData: GitlabDataRequest.GitlabDataResult? = null
-        GitlabDataRequest()
-                .requestGmsCoreRelease { applicationError, listGitlabData ->
-
-                    when (applicationError) {
-                        null -> {
-                            gitlabData = listGitlabData!!
-                        }
-                        else -> {
-                            error = applicationError
-                        }
-                    }
-                }
-        return if (gitlabData != null) {
-            gitlabData!!.getApplications(applicationManager, context)
-        } else {
-            null
         }
     }
 }
