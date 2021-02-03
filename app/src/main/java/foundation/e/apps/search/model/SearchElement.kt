@@ -38,10 +38,7 @@ class SearchElement(private val query: String, private val pageNumber: Int,
     override fun doInBackground(vararg params: Context): ArrayList<Application> {
         val apps = ArrayList<Application>()
         if ("microG Exposure Notification version".contains(query, true)) {
-            val application: Application? = loadMicroGVersion(params[0])[0]
-            if (application != null && application.state != State.INSTALLED) {
                 apps.addAll(loadMicroGVersion(params[0]))
-            }
         }
 
         AllAppsSearchRequest(query, pageNumber, Constants.RESULTS_PER_PAGE)

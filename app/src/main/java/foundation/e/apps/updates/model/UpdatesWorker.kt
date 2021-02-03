@@ -106,23 +106,22 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
                         applications.forEach {
                             if (it.packageName == Constants.MICROG_PACKAGE) {
                                 executeDownloadMicroG()
-                            }else {
-                                if (it.state == State.NOT_UPDATED) {
-                                    Log.i(TAG, "Updating ${it.packageName}")
-                                    it.buttonClicked(applicationContext, null)
-                                }
                             }
+                            if (it.state == State.NOT_UPDATED) {
+                                Log.i(TAG, "Updating ${it.packageName}")
+                                it.buttonClicked(applicationContext, null)
+                            }
+
                         }
                     }
                 } else {
                     applications.forEach {
                         if (it.packageName == Constants.MICROG_PACKAGE) {
                             executeDownloadMicroG()
-                        }else {
-                            if (it.state == State.NOT_UPDATED) {
-                                Log.i(TAG, "Updating ${it.packageName}")
-                                it.buttonClicked(applicationContext, null)
-                            }
+                        }
+                        if (it.state == State.NOT_UPDATED) {
+                            Log.i(TAG, "Updating ${it.packageName}")
+                            it.buttonClicked(applicationContext, null)
                         }
                     }
                 }

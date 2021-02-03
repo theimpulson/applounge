@@ -156,7 +156,6 @@ class Installer(private val packageName: String,
                   }
 
                 }
-
             }
         }
     }
