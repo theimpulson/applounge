@@ -66,6 +66,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
+       getAccentColor()
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -115,7 +116,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = ApplicationListAdapter(this, applicationList, 0)
+        recyclerView.adapter = ApplicationListAdapter(this, applicationList, accentColorOS)
 
         // Bind to the list of applications in this activity's category
         categoryViewModel.getApplications().observe(this, Observer {

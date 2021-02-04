@@ -67,7 +67,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
     private var application: Application? = null
     private val applicationViewModel = ApplicationViewModel()
     private var downloader: Downloader? = null
-var accentColorOS=accentColorOS;
+    var accentColorOS = accentColorOS;
     init {
         pwa_icon.visibility = View.GONE
         view.setOnClickListener {
@@ -79,7 +79,7 @@ var accentColorOS=accentColorOS;
 
 
         installButton.setTextColor(Color.parseColor("#ffffff"))
-        if(0!=this.accentColorOS){
+        if (0 != this.accentColorOS) {
             installButton.setBackgroundColor(this.accentColorOS)
         }
         installButton?.setOnClickListener {
@@ -153,16 +153,15 @@ var accentColorOS=accentColorOS;
     override fun stateChanged(state: State) {
         Execute({}, {
 
-           // installButton.setBackgroundResource(R.drawable.app_install_border_simple)
+            // installButton.setBackgroundResource(R.drawable.app_install_border_simple)
             installButton?.text = activity.getString(state.installButtonTextId)
 
             when (state) {
 
                 State.NOT_DOWNLOADED -> {
-                    if(0!=this.accentColorOS){
+                    if (0 != this.accentColorOS) {
                         installButton.setTextColor(this.accentColorOS)
-                    }
-                    else{
+                    } else {
 
                         installButton.setTextColor(Color.parseColor("#0088ED"))
                     }
@@ -174,10 +173,9 @@ var accentColorOS=accentColorOS;
 
                     installButton?.isEnabled =
                             Common.appHasLaunchActivity(activity, application!!.packageName)
-                    if(0!=this.accentColorOS){
+                    if (0 != this.accentColorOS) {
                         installButton!!.setBackgroundColor(this.accentColorOS)
-                    }
-                    else{
+                    } else {
                         installButton!!.setBackgroundResource(R.drawable.app_install_border)
                     }
                     installButton.setTextColor(Color.parseColor("#FAFAFA"))
@@ -187,14 +185,20 @@ var accentColorOS=accentColorOS;
                     installButton?.isEnabled = false
                 }
                 State.NOT_UPDATED -> {
-                    installButton.setTextColor(Color.parseColor("#FAFAFA"))
-                    //installButton!!.setBackgroundResource(R.drawable.app_install_border)
-                    if(0!=this.accentColorOS){
-                        installButton!!.setBackgroundColor(this.accentColorOS)
+                    if (application?.packageName == Constants.MICROG_PACKAGE) {
+                        installButton.setBackgroundResource(R.drawable.app_install_border_simple)
+                        installButton.text = "Install"
+                        installButton.setTextColor(this.accentColorOS)
+                    } else {
+                        installButton.setTextColor(Color.parseColor("#FAFAFA"))
+                        //installButton!!.setBackgroundResource(R.drawable.app_install_border)
+                        if (0 != this.accentColorOS) {
+                            installButton!!.setBackgroundColor(this.accentColorOS)
+                        } else {
+                            installButton!!.setBackgroundResource(R.drawable.app_install_border)
+                        }
                     }
-                    else{
-                        installButton!!.setBackgroundResource(R.drawable.app_install_border)
-                    }
+
                     installButton?.isEnabled = true
                 }
                 else -> {
