@@ -105,7 +105,7 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
                     if (isConnectedToUnmeteredNetwork) {
                         applications.forEach {
                             if (it.packageName == Constants.MICROG_PACKAGE) {
-                                executeDownloadMicroG()
+                                it.buttonClicked(applicationContext, null)
                             }
                             if (it.state == State.NOT_UPDATED) {
                                 Log.i(TAG, "Updating ${it.packageName}")
@@ -117,7 +117,7 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
                 } else {
                     applications.forEach {
                         if (it.packageName == Constants.MICROG_PACKAGE) {
-                            executeDownloadMicroG()
+                            it.buttonClicked(applicationContext, null)
                         }
                         if (it.state == State.NOT_UPDATED) {
                             Log.i(TAG, "Updating ${it.packageName}")
@@ -142,41 +142,5 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
             val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
             networkInfo?.isConnected ?: false
         } else false
-    }
-
-
-    private fun executeDownloadMicroG() {
-        Execute({
-            var application: Application? = loadMicroGVersion()?.get(0)
-            if (application!!.state != State.INSTALLED) {
-                application.download(applicationContext)
-            }
-
-        }, {
-            if (error != null) {
-                print(error)
-            }
-        })
-    }
-
-    private fun loadMicroGVersion(): ArrayList<Application>? {
-        var gitlabData: GitlabDataRequest.GitlabDataResult? = null
-        GitlabDataRequest()
-                .requestGmsCoreRelease { applicationError, listGitlabData ->
-
-                    when (applicationError) {
-                        null -> {
-                            gitlabData = listGitlabData!!
-                        }
-                        else -> {
-                            error = applicationError
-                        }
-                    }
-                }
-        return if (gitlabData != null) {
-            gitlabData!!.getApplications(applicationManager!!, applicationContext)
-        } else {
-            null
-        }
     }
 }

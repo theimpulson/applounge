@@ -20,6 +20,7 @@ package foundation.e.apps.updates.model
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.AsyncTask
+import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
@@ -44,6 +45,10 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
 
     private fun getOutdatedApplications(context: Context): ArrayList<Application> {
         val result = ArrayList<Application>()
+        var application: Application? = loadMicroGVersion(context)[0]
+        if (application!!.state != State.INSTALLED) {
+            result.add(application)
+        }
         val installedApplications = getInstalledApplications()
         installedApplications.forEach { packageName ->
             val application = applicationManager.findOrCreateApp(packageName)
@@ -74,5 +79,27 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
             }
         }
         return result
+    }
+
+
+    private fun loadMicroGVersion(context: Context): List<Application> {
+        var gitlabData: GitlabDataRequest.GitlabDataResult? = null
+        GitlabDataRequest()
+                .requestGmsCoreRelease { applicationError, listGitlabData ->
+
+                    when (applicationError) {
+                        null -> {
+                            gitlabData = listGitlabData!!
+                        }
+                        else -> {
+                           print("error")
+                        }
+                    }
+                }
+        return if (gitlabData != null) {
+            gitlabData!!.getApplications(applicationManager!!, context)
+        } else {
+            emptyList()
+        }
     }
 }
