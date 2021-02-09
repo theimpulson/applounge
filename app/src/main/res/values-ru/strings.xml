@@ -40,10 +40,8 @@
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Обновления</string>
     <string name="updates_notification_unmetered_network_warning">В ожидании безлимитной сети</string>
-
     <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Обновления приложений будут устанавливаться автоматически</string>
     <string name="MANUALLY_INSTALL_updates_notification_text">Обновления приложений не будут устанавливаться автоматически</string>
-
     <plurals name="updates_notification_title">
         <item quantity="one">%1$d обновление доступно</item>
         <item quantity="few">%1$d обновления доступно</item>
@@ -124,4 +122,9 @@
     <string name="error_install_failed">Приложение не может быть установлено. Пожалуйста, попробуйте позже.</string>
     <string name="exit">Пожалуйста, нажмите НАЗАД снова для выхода</string>
     <string name="action_add_to_home_screen">Добавить на Домашний экран</string>
+    <string name="prefs_microg_vrsn_installed">Установленная версия MicroG</string>
+    <string name="microg_installed">Установленно</string>
+    <string name="microg_not_installed">Не установлено</string>
+    <string name="microg_covid_vrsn_installed">Версия microG Уведомления о взаимодействии</string>
+    <string name="system_apps">Системные приложения</string>
 </resources>
