@@ -32,17 +32,17 @@ import foundation.e.apps.categories.viewmodel.CategoriesViewModel
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_games_categories.view.*
 
-class GamesFragment(color: Int?) : Fragment() {
+class GamesFragment() : Fragment() {
     private lateinit var categoriesViewModel: CategoriesViewModel
 
-    var color=color;
+    var color:Int = 0;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         categoriesViewModel = ViewModelProviders.of(activity!!).get(CategoriesViewModel::class.java)
 
         val view = inflater.inflate(R.layout.fragment_games_categories, container, false)
         view.categories_list.layoutManager = LinearLayoutManager(context)
-
+        color = arguments!!.getInt("color",0)
         view.categories_list.visibility = View.GONE
         view.progress_bar.visibility = View.VISIBLE
         view.error_container.visibility = View.GONE
@@ -80,5 +80,15 @@ class GamesFragment(color: Int?) : Fragment() {
             categoriesViewModel.loadCategories(context!!)
         }
         return view
+    }
+
+    companion object{
+        fun newInstance(color:Int?) : GamesFragment{
+            val gamesFragment = GamesFragment()
+            val bundle = Bundle()
+            bundle.putInt("color",color!!)
+            gamesFragment.arguments = bundle
+            return  gamesFragment
+        }
     }
 }
