@@ -102,7 +102,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             progressBar.visibility = View.VISIBLE
             onQueryTextSubmit(searchView.query.toString())
         }
-
+        automaticSearchMicroG()
         // Initialise search view
         val from = arrayOf(SUGGESTION_KEY)
         val to = intArrayOf(android.R.id.text1)
@@ -185,6 +185,20 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
         return view
     }
+
+    private fun automaticSearchMicroG() {
+        if (arguments?.getString(Constants.MICROG_QUERY) != null) {
+            val query = arguments?.getString(Constants.MICROG_QUERY).toString()
+            searchView.setQuery(query,true)
+            hideKeyboard(activity as Activity)
+            focusView!!.requestFocus()
+            recyclerView.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+            splashContainer.visibility = View.GONE
+            searchViewModel.onSearchQuerySubmitted(context!!,query)
+        }
+    }
+
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {

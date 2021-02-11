@@ -43,6 +43,8 @@ object Constants {
     const val RESULTS_PER_PAGE = 20
     const val SUGGESTION_KEY = "suggestion"
     const val SUGGESTIONS_RESULTS = 5
+    const val MICROG_QUERY = "query"
+    const val OPEN_SEARCH = "open_search"
 
     // Application
     const val WEB_STORE_URL = "https://cleanapk.org/#/app/"
