@@ -132,7 +132,6 @@ class Installer(private val packageName: String,
         }
         context.registerReceiver(receiver, IntentFilter().apply {
             addAction(Intent.ACTION_PACKAGE_ADDED)
-            addAction(Intent.ACTION_PACKAGE_REMOVED)
             addDataScheme("package")
         })
     }
@@ -149,12 +148,7 @@ class Installer(private val packageName: String,
                 callback.onInstallationComplete(context)
 
                 if (packageName == Constants.MICROG_PACKAGE) {
-                  if (PreferenceStorage(context).getBoolean(context.getString(R.string.prefs_microg_vrsn_installed),false)){
-                      PreferenceStorage(context).save(context.getString(R.string.prefs_microg_vrsn_installed), false)
-                  }else{
                       PreferenceStorage(context).save(context.getString(R.string.prefs_microg_vrsn_installed), true)
-                  }
-
                 }
             }
         }
