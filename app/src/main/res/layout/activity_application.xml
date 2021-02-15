@@ -399,6 +399,7 @@
                                 android:maxLines="1"
                                 android:layout_gravity="left"
                                 android:textColor="@android:color/black"
+                                android:drawablePadding="5dp"
                                 android:textSize="@dimen/text_size_extra_large"
                                 android:drawableRight="@drawable/app_border_good"
                                 tools:text="App rating" />
