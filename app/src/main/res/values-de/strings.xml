@@ -93,9 +93,9 @@
     <string name="app_description_content_description">App-Beschreibung</string>
     <string name="app_description_title">Beschreibung</string>
     <string name="app_icon_content_description">App-Symbol</string>
-    <string name="service_description">Dieser Dienst wird von Apps zum Verwalten, Herunterladen und Installieren von Apps verwendet. Ihn zu beenden, kann zu Fehlern bei Ladevorgängen führen.</string>
+    <string name="service_description">Dieser Dienst wird von Apps zum Verwalten, Herunterladen und Installieren von Apps verwendet. Ihn zu beenden, kann zu Fehlern beim Herunterladen von Apps führen.</string>
     <string name="not_available_full">Nicht verfügbar</string>
-    <string name="not_available">Nicht verfügbar</string>
+    <string name="not_available">n.v.</string>
     <string name="app_name">Apps</string>
     <string name="pwa_icon">PWA</string>
     <string name="offline_description">Hier tippen, um erneut zu versuchen!</string>
@@ -104,8 +104,8 @@
     <string name="show_only_open_source_apps">Nur Open-Source-Apps anzeigen</string>
     <string name="show_only_open_source_apps_description">Apps, deren Quellcode frei zugänglich ist</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
-    <string name="Show_all_apps">Alle Apps anzeigen</string>
-    <string name="Show_applications">Apps zeigen:</string>
+    <string name="Show_all_apps">Alle Anwendungen anzeigen</string>
+    <string name="Show_applications">Anwendungen zeigen:</string>
     <string name="Show_all_apps_key">Show_all_apps</string>
     <string name="shouldRefreshOnResume">Kategorien</string>
     <string name="some_text"><font color="#FAFAFA">Irgendein</font> zufälliger <font color="#FAFAFA">Text</font></string>
@@ -113,13 +113,16 @@
     <string name="featured">Empfohlen</string>
     <string name="action_add_to_home_screen">Zum Startbildschirm hinzufügen</string>
     <string name="test_string">&lt;font color=#FAFAFA&lt;b&gt;AKTUALISIERUNG&gt;&lt;/font&gt;</string>
-    <string name="ok"><font fgcolor="#FF0088ED">Ok</font></string>
+    <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
     <string name="action_installing">Wird installiert</string>
     <string name="offline_heading">Sie sind offline.</string>
-    <string name="show_only_pwa_apps_description">Web-Apps, die das Anwendungserlebnis einer nativen App im Browser bieten</string>
+    <string name="show_only_pwa_apps_description">Progressive Web-Apps ermöglichen eine Internetseite wie eine App zu benutzen</string>
     <string name="pwas_categories_title">PWAs</string>
     <string name="more">mehr</string>
     <string name="app_privacy_description1">Bewertung von 1 bis 10. Wird berechnet aus</string>
-    <string name="exit">Bitte erneut auf ZURÜCK tippen um zu beenden</string>
+    <string name="exit">Bitte erneut ZURÜCK tippen zum Beenden</string>
     <string name="microg_covid_vrsn_installed">microG Exposure Notification Version</string>
+    <string name="system_apps">System-Apps</string>
+    <string name="microg_installed">"Installiert "</string>
+    <string name="microg_not_installed">"Nicht installiert "</string>
 </resources>
