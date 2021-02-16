@@ -42,10 +42,8 @@
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Aktualisierungen</string>
     <string name="updates_notification_unmetered_network_warning">Warten auf ein unbegrenztes Netzwerk</string>
-
     <string name="AUTOMATICALLY_INSTALL_updates_notification_text">App-Updates werden automatisch installiert</string>
     <string name="MANUALLY_INSTALL_updates_notification_text">App-Updates werden nicht automatisch installiert</string>
-
     <plurals name="updates_notification_title">
         <item quantity="one">%1$d App-Aktualisierung ist verfügbar</item>
         <item quantity="other">%1$d App-Aktualisierungen sind verfügbar</item>
@@ -123,4 +121,5 @@
     <string name="more">mehr</string>
     <string name="app_privacy_description1">Bewertung von 1 bis 10. Wird berechnet aus</string>
     <string name="exit">Bitte erneut auf ZURÜCK tippen um zu beenden</string>
+    <string name="microg_covid_vrsn_installed">microG Exposure Notification Version</string>
 </resources>
