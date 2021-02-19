@@ -118,7 +118,18 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         getAccentColor();
         bottom_navigation_view_color()
+        openSearchFragment()
     }
+
+    private fun openSearchFragment() {
+        if (intent.getBooleanExtra(Constants.OPEN_SEARCH,false)) {
+            currentFragmentId = R.id.menu_search
+            val bundle = Bundle()
+            bundle.putString(Constants.MICROG_QUERY,"microg")
+            searchFragment.arguments= bundle
+        }
+    }
+
 
     private fun bottom_navigation_view_color() {
         val iconsColorStates =
