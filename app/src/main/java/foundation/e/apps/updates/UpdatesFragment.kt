@@ -50,6 +50,7 @@ class UpdatesFragment() : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private var applicationList = ArrayList<Application>()
     var accentColorOS=0;
+    lateinit var progressBar2:ProgressBar
 
     fun initialise(applicationManager: ApplicationManager, accentColorOS: Int) {
         this.applicationManager = applicationManager
@@ -65,6 +66,7 @@ class UpdatesFragment() : Fragment() {
 
         updatesViewModel = ViewModelProviders.of(activity!!).get(UpdatesViewModel::class.java)
         recyclerView = view.findViewById(R.id.app_list)
+        progressBar2 = view.findViewById<ProgressBar>(R.id.progress_bar2)
         val updateAll = view.findViewById<Button>(R.id.update_all)
         updateAll.setTextColor(accentColorOS)
         val splashContainer = view.findViewById<LinearLayout>(R.id.splash_container)
@@ -154,7 +156,6 @@ class UpdatesFragment() : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val progressBar2 = view!!.findViewById<ProgressBar>(R.id.progress_bar2)
         if (::updatesViewModel.isInitialized) {
             updatesViewModel.getApplications().value?.let {
                 it.forEach { application ->

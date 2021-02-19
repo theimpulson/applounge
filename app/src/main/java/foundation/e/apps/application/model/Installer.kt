@@ -134,24 +134,22 @@ class Installer(private val packageName: String,
             addAction(Intent.ACTION_PACKAGE_ADDED)
             addDataScheme("package")
         })
-        Log.i(TAG, "Registered new broadcast receiver")
     }
 
     private var receiver = object : BroadcastReceiver() {
-        override fun onReceive(p0: Context, p1: Intent) {
-            if (p1.action == Intent.ACTION_PACKAGE_ADDED &&
-                    (p1.data.encodedSchemeSpecificPart == packageName)) {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == Intent.ACTION_PACKAGE_ADDED &&
+                    (intent.data.encodedSchemeSpecificPart == packageName)) {
                 Log.i(TAG, "Broadcast received")
                 var path = apk.absolutePath.split("Download")
                 //delete all APK file after install
                 deleteFileOrDir(path[0] + "Download");
 
-                callback.onInstallationComplete(p0)
+                callback.onInstallationComplete(context)
 
                 if (packageName == Constants.MICROG_PACKAGE) {
-                    PreferenceStorage(p0).save(p0.getString(R.string.prefs_microg_vrsn_installed), true)
+                      PreferenceStorage(context).save(context.getString(R.string.prefs_microg_vrsn_installed), true)
                 }
-
             }
         }
     }

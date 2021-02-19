@@ -19,6 +19,7 @@ package foundation.e.apps.search.model
 
 import android.content.Context
 import android.os.AsyncTask
+import android.util.Log
 import foundation.e.apps.api.AllAppsSearchRequest
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Constants
@@ -31,7 +32,7 @@ class SearchSuggestionsTask(private val searchQuery: String,
     override fun doInBackground(vararg context: Context): ArrayList<String> {
         val searchSuggestions = ArrayList<String>()
 
-        AllAppsSearchRequest(searchQuery,1, Constants.SUGGESTIONS_RESULTS)
+        AllAppsSearchRequest(searchQuery, 1, Constants.SUGGESTIONS_RESULTS)
                 .request { applicationError, searchResult ->
                     when (applicationError) {
                         null -> {
@@ -50,6 +51,10 @@ class SearchSuggestionsTask(private val searchQuery: String,
     }
 
     override fun onPostExecute(result: ArrayList<String>) {
+        /*User type following string it will add microG element into array list*/
+        if ("microG Exposure Notification version".contains(searchQuery, true)) {
+            result.add(0,"microG Exposure Notification version")
+        }
         callback.onSearchSuggestionsRetrieved(searchQuery, result)
     }
 }

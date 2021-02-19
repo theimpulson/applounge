@@ -18,26 +18,26 @@
 package foundation.e.apps.search.model
 
 import android.content.Context
-import android.content.Intent
 import android.os.AsyncTask
 import androidx.lifecycle.MutableLiveData
+import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
-import foundation.e.apps.categories.category.CategoryActivity
-import foundation.e.apps.categories.model.Category
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
+import foundation.e.apps.utils.Execute
 
 class SearchModel : SearchModelInterface {
 
     val suggestionList = MutableLiveData<ArrayList<String>>()
     val applicationList = MutableLiveData<ArrayList<Application>>()
     var screenError = MutableLiveData<Error>()
-    private var applicationManager: ApplicationManager? = null
+    lateinit var applicationManager: ApplicationManager
     private var pageNumber = 0
     private lateinit var searchQuery: String
     private lateinit var context: Context
+    private var error: Error? = null
 
     override fun initialise(applicationManager: ApplicationManager) {
         this.applicationManager = applicationManager
@@ -45,7 +45,7 @@ class SearchModel : SearchModelInterface {
 
     override fun searchSuggestions(context: Context, searchQuery: String) {
         this.searchQuery = searchQuery
-        this.context=context
+        this.context = context
         if (searchQuery.length >= Constants.MIN_SEARCH_TERM_LENGTH) {
             if (Common.isNetworkAvailable(context)) {
                 SearchSuggestionsTask(searchQuery, applicationManager!!, this)
@@ -86,22 +86,16 @@ class SearchModel : SearchModelInterface {
     override fun onSearchComplete(error: Error?, applicationList: ArrayList<Application>) {
 
         if (error == null) {
-            if (searchQuery.equals("microg", true)) {
-                val categoryIntent = Intent(context, CategoryActivity::class.java)
-                categoryIntent.putExtra(Constants.CATEGORY_KEY, Category("system_apps"))
-                context.startActivity(categoryIntent)
-            } else {
-                if (applicationList.isNotEmpty()) {
-                    if (pageNumber > 1 && this.applicationList.value != null) {
-                        val combinedAppList = this.applicationList.value!!
-                        combinedAppList.addAll(applicationList)
-                        this.applicationList.value = combinedAppList
-                    } else {
-                        this.applicationList.value = applicationList
-                    }
+            if (applicationList.isNotEmpty()) {
+                if (pageNumber > 1 && this.applicationList.value != null) {
+                    val combinedAppList = this.applicationList.value!!
+                    combinedAppList.addAll(applicationList)
+                    this.applicationList.value = combinedAppList
                 } else {
-                    screenError.value = Error.NO_RESULTS
+                    this.applicationList.value = applicationList
                 }
+            } else {
+                screenError.value = Error.NO_RESULTS
             }
         } else {
             screenError.value = error

@@ -19,11 +19,15 @@ package foundation.e.apps.search.model
 
 import android.content.Context
 import android.os.AsyncTask
+import foundation.e.apps.R
 import foundation.e.apps.api.AllAppsSearchRequest
+import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
+import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
+import foundation.e.apps.utils.PreferenceStorage
 
 class SearchElement(private val query: String, private val pageNumber: Int,
                     private val applicationManager: ApplicationManager,
@@ -33,8 +37,9 @@ class SearchElement(private val query: String, private val pageNumber: Int,
 
     override fun doInBackground(vararg params: Context): ArrayList<Application> {
         val apps = ArrayList<Application>()
-
-
+        if ("microG Exposure Notification version".contains(query, true)) {
+                apps.addAll(loadMicroGVersion(params[0]))
+        }
 
         AllAppsSearchRequest(query, pageNumber, Constants.RESULTS_PER_PAGE)
                 .request { applicationError, searchResult ->
@@ -53,5 +58,27 @@ class SearchElement(private val query: String, private val pageNumber: Int,
 
     override fun onPostExecute(result: ArrayList<Application>) {
         callback.onSearchComplete(error, result)
+    }
+
+    /*gets microG application from gitlab*/
+    private fun loadMicroGVersion(context: Context): List<Application> {
+        var gitlabData: GitlabDataRequest.GitlabDataResult? = null
+        GitlabDataRequest()
+                .requestGmsCoreRelease { applicationError, listGitlabData ->
+
+                    when (applicationError) {
+                        null -> {
+                            gitlabData = listGitlabData!!
+                        }
+                        else -> {
+                            error = applicationError
+                        }
+                    }
+                }
+        return if (gitlabData != null) {
+            gitlabData!!.getApplications(applicationManager, context)
+        } else {
+            emptyList()
+        }
     }
 }

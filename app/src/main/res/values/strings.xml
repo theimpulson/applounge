@@ -56,6 +56,7 @@
     <string name="app_updated_on">Updated on</string>
     <string name="app_min_android">Requires</string>
     <string name="app_licence">Licence</string>
+    <string name="app_package_name">Package name</string>
     <string name="app_screenshots_title">Screenshots</string>
     <string name="download_notification_description">Downloading</string>
     <string name="no_permissions">No permissions requested</string>

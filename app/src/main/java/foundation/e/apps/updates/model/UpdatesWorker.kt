@@ -29,12 +29,15 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import foundation.e.apps.R
+import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
+import foundation.e.apps.utils.Error
+import foundation.e.apps.utils.Execute
 
 class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context, params),
         UpdatesWorkerInterface {
@@ -44,6 +47,7 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
     private var installAutomatically = true
     private var wifiOnly = false
     val applicationManager = ApplicationManager()
+    private var error: Error? = null
 
     override fun doWork(): Result {
         Log.i(TAG, "Checking for app updates")
@@ -100,14 +104,21 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
                 if (wifiOnly) {
                     if (isConnectedToUnmeteredNetwork) {
                         applications.forEach {
+                            if (it.packageName == Constants.MICROG_PACKAGE) {
+                                it.buttonClicked(applicationContext, null)
+                            }
                             if (it.state == State.NOT_UPDATED) {
                                 Log.i(TAG, "Updating ${it.packageName}")
                                 it.buttonClicked(applicationContext, null)
                             }
+
                         }
                     }
                 } else {
                     applications.forEach {
+                        if (it.packageName == Constants.MICROG_PACKAGE) {
+                            it.buttonClicked(applicationContext, null)
+                        }
                         if (it.state == State.NOT_UPDATED) {
                             Log.i(TAG, "Updating ${it.packageName}")
                             it.buttonClicked(applicationContext, null)

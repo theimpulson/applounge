@@ -33,17 +33,17 @@ import foundation.e.apps.categories.viewmodel.CategoriesViewModel
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_application_categories.view.*
 
-class ApplicationsFragment(color: Int?) : Fragment() {
+class ApplicationsFragment() : Fragment() {
     private lateinit var categoriesViewModel: CategoriesViewModel
 
-    val color = color;
+    var color:Int = 0;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         categoriesViewModel = ViewModelProviders.of(activity!!).get(CategoriesViewModel::class.java)
 
         val view = inflater.inflate(R.layout.fragment_application_categories, container, false)
         view.categories_list.layoutManager = LinearLayoutManager(context)
-
+        color = arguments!!.getInt("color",0)
         view.categories_list.visibility = View.GONE
         view.progress_bar.visibility = View.VISIBLE
         view.error_container.visibility = View.GONE
@@ -61,8 +61,8 @@ class ApplicationsFragment(color: Int?) : Fragment() {
         categoriesViewModel.getApplicationsCategories().observe(this, Observer {
             if (it!!.isNotEmpty()) {
                 //Add New Category
-                it.add(Category("system_apps"))
-
+                if (!it.any { Category -> Category.id == "system_apps" })
+                    it.add(Category("system_apps"))
                 view.categories_list.adapter = CategoriesListAdapter(it, color)
                 view.categories_list.visibility = View.VISIBLE
                 view.progress_bar.visibility = View.GONE
@@ -84,5 +84,14 @@ class ApplicationsFragment(color: Int?) : Fragment() {
             categoriesViewModel.loadCategories(context!!)
         }
         return view
+    }
+    companion object{
+        fun newInstance(color:Int?) : ApplicationsFragment{
+            val applicationsFragment = ApplicationsFragment()
+            val bundle = Bundle()
+            bundle.putInt("color",color!!)
+            applicationsFragment.arguments = bundle
+            return  applicationsFragment
+        }
     }
 }

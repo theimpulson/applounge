@@ -20,10 +20,12 @@ package foundation.e.apps.updates.model
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.AsyncTask
+import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
+import foundation.e.apps.utils.Constants
 
 class OutdatedApplicationsFinder(private val packageManager: PackageManager,
                                  private val callback: UpdatesWorkerInterface,
@@ -43,6 +45,10 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
 
     private fun getOutdatedApplications(context: Context): ArrayList<Application> {
         val result = ArrayList<Application>()
+        var application: Application? = loadMicroGVersion(context)[0]
+        if (application!!.state != State.INSTALLED) {
+            result.add(application)
+        }
         val installedApplications = getInstalledApplications()
         installedApplications.forEach { packageName ->
             val application = applicationManager.findOrCreateApp(packageName)
@@ -64,10 +70,36 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
     private fun getInstalledApplications(): ArrayList<String> {
         val result = ArrayList<String>()
         packageManager.getInstalledApplications(0).forEach { app ->
+            if (Common.isSystemApp(packageManager, app.packageName)) {
+                if (app.packageName == Constants.MICROG_PACKAGE)
+                    result.add(app.packageName)
+            }
             if (!Common.isSystemApp(packageManager, app.packageName)) {
                 result.add(app.packageName)
             }
         }
         return result
+    }
+
+
+    private fun loadMicroGVersion(context: Context): List<Application> {
+        var gitlabData: GitlabDataRequest.GitlabDataResult? = null
+        GitlabDataRequest()
+                .requestGmsCoreRelease { applicationError, listGitlabData ->
+
+                    when (applicationError) {
+                        null -> {
+                            gitlabData = listGitlabData!!
+                        }
+                        else -> {
+                           print("error")
+                        }
+                    }
+                }
+        return if (gitlabData != null) {
+            gitlabData!!.getApplications(applicationManager!!, context)
+        } else {
+            emptyList()
+        }
     }
 }

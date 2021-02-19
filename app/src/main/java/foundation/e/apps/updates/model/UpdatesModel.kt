@@ -28,16 +28,19 @@ import foundation.e.apps.utils.Error
 class UpdatesModel : UpdatesModelInterface {
     val applicationList = MutableLiveData<ArrayList<Application>>()
     var screenError = MutableLiveData<Error>()
-
+    private lateinit var context: Context
     var applicationManager: ApplicationManager? = null
+    private var error: Error? = null
 
     override fun loadApplicationList(context: Context) {
+        this.context = context
         if (Common.isNetworkAvailable(context)) {
-            OutdatedApplicationsFileReader(context.packageManager,applicationManager!!, this)
+            OutdatedApplicationsFileReader(context.packageManager, applicationManager!!, this)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
         } else {
             screenError.value = Error.NO_INTERNET
         }
+
     }
 
     override fun onAppsFound(applications: ArrayList<Application>) {

@@ -20,12 +20,16 @@ package foundation.e.apps.updates.model
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.AsyncTask
+import foundation.e.apps.R
+import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
+import foundation.e.apps.application.model.ApplicationInfo
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Execute
+import foundation.e.apps.utils.PreferenceStorage
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -35,6 +39,11 @@ class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
         AsyncTask<Context, Void, ArrayList<Application>>() {
     override fun doInBackground(vararg context: Context): ArrayList<Application> {
         val applications = ArrayList<Application>()
+        val application: Application? = loadMicroGVersion(context[0])[0]
+        println("versionname::-"+ application?.basicData!!.packageName)
+        if (application != null && application.state != State.INSTALLED) {
+            applications.addAll(loadMicroGVersion(context[0]))
+        }
         try {
             val installedApplications = getInstalledApplications()
             installedApplications.forEach { packageName ->
@@ -68,6 +77,27 @@ class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
             apps.add(application)
         } else {
             application.decrementUses()
+        }
+    }
+
+    private fun loadMicroGVersion(context: Context): List<Application> {
+        var gitlabData: GitlabDataRequest.GitlabDataResult? = null
+        GitlabDataRequest()
+                .requestGmsCoreRelease { applicationError, listGitlabData ->
+
+                    when (applicationError) {
+                        null -> {
+                            gitlabData = listGitlabData!!
+                        }
+                        else -> {
+                            print("error occurred")
+                        }
+                    }
+                }
+        return if (gitlabData != null) {
+            gitlabData!!.getApplications(applicationManager!!, context)
+        } else {
+            emptyList()
         }
     }
 

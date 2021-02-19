@@ -24,8 +24,8 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 class CategoriesViewPagerAdapter(fragmentManager: FragmentManager, private val numberOfTabs: Int, color: Int?) :
         FragmentStatePagerAdapter(fragmentManager) {
 
-    private val applicationsFragment = ApplicationsFragment(color)
-    private val gamesFragment = GamesFragment(color)
+    private val applicationsFragment = ApplicationsFragment.newInstance(color)
+    private val gamesFragment = GamesFragment.newInstance(color)
     private val pwasFragment = PwasFragment()
 
 

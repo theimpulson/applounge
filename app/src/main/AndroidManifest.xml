@@ -68,6 +68,13 @@
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme1"
             android:windowSoftInputMode="adjustResize" />
+        <receiver  android:name=".MicrogUninstallListener"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="foundation.e.apps" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
