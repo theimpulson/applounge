@@ -125,4 +125,5 @@
     <string name="system_apps">System-Apps</string>
     <string name="microg_installed">"Installiert "</string>
     <string name="microg_not_installed">"Nicht installiert "</string>
+    <string name="app_package_name">Paketname</string>
 </resources>
