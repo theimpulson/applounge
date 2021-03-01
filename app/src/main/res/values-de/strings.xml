@@ -72,7 +72,7 @@
     <string name="app_trackers_title">Tracker</string>
     <string name="app_permissions_title">Berechtigungen</string>
     <string name="app_privacy_title">Datenschutzanalysen</string>
-    <string name="app_energy_description">"Bewertung von 1 bis 10. Sie wird aus dem Batterieverbrauch der App, der auf Geräten im Labor gemessen wird, berechnet.  Kommt bald."</string>
+    <string name="app_energy_description">Bewertung von 1 bis 10. Sie wird aus dem Batterieverbrauch der App, der auf Geräten im Labor gemessen wird, berechnet. Kommt bald.</string>
     <string name="app_energy_score">Energie</string>
     <string name="app_rating_description">Bewertung von 1 bis 5. Sie wird aus Benutzerbewertungen dieser App berechnet.</string>
     <string name="app_rating">Bewertung</string>
@@ -89,7 +89,7 @@
     <string name="action_install">Installieren</string>
     <string name="app_rating_content_description">App-Bewertung</string>
     <string name="app_energy_score_content_description">App-Energiebewertung</string>
-    <string name="app_privacy_score_content_description">App-Datenschutzwertung</string>
+    <string name="app_privacy_score_content_description">App-Datenschutzbewertung</string>
     <string name="app_description_content_description">App-Beschreibung</string>
     <string name="app_description_title">Beschreibung</string>
     <string name="app_icon_content_description">App-Symbol</string>
