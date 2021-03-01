@@ -127,4 +127,5 @@
     <string name="microg_not_installed">Не установлено</string>
     <string name="microg_covid_vrsn_installed">Версия microG Уведомления о взаимодействии</string>
     <string name="system_apps">Системные приложения</string>
+    <string name="app_package_name">Имя пакета</string>
 </resources>
