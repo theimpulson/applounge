@@ -119,7 +119,7 @@
     <string name="show_only_pwa_apps_description">Progressive Web-Apps ermöglichen eine Internetseite wie eine App zu benutzen</string>
     <string name="pwas_categories_title">PWA\'s</string>
     <string name="more">mehr</string>
-    <string name="app_privacy_description1">Bewertung von 1 bis 10. Wird berechnet aus</string>
+    <string name="app_privacy_description1">Bewertung von 1 bis 10. Berechnet durch</string>
     <string name="exit">Bitte erneut ZURÜCK tippen zum Beenden</string>
     <string name="microg_covid_vrsn_installed">microG Exposure Notification Version</string>
     <string name="system_apps">System-Apps</string>
