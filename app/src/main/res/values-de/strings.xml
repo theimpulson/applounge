@@ -102,7 +102,7 @@
     <string name="show_only_pwa_apps">Nur PWAs anzeigen</string>
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
     <string name="show_only_open_source_apps">Nur Open-Source-Apps anzeigen</string>
-    <string name="show_only_open_source_apps_description">Apps deren Quellcode frei verfügbar ist</string>
+    <string name="show_only_open_source_apps_description">Apps, deren Quellcode für Benutzer frei verfügbar ist</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
     <string name="Show_all_apps">Alle Anwendungen anzeigen</string>
     <string name="Show_applications">Anwendungen zeigen:</string>
@@ -116,14 +116,15 @@
     <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
     <string name="action_installing">Wird installiert</string>
     <string name="offline_heading">Sie sind nicht mit dem Internet verbunden.</string>
-    <string name="show_only_pwa_apps_description">Progressive Web-Apps ermöglichen eine Internetseite wie eine App zu benutzen</string>
+    <string name="show_only_pwa_apps_description">Progressive Web-Apps machen es möglich, eine Internetseite wie eine App zu benutzen</string>
     <string name="pwas_categories_title">PWA\'s</string>
     <string name="more">mehr</string>
     <string name="app_privacy_description1">Bewertung von 1 bis 10. Berechnet durch</string>
     <string name="exit">Bitte erneut ZURÜCK tippen zum Beenden</string>
-    <string name="microg_covid_vrsn_installed">microG Exposure Notification Version</string>
+    <string name="microg_covid_vrsn_installed">microG Exposure Benachrichtigungsversion</string>
     <string name="system_apps">System-Apps</string>
     <string name="microg_installed">"Installiert "</string>
     <string name="microg_not_installed">"Nicht installiert "</string>
     <string name="app_package_name">Paketname</string>
+    <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
 </resources>
