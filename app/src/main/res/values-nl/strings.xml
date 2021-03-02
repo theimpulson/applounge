@@ -125,4 +125,5 @@
     <string name="microg_installed">Geïnstalleerd</string>
     <string name="microg_not_installed">Niet Geïnstalleerd</string>
     <string name="system_apps">Systeem Apps</string>
+    <string name="app_package_name">Pakket naam</string>
 </resources>
