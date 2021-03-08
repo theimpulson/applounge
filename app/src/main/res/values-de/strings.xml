@@ -8,12 +8,12 @@
     <string name="error_resolve">Nochmals versuchen</string>
     <string name="error_apk_download_failed">Diese App konnte nicht heruntergeladen werden! Bitte versuchen Sie es später noch einmal.</string>
     <string name="error_install_failed">Die App konnte nicht installiert werden! Bitte versuchen Sie es später noch einmal.</string>
-    <string name="error_apk_corrupt">Das Herunterladen wurde unterbrochen! Bitte versuchen Sie es später noch einmal.</string>
-    <string name="error_apk_unavailable">Diese App ist zurzeit nicht verfügbar. Bitte versuchen Sie es später noch einmal.</string>
+    <string name="error_apk_corrupt">Das Herunterladen wurde unterbrochen! Bitte versuche es später noch einmal.</string>
+    <string name="error_apk_unavailable">Diese App ist zurzeit nicht verfügbar. Bitte versuche es später noch einmal.</string>
     <string name="error_no_results">Keine Apps gefunden.</string>
     <string name="error_unknown">Etwas ist schiefgelaufen! Bitte versuchen Sie es später noch einmal.</string>
-    <string name="error_request_timeout">Der Server brauchte zu lange zum Antworten! Versuchen Sie es später noch einmal.</string>
-    <string name="error_server_unavailable">Server nicht verfügbar! Bitter versuchen Sie es später noch einmal.</string>
+    <string name="error_request_timeout">Der Server brauchte zu lange zum Antworten! Versuche es später noch einmal.</string>
+    <string name="error_server_unavailable">Server nicht verfügbar! Bitter versuche es später noch einmal.</string>
     <string name="error_no_internet">Verbindung nicht möglich! Bitte überprüfen Sie Internet-Verbindung und versuchen Sie es nochmals.</string>
     <string name="error_storage_permission_denied">Um Apps herunterzuladen, ist Speicherzugriff erforderlich.</string>
     <string name="package_name_find_text">Um den Paketnamen einer App zu finden, die auf deinem Gerät installiert ist, gehe zu den Systemeinstellungen&gt;Apps&gt;[deine App]. Der Paketname sollte am unteren Ende der Seite geschrieben stehen.
