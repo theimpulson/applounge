@@ -3,7 +3,7 @@
     <string name="error_apk_incompatible">Diese App ist mit Ihrem Gerät nicht kompatibel.</string>
     <string name="error_no_error">Kein Fehler.</string>
     <string name="error_package_already_exists">Diese App ist schon verfügbar oder wurde bereits angefragt.</string>
-    <string name="error_invalid_package_name">Die Anfrage konnte nicht bearbeitet werden. Bitte geben Sie einen gültigen Paketnamen ein.</string>
+    <string name="error_invalid_package_name">Die Anfrage konnte nicht bearbeitet werden. Bitte gib einen gültigen Paketnamen ein.</string>
     <string name="error_no_screenshots_available">Keine Bildschirmfotos verfügbar</string>
     <string name="error_resolve">Nochmals versuchen</string>
     <string name="error_apk_download_failed">Diese App konnte nicht heruntergeladen werden! Bitte versuchen Sie es später noch einmal.</string>
