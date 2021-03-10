@@ -40,8 +40,10 @@ class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
     override fun doInBackground(vararg context: Context): ArrayList<Application> {
         val applications = ArrayList<Application>()
         val application: Application? = loadMicroGVersion(context[0])[0]
-        println("versionname::-"+ application?.basicData!!.packageName)
-        if (application != null && application.state != State.INSTALLED) {
+        println("versionname::-"+ application?.basicData!!.lastVersionNumber)
+        if (PreferenceStorage(context[0])
+                        .getBoolean(context[0].getString(R.string.prefs_microg_vrsn_installed), false)
+                && application.state == State.NOT_UPDATED) {
             applications.addAll(loadMicroGVersion(context[0]))
         }
         try {
