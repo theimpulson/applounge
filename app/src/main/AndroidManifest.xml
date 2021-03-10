@@ -18,6 +18,8 @@
 
     <uses-permission android:name="foundation.e.pwaplayer.provider.READ_WRITE" />
 
+    <uses-permission android:name="foundation.e.apps.micro.status.READ_WRITE" />
+
     <application
         android:allowBackup="true"
         android:alwaysRetainTaskState="true"
@@ -73,13 +75,14 @@
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme1"
             android:windowSoftInputMode="adjustResize" />
-        <receiver  android:name=".MicrogUninstallListener"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="foundation.e.apps" />
-            </intent-filter>
-        </receiver>
+
+
+        <provider
+            android:name=".MicroGProvider"
+            android:authorities="foundation.e.apps.micro.status"
+            android:exported="true"
+          />
+
     </application>
 
 </manifest>

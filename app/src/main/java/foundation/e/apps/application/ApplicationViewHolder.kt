@@ -185,19 +185,12 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
                     installButton?.isEnabled = false
                 }
                 State.NOT_UPDATED -> {
-                    if (application?.packageName == Constants.MICROG_PACKAGE) {
-                        installButton.setBackgroundResource(R.drawable.app_install_border_simple)
-                        installButton.text = "Install"
-                        installButton.setTextColor(this.accentColorOS)
-                    } else {
                         installButton.setTextColor(Color.parseColor("#FAFAFA"))
-                        //installButton!!.setBackgroundResource(R.drawable.app_install_border)
                         if (0 != this.accentColorOS) {
                             installButton!!.setBackgroundColor(this.accentColorOS)
                         } else {
                             installButton!!.setBackgroundResource(R.drawable.app_install_border)
                         }
-                    }
 
                     installButton?.isEnabled = true
                 }

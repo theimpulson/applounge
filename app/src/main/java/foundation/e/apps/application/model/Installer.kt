@@ -22,10 +22,12 @@ import android.app.PendingIntent
 import android.content.*
 import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import foundation.e.apps.MicroGProvider
 import foundation.e.apps.R
 import foundation.e.apps.XAPK.FsUtils.deleteFileOrDir
 import foundation.e.apps.utils.Constants
@@ -149,8 +151,30 @@ class Installer(private val packageName: String,
 
                 if (packageName == Constants.MICROG_PACKAGE) {
                       PreferenceStorage(context).save(context.getString(R.string.prefs_microg_vrsn_installed), true)
+                    if (count(MicroGProvider.CONTENT_URI, context)) {
+                        val values = ContentValues()
+                        values.put(MicroGProvider.installStatus, "true")
+                        val state=context.contentResolver.update(MicroGProvider.CONTENT_URI, values,
+                                MicroGProvider.id + "=?", arrayOf("1"))
+                    } else {
+                        val values = ContentValues()
+                        values.put(MicroGProvider.installStatus, "true")
+                        val state=context.contentResolver.insert(MicroGProvider.CONTENT_URI, values);
+                    }
+
                 }
             }
         }
     }
+
+
+    fun count(uri: Uri, context: Context): Boolean {
+        val cursor: Cursor? = context.contentResolver.query(uri, arrayOf("id"),
+                null, null, null)
+        Log.e("TAG", "count: " + cursor?.count)
+        val status = cursor?.count!! > 0
+        cursor.close()
+        return status
+    }
+
 }

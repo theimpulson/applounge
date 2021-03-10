@@ -24,10 +24,12 @@ import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.database.Cursor
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.util.Log
 import android.util.TypedValue
 import android.view.MenuItem
 import android.widget.Toast
@@ -54,6 +56,7 @@ import foundation.e.apps.updates.UpdatesFragment
 import foundation.e.apps.updates.UpdatesManager
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.CURRENTLY_SELECTED_FRAGMENT_KEY
+import foundation.e.apps.utils.PreferenceStorage
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -88,7 +91,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         disableCategoryIfOpenSource()
 
 
-
         bottom_navigation_view.setOnNavigationItemSelectedListener{
             if (selectFragment(it.itemId,it)) {
                 disableCategoryIfOpenSource()
@@ -121,6 +123,19 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         openSearchFragment()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (retrieveStatus() != null) {
+            if (retrieveStatus().equals("true")) {
+                PreferenceStorage(this).save(getString(R.string.prefs_microg_vrsn_installed), true)
+            } else {
+                PreferenceStorage(this).save(getString(R.string.prefs_microg_vrsn_installed), false)
+            }
+        } else {
+            PreferenceStorage(this).save(getString(R.string.prefs_microg_vrsn_installed), false)
+        }
+    }
+
     private fun openSearchFragment() {
         if (intent.getBooleanExtra(Constants.OPEN_SEARCH,false)) {
             currentFragmentId = R.id.menu_search
@@ -149,6 +164,19 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottom_navigation_view.setItemTextColor(textColorStates)
 
     }
+
+    private fun retrieveStatus(): String? {
+        var status: String? = null
+        val c: Cursor? = contentResolver.query(MicroGProvider.CONTENT_URI, null, "id=?", arrayOf("1"), "installStatus")
+        if (c!!.moveToFirst()) {
+            do {
+                status = c.getString(c.getColumnIndex("installStatus"))
+            } while (c.moveToNext())
+        }
+        c.close()
+        return status
+    }
+
 
     private fun initialiseUpdatesWorker() {
         UpdatesManager(applicationContext).startWorker()
