@@ -129,6 +129,8 @@ class IntegrityVerificationTask(
             return signature.verify()
         } catch (e: Exception) {
             e.printStackTrace()
+            //Toast message if we want to show message to user
+
         }
         return false;
 
