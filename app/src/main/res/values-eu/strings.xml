@@ -126,4 +126,5 @@
     <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
     <string name="microg_covid_vrsn_installed">microG Exposure Notification-en bertsioa</string>
     <string name="system_apps">Sistemako aplikazioak</string>
+    <string name="app_package_name">Pakete-izena</string>
 </resources>
