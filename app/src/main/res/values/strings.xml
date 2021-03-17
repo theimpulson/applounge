@@ -184,4 +184,9 @@
     <string name="microg_not_installed">Not Installed</string>
     <string name="microg_installed">Installed</string>
 
+
+    <string name="Signature_verification_failed">Signature verification failed, aborting install</string>
+
+
+
 </resources>

@@ -19,6 +19,8 @@ package foundation.e.apps.application.model
 
 import android.content.Context
 import android.os.AsyncTask
+import android.widget.Toast
+import foundation.e.apps.R
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Constants
 import org.bouncycastle.jce.provider.BouncyCastleProvider
@@ -53,6 +55,7 @@ class IntegrityVerificationTask(
             } else {
                 Security.addProvider(BouncyCastleProvider())
                 verifyAPKSignature(
+                        context[0],
                         BufferedInputStream(FileInputStream(
                                 applicationInfo.getApkFile(context[0],
                                         fullData.basicData).absolutePath)),
@@ -88,6 +91,7 @@ class IntegrityVerificationTask(
     }
 
     private fun verifyAPKSignature(
+            context: Context,
             apkInputStream: BufferedInputStream,
             apkSignatureInputStream: InputStream,
             publicKeyInputStream: InputStream): Boolean {
@@ -125,12 +129,12 @@ class IntegrityVerificationTask(
             apkInputStream.close()
             apkSignatureInputStream.close()
             publicKeyInputStream.close()
-
+            Toast.makeText(context, R.string.Signature_verification_failed, Toast.LENGTH_LONG).show();
             return signature.verify()
         } catch (e: Exception) {
             e.printStackTrace()
             //Toast message if we want to show message to user
-
+            Toast.makeText(context, R.string.Signature_verification_failed, Toast.LENGTH_LONG).show();
         }
         return false;
 
