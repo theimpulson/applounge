@@ -19,6 +19,8 @@ package foundation.e.apps.application.model
 
 import android.content.Context
 import android.os.AsyncTask
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import foundation.e.apps.R
 import foundation.e.apps.application.model.data.FullData
@@ -132,8 +134,14 @@ class IntegrityVerificationTask(
             return signature.verify()
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(context, context.resources.getString(R.string.Signature_verification_failed), Toast.LENGTH_LONG).show();
+
+            Handler(Looper.getMainLooper()).post {
+                val toast = Toast.makeText(context, context.resources.getString(R.string.Signature_verification_failed),  Toast.LENGTH_LONG)
+                toast.show()
+            }
+
         }
+
         return false;
 
     }
