@@ -129,11 +129,9 @@ class IntegrityVerificationTask(
             apkInputStream.close()
             apkSignatureInputStream.close()
             publicKeyInputStream.close()
-            Toast.makeText(context, context.resources.getString(R.string.Signature_verification_failed), Toast.LENGTH_LONG).show();
             return signature.verify()
         } catch (e: Exception) {
             e.printStackTrace()
-            //Toast message if we want to show message to user
             Toast.makeText(context, context.resources.getString(R.string.Signature_verification_failed), Toast.LENGTH_LONG).show();
         }
         return false;
