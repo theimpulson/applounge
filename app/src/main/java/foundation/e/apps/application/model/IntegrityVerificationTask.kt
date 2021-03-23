@@ -19,6 +19,10 @@ package foundation.e.apps.application.model
 
 import android.content.Context
 import android.os.AsyncTask
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
+import foundation.e.apps.R
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Constants
 import org.bouncycastle.jce.provider.BouncyCastleProvider
@@ -53,6 +57,7 @@ class IntegrityVerificationTask(
             } else {
                 Security.addProvider(BouncyCastleProvider())
                 verifyAPKSignature(
+                        context[0],
                         BufferedInputStream(FileInputStream(
                                 applicationInfo.getApkFile(context[0],
                                         fullData.basicData).absolutePath)),
@@ -88,44 +93,56 @@ class IntegrityVerificationTask(
     }
 
     private fun verifyAPKSignature(
+            context: Context,
             apkInputStream: BufferedInputStream,
             apkSignatureInputStream: InputStream,
             publicKeyInputStream: InputStream): Boolean {
+        try {
 
-        var jcaPGPObjectFactory =
-                JcaPGPObjectFactory(PGPUtil.getDecoderStream(apkSignatureInputStream))
-        val pgpSignatureList: PGPSignatureList
+            var jcaPGPObjectFactory =
+                    JcaPGPObjectFactory(PGPUtil.getDecoderStream(apkSignatureInputStream))
+            val pgpSignatureList: PGPSignatureList
 
-        val pgpObject = jcaPGPObjectFactory.nextObject()
-        if (pgpObject is PGPCompressedData) {
-            jcaPGPObjectFactory = JcaPGPObjectFactory(pgpObject.dataStream)
-            pgpSignatureList = jcaPGPObjectFactory.nextObject() as PGPSignatureList
-        } else {
-            pgpSignatureList = pgpObject as PGPSignatureList
+            val pgpObject = jcaPGPObjectFactory.nextObject()
+            if (pgpObject is PGPCompressedData) {
+                jcaPGPObjectFactory = JcaPGPObjectFactory(pgpObject.dataStream)
+                pgpSignatureList = jcaPGPObjectFactory.nextObject() as PGPSignatureList
+            } else {
+                pgpSignatureList = pgpObject as PGPSignatureList
+            }
+
+            val pgpPublicKeyRingCollection =
+                    PGPPublicKeyRingCollection(
+                            PGPUtil.getDecoderStream(publicKeyInputStream),
+                            JcaKeyFingerprintCalculator())
+
+            val signature = pgpSignatureList.get(0)
+            val key = pgpPublicKeyRingCollection.getPublicKey(signature.keyID)
+
+            signature.init(BcPGPContentVerifierBuilderProvider(), key)
+
+            val buff = ByteArray(1024)
+            var read = apkInputStream.read(buff)
+            while (read != -1) {
+                signature.update(buff, 0, read)
+                read = apkInputStream.read(buff)
+            }
+
+            apkInputStream.close()
+            apkSignatureInputStream.close()
+            publicKeyInputStream.close()
+            return signature.verify()
+        } catch (e: Exception) {
+            e.printStackTrace()
+
+            Handler(Looper.getMainLooper()).post {
+                val toast = Toast.makeText(context, context.resources.getString(R.string.Signature_verification_failed),  Toast.LENGTH_LONG)
+                toast.show()
+            }
+
         }
 
-        val pgpPublicKeyRingCollection =
-                PGPPublicKeyRingCollection(
-                        PGPUtil.getDecoderStream(publicKeyInputStream),
-                        JcaKeyFingerprintCalculator())
-
-        val signature = pgpSignatureList.get(0)
-        val key = pgpPublicKeyRingCollection.getPublicKey(signature.keyID)
-
-        signature.init(BcPGPContentVerifierBuilderProvider(), key)
-
-        val buff = ByteArray(1024)
-        var read = apkInputStream.read(buff)
-        while (read != -1) {
-            signature.update(buff, 0, read)
-            read = apkInputStream.read(buff)
-        }
-
-        apkInputStream.close()
-        apkSignatureInputStream.close()
-        publicKeyInputStream.close()
-
-        return signature.verify()
+        return false;
 
     }
 }
