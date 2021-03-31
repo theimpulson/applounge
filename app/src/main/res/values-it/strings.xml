@@ -126,4 +126,6 @@
     <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
     <string name="microg_covid_vrsn_installed">Versione di microG Exposure Notification</string>
     <string name="system_apps">App di Sistema</string>
+    <string name="Signature_verification_failed">Verifica della firma non riuscita, installazione interrotta</string>
+    <string name="app_package_name">Nome del pacchetto</string>
 </resources>
