@@ -126,4 +126,5 @@
     <string name="microg_not_installed">Niet Geïnstalleerd</string>
     <string name="system_apps">Systeem Apps</string>
     <string name="app_package_name">Pakket naam</string>
+    <string name="Signature_verification_failed">Verificatie mislukt, installatie wordt afgebroken</string>
 </resources>
