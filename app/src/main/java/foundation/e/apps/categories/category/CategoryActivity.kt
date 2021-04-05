@@ -32,7 +32,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -75,7 +75,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         category = intent.getSerializableExtra(CATEGORY_KEY) as Category
         supportActionBar?.title = category.getTitle()
 
-        categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
+        categoryViewModel = ViewModelProvider(this).get(CategoryViewModel::class.java)
         recyclerView = findViewById(R.id.app_list)
         val loadMoreContainer = findViewById<RelativeLayout>(R.id.load_more_container)
         progressBar = findViewById(R.id.progress_bar)

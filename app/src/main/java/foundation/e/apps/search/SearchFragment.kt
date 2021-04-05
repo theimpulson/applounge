@@ -33,7 +33,7 @@ import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import foundation.e.apps.R
@@ -71,7 +71,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
-        searchViewModel = ViewModelProviders.of(activity!!).get(SearchViewModel::class.java)
+        searchViewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         focusView = view.findViewById(R.id.view)
         searchView = view.findViewById(R.id.search_view)
         recyclerView = view.findViewById(R.id.app_list)

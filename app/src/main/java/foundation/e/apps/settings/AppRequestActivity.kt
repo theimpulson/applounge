@@ -25,7 +25,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import foundation.e.apps.R
 import foundation.e.apps.settings.viewmodel.AppRequestViewModel
 import foundation.e.apps.utils.Error
@@ -43,7 +43,7 @@ class AppRequestActivity : AppCompatActivity(), TextWatcher {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        viewModel = ViewModelProviders.of(this).get(AppRequestViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(AppRequestViewModel::class.java)
         progress_bar.visibility = View.GONE
         app_request_error_text_view.visibility = View.GONE
         package_name_edit_text.addTextChangedListener(this)

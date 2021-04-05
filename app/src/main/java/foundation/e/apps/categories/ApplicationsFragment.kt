@@ -25,7 +25,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import foundation.e.apps.R
 import foundation.e.apps.categories.model.Category
@@ -39,7 +39,7 @@ class ApplicationsFragment() : Fragment() {
     var color:Int = 0;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        categoriesViewModel = ViewModelProviders.of(activity!!).get(CategoriesViewModel::class.java)
+        categoriesViewModel = ViewModelProvider(this).get(CategoriesViewModel::class.java)
 
         val view = inflater.inflate(R.layout.fragment_application_categories, container, false)
         view.categories_list.layoutManager = LinearLayoutManager(context)

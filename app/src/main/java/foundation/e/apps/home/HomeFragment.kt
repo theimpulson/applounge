@@ -30,7 +30,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -70,7 +70,7 @@ class HomeFragment : Fragment() {
             view.findViewById<TextView>(R.id.tv_featured).setTextColor(accentColorOS);
         }*/
 
-        homeViewModel = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         imageCarousel = view.findViewById(R.id.image_carousel)
         divider = view.findViewById(R.id.divider)
         categoryList = view.findViewById(R.id.category_list)

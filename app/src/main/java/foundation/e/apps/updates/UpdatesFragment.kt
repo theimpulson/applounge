@@ -31,7 +31,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import foundation.e.apps.R
@@ -64,7 +64,7 @@ class UpdatesFragment() : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_updates, container, false)
 
-        updatesViewModel = ViewModelProviders.of(activity!!).get(UpdatesViewModel::class.java)
+        updatesViewModel = ViewModelProvider(this).get(UpdatesViewModel::class.java)
         recyclerView = view.findViewById(R.id.app_list)
         progressBar2 = view.findViewById<ProgressBar>(R.id.progress_bar2)
         val updateAll = view.findViewById<Button>(R.id.update_all)
