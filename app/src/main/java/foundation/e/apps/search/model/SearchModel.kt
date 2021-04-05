@@ -48,7 +48,7 @@ class SearchModel : SearchModelInterface {
         this.context = context
         if (searchQuery.length >= Constants.MIN_SEARCH_TERM_LENGTH) {
             if (Common.isNetworkAvailable(context)) {
-                SearchSuggestionsTask(searchQuery, applicationManager!!, this)
+                SearchSuggestionsTask(searchQuery, applicationManager, this)
                         .executeOnExecutor(Common.EXECUTOR, context)
             }
         } else {
@@ -76,7 +76,7 @@ class SearchModel : SearchModelInterface {
     override fun loadMore(context: Context) {
         if (Common.isNetworkAvailable(context)) {
             pageNumber++
-            SearchElement(searchQuery, pageNumber, applicationManager!!, this)
+            SearchElement(searchQuery, pageNumber, applicationManager, this)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
         } else {
             screenError.value = Error.NO_INTERNET

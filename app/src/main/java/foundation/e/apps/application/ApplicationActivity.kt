@@ -108,7 +108,7 @@ class ApplicationActivity :
         initialiseDimensions()
         val applicationPackageName: String? = intent.getStringExtra(APPLICATION_PACKAGE_NAME_KEY)
         if (!applicationPackageName.isNullOrEmpty()) {
-            this.applicationPackageName = applicationPackageName!!
+            this.applicationPackageName = applicationPackageName
             applicationManagerServiceConnection.bindService(this)
         }
 
@@ -236,7 +236,7 @@ class ApplicationActivity :
 
 
             // Set the app author
-            if (basicData.author!!.isNotEmpty()) {
+            if (basicData.author.isNotEmpty()) {
                 app_author.text = basicData.author
             } else {
                 app_author.visibility = View.GONE
@@ -272,12 +272,12 @@ class ApplicationActivity :
 
             // Set the app rating
             val builder = textColorChange(getText(R.string.not_available).toString())
-            if (basicData.ratings!!.rating != -1f) {
+            if (basicData.ratings.rating != -1f) {
                 app_rating.text = basicData.ratings.rating.toString() + "/5"
             } else {
                 app_rating.text = builder
             }
-            setRatingBorder(basicData.ratings!!.rating)
+            setRatingBorder(basicData.ratings.rating)
 
             app_rating_container.setOnClickListener {
                 val text = R.string.ok
@@ -515,7 +515,7 @@ class ApplicationActivity :
 
         // Set the app title
         if (pwasBasicData!!.name.isNotEmpty()) {
-            app_title.text = pwasBasicData!!.name
+            app_title.text = pwasBasicData.name
         } else {
             app_title.visibility = View.GONE
         }
@@ -529,7 +529,7 @@ class ApplicationActivity :
             app_description_container.isEnabled = false
         }
 
-        if (pwaFullData!!.category.getTitle().isNotEmpty()) {
+        if (pwaFullData.category.getTitle().isNotEmpty()) {
             app_category.text = pwaFullData.category.getTitle()
             app_category.setOnClickListener {
                 startActivity(Intent(this, CategoryActivity::class.java).apply {

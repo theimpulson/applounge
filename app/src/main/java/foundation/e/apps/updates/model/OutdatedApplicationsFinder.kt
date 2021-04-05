@@ -97,7 +97,7 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
                     }
                 }
         return if (gitlabData != null) {
-            gitlabData!!.getApplications(applicationManager!!, context)
+            gitlabData!!.getApplications(applicationManager, context)
         } else {
             emptyList()
         }

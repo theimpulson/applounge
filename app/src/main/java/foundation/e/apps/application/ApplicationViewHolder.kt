@@ -82,7 +82,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         if (0 != this.accentColorOS) {
             installButton.setBackgroundColor(this.accentColorOS)
         }
-        installButton?.setOnClickListener {
+        installButton.setOnClickListener {
             if (application?.fullData != null &&
                     application!!.fullData!!.getLastVersion() == null) {
                 Snackbar.make(view, activity.getString(
@@ -112,9 +112,9 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
             application!!.addListener(this)
             title.text = application!!.basicData!!.name
             author.text = application!!.basicData!!.author
-            ratingBar.rating = application!!.basicData!!.ratings!!.rating!!
-            if (application!!.basicData!!.ratings!!.rating != -1f) {
-                rating.text = application!!.basicData!!.ratings!!.rating.toString()
+            ratingBar.rating = application!!.basicData!!.ratings.rating!!
+            if (application!!.basicData!!.ratings.rating != -1f) {
+                rating.text = application!!.basicData!!.ratings.rating.toString()
             } else {
                 rating.text = activity.getString(R.string.not_available)
             }
@@ -154,7 +154,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         Execute({}, {
 
             // installButton.setBackgroundResource(R.drawable.app_install_border_simple)
-            installButton?.text = activity.getString(state.installButtonTextId)
+            installButton.text = activity.getString(state.installButtonTextId)
 
             when (state) {
 
@@ -171,32 +171,32 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
 
                 State.INSTALLED -> {
 
-                    installButton?.isEnabled =
+                    installButton.isEnabled =
                             Common.appHasLaunchActivity(activity, application!!.packageName)
                     if (0 != this.accentColorOS) {
-                        installButton!!.setBackgroundColor(this.accentColorOS)
+                        installButton.setBackgroundColor(this.accentColorOS)
                     } else {
-                        installButton!!.setBackgroundResource(R.drawable.app_install_border)
+                        installButton.setBackgroundResource(R.drawable.app_install_border)
                     }
                     installButton.setTextColor(Color.parseColor("#FAFAFA"))
 
                 }
                 State.INSTALLING -> {
-                    installButton?.isEnabled = false
+                    installButton.isEnabled = false
                 }
                 State.NOT_UPDATED -> {
                         installButton.setTextColor(Color.parseColor("#FAFAFA"))
                         if (0 != this.accentColorOS) {
-                            installButton!!.setBackgroundColor(this.accentColorOS)
+                            installButton.setBackgroundColor(this.accentColorOS)
                         } else {
-                            installButton!!.setBackgroundResource(R.drawable.app_install_border)
+                            installButton.setBackgroundResource(R.drawable.app_install_border)
                         }
 
-                    installButton?.isEnabled = true
+                    installButton.isEnabled = true
                 }
                 else -> {
                     installButton.setTextColor(Color.parseColor("#0088ED"))
-                    installButton?.isEnabled = true
+                    installButton.isEnabled = true
                 }
             }
 
@@ -211,7 +211,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
     @SuppressLint("SetTextI18n")
     override fun notifyDownloadProgress(count: Int, total: Int) {
         installButton.setGravity(Gravity.CENTER)
-        installButton?.text = ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
+        installButton.text = ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
         installButton.setTextColor(Color.parseColor("#0088ED"))
         installButton.setBackgroundResource(R.drawable.app_installing_border_simple)
     }

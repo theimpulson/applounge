@@ -15,7 +15,7 @@ class PreferenceStorage(val context: Context) {
 
         editor.putString(KEY_NAME, text)
 
-        editor!!.commit()
+        editor.commit()
     }
 
     fun save(KEY_NAME: String, value: Int) {
@@ -30,7 +30,7 @@ class PreferenceStorage(val context: Context) {
 
         val editor: SharedPreferences.Editor = sharedPref.edit()
 
-        editor.putBoolean(KEY_NAME, status!!)
+        editor.putBoolean(KEY_NAME, status)
 
         editor.commit()
     }

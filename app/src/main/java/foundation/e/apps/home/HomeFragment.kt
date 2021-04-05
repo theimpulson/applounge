@@ -174,7 +174,7 @@ class HomeFragment : Fragment() {
             }
             homeViewModel.getBannerApplications().value!!.forEach {
                 if(it.application!=null)
-                    it.application!!.decrementUses()
+                    it.application.decrementUses()
             }
         }
     }

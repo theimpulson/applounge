@@ -55,7 +55,7 @@ class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnec
         val applicationPackageName: String? =
                 intent.getStringExtra(Constants.APPLICATION_PACKAGE_NAME_KEY)
         if (!applicationPackageName.isNullOrEmpty()) {
-            this.applicationPackageName = applicationPackageName!!
+            this.applicationPackageName = applicationPackageName
             applicationManagerServiceConnection.bindService(this)
         }
     }
@@ -75,7 +75,7 @@ class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnec
             screenshotsCarousel = screenshots_carousel
             screenshotsCarousel.visibility = View.GONE
 
-            pwasBasicData!!.loadImagesAsyncly {
+            pwasBasicData.loadImagesAsyncly {
                 if (it.isNotEmpty()) {
                     screenshotsCarousel.adapter = ScreenshotsCarouselAdapter(this, it)
                     screenshotsCarousel.setCurrentItem(lastSelectedScreenshotIndex, false)
@@ -100,7 +100,7 @@ class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnec
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (::screenshotsCarousel.isInitialized) {
-            outState?.putInt(last_selected_screenshot_key, screenshotsCarousel.currentItem)
+            outState.putInt(last_selected_screenshot_key, screenshotsCarousel.currentItem)
         }
     }
 

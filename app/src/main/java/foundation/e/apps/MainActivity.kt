@@ -320,7 +320,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(CURRENTLY_SELECTED_FRAGMENT_KEY, currentFragmentId)
+        outState.putInt(CURRENTLY_SELECTED_FRAGMENT_KEY, currentFragmentId)
     }
 
     override fun onDestroy() {

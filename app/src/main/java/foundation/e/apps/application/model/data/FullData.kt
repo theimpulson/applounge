@@ -74,7 +74,7 @@ constructor(
 
     var latestVersion: Version? = null;
     val packageName: String
-        get() = basicData.packageName!!
+        get() = basicData.packageName
 
     fun getLastVersion(): Version? {
         return if (basicData.latestDownloadableUpdate != "-1") {

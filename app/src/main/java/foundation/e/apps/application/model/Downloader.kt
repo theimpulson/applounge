@@ -60,7 +60,7 @@ class Downloader(private val applicationInfo: ApplicationInfo,
     }
 
     fun download(context: Context) {
-        if (fullData?.getLastVersion() != null) {
+        if (fullData.getLastVersion() != null) {
             downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             registerReceivers(context)
             initialiseDownloadManagerRequest(context)
@@ -96,7 +96,7 @@ class Downloader(private val applicationInfo: ApplicationInfo,
 
         request = DownloadManager.Request(
                 Uri.parse(
-                        Constants.DOWNLOAD_URL + fullData?.getLastVersion()!!.downloadLink))
+                        Constants.DOWNLOAD_URL + fullData.getLastVersion()!!.downloadLink))
                 .apply {
                     setTitle(fullData.basicData.name)
                     setDescription(context.getString(R.string.download_notification_description))
@@ -158,7 +158,7 @@ class Downloader(private val applicationInfo: ApplicationInfo,
             unregisterReceivers(context)
             val status = getDownloadStatus()
             if (status != null && status == DownloadManager.STATUS_SUCCESSFUL) {
-                fullData?.let {
+                fullData.let {
                     IntegrityVerificationTask(
                             applicationInfo,
                             it,

@@ -290,7 +290,7 @@ class Application(val packageName: String, private val applicationManager: Appli
     private fun findBasicData(context: Context): Error? {
         var error: Error? = null
         if (Common.isNetworkAvailable(context)) {
-            PackageNameSearchRequest(packageName!!).request { applicationError, searchResult ->
+            PackageNameSearchRequest(packageName).request { applicationError, searchResult ->
                 when (applicationError) {
                     null -> {
                         error = Error.NO_RESULTS

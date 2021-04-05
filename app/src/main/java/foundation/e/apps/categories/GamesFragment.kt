@@ -52,7 +52,7 @@ class GamesFragment() : Fragment() {
         }
         view.error_resolve.setTextColor(Color.parseColor("#ffffff"))
         if (color != null) {
-            view.error_resolve.setBackgroundColor(color!!)
+            view.error_resolve.setBackgroundColor(color)
         }
 
 
