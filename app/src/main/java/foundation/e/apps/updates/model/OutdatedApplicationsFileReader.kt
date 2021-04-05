@@ -23,15 +23,10 @@ import android.os.AsyncTask
 import foundation.e.apps.R
 import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
-import foundation.e.apps.application.model.ApplicationInfo
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
-import foundation.e.apps.utils.Constants
-import foundation.e.apps.utils.Execute
 import foundation.e.apps.utils.PreferenceStorage
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
                                      private val applicationManager: ApplicationManager,

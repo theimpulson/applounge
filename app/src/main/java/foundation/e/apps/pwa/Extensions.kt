@@ -1,6 +1,5 @@
 package foundation.e.apps.pwa
 
-import android.R.attr.bitmap
 import android.graphics.Bitmap
 import android.util.Log
 import java.io.ByteArrayOutputStream

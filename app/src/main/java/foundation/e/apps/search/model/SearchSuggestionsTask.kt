@@ -19,7 +19,6 @@ package foundation.e.apps.search.model
 
 import android.content.Context
 import android.os.AsyncTask
-import android.util.Log
 import foundation.e.apps.api.AllAppsSearchRequest
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Constants

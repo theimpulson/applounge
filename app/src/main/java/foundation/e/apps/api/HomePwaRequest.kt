@@ -1,14 +1,9 @@
 package foundation.e.apps.api
 
 import android.content.Context
-import android.util.Log
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import foundation.e.apps.MainActivity
 import foundation.e.apps.application.model.Application
-import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.PwasBasicData
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.categories.model.Category

@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -40,8 +39,6 @@ import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.common.SmallApplicationListAdapter
 import foundation.e.apps.home.viewmodel.HomeViewModel
-import kotlinx.android.synthetic.main.error_layout.*
-import kotlinx.android.synthetic.main.install_button_layout.*
 
 
 class HomeFragment : Fragment() {

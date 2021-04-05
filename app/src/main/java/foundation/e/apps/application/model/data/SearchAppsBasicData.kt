@@ -2,11 +2,8 @@ package foundation.e.apps.application.model.data
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
-import androidx.core.content.res.ResourcesCompat
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error

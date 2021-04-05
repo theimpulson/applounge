@@ -19,7 +19,6 @@ package foundation.e.apps.application
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.view.Gravity
@@ -45,7 +44,6 @@ import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.Execute
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import kotlinx.android.synthetic.main.install_button_layout.view.*
-import java.lang.Exception
 
 
 class ApplicationViewHolder(private val activity: Activity, private val view: View, accentColorOS: Int) :

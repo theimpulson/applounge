@@ -19,15 +19,12 @@ package foundation.e.apps.search.model
 
 import android.content.Context
 import android.os.AsyncTask
-import foundation.e.apps.R
 import foundation.e.apps.api.AllAppsSearchRequest
 import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
-import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
-import foundation.e.apps.utils.PreferenceStorage
 
 class SearchElement(private val query: String, private val pageNumber: Int,
                     private val applicationManager: ApplicationManager,

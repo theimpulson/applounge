@@ -17,9 +17,7 @@
 
 package foundation.e.apps.updates
 
-import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -40,8 +38,6 @@ import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.common.ApplicationListAdapter
 import foundation.e.apps.updates.viewmodel.UpdatesViewModel
-import kotlinx.android.synthetic.main.error_layout.*
-import kotlinx.android.synthetic.main.fragment_updates.*
 
 
 class UpdatesFragment() : Fragment() {

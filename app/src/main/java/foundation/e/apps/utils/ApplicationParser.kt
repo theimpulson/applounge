@@ -22,7 +22,6 @@ import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.PwasBasicData
 import foundation.e.apps.application.model.data.SearchAppsBasicData
-import foundation.e.apps.application.model.release.ReleaseData
 import foundation.e.apps.applicationmanager.ApplicationManager
 
 class ApplicationParser {

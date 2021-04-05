@@ -20,13 +20,11 @@ package foundation.e.apps.search.model
 import android.content.Context
 import android.os.AsyncTask
 import androidx.lifecycle.MutableLiveData
-import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
-import foundation.e.apps.utils.Execute
 
 class SearchModel : SearchModelInterface {
 

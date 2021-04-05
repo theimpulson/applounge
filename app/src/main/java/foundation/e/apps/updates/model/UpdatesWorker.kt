@@ -21,7 +21,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.NetworkInfo
 import android.os.AsyncTask
 import android.preference.PreferenceManager
@@ -29,15 +28,12 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import foundation.e.apps.R
-import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.updates.UpdatesNotifier
-import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
-import foundation.e.apps.utils.Execute
 
 class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context, params),
         UpdatesWorkerInterface {

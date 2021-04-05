@@ -25,9 +25,7 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Environment
-import android.util.Log
 import foundation.e.apps.R
-import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Constants
 

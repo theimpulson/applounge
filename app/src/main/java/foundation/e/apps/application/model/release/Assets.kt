@@ -1,7 +1,6 @@
 package foundation.e.apps.application.model.release
 
 import com.google.gson.annotations.SerializedName
-import foundation.e.apps.application.model.release.Sources
 
 data class Assets (
 

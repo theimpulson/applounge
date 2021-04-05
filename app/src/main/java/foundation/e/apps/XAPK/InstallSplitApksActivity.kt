@@ -8,14 +8,8 @@ import android.content.pm.PackageInstaller
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.text.TextUtils
-import android.view.KeyEvent
-import android.view.View
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.makeramen.roundedimageview.BuildConfig
-import com.makeramen.roundedimageview.RoundedImageView
-import foundation.e.apps.R
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException

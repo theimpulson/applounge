@@ -18,18 +18,12 @@
 package foundation.e.apps.application.model
 
 import android.Manifest
-import android.R
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.util.Log
-import android.util.TypedValue
-import androidx.annotation.ColorInt
-import androidx.appcompat.view.ContextThemeWrapper
 import foundation.e.apps.MainActivity.Companion.mActivity
-import foundation.e.apps.pwa.PwaInstaller
 import foundation.e.apps.XAPK.XAPKFile
 import foundation.e.apps.api.AppDetailRequest
 import foundation.e.apps.api.AppDownloadedRequest
@@ -38,6 +32,7 @@ import foundation.e.apps.application.model.State.*
 import foundation.e.apps.application.model.data.*
 import foundation.e.apps.application.model.release.ReleaseData
 import foundation.e.apps.applicationmanager.ApplicationManager
+import foundation.e.apps.pwa.PwaInstaller
 import foundation.e.apps.utils.*
 import java.util.concurrent.atomic.AtomicInteger
 

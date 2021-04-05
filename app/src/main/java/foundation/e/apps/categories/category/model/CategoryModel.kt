@@ -20,9 +20,9 @@ package foundation.e.apps.categories.category.model
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import foundation.e.apps.MainActivity
+import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.api.ListApplicationsRequest
 import foundation.e.apps.api.ListPwasRequest
-import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common

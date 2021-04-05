@@ -21,7 +21,6 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Environment
-import android.util.Log
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Common
