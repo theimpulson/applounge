@@ -27,6 +27,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.R
@@ -105,7 +106,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         if (app.basicData != null) {
             this.application?.removeListener(this)
             this.application = app
-            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+            icon.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_app_default))
             application!!.loadIcon(this)
             application!!.addListener(this)
             title.text = application!!.basicData!!.name
@@ -124,7 +125,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         } else {
             this.application?.removeListener(this)
             this.application = app
-            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+            icon.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_app_default))
             application!!.addListener(this)
             if (application!!.searchAppsBasicData != null) {
                 if (application!!.searchAppsBasicData!!.is_pwa) {

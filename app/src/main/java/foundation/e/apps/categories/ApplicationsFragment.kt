@@ -63,7 +63,7 @@ class ApplicationsFragment() : Fragment() {
                 //Add New Category
                 if (!it.any { Category -> Category.id == "system_apps" })
                     it.add(Category("system_apps"))
-                view.categories_list.adapter = CategoriesListAdapter(it, color)
+                view.categories_list.adapter = context?.let { context -> CategoriesListAdapter(context, it, color) }
                 view.categories_list.visibility = View.VISIBLE
                 view.progress_bar.visibility = View.GONE
             }

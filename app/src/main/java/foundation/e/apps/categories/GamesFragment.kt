@@ -59,7 +59,7 @@ class GamesFragment() : Fragment() {
         // Bind to the list of games categories
         categoriesViewModel.getGamesCategories().observe(viewLifecycleOwner, Observer {
             if (it!!.isNotEmpty()) {
-                view.categories_list.adapter = CategoriesListAdapter(it, color)
+                view.categories_list.adapter = context?.let { context -> CategoriesListAdapter(context, it, color) }
                 view.categories_list.visibility = View.VISIBLE
                 view.progress_bar.visibility = View.GONE
             }

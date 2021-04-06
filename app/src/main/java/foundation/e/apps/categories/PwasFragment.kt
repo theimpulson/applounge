@@ -51,7 +51,7 @@ class PwasFragment : Fragment() {
         // Bind to the list of pwas categories
         categoriesViewModel.getPwasCategories().observe(viewLifecycleOwner, Observer {
             if (it!!.isNotEmpty()) {
-                view.categories_list.adapter = CategoriesListAdapter(it, null)
+                view.categories_list.adapter = context?.let { context -> CategoriesListAdapter(context, it, null) }
                 view.categories_list.visibility = View.VISIBLE
                 view.progress_bar.visibility = View.GONE
             }
