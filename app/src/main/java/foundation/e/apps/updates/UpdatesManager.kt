@@ -26,7 +26,7 @@ import foundation.e.apps.updates.model.UpdatesWorker
 import foundation.e.apps.utils.Constants
 import java.util.concurrent.TimeUnit
 
-class UpdatesManager(applicationContext: Context) {
+class UpdatesManager(private val applicationContext: Context) {
     private val TAG = "UpdatesManager"
     private var automaticUpdateInterval: Int
 
@@ -53,7 +53,7 @@ class UpdatesManager(applicationContext: Context) {
 
     fun startWorker() {
         Log.i(TAG, "UpdatesWorker interval: ${automaticUpdateInterval.toLong()} hours")
-        WorkManager.getInstance().enqueueUniquePeriodicWork(Constants.UPDATES_WORK_NAME,
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(Constants.UPDATES_WORK_NAME,
                 ExistingPeriodicWorkPolicy.KEEP, getPeriodicWorkRequest())
         Log.i(TAG, "UpdatesWorker started")
     }
@@ -61,7 +61,7 @@ class UpdatesManager(applicationContext: Context) {
     fun replaceWorker(automaticUpdateInterval: Int) {
         this.automaticUpdateInterval = automaticUpdateInterval
         Log.i(TAG, "UpdatesWorker interval: ${automaticUpdateInterval.toLong()} hours")
-        WorkManager.getInstance().enqueueUniquePeriodicWork(Constants.UPDATES_WORK_NAME,
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(Constants.UPDATES_WORK_NAME,
                 ExistingPeriodicWorkPolicy.REPLACE, getPeriodicWorkRequest())
         Log.i(TAG, "UpdatesWorker started")
     }
