@@ -93,7 +93,7 @@ class HomeFragment : Fragment() {
         }
 
         // Bind image carousel adapter to banner images in view model
-        homeViewModel.getBannerApplications().observe(this, Observer {
+        homeViewModel.getBannerApplications().observe(viewLifecycleOwner, Observer {
             if (homeViewModel.getBannerApplications().value!!.isNotEmpty()) {
                 imageCarousel.adapter = ImageCarouselAdapter(activity!!, homeViewModel.getBannerApplications().value!!)
                 imageCarousel.clipToPadding = false;
@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
         })
 
         // Bind categories adapter to categories in view model
-        homeViewModel.getCategories().observe(this, Observer {
+        homeViewModel.getCategories().observe(viewLifecycleOwner, Observer {
             if (homeViewModel.getCategories().value!!.isNotEmpty()) {
                 showCategories(it!!)
                 categoryList.visibility = View.VISIBLE
@@ -117,7 +117,7 @@ class HomeFragment : Fragment() {
         })
 
         // Bind to the screen error
-        homeViewModel.getScreenError().observe(this, Observer {
+        homeViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 errorDescription.text = activity!!.getString(it.description)
                 errorContainer.visibility = View.VISIBLE

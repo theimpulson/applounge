@@ -107,7 +107,7 @@ class UpdatesFragment() : Fragment() {
         recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList, accentColorOS)
 
         // Bind recycler view adapter to outdated applications list in view model
-        updatesViewModel.getApplications().observe(this, Observer {
+        updatesViewModel.getApplications().observe(viewLifecycleOwner, Observer {
             if (it != null) {
 
 
@@ -130,7 +130,7 @@ class UpdatesFragment() : Fragment() {
         })
 
         // Bind to the screen error
-        updatesViewModel.getScreenError().observe(this, Observer {
+        updatesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 errorDescription.text = activity!!.getString(it.description)
                 errorContainer.visibility = View.VISIBLE

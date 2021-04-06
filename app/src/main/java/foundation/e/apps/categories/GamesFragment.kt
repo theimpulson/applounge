@@ -57,7 +57,7 @@ class GamesFragment() : Fragment() {
 
 
         // Bind to the list of games categories
-        categoriesViewModel.getGamesCategories().observe(this, Observer {
+        categoriesViewModel.getGamesCategories().observe(viewLifecycleOwner, Observer {
             if (it!!.isNotEmpty()) {
                 view.categories_list.adapter = CategoriesListAdapter(it, color)
                 view.categories_list.visibility = View.VISIBLE
@@ -66,7 +66,7 @@ class GamesFragment() : Fragment() {
         })
 
         // Bind to the screen error
-        categoriesViewModel.getScreenError().observe(this, Observer {
+        categoriesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 view.error_description.text = activity!!.getString(it.description)
                 view.error_container.visibility = View.VISIBLE

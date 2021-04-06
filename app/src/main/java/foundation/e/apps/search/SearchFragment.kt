@@ -131,12 +131,12 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         })
 
         // Bind search view suggestions adapter to search suggestions list in view model
-        searchViewModel.getSuggestions().observe(this, Observer {
+        searchViewModel.getSuggestions().observe(viewLifecycleOwner, Observer {
             populateSuggestionsAdapter(it)
         })
 
         // Bind recycler view adapter to search results list in view model
-        searchViewModel.getApplications().observe(this, Observer {
+        searchViewModel.getApplications().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 applicationList.clear()
                 applicationList.addAll(it)
@@ -156,7 +156,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         })
 
         // Bind to the screen error
-        searchViewModel.getScreenError().observe(this, Observer {
+        searchViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 if (!isLoadingMoreApplications) {
                     applicationList.clear()

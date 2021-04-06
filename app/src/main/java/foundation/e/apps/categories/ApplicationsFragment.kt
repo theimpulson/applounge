@@ -58,7 +58,7 @@ class ApplicationsFragment() : Fragment() {
         }
 
         // Bind to the list of applications categories
-        categoriesViewModel.getApplicationsCategories().observe(this, Observer {
+        categoriesViewModel.getApplicationsCategories().observe(viewLifecycleOwner, Observer {
             if (it!!.isNotEmpty()) {
                 //Add New Category
                 if (!it.any { Category -> Category.id == "system_apps" })
@@ -70,7 +70,7 @@ class ApplicationsFragment() : Fragment() {
         })
 
         // Bind to the screen error
-        categoriesViewModel.getScreenError().observe(this, Observer {
+        categoriesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 view.error_description.text = activity!!.getString(it.description)
                 view.error_container.visibility = View.VISIBLE
