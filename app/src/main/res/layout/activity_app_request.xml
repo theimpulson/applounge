@@ -170,7 +170,8 @@
                     android:layout_marginEnd="@dimen/layout_margin_large"
                     android:layout_marginBottom="@dimen/layout_margin_large"
                     android:adjustViewBounds="true"
-                    android:src="@drawable/package_name_help_image" />
+                    android:src="@drawable/package_name_help_image"
+                    android:contentDescription="@string/package_name_help_example" />
 
             </LinearLayout>
 

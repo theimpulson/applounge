@@ -34,7 +34,8 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/layout_margin_medium"
         android:src="@drawable/ic_cat_default"
-        android:tint="@color/color_category_icon" />
+        android:tint="@color/color_category_icon"
+        android:contentDescription="@string/menu_categories" />
 
     <TextView
         android:id="@+id/category_title"

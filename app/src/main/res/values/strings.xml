@@ -186,7 +186,12 @@
 
 
     <string name="Signature_verification_failed">Signature verification failed, aborting install</string>
-
+    <string name="permissions_expand">Show list of permissions</string>
+    <string name="trackers_expand">Show list of trackers</string>
+    <string name="package_name_help_example">Example scr showing a package and it\'s name</string>
+    <string name="error_incident">An error occured</string>
+    <string name="image_carousel">Image carousel</string>
+    <string name="divider">Divider</string>
 
 
 </resources>

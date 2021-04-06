@@ -582,7 +582,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/layout_margin_medium"
-                        android:src="@drawable/ic_app_description_expand" />
+                        android:src="@drawable/ic_app_description_expand"
+                        android:contentDescription="@string/permissions_expand" />
 
                 </RelativeLayout>
 
@@ -621,7 +622,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/layout_margin_medium"
-                        android:src="@drawable/ic_app_description_expand" />
+                        android:src="@drawable/ic_app_description_expand"
+                        android:contentDescription="@string/trackers_expand" />
 
                 </RelativeLayout>
 
@@ -670,7 +672,8 @@
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/ic_app_version" />
+                            android:src="@drawable/ic_app_version"
+                            android:contentDescription="@string/app_version" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -711,7 +714,8 @@
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/ic_app_updated_on" />
+                            android:src="@drawable/ic_app_updated_on"
+                            android:contentDescription="@string/app_updated_on" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -752,7 +756,8 @@
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/ic_app_min_android" />
+                            android:src="@drawable/ic_app_min_android"
+                            android:contentDescription="@string/app_min_android" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -793,7 +798,8 @@
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/ic_app_licence" />
+                            android:src="@drawable/ic_app_licence"
+                            android:contentDescription="@string/app_licence" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -834,7 +840,8 @@
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/ic_package_icon" />
+                            android:src="@drawable/ic_package_icon"
+                            android:contentDescription="@string/app_package_name" />
 
                         <TextView
                             android:layout_width="wrap_content"
