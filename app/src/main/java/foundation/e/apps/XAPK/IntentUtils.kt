@@ -28,9 +28,7 @@ object IntentUtils {
             Intent().apply {
                 this.action = Intent.ACTION_VIEW
                 this.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    this.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                }
+                this.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 this.setDataAndType(UriUtils.fromFileProvider(mContext, File(filePath)), "application/vnd.android.package-archive")
                 mContext.startActivity(this)
             }

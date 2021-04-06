@@ -36,7 +36,7 @@
     <style name="AppTheme1" parent="android:Theme">
         <item name="android:windowDisablePreview">true</item>
     </style>
-    <style name="AppTheme" parent="BaseTheme"/>
+    <style name="AppTheme" parent="BaseTheme"></style>
 
     <style name="SearchSuggestionTheme" parent="Widget.AppCompat.Light.AutoCompleteTextView">
         <item name="android:popupBackground">#FAFAFA</item>

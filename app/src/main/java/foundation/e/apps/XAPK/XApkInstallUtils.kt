@@ -56,12 +56,6 @@ object XApkInstallUtils {
                             }
                             return@Runnable
                         }
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && this.XSplitApks?.size ?: 0 > 1) {
-                            handler.post {
-                                xApkInstallProgressCallback?.onError(InstallError.LowerSdkError)
-                            }
-                            return@Runnable
-                        }
                         if (this.useObbs()) {
                             installXApkObb(zipFile!!, this, xApkInstallProgressCallback)
                         }

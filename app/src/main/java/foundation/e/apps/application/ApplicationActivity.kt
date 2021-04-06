@@ -128,13 +128,11 @@ class ApplicationActivity :
         } else {
             toolbar.elevation = defaultElevation
         }
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            scroll_view.setOnScrollChangeListener { view, ia, ib, ic, id ->
-                if (view.scrollY == 0) {
-                    toolbar.elevation = 0f
-                } else {
-                    toolbar.elevation = defaultElevation
-                }
+        scroll_view.setOnScrollChangeListener { view, ia, ib, ic, id ->
+            if (view.scrollY == 0) {
+                toolbar.elevation = 0f
+            } else {
+                toolbar.elevation = defaultElevation
             }
         }
     }
@@ -721,9 +719,7 @@ class ApplicationActivity :
             imageView.setImageBitmap(it)
             val outValue = TypedValue()
             theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
-            if (android.os.Build.VERSION.SDK_INT >= 23) {
-                imageView.foreground = getDrawable(outValue.resourceId)
-            }
+            imageView.foreground = getDrawable(outValue.resourceId)
             app_images_container.addView(imageView)
             imageView.setOnClickListener { _ ->
                 val intent = Intent(this, ScreenshotsActivity::class.java)

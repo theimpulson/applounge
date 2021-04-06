@@ -149,15 +149,11 @@ class Application(val packageName: String, private val applicationManager: Appli
     }
 
     private fun canWriteStorage(activity: Activity): Boolean {
-        return if (android.os.Build.VERSION.SDK_INT >= 23) {
-            if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                activity.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        Constants.STORAGE_PERMISSION_REQUEST_CODE)
-                false
-            } else {
-                true
-            }
+        return if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            activity.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                                        Constants.STORAGE_PERMISSION_REQUEST_CODE)
+            false
         } else {
             true
         }

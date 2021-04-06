@@ -36,11 +36,7 @@ class LocaleUtils {
 
     val systemLocal: Locale
         get() {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                LocaleList.getDefault().get(0)
-            } else {
-                Locale.getDefault()
-            }
+            return LocaleList.getDefault().get(0)
         }
 
 
@@ -51,17 +47,7 @@ class LocaleUtils {
 //        }
 
     private fun forLanguageTag(languageTag: String): Locale {
-        return if (Build.VERSION.SDK_INT >= 21) {
-            Locale.forLanguageTag(languageTag)
-        } else {
-            val parts = languageTag.split("-".toRegex()).toTypedArray()
-            if (parts.size == 1)
-                Locale(parts[0])
-            else if (parts.size == 2 || parts.size == 3 && parts[2].startsWith("#"))
-                Locale(parts[0], parts[1])
-            else
-                Locale(parts[0], parts[1], parts[2])
-        }
+        return Locale.forLanguageTag(languageTag)
     }
 
     private fun toLanguageTag(locale: Locale): String {

@@ -61,11 +61,7 @@ class Installer(private val packageName: String,
     }
 
     private fun requestApplicationInstall(context: Context) {
-        val uri = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            FileProvider.getUriForFile(context, context.packageName + ".provider", apk)
-        } else {
-            Uri.fromFile(apk)
-        }
+        val uri = FileProvider.getUriForFile(context, context.packageName + ".provider", apk)
         val intent = Intent(Intent.ACTION_INSTALL_PACKAGE)
         intent.action = Intent.ACTION_VIEW
         intent.setDataAndType(uri, "application/vnd.android.package-archive")
