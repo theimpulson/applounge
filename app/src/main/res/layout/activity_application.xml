@@ -376,7 +376,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_margin_medium"
                     android:weightSum="3"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
 
                     <LinearLayout
                         android:id="@+id/app_rating_container"
