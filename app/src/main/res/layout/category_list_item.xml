@@ -18,6 +18,7 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/category_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -34,8 +35,8 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/layout_margin_medium"
         android:src="@drawable/ic_cat_default"
-        android:tint="@color/color_category_icon"
-        android:contentDescription="@string/menu_categories" />
+        android:contentDescription="@string/menu_categories"
+        app:tint="@color/color_category_icon" />
 
     <TextView
         android:id="@+id/category_title"

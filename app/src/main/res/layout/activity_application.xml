@@ -426,7 +426,7 @@
                                 android:layout_height="16dp"
                                 android:contentDescription="@string/app_rating_content_description"
                                 android:src="@drawable/ic_app_rating"
-                                android:tint="@android:color/darker_gray"/>
+                                app:tint="@android:color/darker_gray" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -507,7 +507,7 @@
                                 android:layout_height="16dp"
                                 android:contentDescription="@string/app_privacy_score_content_description"
                                 android:src="@drawable/ic_app_privacy"
-                                android:tint="@android:color/darker_gray"/>
+                                app:tint="@android:color/darker_gray" />
 
                             <TextView
                                 android:layout_width="wrap_content"

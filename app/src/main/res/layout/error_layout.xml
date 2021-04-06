@@ -18,6 +18,7 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/error_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -31,8 +32,8 @@
         android:layout_width="@dimen/app_icon_size"
         android:layout_height="@dimen/app_icon_size"
         android:src="@drawable/ic_error"
-        android:tint="@android:color/darker_gray"
-        android:contentDescription="@string/error_incident" />
+        android:contentDescription="@string/error_incident"
+        app:tint="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/error_description"
