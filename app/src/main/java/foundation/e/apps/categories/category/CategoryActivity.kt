@@ -164,6 +164,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
                                             grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE &&
                 grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
             Snackbar.make(container, R.string.error_storage_permission_denied,
