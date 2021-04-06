@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button xmlns:android="http://schemas.android.com/apk/res/android"
+            <Button
                 android:id="@+id/update_all"
                 android:layout_width="@dimen/update_all_button_width"
                 android:layout_height="wrap_content"
