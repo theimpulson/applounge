@@ -14,4 +14,4 @@ build:
   artifacts:
     paths:
     - app/build/outputs/apk/
-  
+    - app/build/reports/
