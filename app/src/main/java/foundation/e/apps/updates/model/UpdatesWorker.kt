@@ -23,8 +23,8 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.AsyncTask
-import android.preference.PreferenceManager
 import android.util.Log
+import androidx.preference.PreferenceManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import foundation.e.apps.R

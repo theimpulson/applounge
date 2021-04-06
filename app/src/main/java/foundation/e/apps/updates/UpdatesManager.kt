@@ -18,8 +18,8 @@
 package foundation.e.apps.updates
 
 import android.content.Context
-import android.preference.PreferenceManager
 import android.util.Log
+import androidx.preference.PreferenceManager
 import androidx.work.*
 import foundation.e.apps.R
 import foundation.e.apps.updates.model.UpdatesWorker

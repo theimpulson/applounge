@@ -28,7 +28,6 @@ import android.database.Cursor
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.preference.PreferenceManager
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.ColorRes
@@ -36,6 +35,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
