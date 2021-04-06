@@ -112,7 +112,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList, 0)
+        recyclerView.adapter = ApplicationListAdapter(requireActivity(), applicationList, 0)
         loadMoreContainer.visibility = View.GONE
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -160,7 +160,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             if (it != null) {
                 if (!isLoadingMoreApplications) {
                     applicationList.clear()
-                    errorDescription.text = activity!!.getString(it.description)
+                    errorDescription.text = requireActivity().getString(it.description)
                     errorContainer.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
                     loadMoreContainer.visibility = View.GONE
@@ -194,7 +194,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             splashContainer.visibility = View.GONE
-            searchViewModel.onSearchQuerySubmitted(context!!,query)
+            searchViewModel.onSearchQuerySubmitted(requireContext(),query)
         }
     }
 
@@ -206,14 +206,14 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             splashContainer.visibility = View.GONE
-            searchViewModel.onSearchQuerySubmitted(context!!, it)
+            searchViewModel.onSearchQuerySubmitted(requireContext(), it)
         }
         return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
         searchView.query?.let {
-            searchViewModel.onSearchQueryChanged(context!!, it.toString())
+            searchViewModel.onSearchQueryChanged(requireContext(), it.toString())
         }
         return true
     }
@@ -265,7 +265,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         if (::searchViewModel.isInitialized) {
             searchViewModel.getApplications().value?.let {
                 it.forEach { application ->
-                    application.checkForStateUpdate(context!!)
+                    application.checkForStateUpdate(requireContext())
                 }
             }
         }

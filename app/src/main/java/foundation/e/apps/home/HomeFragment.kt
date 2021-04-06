@@ -89,13 +89,13 @@ class HomeFragment : Fragment() {
         errorContainer.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
             progressBar.visibility = View.VISIBLE
-            homeViewModel.loadCategories(context!!)
+            homeViewModel.loadCategories(requireContext())
         }
 
         // Bind image carousel adapter to banner images in view model
         homeViewModel.getBannerApplications().observe(viewLifecycleOwner, Observer {
             if (homeViewModel.getBannerApplications().value!!.isNotEmpty()) {
-                imageCarousel.adapter = ImageCarouselAdapter(activity!!, homeViewModel.getBannerApplications().value!!)
+                imageCarousel.adapter = ImageCarouselAdapter(requireActivity(), homeViewModel.getBannerApplications().value!!)
                 imageCarousel.clipToPadding = false;
                 imageCarousel.setPadding(170, 10, 170, 10);
                 imageCarousel.pageMargin =50
@@ -119,7 +119,7 @@ class HomeFragment : Fragment() {
         // Bind to the screen error
         homeViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                errorDescription.text = activity!!.getString(it.description)
+                errorDescription.text = requireActivity().getString(it.description)
                 errorContainer.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
             } else {
@@ -129,7 +129,7 @@ class HomeFragment : Fragment() {
 
         if (homeViewModel.getBannerApplications().value!!.isEmpty() ||
                 homeViewModel.getCategories().value!!.isEmpty()) {
-            homeViewModel.loadCategories(context!!)
+            homeViewModel.loadCategories(requireContext())
         }
         return view
     }
@@ -137,16 +137,16 @@ class HomeFragment : Fragment() {
     private fun setCustomScroller() {
         val scroller = ViewPager::class.java.getDeclaredField("mScroller")
         scroller.isAccessible = true
-        scroller.set(imageCarousel, ImageCarouselScroller(context!!))
+        scroller.set(imageCarousel, ImageCarouselScroller(requireContext()))
     }
 
     private fun showCategories(categories: LinkedHashMap<Category, ArrayList<Application>>) {
         categoryList.removeAllViews()
         categories.forEach {
-            val homeCategory = HomeCategory(context!!, it.key)
+            val homeCategory = HomeCategory(requireContext(), it.key)
             val applicationList = homeCategory.findViewById<RecyclerView>(R.id.application_list)
             applicationList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            applicationList.adapter = SmallApplicationListAdapter(activity!!, it.value)
+            applicationList.adapter = SmallApplicationListAdapter(requireActivity(), it.value)
             categoryList.addView(homeCategory)
         }
     }
@@ -156,7 +156,7 @@ class HomeFragment : Fragment() {
         if (::homeViewModel.isInitialized) {
             homeViewModel.getCategories().value!!.values.forEach {
                 it.forEach { application ->
-                    application.checkForStateUpdate(context!!)
+                    application.checkForStateUpdate(requireContext())
                 }
             }
         }

@@ -42,13 +42,13 @@ class GamesFragment() : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_games_categories, container, false)
         view.categories_list.layoutManager = LinearLayoutManager(context)
-        color = arguments!!.getInt("color",0)
+        color = requireArguments().getInt("color",0)
         view.categories_list.visibility = View.GONE
         view.progress_bar.visibility = View.VISIBLE
         view.error_container.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
             view.progress_bar.visibility = View.VISIBLE
-            categoriesViewModel.loadCategories(context!!)
+            categoriesViewModel.loadCategories(requireContext())
         }
         view.error_resolve.setTextColor(Color.parseColor("#ffffff"))
         if (color != null) {
@@ -68,7 +68,7 @@ class GamesFragment() : Fragment() {
         // Bind to the screen error
         categoriesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                view.error_description.text = activity!!.getString(it.description)
+                view.error_description.text = requireActivity().getString(it.description)
                 view.error_container.visibility = View.VISIBLE
                 view.progress_bar.visibility = View.GONE
             } else {
@@ -77,7 +77,7 @@ class GamesFragment() : Fragment() {
         })
 
         if (categoriesViewModel.getGamesCategories().value!!.isEmpty()) {
-            categoriesViewModel.loadCategories(context!!)
+            categoriesViewModel.loadCategories(requireContext())
         }
         return view
     }

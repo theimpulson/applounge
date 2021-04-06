@@ -45,7 +45,7 @@ class PwasFragment : Fragment() {
         view.error_container.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
             view.progress_bar.visibility = View.VISIBLE
-            categoriesViewModel.loadCategories(context!!)
+            categoriesViewModel.loadCategories(requireContext())
         }
 
         // Bind to the list of pwas categories
@@ -60,7 +60,7 @@ class PwasFragment : Fragment() {
         // Bind to the screen error
         categoriesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                view.error_description.text = activity!!.getString(it.description)
+                view.error_description.text = requireActivity().getString(it.description)
                 view.error_container.visibility = View.VISIBLE
                 view.progress_bar.visibility = View.GONE
             } else {
@@ -69,7 +69,7 @@ class PwasFragment : Fragment() {
         })
 
         if (categoriesViewModel.getPwasCategories().value!!.isEmpty()) {
-            categoriesViewModel.loadCategories(context!!)
+            categoriesViewModel.loadCategories(requireContext())
         }
         return view
     }

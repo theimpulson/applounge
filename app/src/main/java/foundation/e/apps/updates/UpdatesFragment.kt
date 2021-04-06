@@ -87,7 +87,7 @@ class UpdatesFragment() : Fragment() {
         updateAll.setOnClickListener {
             applicationList.forEach { application ->
                 if (application.state == State.NOT_UPDATED) {
-                    application.buttonClicked(context!!, activity!!)
+                    application.buttonClicked(requireContext(), requireActivity())
                 }
             }
         }
@@ -98,13 +98,13 @@ class UpdatesFragment() : Fragment() {
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
             updateAll.isEnabled = false
             progressBar.visibility = View.VISIBLE
-            updatesViewModel.loadApplicationList(context!!)
+            updatesViewModel.loadApplicationList(requireContext())
         }
 
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList, accentColorOS)
+        recyclerView.adapter = ApplicationListAdapter(requireActivity(), applicationList, accentColorOS)
 
         // Bind recycler view adapter to outdated applications list in view model
         updatesViewModel.getApplications().observe(viewLifecycleOwner, Observer {
@@ -132,7 +132,7 @@ class UpdatesFragment() : Fragment() {
         // Bind to the screen error
         updatesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                errorDescription.text = activity!!.getString(it.description)
+                errorDescription.text = requireActivity().getString(it.description)
                 errorContainer.visibility = View.VISIBLE
                 updateAll.isEnabled = false
                 progressBar.visibility = View.GONE
@@ -144,7 +144,7 @@ class UpdatesFragment() : Fragment() {
                 errorContainer.visibility = View.GONE
             }
         })
-        updatesViewModel.loadApplicationList(context!!)
+        updatesViewModel.loadApplicationList(requireContext())
 
 
         return view
@@ -156,7 +156,7 @@ class UpdatesFragment() : Fragment() {
             updatesViewModel.getApplications().value?.let {
                 it.forEach { application ->
                     progressBar2.visibility=View.VISIBLE
-                    application.checkForStateUpdate(context!!)
+                    application.checkForStateUpdate(requireContext())
                 }
                 val handler = Handler()
                 handler.postDelayed({

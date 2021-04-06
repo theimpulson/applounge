@@ -54,7 +54,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val updateCheckInterval =
                 preferenceManager.findPreference<Preference>(getString(R.string.pref_update_interval_key)) as ListPreference
         updateCheckInterval.setOnPreferenceChangeListener { _, newValue ->
-            UpdatesManager(activity!!.applicationContext).replaceWorker(newValue.toString().toInt())
+            UpdatesManager(requireActivity().applicationContext).replaceWorker(newValue.toString().toInt())
             true
         }
 
@@ -119,7 +119,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                 Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
-                activity!!.finish()
+                requireActivity().finish()
             }
         }
         worker.schedule(task, 1, TimeUnit.SECONDS)

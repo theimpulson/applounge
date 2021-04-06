@@ -36,8 +36,8 @@ class CategoriesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         val viewPager = view.findViewById<ViewPager>(R.id.view_pager)
-        var color = getAccentColor(activity!!);
-        viewPager.adapter = CategoriesViewPagerAdapter(activity!!.supportFragmentManager, tabLayout.tabCount, color)
+        var color = getAccentColor(requireActivity());
+        viewPager.adapter = CategoriesViewPagerAdapter(requireActivity().supportFragmentManager, tabLayout.tabCount, color)
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 
         if (color != null) {
