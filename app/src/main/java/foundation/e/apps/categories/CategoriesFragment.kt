@@ -69,7 +69,7 @@ class CategoriesFragment : Fragment() {
   */
     fun getAccentColor(context: Context): Int {
 
-        val color =context.resources.getColor(R.color.colorAccent);
+        val color = context.getColor(R.color.colorAccent);
 
 
         return color;

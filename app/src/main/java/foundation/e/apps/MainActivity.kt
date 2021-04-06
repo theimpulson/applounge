@@ -354,7 +354,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     *  */
     private fun getAccentColor() {
 
-        accentColorOS=this.resources.getColor(R.color.colorAccent);
+        accentColorOS = this.getColor(R.color.colorAccent);
 
 
 

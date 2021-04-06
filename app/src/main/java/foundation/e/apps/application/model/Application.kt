@@ -471,7 +471,7 @@ class Application(val packageName: String, private val applicationManager: Appli
    */
     fun getAccentColor(context: Context): Int {
 
-        val color =context.resources.getColor(foundation.e.apps.R.color.colorAccent);
+        val color = context.getColor(foundation.e.apps.R.color.colorAccent);
         return color;
 
     }
