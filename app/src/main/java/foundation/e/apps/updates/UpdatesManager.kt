@@ -35,7 +35,7 @@ class UpdatesManager(applicationContext: Context) {
         automaticUpdateInterval =
                 preferences.getString(
                         applicationContext.getString(R.string.pref_update_interval_key),
-                        applicationContext.getString(R.string.preference_update_interval_default))
+                        applicationContext.getString(R.string.preference_update_interval_default))!!
                         .toInt()
     }
 

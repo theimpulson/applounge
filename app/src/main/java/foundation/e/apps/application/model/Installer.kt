@@ -141,7 +141,7 @@ class Installer(private val packageName: String,
     private var receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == Intent.ACTION_PACKAGE_ADDED &&
-                    (intent.data.encodedSchemeSpecificPart == packageName)) {
+                    (intent.data?.encodedSchemeSpecificPart == packageName)) {
                 Log.i(TAG, "Broadcast received")
                 var path = apk.absolutePath.split("Download")
                 //delete all APK file after install

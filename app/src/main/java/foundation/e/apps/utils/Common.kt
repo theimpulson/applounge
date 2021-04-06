@@ -92,7 +92,7 @@ object Common {
     }
 
     fun appHasLaunchActivity(context: Context, packageName: String?): Boolean {
-        return (context.packageManager.getLaunchIntentForPackage(packageName) != null)
+        return (packageName?.let { context.packageManager.getLaunchIntentForPackage(it) } != null)
     }
 
     fun getObjectMapper(): ObjectMapper {
