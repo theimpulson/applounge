@@ -141,8 +141,8 @@ object XApkInstallUtils {
             for (item in xApkManifest.expansionList!!) {
                 val inputStream = getZipFileInputStream(zipFile, item.xFile, true)!!
                 val obbFile = File(FsUtils.getStorageDir(), item.installPath)
-                if (!obbFile.parentFile.exists()) {
-                    obbFile.parentFile.mkdirs()
+                if (obbFile.parentFile?.exists() == false) {
+                    obbFile.parentFile?.mkdirs()
                 }
                 obbSuccess = FileWriterUtils.writeFileFromIS(
                     obbFile,
