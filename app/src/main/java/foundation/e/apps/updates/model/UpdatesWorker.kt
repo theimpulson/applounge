@@ -21,7 +21,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
+import android.net.NetworkCapabilities
 import android.os.AsyncTask
 import android.util.Log
 import androidx.preference.PreferenceManager
@@ -132,11 +132,20 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
             context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
             PackageManager.PERMISSION_GRANTED)
 
+    /*
+     * Checks if the device is connected to a metered connection or not
+     * @param context current Context
+     * @return returns true if the connections is not metered, false otherwise
+     */
     private fun isConnectedToUnmeteredNetwork(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
-        return if (connectivityManager is ConnectivityManager) {
-            val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
-            networkInfo?.isConnected ?: false
-        } else false
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+
+        if (capabilities != null) {
+            if (capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)) {
+                return true
+            }
+        }
+        return false
     }
 }
