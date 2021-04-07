@@ -18,6 +18,8 @@
 package foundation.e.apps.updates
 
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -67,10 +69,10 @@ class UpdatesFragment() : Fragment() {
         updateAll.setTextColor(accentColorOS)
         val splashContainer = view.findViewById<LinearLayout>(R.id.splash_container)
         val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
-        progressBar.getIndeterminateDrawable().setColorFilter(accentColorOS, android.graphics.PorterDuff.Mode.MULTIPLY);
+        progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
         val reloadProgressBar = view.findViewById<ProgressBar>(R.id.progress_bar2)
         //progressBar.setProgressTintList(ColorStateList.valueOf(accentColorOS));
-        reloadProgressBar.getIndeterminateDrawable().setColorFilter(accentColorOS, android.graphics.PorterDuff.Mode.MULTIPLY);
+        reloadProgressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
 
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
