@@ -199,7 +199,6 @@ class Application(val packageName: String, private val applicationManager: Appli
         } else {
             true
         }
-        true
     }
 
     override fun onDownloadComplete(context: Context, status: Int) {
