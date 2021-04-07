@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Environment
+import androidx.core.content.pm.PackageInfoCompat
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Common
@@ -62,7 +63,7 @@ class ApplicationInfo(private val packageName: String) {
                     val updateVersionCode = matcher.group()
                             .replace("(", "")
                             .replace(")", "")
-                    return (updateVersionCode.toInt() <= packageInfo.versionCode)
+                    return updateVersionCode.toLong() <= PackageInfoCompat.getLongVersionCode(packageInfo)
                 } catch (exception: Exception) {
                 }
             }
