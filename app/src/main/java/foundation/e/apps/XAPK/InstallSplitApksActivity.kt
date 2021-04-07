@@ -80,7 +80,7 @@ class InstallSplitApksActivity : BaseActivity() {
             val pendingIntent = PendingIntent.getActivity(mActivity, 0, intent, 0)
             val statusReceiver = pendingIntent.intentSender
             // Commit the session (this will start the installation workflow).
-            session!!.commit(statusReceiver)
+            session.commit(statusReceiver)
             finish()
         } catch (e: IOException) {
             e.printStackTrace()
