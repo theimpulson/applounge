@@ -40,11 +40,8 @@ class CategoriesFragment : Fragment() {
         viewPager.adapter = CategoriesViewPagerAdapter(requireActivity().supportFragmentManager, tabLayout.tabCount, color)
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 
-        if (color != null) {
-            tabLayout.setSelectedTabIndicatorColor(color);
-            tabLayout.setTabTextColors(Color.parseColor("#000000"), color);
-
-        };
+        tabLayout.setSelectedTabIndicatorColor(color);
+        tabLayout.setTabTextColors(Color.parseColor("#000000"), color);
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {

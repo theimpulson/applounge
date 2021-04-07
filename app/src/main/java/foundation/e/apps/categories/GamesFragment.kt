@@ -51,9 +51,7 @@ class GamesFragment() : Fragment() {
             categoriesViewModel.loadCategories(requireContext())
         }
         view.error_resolve.setTextColor(Color.parseColor("#ffffff"))
-        if (color != null) {
-            view.error_resolve.setBackgroundColor(color)
-        }
+        view.error_resolve.setBackgroundColor(color)
 
 
         // Bind to the list of games categories
