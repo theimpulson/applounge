@@ -38,7 +38,6 @@ import java.util.concurrent.Executors
 import javax.net.ssl.HttpsURLConnection
 import kotlin.math.roundToInt
 
-
 object Common {
 
     val EXECUTOR = Executors.newCachedThreadPool()!!
@@ -64,29 +63,20 @@ object Common {
         return connection
     }
 
+    /*
+     * Checks if the given [packageName] is a system app or not
+     * @param packageManager current PackageManager
+     * @param packageName package to verify
+     * @return true if the app is system app. false otherwise
+     */
     fun isSystemApp(packageManager: PackageManager, packageName: String?): Boolean {
-        try {
-            // Get package information for the app
-            val appPackageInfo = packageManager.getPackageInfo(
-                    packageName, PackageManager.GET_SIGNATURES)
-            // Get application information for the app
-            val appInfo = packageManager.getApplicationInfo(
-                    packageName, 0)
-            // Get package information for the Android system
-            val systemPackageInfo = packageManager.getPackageInfo(
-                    "android", PackageManager.GET_SIGNATURES)
-
-            // Compare app and Android system signatures
-            if (appPackageInfo.signatures.isNotEmpty() &&
-                    systemPackageInfo.signatures.isNotEmpty() &&
-                    appPackageInfo.signatures[0] == systemPackageInfo.signatures[0]) {
-                return true
-            } else if (appInfo.flags and (ApplicationInfo.FLAG_SYSTEM or
-                            ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-                return true
+        if (packageName != null) {
+            return try {
+                val info = packageManager.getPackageInfo(packageName, 0)
+                (info.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+            } catch (exception: Exception) {
+                false
             }
-        } catch (exception: Exception) {
-            exception.printStackTrace()
         }
         return false
     }
