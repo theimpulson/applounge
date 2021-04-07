@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.os.LocaleListCompat
@@ -42,10 +43,22 @@ object Common {
 
     val EXECUTOR = Executors.newCachedThreadPool()!!
 
+    /*
+     * Checks if device has internet connection available or not
+     * @param context current Context
+     * @return true if internet connection is available, false otherwise
+     */
     fun isNetworkAvailable(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetworkInfo = connectivityManager.activeNetworkInfo
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected
+        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+
+        if (capabilities != null) {
+            if (capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)) {
+                return true
+            }
+        }
+        return false
     }
 
     fun toMiB(bytes: Int): Double {
