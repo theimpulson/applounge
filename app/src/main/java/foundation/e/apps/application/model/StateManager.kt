@@ -43,7 +43,7 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
             } else if (appManager.isInstalling(app) && app.isInstalling) {
                 State.INSTALLING
             } else if (PreferenceStorage(context).getBoolean(context.getString(R.string.prefs_microg_vrsn_installed), false)) {
-                if (info.isLastVersionInstalled(context, basicData.lastVersionNumber ?: "")) {
+                if (info.isLastVersionInstalled(context, basicData.lastVersionNumber)) {
                     State.NOT_UPDATED
                 } else {
                     State.INSTALLED
@@ -76,7 +76,7 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
         } else if (appManager.isInstalling(app) && app.isInstalling) {
             State.INSTALLING
         } else if (PreferenceStorage(context).getBoolean(context.getString(R.string.prefs_microg_vrsn_installed), false)) {
-            if (info.isLastVersionInstalled(context, basicData.lastVersionNumber ?: "")) {
+            if (info.isLastVersionInstalled(context, basicData.lastVersionNumber)) {
                 State.NOT_UPDATED
             } else {
                 State.INSTALLED
