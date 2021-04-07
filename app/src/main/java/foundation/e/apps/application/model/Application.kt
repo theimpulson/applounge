@@ -95,7 +95,7 @@ class Application(val packageName: String, private val applicationManager: Appli
     }
 
     fun pwaInstall(context: Context) {
-        var error: Error? = null
+        var error: Error?
 
         Thread(Runnable {
             error = assertFullData(context)
