@@ -117,7 +117,6 @@ class InstallSplitApksActivity : BaseActivity() {
         val extras = intent.extras
         if (PACKAGE_INSTALLED_ACTION == intent.action) {
             val status = extras!!.getInt(PackageInstaller.EXTRA_STATUS)
-            val message = extras.getString(PackageInstaller.EXTRA_STATUS_MESSAGE)
             when (status) {
                 PackageInstaller.STATUS_PENDING_USER_ACTION -> {
                     // This test app isn't privileged, so the user has to confirm the install.
@@ -168,6 +167,4 @@ class InstallSplitApksActivity : BaseActivity() {
 
 }
 
-private fun Intent.putExtra(keY_PARAM: String, apksBean: ApksBean) {
 
-}

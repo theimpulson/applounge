@@ -67,7 +67,6 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val extras = intent.extras
         category = intent.getSerializableExtra(CATEGORY_KEY) as Category
         supportActionBar?.title = category.getTitle()
 

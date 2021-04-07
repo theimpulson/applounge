@@ -84,21 +84,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
         //Show only pwas when checked
         var z = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.show_only_pwa_apps_key)) as RadioButtonPreference
 
-        x.setOnPreferenceChangeListener { _, newValue ->
+        x.setOnPreferenceChangeListener { _, _ ->
             y.isChecked = false
             z.isChecked = false
             backToMainActivity()
             true
         }
 
-        y.setOnPreferenceChangeListener { _, newValue ->
+        y.setOnPreferenceChangeListener { _, _ ->
             x.isChecked = false
             z.isChecked = false
             backToMainActivity()
             true
         }
 
-        z.setOnPreferenceChangeListener { _, newValue ->
+        z.setOnPreferenceChangeListener { _, _ ->
             y.isChecked = false
             x.isChecked = false
             backToMainActivity()

@@ -128,7 +128,7 @@ class ApplicationActivity :
         } else {
             toolbar.elevation = defaultElevation
         }
-        scroll_view.setOnScrollChangeListener { view, ia, ib, ic, id ->
+        scroll_view.setOnScrollChangeListener { view, _, _, _, _ ->
             if (view.scrollY == 0) {
                 toolbar.elevation = 0f
             } else {
@@ -278,7 +278,6 @@ class ApplicationActivity :
             setRatingBorder(basicData.ratings.rating)
 
             app_rating_container.setOnClickListener {
-                val text = R.string.ok
                 val alertDialog = AlertDialog.Builder(this).create()
 
                 alertDialog.setIcon(R.drawable.ic_app_rating)

@@ -209,7 +209,7 @@ class Application(val packageName: String, private val applicationManager: Appli
                 Execute({
                     AppDownloadedRequest(basicData!!.id,fullData!!.getLastVersion()?.apkArchitecture).request()
                 }, {})
-                if(info.isXapk(fullData!!,basicData)){
+                if(info.isXapk(fullData!!)){
                     isInstalling=true
                     XAPKFile(info.getxApkFile(context,basicData!!),this)
                 }

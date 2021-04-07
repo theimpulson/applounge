@@ -111,19 +111,19 @@ class ApplicationInfo(private val packageName: String) {
         Installer(data.packageName, getApkFile(context, data), callback).install(context)
     }
 
-    fun isXapk(fullData: FullData, basicData: BasicData?): Boolean {
+    fun isXapk(fullData: FullData): Boolean {
         return fullData.getLastVersion()!!.is_xapk && fullData.getLastVersion()?.downloadLink!!.endsWith(".xapk")
     }
 
     fun getApkOrXapkFileName(fullData: FullData, basicData: BasicData): String? {
-        if (isXapk(fullData, basicData)) {
+        if (isXapk(fullData)) {
             return getxApkFilename(basicData)
         } else
             return getApkFilename(basicData)
     }
 
     fun getApkOrXapkFile(context: Context, fullData: FullData, basicData: BasicData): File {
-        if (isXapk(fullData, basicData)) {
+        if (isXapk(fullData)) {
             return getxApkFile(context, basicData)
         } else
             return getApkFile(context, basicData)
