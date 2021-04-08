@@ -70,11 +70,24 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private var isReceiverRegistered = false
     var accentColorOS = 0
 
+    init {
+        instance = this
+    }
 
     companion object {
+        private var instance: MainActivity? = null
+
         lateinit var mActivity: MainActivity
         var sharedPreferences : SharedPreferences?=null
         val sharedPrefFile = "kotlinsharedpreference"
+
+        /*
+         * Provides the application context via MainActivity
+         * @return applicationContext
+         */
+        fun applicationContext(): Context {
+            return instance!!.applicationContext
+        }
     }
 
 
