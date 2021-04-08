@@ -19,6 +19,7 @@ package foundation.e.apps.XAPK
 
 import android.os.Environment
 import foundation.e.apps.BuildConfig
+import foundation.e.apps.MainActivity
 import java.io.File
 
 object AppFolder {
@@ -51,7 +52,8 @@ object AppFolder {
     private val appFolder: File?
         get() {
             return if (FsUtils.isSdUsable) {
-                val appFolder = File(Environment.getExternalStorageDirectory(), APP_FOLDER_NAME)
+                val appContext = MainActivity.applicationContext()
+                val appFolder = File(appContext.getExternalFilesDir(null), APP_FOLDER_NAME)
                 FsUtils.createOnNotFound(appFolder)
             } else {
                 null

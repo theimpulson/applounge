@@ -19,6 +19,7 @@ package foundation.e.apps.XAPK
 
 import android.os.Environment
 import android.text.TextUtils
+import foundation.e.apps.MainActivity
 import java.io.File
 
 object FsUtils {
@@ -28,7 +29,8 @@ object FsUtils {
 
     fun getStorageDir(): File? {
         return if (isSdUsable) {
-            Environment.getExternalStorageDirectory()
+            val appContext = MainActivity.applicationContext()
+            appContext.getExternalFilesDir(null)
         } else {
             null
         }
