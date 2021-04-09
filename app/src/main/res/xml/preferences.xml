@@ -25,7 +25,6 @@
         <Preference android:layout="@layout/preference_space" />
 
         <ListPreference
-            android:id="@+id/id_update"
             android:defaultValue="@string/preference_update_interval_default"
             android:dialogTitle="@string/preference_update_interval_title"
             android:entries="@array/update_interval_names"

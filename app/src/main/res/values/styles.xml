@@ -55,25 +55,6 @@
         <item name="colorPrimary">@color/colorAccent</item>
     </style>
 
-    <style name="CustomAppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="titleTextAppearance">@style/Toolbar_TextAppearance_White</item>
-    </style>
-
-    <style name="Toolbar_TextAppearance_White" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="FullscreenTheme" parent="AppTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
-    <style name="SplashTheme" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/splash</item>
-    </style>
-
     <style name="ToolbarTheme" parent="Widget.AppCompat.Toolbar">
         <item name="colorControlNormal">@lineageos.platform:color/color_default_accent</item>
     </style>

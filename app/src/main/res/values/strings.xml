@@ -23,13 +23,9 @@
 
     <!-- Application -->
     <string name="app_icon_content_description">App icon</string>
-    <string name="app_description_title">Description</string>
-    <string name="app_description_content_description">App description</string>
     <string name="app_privacy_score_content_description">App privacy score</string>
-    <string name="app_energy_score_content_description">App energy score</string>
     <string name="app_rating_content_description">App rating</string>
     <string name="action_install">Install</string>
-    <string name="action_add_to_home_screen">Add to Home Screen</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_installing">Installing</string>
     <string name="featured">Featured</string>
@@ -37,17 +33,13 @@
     <string name="action_update">Update</string>
     <string name="action_update_all">Update all</string>
     <string name="action_launch">Open</string>
-    <string name="action_share">Share</string>
     <string name="app_ratings_title">Ratings</string>
     <string name="app_privacy_score">Privacy</string>
     <string name="app_privacy_description">Score out of 10. Computed using <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>, based on permissions and trackers used in the app.</string>
-    <string name="app_privacy_description1">Score out of 10. Computed using</string>
 
     <string name="app_privacy_description_short">Computed using <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
     <string name="app_rating">Rating</string>
     <string name="app_rating_description">Score out of 5. Computed using users\' ratings of the app.</string>
-    <string name="app_energy_score">Energy</string>
-    <string name="app_energy_description">Score out of 10. Computed using the app\'s battery usage as measured on devices in a dedicated lab. Coming soon.</string>
     <string name="app_privacy_title">Privacy analyses</string>
     <string name="app_permissions_title">Permissions</string>
     <string name="app_trackers_title">Trackers</string>
@@ -57,18 +49,11 @@
     <string name="app_min_android">Requires</string>
     <string name="app_licence">Licence</string>
     <string name="app_package_name">Package name</string>
-    <string name="app_screenshots_title">Screenshots</string>
     <string name="download_notification_description">Downloading</string>
     <string name="no_permissions">No permissions requested</string>
     <string name="no_trackers">No trackers used</string>
-    <string name="action_ok">Ok</string>
     <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
     <string name="exit">Please click BACK again to exit</string>
-
-    <string name="pick_up_apk_file">pick_up_apk_file</string>
-
-    <string name="some_text"><![CDATA[<font color=\'#FAFAFA\'>Some</font> random <font color=\'#FAFAFA\'>text</font>]]></string>
-    <string name="test_string" ><![CDATA[<font color="#FAFAFA"<b>UPDATE></font>]]> </string>
 
 
     <!-- Application Description Activity -->
@@ -85,14 +70,10 @@
     <string name="menu_settings">Settings</string>
 
     <!-- Home Fragment -->
-    <string name="app_store_banner_content_description">App store banner</string>
 
     <!-- Categories fragment -->
     <string name="applications_categories_title">Apps</string>
     <string name="games_categories_title">Games</string>
-    <string name="pwas_categories_title">Pwas</string>
-    <string name="shouldRefreshOnResume">Categories</string>
-
 
 
     <!-- Search fragment -->
@@ -127,7 +108,6 @@
     <string name="pref_update_install_automatically_key">pref_update_install_automatically</string>
     <string name="pref_update_notify_key">pref_update_notify</string>
 
-    <string name="preference_apps_title">Apps</string>
     <string name="pref_apps_request_app_key">pref_apps_request_app</string>
     <string name="preference_apps_request_app_title">Request app</string>
     <string name="preference_apps_request_app_summary">Request an app that is currently unavailable</string>
@@ -142,15 +122,12 @@
     <string name="package_name_find_text">To find the package name of an app that is installed on your device, go to System Settings > Apps > [your app]. The package name should be listed at the bottom of the page.\n*This process may vary on some devices.</string>
 
 <!--    <string name="show_all_apps_key">show_all_apps</string>-->
-    <string name="Show_all_apps_key">Show_all_apps</string>
 
     <string name="Show_applications">Show applications:</string>
     <string name="Show_all_apps">Show all apps</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
-    <string name="show_only_open_source_apps_description">Apps which Source code is freely available to the users</string>
     <string name="show_only_open_source_apps">Show only open-source apps</string>
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
-    <string name="show_only_pwa_apps_description">Web Apps providing Native App experiences using a browser</string>
     <string name="show_only_pwa_apps">Show only PWAs</string>
 
 
@@ -166,7 +143,6 @@
     <string name="error_apk_unavailable">This app is currently unavailable! Please try again later.</string>
     <string name="error_apk_corrupt">Download was interrupted! Please try again later.</string>
     <string name="error_install_failed">App couldn\'t be installed! Please try again later.</string>
-    <string name="error_apk_download_failed">App couldn\'t be downloaded! Please try again later.</string>
     <string name="error_resolve">Retry</string>
     <string name="error_no_screenshots_available">No screenshots available</string>
     <string name="error_invalid_package_name">Unable to submit request. Please enter a valid package name.</string>
@@ -175,11 +151,7 @@
     <string name="error_apk_incompatible">This app is incompatible with your device.</string>
 
     <!-- pwa -->
-    <string name="offline_heading">You are offline.</string>
-    <string name="offline_description">Tap here to retry!</string>
     <string name="pwa_icon">PWA</string>
-    <string name="system_apps">System Apps</string>
-    <string name="microg_covid_vrsn_installed">microG Exposure Notification version</string>
     <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
     <string name="microg_not_installed">Not Installed</string>
     <string name="microg_installed">Installed</string>

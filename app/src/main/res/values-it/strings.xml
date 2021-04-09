@@ -3,7 +3,6 @@
     <string name="app_name">App</string>
     <string name="app_privacy_score">Privacy</string>
     <string name="app_ratings_title">Voti</string>
-    <string name="action_share">Condividi</string>
     <string name="action_launch">Apri</string>
     <string name="action_update_all">Aggiorna tutto</string>
     <string name="action_update">Aggiorna</string>
@@ -11,10 +10,7 @@
     <string name="action_cancel">Annulla</string>
     <string name="action_install">Installa</string>
     <string name="app_rating_content_description">Gradimento app</string>
-    <string name="app_energy_score_content_description">Voto energia app</string>
     <string name="app_privacy_score_content_description">Voto privacy app</string>
-    <string name="app_description_content_description">Descrizione app</string>
-    <string name="app_description_title">Descrizione</string>
     <string name="app_icon_content_description">Icona app</string>
     <string name="service_description">Questo servizio è utilizzato da App per gestire, scaricare ed installare le app. Fermarlo potrebbe causare errori nel dowload delle app.</string>
     <string name="not_available_full">Non disponibile</string>
@@ -27,7 +23,6 @@
     <string name="error_invalid_package_name">La richiesta non può essere inviata. Inserisci un nome pacchetto valido.</string>
     <string name="error_no_screenshots_available">Schermate non disponibili</string>
     <string name="error_resolve">Riprova</string>
-    <string name="error_apk_download_failed">Non è stato possibile scaricare l\'app! Riprova più tardi.</string>
     <string name="error_install_failed">Non è stato possibile installare l\'app! Riprova più tardi.</string>
     <string name="error_apk_corrupt">Scaricamento interrotto! Riprova più tardi.</string>
     <string name="error_apk_unavailable">Questa app non è attualmente disponibile! Ritenta più tardi.</string>
@@ -48,7 +43,6 @@
     <string name="preference_apps_request_app_summary">Richiedi una app attualmente non disponibile</string>
     <string name="preference_apps_request_app_title">Richiedi app</string>
     <string name="pref_apps_request_app_key">pref_apps_request_app</string>
-    <string name="preference_apps_title">App</string>
     <string name="pref_update_notify_key">pref_update_notify</string>
     <string name="pref_update_install_automatically_key">pref_update_install_automatically</string>
     <string name="pref_update_wifi_only_key">pref_update_wifi_only</string>
@@ -73,16 +67,13 @@
     <string name="search_splash_title">Cerca una app</string>
     <string name="games_categories_title">Giochi</string>
     <string name="applications_categories_title">App</string>
-    <string name="app_store_banner_content_description">App store banner</string>
     <string name="menu_updates">Aggiornamenti</string>
     <string name="menu_categories">Categorie</string>
     <string name="menu_home">Home</string>
     <string name="application_description_activity_title">Descrizione</string>
-    <string name="action_ok">Ok</string>
     <string name="no_trackers">Nessun tracker utilizzato</string>
     <string name="no_permissions">Nessun permesso richiesto</string>
     <string name="download_notification_description">Scaricamento</string>
-    <string name="app_screenshots_title">Screenshots</string>
     <string name="app_licence">Licenza</string>
     <string name="app_min_android">Richiede</string>
     <string name="app_updated_on">Aggiornata il</string>
@@ -91,41 +82,25 @@
     <string name="app_trackers_title">Trackers</string>
     <string name="app_permissions_title">Autorizzazioni</string>
     <string name="app_privacy_title">Analisi privacy</string>
-    <string name="app_energy_description">Voto su scala di 10. Calcolato utilizzando l\'utilizzo batteria dell\'app come misurato su dispositivi in un laboratorio dedicato. In arrivo.</string>
-    <string name="app_energy_score">Energia</string>
     <string name="app_rating_description">Voto su scala di 5. Calcolato utilizzando i voti degli utilizzatori dell\'app.</string>
     <string name="app_rating">Voti</string>
     <string name="app_privacy_description_short">Calcolato utilizzando <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
     <string name="app_privacy_description">Voto su scala di 10. Calcolato utilizzando <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>, che si basa su permessi e trackers usati nell\'app.</string>
     <string name="pwa_icon">PWA</string>
-    <string name="offline_description">Tocca qui per riprovare!</string>
-    <string name="offline_heading">Sei offline.</string>
     <string name="show_only_pwa_apps">Mostra solo le PWA</string>
-    <string name="show_only_pwa_apps_description">Le Web App consentono un\'esperienza come se fossero App Reali girando in un Browser</string>
     <string name="show_only_open_source_apps">Mostra solo le app open-source</string>
-    <string name="show_only_open_source_apps_description">App con Codice Sorgente disponibile liberamente agli utenti</string>
     <string name="Show_all_apps">Mostra tutte le app</string>
     <string name="Show_applications">Mostra app:</string>
-    <string name="shouldRefreshOnResume">Categorie</string>
-    <string name="pwas_categories_title">Pwa</string>
     <string name="more">altro</string>
-    <string name="test_string">&lt;font color=#FAFAFA&lt;b&gt;AGGIORNA&gt;&lt;/font&gt;</string>
     <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
-    <string name="app_privacy_description1">Voto su scala di 10. Calcolato utilizzando</string>
     <string name="featured">In Evidenza</string>
     <string name="action_installing">Installazione</string>
-    <string name="action_add_to_home_screen">Aggiungi a Schermata Home</string>
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
-    <string name="Show_all_apps_key">Show_all_apps</string>
-    <string name="some_text"><font color="#FAFAFA">Un</font> testo <font color="#FAFAFA">a caso</font></string>
-    <string name="pick_up_apk_file">pick_up_apk_file</string>
     <string name="exit">Tocca ancora INDIETRO per uscire</string>
     <string name="microg_installed">Installato</string>
     <string name="microg_not_installed">Non installato</string>
     <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
-    <string name="microg_covid_vrsn_installed">Versione di microG Exposure Notification</string>
-    <string name="system_apps">App di Sistema</string>
     <string name="Signature_verification_failed">Verifica della firma non riuscita, installazione interrotta</string>
     <string name="app_package_name">Nome del pacchetto</string>
 </resources>

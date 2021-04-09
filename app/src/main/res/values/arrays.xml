@@ -30,17 +30,5 @@
         <item>720</item>
     </string-array>
 
-    <string-array name="apps_array_names">
-        <item>Show all apps</item>
-        <item>Show only Progressive WebApps</item>
-        <item>Show only open-source apps</item>
-    </string-array>
-
-    <string-array name="apps_array_values">
-        <item>any</item>
-        <item>pwa</item>
-        <item>open</item>
-    </string-array>
-
 
 </resources>

@@ -631,7 +631,6 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/Information_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_divider_height"
                 android:layout_marginStart="@dimen/layout_margin_medium"

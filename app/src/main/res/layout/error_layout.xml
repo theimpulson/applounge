@@ -28,7 +28,6 @@
     android:padding="@dimen/layout_padding_large">
 
     <ImageView
-        android:id="@+id/error_icon"
         android:layout_width="@dimen/app_icon_size"
         android:layout_height="@dimen/app_icon_size"
         android:src="@drawable/ic_error"
