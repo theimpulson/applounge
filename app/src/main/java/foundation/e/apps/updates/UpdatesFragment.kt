@@ -71,7 +71,6 @@ class UpdatesFragment() : Fragment() {
         val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
         progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
         val reloadProgressBar = view.findViewById<ProgressBar>(R.id.progress_bar2)
-        //progressBar.setProgressTintList(ColorStateList.valueOf(accentColorOS));
         reloadProgressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
 
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)

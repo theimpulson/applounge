@@ -65,7 +65,6 @@ class CategoriesListAdapter(private val context: Context, private var categories
 
 
         holder.categoryIcon.setImageDrawable(AppCompatResources.getDrawable(context, categories[position].getIconResource()))
-        //holder.categoryIcon.setColorFilter(Color.parseColor("#0088ED"))
         if (color != null) {
             holder.categoryIcon.setColorFilter(color)
         }

@@ -62,9 +62,6 @@ object XApkInstallUtils {
                         if (this.useSplitApks()) {
                             installSplitApks(xApkFile, zipFile!!,callback, this, xApkInstallProgressCallback)
                         }
-//                        else {
-//                            installApk(zipFile!!, this, xApkInstallProgressCallback)
-//                        }
                     }
                 }
             } catch (e: Exception) {
@@ -215,36 +212,6 @@ object XApkInstallUtils {
         }
     }
 
-//    private fun installApk(zipFile: ZipFile, xApkManifest: XApkManifest,
-//                           xApkInstallProgressCallback: XApkInstallProgressCallback?){
-//        val apkFileName = "${xApkManifest.packageName}.apk"
-//        var isApkSuccess = false
-//        val tempApk = File(AppFolder.tempFolder, apkFileName)
-//        val totalLength = getXApkTotalSize(zipFile, xApkManifest)
-//        getZipFileInputStream(zipFile, apkFileName)?.apply {
-//            isApkSuccess = FileWriterUtils.writeFileFromIS(tempApk, this, object : FileWriterUtils.FileWriterProgressCallback {
-//                var percent = 0
-//                override fun onProgress(currentOffset: Long) {
-//                    val percent1 = FormatUtils.formatPercent(currentOffset, totalLength)
-//                    if (percent1 > percent) {
-//                        percent = percent1
-//                        handler.post {
-//                            xApkInstallProgressCallback?.onApkProgress(currentOffset, totalLength,percent)
-//                        }
-//                    }
-//                }
-//            })
-//        }
-//        if (isApkSuccess) {
-//            handler.post {
-//                xApkInstallProgressCallback?.onCompedApk(tempApk)
-//            }
-//        } else {
-//            handler.post {
-//                xApkInstallProgressCallback?.onError(InstallError.ApkError)
-//            }
-//        }
-//    }
 
     @WorkerThread
     private fun getZipFileInputStream(zipFile: ZipFile, inputName: String, isRaw: Boolean = false): InputStream? {

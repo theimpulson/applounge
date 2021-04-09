@@ -73,18 +73,6 @@ data class XApkManifest (@Expose
 
     fun useObbs() = !this.expansionList.isNullOrEmpty()
 
-//    fun getLocalLabel(): String {
-//        val localeTag = LocaleUtils().appLocalTag
-//        var label1 = this.label
-//        localesLabel?.let {
-//            if (it.containsKey(localeTag)) {
-//                it[localeTag]?.let { it2 ->
-//                    label1 = it2
-//                }
-//            }
-//        }
-//        return label1
-//    }
 
 }
 

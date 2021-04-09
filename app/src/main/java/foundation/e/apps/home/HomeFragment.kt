@@ -17,8 +17,6 @@
 
 package foundation.e.apps.home
 
-//import java.awt.font.ShapeGraphicAttribute.STROKE
-//import java.awt.AlphaComposite.SRC_IN
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -62,10 +60,6 @@ class HomeFragment : Fragment() {
         }
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-       /* if(accentColorOS!=0){
-
-            view.findViewById<TextView>(R.id.tv_featured).setTextColor(accentColorOS);
-        }*/
 
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         imageCarousel = view.findViewById(R.id.image_carousel)

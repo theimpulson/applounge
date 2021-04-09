@@ -92,12 +92,10 @@ class PwaInstaller : AppCompatActivity() {
                     urlConnection.connectTimeout = Constants.CONNECT_TIMEOUT
                     urlConnection.readTimeout = Constants.READ_TIMEOUT
                     icon = BitmapFactory.decodeStream(urlConnection.inputStream)
-                    //scaledBitmap = Bitmap.createScaledBitmap(icon, 128, 128, true)
                 } catch (e: FileNotFoundException) {
                     val x = R.drawable.pwa_default_icon
                     icon = BitmapFactory.decodeResource(mActivity.getResources(),
                             x)
-                    //scaledBitmap = Bitmap.createScaledBitmap(icon, 128, 128, true)
                 }
                 val intent = Intent()
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

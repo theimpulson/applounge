@@ -24,15 +24,6 @@ import java.util.*
 
 class LocaleUtils {
 
-//    val appLocal: Locale
-//        get() {
-//            val localValue = Settings.languageValue
-//            return if (TextUtils.equals(localValue, MainActivity.mActivity.getString(R.string.language_auto_value))) {
-//                systemLocal
-//            } else {
-//                forLanguageTag(localValue)
-//            }
-//        }
 
     val systemLocal: Locale
         get() {
@@ -41,10 +32,6 @@ class LocaleUtils {
 
 
 
-//    val appLocalTag: String
-//        get() {
-//            return toLanguageTag(appLocal)
-//        }
 
     private fun forLanguageTag(languageTag: String): Locale {
         return Locale.forLanguageTag(languageTag)

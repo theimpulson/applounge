@@ -172,16 +172,6 @@ class ApplicationActivity :
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            /*R.id.action_share -> {
-                if (::application.isInitialized) {
-                    val shareIntent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, WEB_STORE_URL + application.basicData!!.id)
-                        type = "text/plain"
-                    }
-                    startActivity(shareIntent)
-                }
-            }*/
             android.R.id.home -> {
                 finish()
             }

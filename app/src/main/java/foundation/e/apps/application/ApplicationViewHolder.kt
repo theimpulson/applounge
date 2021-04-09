@@ -152,7 +152,6 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
     override fun stateChanged(state: State) {
         Execute({}, {
 
-            // installButton.setBackgroundResource(R.drawable.app_install_border_simple)
             installButton.text = activity.getString(state.installButtonTextId)
 
             when (state) {

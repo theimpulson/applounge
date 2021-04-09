@@ -79,12 +79,10 @@ class Application(val packageName: String, private val applicationManager: Appli
             stateManager.find(context, basicData!!)
         } else if (searchAppsBasicData != null) {
             if (searchAppsBasicData!!.is_pwa) {
-//                stateManager.pwaFind()
             } else {
                 stateManager.searchAppsFind(context, searchAppsBasicData!!)
             }
         } else if (pwabasicdata != null) {
-//              stateManager.pwaFind()
         }
     }
 

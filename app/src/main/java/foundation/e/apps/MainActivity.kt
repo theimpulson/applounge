@@ -17,7 +17,6 @@
 
 package foundation.e.apps
 
-//import androidx.fragment.app.ListFragment
 
 
 import android.annotation.SuppressLint
@@ -94,7 +93,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //ThemeColors(this);
         setContentView(R.layout.activity_main)
         mActivity = this
         disableCategoryIfOpenSource()

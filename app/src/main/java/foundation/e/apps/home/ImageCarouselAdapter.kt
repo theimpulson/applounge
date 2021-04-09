@@ -50,7 +50,6 @@ class ImageCarouselAdapter(context: Context, private val bannerApplications: Arr
         val view = layoutInflater.inflate(R.layout.image_carousel_item, container, false)
         val wideImage = view.image
         val image = getRoundedCornerBitmap(bannerApplications[position].image,mActivity)
-//        val resizedImage=reSizeImage(image)
         wideImage.setImageBitmap(image)
         wideImage.setOnClickListener {
            if(mActivity.showApplicationTypePreference()=="open" || mActivity.showApplicationTypePreference()=="pwa"){

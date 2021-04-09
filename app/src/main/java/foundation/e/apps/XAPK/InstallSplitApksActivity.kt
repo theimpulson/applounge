@@ -54,7 +54,6 @@ class InstallSplitApksActivity : BaseActivity() {
         if (apksBean == null
             || apksBean!!.splitApkPaths.isNullOrEmpty()
             || apksBean!!.packageName.isEmpty()) {
-//            SimpleToast.defaultShow(mContext, R.string.install_failed)
             finish()
             return
         }
@@ -124,7 +123,6 @@ class InstallSplitApksActivity : BaseActivity() {
                     startActivity(confirmIntent)
                 }
                 PackageInstaller.STATUS_SUCCESS -> {
-//                    SimpleToast.defaultShow(this, R.string.install_success)
                     finish()
                 }
                 PackageInstaller.STATUS_FAILURE,
@@ -134,7 +132,6 @@ class InstallSplitApksActivity : BaseActivity() {
                 PackageInstaller.STATUS_FAILURE_INCOMPATIBLE,
                 PackageInstaller.STATUS_FAILURE_INVALID,
                 PackageInstaller.STATUS_FAILURE_STORAGE -> {
-//                    SimpleToast.defaultShow(this, R.string.install_failed)
                     finish()
                 }
                 else -> {}
@@ -157,13 +154,6 @@ class InstallSplitApksActivity : BaseActivity() {
         }
     }
 
-//    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-//        return if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            true
-//        } else {
-//            super.onKeyDown(keyCode, event)
-//        }
-//    }
 
 }
 

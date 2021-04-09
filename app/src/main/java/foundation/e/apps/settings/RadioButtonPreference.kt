@@ -36,7 +36,6 @@ class RadioButtonPreference : CheckBoxPreference {
     override fun onClick() {
         if (this.isChecked)
             return
-//            mActivity.recreate()
 
         super.onClick()
     }
