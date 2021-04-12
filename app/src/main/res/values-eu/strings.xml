@@ -112,7 +112,7 @@
     <string name="preference_update_wifi_only_description">Eguneratu aplikazioak automatikoki soilik muga gabeko sareetan, WiFian adibidez</string>
     <string name="preference_update_wifi_only_title">Soilik muga gabeko sareetan</string>
     <string name="updates_notification_unmetered_network_warning">Muga gabeko sare baten zain</string>
-    <string name="preference_update_interval_title">Eguneratzeak egiaztatzeko tartea</string>
+    <string name="preference_update_interval_title">Eguneratzeak egiaztatzeko bitartea</string>
     <string name="no_trackers">Ez da aztarnaririk erabiltzen</string>
     <string name="app_updated_on">Eguneratze-data:</string>
     <string name="app_trackers_title">Aztarnariak</string>
