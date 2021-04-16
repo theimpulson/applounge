@@ -1,23 +1,22 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps
 
-//import androidx.fragment.app.ListFragment
 
 
 import android.annotation.SuppressLint
@@ -28,18 +27,14 @@ import android.database.Cursor
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.preference.PreferenceManager
-import android.util.Log
-import android.util.TypedValue
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -74,18 +69,30 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private var isReceiverRegistered = false
     var accentColorOS = 0
 
+    init {
+        instance = this
+    }
 
     companion object {
+        private var instance: MainActivity? = null
+
         lateinit var mActivity: MainActivity
         var sharedPreferences : SharedPreferences?=null
         val sharedPrefFile = "kotlinsharedpreference"
+
+        /*
+         * Provides the application context via MainActivity
+         * @return applicationContext
+         */
+        fun applicationContext(): Context {
+            return instance!!.applicationContext
+        }
     }
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //ThemeColors(this);
         setContentView(R.layout.activity_main)
         mActivity = this
         disableCategoryIfOpenSource()
@@ -311,6 +318,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
                                             grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE &&
                 grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
             Snackbar.make(container, R.string.error_storage_permission_denied,
@@ -320,7 +328,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(CURRENTLY_SELECTED_FRAGMENT_KEY, currentFragmentId)
+        outState.putInt(CURRENTLY_SELECTED_FRAGMENT_KEY, currentFragmentId)
     }
 
     override fun onDestroy() {
@@ -357,7 +365,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     *  */
     private fun getAccentColor() {
 
-        accentColorOS=this.resources.getColor(R.color.colorAccent);
+        accentColorOS = this.getColor(R.color.colorAccent);
 
 
 

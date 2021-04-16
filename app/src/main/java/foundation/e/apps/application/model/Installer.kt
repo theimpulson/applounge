@@ -1,18 +1,18 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.application.model
@@ -61,11 +61,7 @@ class Installer(private val packageName: String,
     }
 
     private fun requestApplicationInstall(context: Context) {
-        val uri = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            FileProvider.getUriForFile(context, context.packageName + ".provider", apk)
-        } else {
-            Uri.fromFile(apk)
-        }
+        val uri = FileProvider.getUriForFile(context, context.packageName + ".provider", apk)
         val intent = Intent(Intent.ACTION_INSTALL_PACKAGE)
         intent.action = Intent.ACTION_VIEW
         intent.setDataAndType(uri, "application/vnd.android.package-archive")
@@ -141,7 +137,7 @@ class Installer(private val packageName: String,
     private var receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == Intent.ACTION_PACKAGE_ADDED &&
-                    (intent.data.encodedSchemeSpecificPart == packageName)) {
+                    (intent.data?.encodedSchemeSpecificPart == packageName)) {
                 Log.i(TAG, "Broadcast received")
                 var path = apk.absolutePath.split("Download")
                 //delete all APK file after install

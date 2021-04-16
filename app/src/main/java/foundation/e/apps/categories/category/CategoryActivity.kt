@@ -1,18 +1,18 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.categories.category
@@ -20,23 +20,19 @@ package foundation.e.apps.categories.category
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import foundation.e.apps.MainActivity
 import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
@@ -71,11 +67,10 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val extras = intent.extras
         category = intent.getSerializableExtra(CATEGORY_KEY) as Category
         supportActionBar?.title = category.getTitle()
 
-        categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
+        categoryViewModel = ViewModelProvider(this).get(CategoryViewModel::class.java)
         recyclerView = findViewById(R.id.app_list)
         val loadMoreContainer = findViewById<RelativeLayout>(R.id.load_more_container)
         progressBar = findViewById(R.id.progress_bar)
@@ -168,6 +163,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
                                             grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE &&
                 grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
             Snackbar.make(container, R.string.error_storage_permission_denied,
@@ -202,6 +198,6 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
    *  */
     private fun getAccentColor() {
 
-        accentColorOS=this.resources.getColor(R.color.colorAccent);
+        accentColorOS = this.getColor(R.color.colorAccent);
     }
 }

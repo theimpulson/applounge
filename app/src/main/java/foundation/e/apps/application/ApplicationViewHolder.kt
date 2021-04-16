@@ -1,25 +1,24 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.application
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.view.Gravity
@@ -28,6 +27,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.R
@@ -45,7 +45,6 @@ import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.Execute
 import kotlinx.android.synthetic.main.application_list_item.view.*
 import kotlinx.android.synthetic.main.install_button_layout.view.*
-import java.lang.Exception
 
 
 class ApplicationViewHolder(private val activity: Activity, private val view: View, accentColorOS: Int) :
@@ -82,7 +81,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         if (0 != this.accentColorOS) {
             installButton.setBackgroundColor(this.accentColorOS)
         }
-        installButton?.setOnClickListener {
+        installButton.setOnClickListener {
             if (application?.fullData != null &&
                     application!!.fullData!!.getLastVersion() == null) {
                 Snackbar.make(view, activity.getString(
@@ -107,14 +106,14 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         if (app.basicData != null) {
             this.application?.removeListener(this)
             this.application = app
-            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+            icon.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_app_default))
             application!!.loadIcon(this)
             application!!.addListener(this)
             title.text = application!!.basicData!!.name
             author.text = application!!.basicData!!.author
-            ratingBar.rating = application!!.basicData!!.ratings!!.rating!!
-            if (application!!.basicData!!.ratings!!.rating != -1f) {
-                rating.text = application!!.basicData!!.ratings!!.rating.toString()
+            ratingBar.rating = application!!.basicData!!.ratings.rating!!
+            if (application!!.basicData!!.ratings.rating != -1f) {
+                rating.text = application!!.basicData!!.ratings.rating.toString()
             } else {
                 rating.text = activity.getString(R.string.not_available)
             }
@@ -126,7 +125,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
         } else {
             this.application?.removeListener(this)
             this.application = app
-            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+            icon.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_app_default))
             application!!.addListener(this)
             if (application!!.searchAppsBasicData != null) {
                 if (application!!.searchAppsBasicData!!.is_pwa) {
@@ -153,8 +152,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
     override fun stateChanged(state: State) {
         Execute({}, {
 
-            // installButton.setBackgroundResource(R.drawable.app_install_border_simple)
-            installButton?.text = activity.getString(state.installButtonTextId)
+            installButton.text = activity.getString(state.installButtonTextId)
 
             when (state) {
 
@@ -171,32 +169,32 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
 
                 State.INSTALLED -> {
 
-                    installButton?.isEnabled =
+                    installButton.isEnabled =
                             Common.appHasLaunchActivity(activity, application!!.packageName)
                     if (0 != this.accentColorOS) {
-                        installButton!!.setBackgroundColor(this.accentColorOS)
+                        installButton.setBackgroundColor(this.accentColorOS)
                     } else {
-                        installButton!!.setBackgroundResource(R.drawable.app_install_border)
+                        installButton.setBackgroundResource(R.drawable.app_install_border)
                     }
                     installButton.setTextColor(Color.parseColor("#FAFAFA"))
 
                 }
                 State.INSTALLING -> {
-                    installButton?.isEnabled = false
+                    installButton.isEnabled = false
                 }
                 State.NOT_UPDATED -> {
                         installButton.setTextColor(Color.parseColor("#FAFAFA"))
                         if (0 != this.accentColorOS) {
-                            installButton!!.setBackgroundColor(this.accentColorOS)
+                            installButton.setBackgroundColor(this.accentColorOS)
                         } else {
-                            installButton!!.setBackgroundResource(R.drawable.app_install_border)
+                            installButton.setBackgroundResource(R.drawable.app_install_border)
                         }
 
-                    installButton?.isEnabled = true
+                    installButton.isEnabled = true
                 }
                 else -> {
                     installButton.setTextColor(Color.parseColor("#0088ED"))
-                    installButton?.isEnabled = true
+                    installButton.isEnabled = true
                 }
             }
 
@@ -211,7 +209,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
     @SuppressLint("SetTextI18n")
     override fun notifyDownloadProgress(count: Int, total: Int) {
         installButton.setGravity(Gravity.CENTER)
-        installButton?.text = ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
+        installButton.text = ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
         installButton.setTextColor(Color.parseColor("#0088ED"))
         installButton.setBackgroundResource(R.drawable.app_installing_border_simple)
     }

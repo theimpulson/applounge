@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_ratings_title">Waarderingen</string>
-    <string name="action_share">Delen</string>
     <string name="action_launch">Open</string>
     <string name="action_update_all">Alles bijwerken</string>
     <string name="action_update">Bijwerken</string>
@@ -9,10 +8,7 @@
     <string name="action_cancel">Annuleren</string>
     <string name="action_install">Installeren</string>
     <string name="app_rating_content_description">App beoordeling</string>
-    <string name="app_energy_score_content_description">App energie score</string>
     <string name="app_privacy_score_content_description">App-privacyscore</string>
-    <string name="app_description_content_description">App beschrijving</string>
-    <string name="app_description_title">Beschrijving</string>
     <string name="app_icon_content_description">App icoon</string>
     <string name="service_description">Deze service wordt door Apps gebruikt om apps te beheren, downloaden en installeren. Als u dit stopt, kan het downloaden van apps mislukken.</string>
     <string name="not_available_full">Niet beschikbaar</string>
@@ -20,7 +16,6 @@
     <string name="error_package_already_exists">Deze app is al beschikbaar of werd reeds verzocht.</string>
     <string name="error_invalid_package_name">Verzoek indienen niet gelukt. Vul een geldige pakket naam in.</string>
     <string name="error_resolve">Opnieuw proberen</string>
-    <string name="error_apk_download_failed">App kon niet gedownload worden! Probeer het later opnieuw.</string>
     <string name="error_unknown">Er ging iets verkeerd! Probeer het later opnieuw.</string>
     <string name="error_request_timeout">De server deed er te lang over om te reageren! Probeer het later opnieuw.</string>
     <string name="package_name_help_title">Wat is een pakket naam\?</string>
@@ -40,7 +35,6 @@
     <string name="app_request_successful_text">App verzoek is succesvol geplaatst!</string>
     <string name="submit_button_text">Indienen</string>
     <string name="preference_apps_request_app_title">Vraag een applicatie aan</string>
-    <string name="preference_apps_title">Apps</string>
     <string name="preference_update_notify_available_description">Toon een melding wanneer er app-updates beschikbaar zijn</string>
     <string name="preference_update_install_automatically_description">Download en installeer app-updates op de achtergrond</string>
     <string name="preference_update_install_automatically_title">Updates automatisch installeren</string>
@@ -68,17 +62,14 @@
     <string name="search_splash_title">Zoek een app</string>
     <string name="games_categories_title">Spellen</string>
     <string name="applications_categories_title">Apps</string>
-    <string name="app_store_banner_content_description">App Store banner</string>
     <string name="menu_settings">Instellingen</string>
     <string name="menu_updates">Updates</string>
     <string name="menu_search">Zoeken</string>
     <string name="menu_categories">Categorieën</string>
     <string name="application_description_activity_title">Beschrijving</string>
-    <string name="action_ok">Ok</string>
     <string name="no_trackers">Geen trackers gebruikt</string>
     <string name="no_permissions">Geen toestemmingen gevraagd</string>
     <string name="download_notification_description">Downloaden</string>
-    <string name="app_screenshots_title">Screenshots</string>
     <string name="app_licence">Licentie</string>
     <string name="app_min_android">Vereist</string>
     <string name="app_updated_on">Bijgewerkt op</string>
@@ -86,8 +77,6 @@
     <string name="app_information_title">Informatie</string>
     <string name="app_trackers_title">Trackers</string>
     <string name="app_permissions_title">Toestemmingen</string>
-    <string name="app_energy_description">Score op 10. Berekend met het batterijgebruik van de app, gemeten op apparaten in een speciaal laboratorium. Binnenkort verwacht.</string>
-    <string name="app_energy_score">Energie</string>
     <string name="app_rating_description">Score uit 5. Berekend op basis van gebruikersbeoordelingen van de app.</string>
     <string name="app_privacy_description_short">Berekend met behulp van <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
     <string name="app_privacy_score">Privacy</string>
@@ -96,35 +85,21 @@
     <string name="pref_update_install_automatically_key">pref_update_install_automatically</string>
     <string name="pref_update_wifi_only_key">pref_update_wifi_only</string>
     <string name="pref_update_interval_key">pref_update_interval</string>
-    <string name="pick_up_apk_file">pick_up_apk_file</string>
-    <string name="Show_all_apps_key">Show_all_apps</string>
     <string name="pref_apps_request_app_key">pref_apps_request_app</string>
     <string name="pwa_icon">PWA</string>
     <string name="exit">Klik aub nogmaals op TERUG om af te sluiten</string>
     <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
-    <string name="offline_description">Tik hier om opnieuw te proberen!</string>
-    <string name="offline_heading">Je bent offline.</string>
-    <string name="shouldRefreshOnResume">Categorieën</string>
     <string name="more">Meer</string>
-    <string name="test_string">&lt;font color=#FAFAFA&lt;b&gt;UPDATE&gt;&lt;/font&gt;</string>
-    <string name="some_text"><font color="#FAFAFA">Een</font> willekeurige <font color="#FAFAFA">tekst</font></string>
-    <string name="app_privacy_description1">Score op 10. Berekend met behulp van</string>
     <string name="featured">Aanbevolen</string>
     <string name="action_installing">Aan het installeren</string>
-    <string name="action_add_to_home_screen">Toevoegen aan startscherm</string>
     <string name="show_only_pwa_apps">Toon enkel PWAs (Progressive Web Applications)</string>
     <string name="show_only_open_source_apps">Toon enkel open source apps</string>
-    <string name="show_only_open_source_apps_description">Apps waarvan de broncode vrij beschikbaar is voor de gebruikers</string>
     <string name="Show_all_apps">Toon alle apps</string>
     <string name="Show_applications">Toon applicaties:</string>
-    <string name="pwas_categories_title">PWAs</string>
-    <string name="show_only_pwa_apps_description">Web Apps bieden dezelfde gebruikservaring als gewone apps, met gebruik van een browser</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
-    <string name="microg_covid_vrsn_installed">microG Exposure Notification versie</string>
     <string name="microg_installed">Geïnstalleerd</string>
     <string name="microg_not_installed">Niet Geïnstalleerd</string>
-    <string name="system_apps">Systeem Apps</string>
     <string name="app_package_name">Pakket naam</string>
     <string name="Signature_verification_failed">Verificatie mislukt, installatie wordt afgebroken</string>
 </resources>

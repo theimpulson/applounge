@@ -1,18 +1,18 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.updates.model
@@ -23,15 +23,10 @@ import android.os.AsyncTask
 import foundation.e.apps.R
 import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
-import foundation.e.apps.application.model.ApplicationInfo
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
-import foundation.e.apps.utils.Constants
-import foundation.e.apps.utils.Execute
 import foundation.e.apps.utils.PreferenceStorage
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
                                      private val applicationManager: ApplicationManager,
@@ -97,7 +92,7 @@ class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
                     }
                 }
         return if (gitlabData != null) {
-            gitlabData!!.getApplications(applicationManager!!, context)
+            gitlabData!!.getApplications(applicationManager, context)
         } else {
             emptyList()
         }

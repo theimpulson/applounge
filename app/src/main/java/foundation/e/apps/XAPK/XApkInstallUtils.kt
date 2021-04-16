@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package foundation.e.apps.XAPK
 
 import android.os.Build
@@ -39,21 +56,12 @@ object XApkInstallUtils {
                             }
                             return@Runnable
                         }
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && this.XSplitApks?.size ?: 0 > 1) {
-                            handler.post {
-                                xApkInstallProgressCallback?.onError(InstallError.LowerSdkError)
-                            }
-                            return@Runnable
-                        }
                         if (this.useObbs()) {
                             installXApkObb(zipFile!!, this, xApkInstallProgressCallback)
                         }
                         if (this.useSplitApks()) {
                             installSplitApks(xApkFile, zipFile!!,callback, this, xApkInstallProgressCallback)
                         }
-//                        else {
-//                            installApk(zipFile!!, this, xApkInstallProgressCallback)
-//                        }
                     }
                 }
             } catch (e: Exception) {
@@ -130,8 +138,8 @@ object XApkInstallUtils {
             for (item in xApkManifest.expansionList!!) {
                 val inputStream = getZipFileInputStream(zipFile, item.xFile, true)!!
                 val obbFile = File(FsUtils.getStorageDir(), item.installPath)
-                if (!obbFile.parentFile.exists()) {
-                    obbFile.parentFile.mkdirs()
+                if (obbFile.parentFile?.exists() == false) {
+                    obbFile.parentFile?.mkdirs()
                 }
                 obbSuccess = FileWriterUtils.writeFileFromIS(
                     obbFile,
@@ -204,36 +212,6 @@ object XApkInstallUtils {
         }
     }
 
-//    private fun installApk(zipFile: ZipFile, xApkManifest: XApkManifest,
-//                           xApkInstallProgressCallback: XApkInstallProgressCallback?){
-//        val apkFileName = "${xApkManifest.packageName}.apk"
-//        var isApkSuccess = false
-//        val tempApk = File(AppFolder.tempFolder, apkFileName)
-//        val totalLength = getXApkTotalSize(zipFile, xApkManifest)
-//        getZipFileInputStream(zipFile, apkFileName)?.apply {
-//            isApkSuccess = FileWriterUtils.writeFileFromIS(tempApk, this, object : FileWriterUtils.FileWriterProgressCallback {
-//                var percent = 0
-//                override fun onProgress(currentOffset: Long) {
-//                    val percent1 = FormatUtils.formatPercent(currentOffset, totalLength)
-//                    if (percent1 > percent) {
-//                        percent = percent1
-//                        handler.post {
-//                            xApkInstallProgressCallback?.onApkProgress(currentOffset, totalLength,percent)
-//                        }
-//                    }
-//                }
-//            })
-//        }
-//        if (isApkSuccess) {
-//            handler.post {
-//                xApkInstallProgressCallback?.onCompedApk(tempApk)
-//            }
-//        } else {
-//            handler.post {
-//                xApkInstallProgressCallback?.onError(InstallError.ApkError)
-//            }
-//        }
-//    }
 
     @WorkerThread
     private fun getZipFileInputStream(zipFile: ZipFile, inputName: String, isRaw: Boolean = false): InputStream? {

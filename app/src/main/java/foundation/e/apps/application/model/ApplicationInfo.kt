@@ -1,18 +1,18 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.application.model
@@ -21,7 +21,7 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Environment
-import android.util.Log
+import androidx.core.content.pm.PackageInfoCompat
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Common
@@ -63,7 +63,7 @@ class ApplicationInfo(private val packageName: String) {
                     val updateVersionCode = matcher.group()
                             .replace("(", "")
                             .replace(")", "")
-                    return (updateVersionCode.toInt() <= packageInfo.versionCode)
+                    return updateVersionCode.toLong() <= PackageInfoCompat.getLongVersionCode(packageInfo)
                 } catch (exception: Exception) {
                 }
             }
@@ -111,19 +111,19 @@ class ApplicationInfo(private val packageName: String) {
         Installer(data.packageName, getApkFile(context, data), callback).install(context)
     }
 
-    fun isXapk(fullData: FullData, basicData: BasicData?): Boolean {
+    fun isXapk(fullData: FullData): Boolean {
         return fullData.getLastVersion()!!.is_xapk && fullData.getLastVersion()?.downloadLink!!.endsWith(".xapk")
     }
 
     fun getApkOrXapkFileName(fullData: FullData, basicData: BasicData): String? {
-        if (isXapk(fullData, basicData)) {
+        if (isXapk(fullData)) {
             return getxApkFilename(basicData)
         } else
             return getApkFilename(basicData)
     }
 
     fun getApkOrXapkFile(context: Context, fullData: FullData, basicData: BasicData): File {
-        if (isXapk(fullData, basicData)) {
+        if (isXapk(fullData)) {
             return getxApkFile(context, basicData)
         } else
             return getApkFile(context, basicData)

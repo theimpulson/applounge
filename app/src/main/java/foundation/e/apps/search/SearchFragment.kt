@@ -1,18 +1,18 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.search
@@ -28,12 +28,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import foundation.e.apps.R
@@ -71,7 +70,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
-        searchViewModel = ViewModelProviders.of(activity!!).get(SearchViewModel::class.java)
+        searchViewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         focusView = view.findViewById(R.id.view)
         searchView = view.findViewById(R.id.search_view)
         recyclerView = view.findViewById(R.id.app_list)
@@ -113,7 +112,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList, 0)
+        recyclerView.adapter = ApplicationListAdapter(requireActivity(), applicationList, 0)
         loadMoreContainer.visibility = View.GONE
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -132,12 +131,12 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         })
 
         // Bind search view suggestions adapter to search suggestions list in view model
-        searchViewModel.getSuggestions().observe(this, Observer {
+        searchViewModel.getSuggestions().observe(viewLifecycleOwner, Observer {
             populateSuggestionsAdapter(it)
         })
 
         // Bind recycler view adapter to search results list in view model
-        searchViewModel.getApplications().observe(this, Observer {
+        searchViewModel.getApplications().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 applicationList.clear()
                 applicationList.addAll(it)
@@ -157,11 +156,11 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         })
 
         // Bind to the screen error
-        searchViewModel.getScreenError().observe(this, Observer {
+        searchViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 if (!isLoadingMoreApplications) {
                     applicationList.clear()
-                    errorDescription.text = activity!!.getString(it.description)
+                    errorDescription.text = requireActivity().getString(it.description)
                     errorContainer.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
                     loadMoreContainer.visibility = View.GONE
@@ -195,7 +194,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             splashContainer.visibility = View.GONE
-            searchViewModel.onSearchQuerySubmitted(context!!,query)
+            searchViewModel.onSearchQuerySubmitted(requireContext(),query)
         }
     }
 
@@ -207,14 +206,14 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             splashContainer.visibility = View.GONE
-            searchViewModel.onSearchQuerySubmitted(context!!, it)
+            searchViewModel.onSearchQuerySubmitted(requireContext(), it)
         }
         return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
         searchView.query?.let {
-            searchViewModel.onSearchQueryChanged(context!!, it.toString())
+            searchViewModel.onSearchQueryChanged(requireContext(), it.toString())
         }
         return true
     }
@@ -266,7 +265,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         if (::searchViewModel.isInitialized) {
             searchViewModel.getApplications().value?.let {
                 it.forEach { application ->
-                    application.checkForStateUpdate(context!!)
+                    application.checkForStateUpdate(requireContext())
                 }
             }
         }

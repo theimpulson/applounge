@@ -1,18 +1,18 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.application
@@ -28,6 +28,7 @@ import android.view.animation.Animation
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.R
@@ -88,14 +89,14 @@ class SmallApplicationViewHolder(private val activity: Activity, private val vie
         if(app.basicData!=null) {
             this.application?.removeListener(this)
             this.application = app
-            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+            icon.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_app_default))
             application!!.loadIcon(this)
             application!!.addListener(this)
             title.text = application!!.basicData!!.name
         }else if(app.pwabasicdata!=null){
             this.application?.removeListener(this)
             this.application = app
-            icon.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_app_default))
+            icon.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_app_default))
             application!!.PwaloadIcon(this)
             application!!.addListener(this)
             title.text = application!!.pwabasicdata!!.name

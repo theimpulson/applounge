@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package foundation.e.apps.XAPK
 
 import android.app.PendingIntent
@@ -8,14 +25,8 @@ import android.content.pm.PackageInstaller
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.text.TextUtils
-import android.view.KeyEvent
-import android.view.View
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.makeramen.roundedimageview.BuildConfig
-import com.makeramen.roundedimageview.RoundedImageView
-import foundation.e.apps.R
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -43,7 +54,6 @@ class InstallSplitApksActivity : BaseActivity() {
         if (apksBean == null
             || apksBean!!.splitApkPaths.isNullOrEmpty()
             || apksBean!!.packageName.isEmpty()) {
-//            SimpleToast.defaultShow(mContext, R.string.install_failed)
             finish()
             return
         }
@@ -69,7 +79,7 @@ class InstallSplitApksActivity : BaseActivity() {
             val pendingIntent = PendingIntent.getActivity(mActivity, 0, intent, 0)
             val statusReceiver = pendingIntent.intentSender
             // Commit the session (this will start the installation workflow).
-            session!!.commit(statusReceiver)
+            session.commit(statusReceiver)
             finish()
         } catch (e: IOException) {
             e.printStackTrace()
@@ -106,7 +116,6 @@ class InstallSplitApksActivity : BaseActivity() {
         val extras = intent.extras
         if (PACKAGE_INSTALLED_ACTION == intent.action) {
             val status = extras!!.getInt(PackageInstaller.EXTRA_STATUS)
-            val message = extras.getString(PackageInstaller.EXTRA_STATUS_MESSAGE)
             when (status) {
                 PackageInstaller.STATUS_PENDING_USER_ACTION -> {
                     // This test app isn't privileged, so the user has to confirm the install.
@@ -114,7 +123,6 @@ class InstallSplitApksActivity : BaseActivity() {
                     startActivity(confirmIntent)
                 }
                 PackageInstaller.STATUS_SUCCESS -> {
-//                    SimpleToast.defaultShow(this, R.string.install_success)
                     finish()
                 }
                 PackageInstaller.STATUS_FAILURE,
@@ -124,7 +132,6 @@ class InstallSplitApksActivity : BaseActivity() {
                 PackageInstaller.STATUS_FAILURE_INCOMPATIBLE,
                 PackageInstaller.STATUS_FAILURE_INVALID,
                 PackageInstaller.STATUS_FAILURE_STORAGE -> {
-//                    SimpleToast.defaultShow(this, R.string.install_failed)
                     finish()
                 }
                 else -> {}
@@ -147,16 +154,7 @@ class InstallSplitApksActivity : BaseActivity() {
         }
     }
 
-//    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-//        return if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            true
-//        } else {
-//            super.onKeyDown(keyCode, event)
-//        }
-//    }
 
 }
 
-private fun Intent.putExtra(keY_PARAM: String, apksBean: ApksBean) {
 
-}

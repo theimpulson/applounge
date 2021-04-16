@@ -2,11 +2,9 @@
 <resources>
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
     <string name="show_only_open_source_apps">Erakutsi soilik kode irekikoak</string>
-    <string name="show_only_open_source_apps_description">Iturburu-kodeak erabiltzaileentzat eskuragarri dituzten aplikazioak</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
     <string name="Show_all_apps">Erakutsi aplikazio guztiak</string>
     <string name="Show_applications">Erakutsi aplikazioak:</string>
-    <string name="Show_all_apps_key">Show_all_apps</string>
     <string name="package_name_find_text">Zure gailuan instalatua dagoen aplikazio baten pakete-izena aurkitzeko, jarraitu Ezarpenak &gt; Aplikazioak &gt; [zure aplikazioa]. Pakete-izenak hor nonbait egon beharko luke.
 \n*Prozesu hau ezberdina izan daiteke gailuaren arabera.</string>
     <string name="package_name_find_title">Nola aurkitu aplikazio baten pakete-izena\?</string>
@@ -18,7 +16,6 @@
     <string name="preference_apps_request_app_summary">Eskatu eskuragarri ez dagoen aplikazio bat</string>
     <string name="preference_apps_request_app_title">Eskatu aplikazioa</string>
     <string name="pref_apps_request_app_key">pref_apps_request_app</string>
-    <string name="preference_apps_title">Aplikazioak</string>
     <string name="pref_update_notify_key">pref_update_notify</string>
     <string name="pref_update_install_automatically_key">pref_update_install_automatically</string>
     <string name="pref_update_wifi_only_key">pref_update_wifi_only</string>
@@ -34,8 +31,6 @@
     </plurals>
     <string name="updates_splash_title">Aplikazio guztiak eguneratuta daude</string>
     <string name="search_splash_title">Bilatu aplikazioa</string>
-    <string name="shouldRefreshOnResume">Kategoriak</string>
-    <string name="pwas_categories_title">PWAk</string>
     <string name="games_categories_title">Jolasak</string>
     <string name="applications_categories_title">Aplikazioak</string>
     <string name="menu_settings">Ezarpenak</string>
@@ -45,27 +40,20 @@
     <string name="menu_home">Hasiera</string>
     <string name="more">gehiago</string>
     <string name="application_description_activity_title">Deskribapena</string>
-    <string name="test_string">&lt;font color=#FAFAFA&lt;b&gt;EGUNERATU&gt;&lt;/font&gt;</string>
-    <string name="some_text">&lt;font color=\'#FAFAFA\'&gt;Zorizko&lt;/font&gt;testuren&lt;font color=\'#FAFAFA\'&gt;bat&lt;/font&gt;</string>
-    <string name="pick_up_apk_file">pick_up_apk_file</string>
     <string name="exit">Ukitu berriz ATZERA irteteko</string>
     <string name="ok">&lt;font fgcolor=\"#FF0088ED\"&gt;ADOS&lt;/font&gt;<font fgcolor="#FF0088ED">OK</font></string>
-    <string name="action_ok">Ados</string>
     <string name="no_permissions">Ez da baimenik eskatu</string>
     <string name="download_notification_description">Deskargatzen</string>
-    <string name="app_screenshots_title">Pantaila-argazkiak</string>
     <string name="app_licence">Lizentzia</string>
     <string name="app_min_android">Beharrezkoa du</string>
     <string name="app_version">Bertsioa</string>
     <string name="app_information_title">Informazioa</string>
     <string name="app_permissions_title">Baimenak</string>
     <string name="app_privacy_title">Pribatutasun analisiak</string>
-    <string name="app_energy_score">Energia</string>
     <string name="app_rating">Puntuazioa</string>
     <string name="app_privacy_description_short">&lt;a href=\"https://exodus-privacy.eu.org\"&gt;Exodus Pribatutasun analisiak&lt;/a&gt; erabiliz kalkulatua.<a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>.</string>
     <string name="app_privacy_score">Pribatutasuna</string>
     <string name="app_ratings_title">Puntuazioak</string>
-    <string name="action_share">Partekatu</string>
     <string name="action_launch">Ireki</string>
     <string name="action_update_all">Guztiak eguneratu</string>
     <string name="action_update">Eguneratu</string>
@@ -73,28 +61,21 @@
     <string name="featured">Nabarmendua</string>
     <string name="action_installing">Instalatzen</string>
     <string name="action_cancel">Utzi</string>
-    <string name="action_add_to_home_screen">Gehitu hasierako pantailan</string>
     <string name="action_install">Instalatu</string>
     <string name="app_rating_content_description">Aplikazioaren puntuazioa</string>
-    <string name="app_energy_score_content_description">Aplikazioaren energia-puntuazioa</string>
     <string name="app_privacy_score_content_description">Aplikazioaren pribatutasun-puntuazioa</string>
-    <string name="app_description_content_description">Aplikazioaren deskribapena</string>
-    <string name="app_description_title">Deskribapena</string>
     <string name="app_icon_content_description">Aplikazioaren ikonoa</string>
     <string name="service_description">Aplikazioak administratzeko, deskargatzeko eta instalatzeko erabiltzen du zerbitzu hau Aplikazioak-ek. Geldiarazteak aplikazioen deskargek huts egitea eragin dezake.</string>
     <string name="not_available_full">Ez erabilgarri</string>
     <string name="not_available">E/E</string>
     <string name="app_name">Aplikazioak</string>
     <string name="pwa_icon">PWA</string>
-    <string name="offline_description">Ukitu hemen berriro saiatzeko!</string>
-    <string name="offline_heading">Lineaz kanpo zaude.</string>
     <string name="error_apk_incompatible">Aplikazioa hau zure gailuarekin bateraezina da.</string>
     <string name="error_no_error">Errorerik ez.</string>
     <string name="error_package_already_exists">Aplikazio hau jada eskuragarri dago edo dagoeneko eskatu egin da.</string>
     <string name="error_invalid_package_name">Ezin da eskaera bidali. Sartu baliozko pakete-izen bat.</string>
     <string name="error_no_screenshots_available">Ez dago pantaila-argazkirik eskuragarri</string>
     <string name="error_resolve">Saiatu berriro</string>
-    <string name="error_apk_download_failed">Aplikazioa ezin izan da deskargatu! Saiatu berriro geroago.</string>
     <string name="error_install_failed">Aplikazioa ezin izan da instalatu! Saiatu berriro geroago.</string>
     <string name="error_apk_corrupt">Deskarga eten egin da! Saiatu berriro geroago.</string>
     <string name="error_apk_unavailable">Aplikazio hau ez dago eskuragarri! Saiatu berriro geroago.</string>
@@ -105,7 +86,6 @@
     <string name="error_no_internet">Ezin da konektatu! Egiaztatu interneteko konexioa eta saiatu berriro.</string>
     <string name="error_storage_permission_denied">Biltegiratze baimena beharrezkoa da aplikazioak deskargatzeko.</string>
     <string name="show_only_pwa_apps">Erakutsi soilik PWAk</string>
-    <string name="show_only_pwa_apps_description">Web-aplikazioak, nabigatzaile baten bidez aplikazio natiboen esperientzia eskaintzen dutenak</string>
     <string name="preference_update_notify_available_description">Erakutsi jakinarazpena aplikazioen eguneratzeak eskuragarri daudenean</string>
     <string name="preference_update_notify_available_title">Erakutsi eguneratze eskuragarriak</string>
     <string name="preference_update_install_automatically_description">Deskargatu eta instalatu aplikazioen eguneratzeak atzeko planoan</string>
@@ -117,14 +97,9 @@
     <string name="app_updated_on">Eguneratze-data:</string>
     <string name="app_trackers_title">Aztarnariak</string>
     <string name="app_privacy_description">Puntuazioa 10etik. <a href="https://exodus-privacy.eu.org">Exodus Privacy analisiak</a> erabiliz kalkulatuta, aplikazioan erabilitako baimen eta aztarnarietan oinarrituta.</string>
-    <string name="app_energy_description">Puntuazioa 10etik. Aplikazioen bateria-erabilera kalkulatuta, laborategi dedikatu bateko gailuetan. Laster erabilgarri.</string>
     <string name="app_rating_description">Puntuazioa 5etik. Erabiltzaileek aplikazioari emandako puntuazioarekin kalkulatuta.</string>
-    <string name="app_privacy_description1">Puntuazioa 10etik. Hau erabiliz kalkulatuta:</string>
-    <string name="app_store_banner_content_description">Aplikazio-biltegiaren iragarki-banda</string>
     <string name="microg_installed">Instalatuta</string>
     <string name="microg_not_installed">Instalatu gabe</string>
     <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
-    <string name="microg_covid_vrsn_installed">microG Exposure Notification-en bertsioa</string>
-    <string name="system_apps">Sistemako aplikazioak</string>
     <string name="app_package_name">Pakete-izena</string>
 </resources>

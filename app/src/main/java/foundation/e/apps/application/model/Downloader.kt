@@ -1,18 +1,18 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.application.model
@@ -25,9 +25,7 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Environment
-import android.util.Log
 import foundation.e.apps.R
-import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Constants
 
@@ -60,7 +58,7 @@ class Downloader(private val applicationInfo: ApplicationInfo,
     }
 
     fun download(context: Context) {
-        if (fullData?.getLastVersion() != null) {
+        if (fullData.getLastVersion() != null) {
             downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             registerReceivers(context)
             initialiseDownloadManagerRequest(context)
@@ -96,7 +94,7 @@ class Downloader(private val applicationInfo: ApplicationInfo,
 
         request = DownloadManager.Request(
                 Uri.parse(
-                        Constants.DOWNLOAD_URL + fullData?.getLastVersion()!!.downloadLink))
+                        Constants.DOWNLOAD_URL + fullData.getLastVersion()!!.downloadLink))
                 .apply {
                     setTitle(fullData.basicData.name)
                     setDescription(context.getString(R.string.download_notification_description))
@@ -158,7 +156,7 @@ class Downloader(private val applicationInfo: ApplicationInfo,
             unregisterReceivers(context)
             val status = getDownloadStatus()
             if (status != null && status == DownloadManager.STATUS_SUCCESSFUL) {
-                fullData?.let {
+                fullData.let {
                     IntegrityVerificationTask(
                             applicationInfo,
                             it,

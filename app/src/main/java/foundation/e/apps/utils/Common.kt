@@ -1,18 +1,18 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.utils
@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.os.LocaleListCompat
@@ -37,17 +38,27 @@ import java.util.*
 import java.util.concurrent.Executors
 import javax.net.ssl.HttpsURLConnection
 import kotlin.math.roundToInt
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-
 
 object Common {
 
     val EXECUTOR = Executors.newCachedThreadPool()!!
 
+    /*
+     * Checks if device has internet connection available or not
+     * @param context current Context
+     * @return true if internet connection is available, false otherwise
+     */
     fun isNetworkAvailable(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetworkInfo = connectivityManager.activeNetworkInfo
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected
+        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+
+        if (capabilities != null) {
+            if (capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)) {
+                return true
+            }
+        }
+        return false
     }
 
     fun toMiB(bytes: Int): Double {
@@ -65,35 +76,26 @@ object Common {
         return connection
     }
 
+    /*
+     * Checks if the given [packageName] is a system app or not
+     * @param packageManager current PackageManager
+     * @param packageName package to verify
+     * @return true if the app is system app. false otherwise
+     */
     fun isSystemApp(packageManager: PackageManager, packageName: String?): Boolean {
-        try {
-            // Get package information for the app
-            val appPackageInfo = packageManager.getPackageInfo(
-                    packageName, PackageManager.GET_SIGNATURES)
-            // Get application information for the app
-            val appInfo = packageManager.getApplicationInfo(
-                    packageName, 0)
-            // Get package information for the Android system
-            val systemPackageInfo = packageManager.getPackageInfo(
-                    "android", PackageManager.GET_SIGNATURES)
-
-            // Compare app and Android system signatures
-            if (appPackageInfo.signatures.isNotEmpty() &&
-                    systemPackageInfo.signatures.isNotEmpty() &&
-                    appPackageInfo.signatures[0] == systemPackageInfo.signatures[0]) {
-                return true
-            } else if (appInfo.flags and (ApplicationInfo.FLAG_SYSTEM or
-                            ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-                return true
+        if (packageName != null) {
+            return try {
+                val info = packageManager.getPackageInfo(packageName, 0)
+                (info.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+            } catch (exception: Exception) {
+                false
             }
-        } catch (exception: Exception) {
-            exception.printStackTrace()
         }
         return false
     }
 
     fun appHasLaunchActivity(context: Context, packageName: String?): Boolean {
-        return (context.packageManager.getLaunchIntentForPackage(packageName) != null)
+        return (packageName?.let { context.packageManager.getLaunchIntentForPackage(it) } != null)
     }
 
     fun getObjectMapper(): ObjectMapper {

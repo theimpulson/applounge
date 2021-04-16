@@ -1,36 +1,33 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.home
 
-//import java.awt.font.ShapeGraphicAttribute.STROKE
-//import java.awt.AlphaComposite.SRC_IN
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -40,8 +37,6 @@ import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.common.SmallApplicationListAdapter
 import foundation.e.apps.home.viewmodel.HomeViewModel
-import kotlinx.android.synthetic.main.error_layout.*
-import kotlinx.android.synthetic.main.install_button_layout.*
 
 
 class HomeFragment : Fragment() {
@@ -65,12 +60,8 @@ class HomeFragment : Fragment() {
         }
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-       /* if(accentColorOS!=0){
 
-            view.findViewById<TextView>(R.id.tv_featured).setTextColor(accentColorOS);
-        }*/
-
-        homeViewModel = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         imageCarousel = view.findViewById(R.id.image_carousel)
         divider = view.findViewById(R.id.divider)
         categoryList = view.findViewById(R.id.category_list)
@@ -92,13 +83,13 @@ class HomeFragment : Fragment() {
         errorContainer.visibility = View.GONE
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
             progressBar.visibility = View.VISIBLE
-            homeViewModel.loadCategories(context!!)
+            homeViewModel.loadCategories(requireContext())
         }
 
         // Bind image carousel adapter to banner images in view model
-        homeViewModel.getBannerApplications().observe(this, Observer {
+        homeViewModel.getBannerApplications().observe(viewLifecycleOwner, Observer {
             if (homeViewModel.getBannerApplications().value!!.isNotEmpty()) {
-                imageCarousel.adapter = ImageCarouselAdapter(activity!!, homeViewModel.getBannerApplications().value!!)
+                imageCarousel.adapter = ImageCarouselAdapter(requireActivity(), homeViewModel.getBannerApplications().value!!)
                 imageCarousel.clipToPadding = false;
                 imageCarousel.setPadding(170, 10, 170, 10);
                 imageCarousel.pageMargin =50
@@ -110,7 +101,7 @@ class HomeFragment : Fragment() {
         })
 
         // Bind categories adapter to categories in view model
-        homeViewModel.getCategories().observe(this, Observer {
+        homeViewModel.getCategories().observe(viewLifecycleOwner, Observer {
             if (homeViewModel.getCategories().value!!.isNotEmpty()) {
                 showCategories(it!!)
                 categoryList.visibility = View.VISIBLE
@@ -120,9 +111,9 @@ class HomeFragment : Fragment() {
         })
 
         // Bind to the screen error
-        homeViewModel.getScreenError().observe(this, Observer {
+        homeViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                errorDescription.text = activity!!.getString(it.description)
+                errorDescription.text = requireActivity().getString(it.description)
                 errorContainer.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
             } else {
@@ -132,7 +123,7 @@ class HomeFragment : Fragment() {
 
         if (homeViewModel.getBannerApplications().value!!.isEmpty() ||
                 homeViewModel.getCategories().value!!.isEmpty()) {
-            homeViewModel.loadCategories(context!!)
+            homeViewModel.loadCategories(requireContext())
         }
         return view
     }
@@ -140,16 +131,16 @@ class HomeFragment : Fragment() {
     private fun setCustomScroller() {
         val scroller = ViewPager::class.java.getDeclaredField("mScroller")
         scroller.isAccessible = true
-        scroller.set(imageCarousel, ImageCarouselScroller(context!!))
+        scroller.set(imageCarousel, ImageCarouselScroller(requireContext()))
     }
 
     private fun showCategories(categories: LinkedHashMap<Category, ArrayList<Application>>) {
         categoryList.removeAllViews()
         categories.forEach {
-            val homeCategory = HomeCategory(context!!, it.key)
+            val homeCategory = HomeCategory(requireContext(), it.key)
             val applicationList = homeCategory.findViewById<RecyclerView>(R.id.application_list)
             applicationList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            applicationList.adapter = SmallApplicationListAdapter(activity!!, it.value)
+            applicationList.adapter = SmallApplicationListAdapter(requireActivity(), it.value)
             categoryList.addView(homeCategory)
         }
     }
@@ -159,7 +150,7 @@ class HomeFragment : Fragment() {
         if (::homeViewModel.isInitialized) {
             homeViewModel.getCategories().value!!.values.forEach {
                 it.forEach { application ->
-                    application.checkForStateUpdate(context!!)
+                    application.checkForStateUpdate(requireContext())
                 }
             }
         }
@@ -174,7 +165,7 @@ class HomeFragment : Fragment() {
             }
             homeViewModel.getBannerApplications().value!!.forEach {
                 if(it.application!=null)
-                    it.application!!.decrementUses()
+                    it.application.decrementUses()
             }
         }
     }

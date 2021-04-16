@@ -1,18 +1,18 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.application
@@ -108,7 +108,7 @@ class ApplicationActivity :
         initialiseDimensions()
         val applicationPackageName: String? = intent.getStringExtra(APPLICATION_PACKAGE_NAME_KEY)
         if (!applicationPackageName.isNullOrEmpty()) {
-            this.applicationPackageName = applicationPackageName!!
+            this.applicationPackageName = applicationPackageName
             applicationManagerServiceConnection.bindService(this)
         }
 
@@ -128,13 +128,11 @@ class ApplicationActivity :
         } else {
             toolbar.elevation = defaultElevation
         }
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            scroll_view.setOnScrollChangeListener { view, ia, ib, ic, id ->
-                if (view.scrollY == 0) {
-                    toolbar.elevation = 0f
-                } else {
-                    toolbar.elevation = defaultElevation
-                }
+        scroll_view.setOnScrollChangeListener { view, _, _, _, _ ->
+            if (view.scrollY == 0) {
+                toolbar.elevation = 0f
+            } else {
+                toolbar.elevation = defaultElevation
             }
         }
     }
@@ -174,16 +172,6 @@ class ApplicationActivity :
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            /*R.id.action_share -> {
-                if (::application.isInitialized) {
-                    val shareIntent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, WEB_STORE_URL + application.basicData!!.id)
-                        type = "text/plain"
-                    }
-                    startActivity(shareIntent)
-                }
-            }*/
             android.R.id.home -> {
                 finish()
             }
@@ -236,7 +224,7 @@ class ApplicationActivity :
 
 
             // Set the app author
-            if (basicData.author!!.isNotEmpty()) {
+            if (basicData.author.isNotEmpty()) {
                 app_author.text = basicData.author
             } else {
                 app_author.visibility = View.GONE
@@ -272,15 +260,14 @@ class ApplicationActivity :
 
             // Set the app rating
             val builder = textColorChange(getText(R.string.not_available).toString())
-            if (basicData.ratings!!.rating != -1f) {
+            if (basicData.ratings.rating != -1f) {
                 app_rating.text = basicData.ratings.rating.toString() + "/5"
             } else {
                 app_rating.text = builder
             }
-            setRatingBorder(basicData.ratings!!.rating)
+            setRatingBorder(basicData.ratings.rating)
 
             app_rating_container.setOnClickListener {
-                val text = R.string.ok
                 val alertDialog = AlertDialog.Builder(this).create()
 
                 alertDialog.setIcon(R.drawable.ic_app_rating)
@@ -515,7 +502,7 @@ class ApplicationActivity :
 
         // Set the app title
         if (pwasBasicData!!.name.isNotEmpty()) {
-            app_title.text = pwasBasicData!!.name
+            app_title.text = pwasBasicData.name
         } else {
             app_title.visibility = View.GONE
         }
@@ -529,7 +516,7 @@ class ApplicationActivity :
             app_description_container.isEnabled = false
         }
 
-        if (pwaFullData!!.category.getTitle().isNotEmpty()) {
+        if (pwaFullData.category.getTitle().isNotEmpty()) {
             app_category.text = pwaFullData.category.getTitle()
             app_category.setOnClickListener {
                 startActivity(Intent(this, CategoryActivity::class.java).apply {
@@ -721,9 +708,7 @@ class ApplicationActivity :
             imageView.setImageBitmap(it)
             val outValue = TypedValue()
             theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
-            if (android.os.Build.VERSION.SDK_INT >= 23) {
-                imageView.foreground = getDrawable(outValue.resourceId)
-            }
+            imageView.foreground = getDrawable(outValue.resourceId)
             app_images_container.addView(imageView)
             imageView.setOnClickListener { _ ->
                 val intent = Intent(this, ScreenshotsActivity::class.java)
@@ -737,6 +722,7 @@ class ApplicationActivity :
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 application.buttonClicked(this, this)
@@ -764,6 +750,6 @@ class ApplicationActivity :
     }
 
     private fun getAccentColor() {
-        accentColorOS = this.resources.getColor(R.color.colorAccent);
+        accentColorOS = this.getColor(R.color.colorAccent);
     }
 }

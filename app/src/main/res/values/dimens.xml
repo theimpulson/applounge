@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-    -->
+  ~ Copyright (C) 2019-2021  E FOUNDATION
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
 
 <resources>
 
@@ -27,37 +27,30 @@
     <dimen name="layout_margin_medium">8dp</dimen>
     <dimen name="layout_margin_medium2">10dp</dimen>
     <dimen name="layout_margin_large">16dp</dimen>
-    <dimen name="layout_margin_extra_large">200dp</dimen>
 
 
     <dimen name="text_size_extra_small">12sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
-    <dimen name="text_size_large2">19sp</dimen>
     <dimen name="text_size_extra_large">28sp</dimen>
 
 
     <dimen name="default_divider_height">0.5dp</dimen>
     <dimen name="default_elevation">4dp</dimen>
     <dimen name="default_radius">4dp</dimen>
-    <dimen name="category_radius2">16dp</dimen>
     <dimen name="category_radius">8dp</dimen>
 
 
     <dimen name="install_button_width">80dp</dimen>
-    <dimen name="install_button_width2">100dp</dimen>
     <dimen name="install_button_width3">120dp</dimen>
     <dimen name="install_button_height">29dp</dimen>
     <dimen name="install_button_height2">33dp</dimen>
-    <dimen name="install_button_height3">36dp</dimen>
-    <dimen name="pwa_button_width">56dp</dimen>
     <dimen name="update_all_button_width">116dp</dimen>
     <dimen name="app_icon_size">64dp</dimen>
     <dimen name="app_icon_size_large">80dp</dimen>
     <dimen name="small_application_list_item_width">140dp</dimen>
     <dimen name="small_application_list_item_height">190dp</dimen>
-    <dimen name="app_privacy_analyses_height">112dp</dimen>
     <dimen name="category_icon_size">32dp</dimen>
     <dimen name="load_more_progress_bar_size">32dp</dimen>
     <dimen name="banner_viewPager_height">160dp</dimen>

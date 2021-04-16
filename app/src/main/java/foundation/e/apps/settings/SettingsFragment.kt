@@ -1,18 +1,18 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.settings
@@ -54,7 +54,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val updateCheckInterval =
                 preferenceManager.findPreference<Preference>(getString(R.string.pref_update_interval_key)) as ListPreference
         updateCheckInterval.setOnPreferenceChangeListener { _, newValue ->
-            UpdatesManager(activity!!.applicationContext).replaceWorker(newValue.toString().toInt())
+            UpdatesManager(requireActivity().applicationContext).replaceWorker(newValue.toString().toInt())
             true
         }
 
@@ -84,21 +84,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
         //Show only pwas when checked
         var z = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.show_only_pwa_apps_key)) as RadioButtonPreference
 
-        x.setOnPreferenceChangeListener { _, newValue ->
+        x.setOnPreferenceChangeListener { _, _ ->
             y.isChecked = false
             z.isChecked = false
             backToMainActivity()
             true
         }
 
-        y.setOnPreferenceChangeListener { _, newValue ->
+        y.setOnPreferenceChangeListener { _, _ ->
             x.isChecked = false
             z.isChecked = false
             backToMainActivity()
             true
         }
 
-        z.setOnPreferenceChangeListener { _, newValue ->
+        z.setOnPreferenceChangeListener { _, _ ->
             y.isChecked = false
             x.isChecked = false
             backToMainActivity()
@@ -119,7 +119,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                 Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
-                activity!!.finish()
+                requireActivity().finish()
             }
         }
         worker.schedule(task, 1, TimeUnit.SECONDS)

@@ -1,25 +1,25 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.updates
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -31,7 +31,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import foundation.e.apps.R
@@ -40,8 +40,6 @@ import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.common.ApplicationListAdapter
 import foundation.e.apps.updates.viewmodel.UpdatesViewModel
-import kotlinx.android.synthetic.main.error_layout.*
-import kotlinx.android.synthetic.main.fragment_updates.*
 
 
 class UpdatesFragment() : Fragment() {
@@ -64,17 +62,16 @@ class UpdatesFragment() : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_updates, container, false)
 
-        updatesViewModel = ViewModelProviders.of(activity!!).get(UpdatesViewModel::class.java)
+        updatesViewModel = ViewModelProvider(this).get(UpdatesViewModel::class.java)
         recyclerView = view.findViewById(R.id.app_list)
         progressBar2 = view.findViewById<ProgressBar>(R.id.progress_bar2)
         val updateAll = view.findViewById<Button>(R.id.update_all)
         updateAll.setTextColor(accentColorOS)
         val splashContainer = view.findViewById<LinearLayout>(R.id.splash_container)
         val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
-        progressBar.getIndeterminateDrawable().setColorFilter(accentColorOS, android.graphics.PorterDuff.Mode.MULTIPLY);
+        progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
         val reloadProgressBar = view.findViewById<ProgressBar>(R.id.progress_bar2)
-        //progressBar.setProgressTintList(ColorStateList.valueOf(accentColorOS));
-        reloadProgressBar.getIndeterminateDrawable().setColorFilter(accentColorOS, android.graphics.PorterDuff.Mode.MULTIPLY);
+        reloadProgressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
 
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
         val errorDescription = view.findViewById<TextView>(R.id.error_description)
@@ -91,7 +88,7 @@ class UpdatesFragment() : Fragment() {
         updateAll.setOnClickListener {
             applicationList.forEach { application ->
                 if (application.state == State.NOT_UPDATED) {
-                    application.buttonClicked(context!!, activity!!)
+                    application.buttonClicked(requireContext(), requireActivity())
                 }
             }
         }
@@ -102,16 +99,16 @@ class UpdatesFragment() : Fragment() {
         view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
             updateAll.isEnabled = false
             progressBar.visibility = View.VISIBLE
-            updatesViewModel.loadApplicationList(context!!)
+            updatesViewModel.loadApplicationList(requireContext())
         }
 
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ApplicationListAdapter(activity!!, applicationList, accentColorOS)
+        recyclerView.adapter = ApplicationListAdapter(requireActivity(), applicationList, accentColorOS)
 
         // Bind recycler view adapter to outdated applications list in view model
-        updatesViewModel.getApplications().observe(this, Observer {
+        updatesViewModel.getApplications().observe(viewLifecycleOwner, Observer {
             if (it != null) {
 
 
@@ -134,9 +131,9 @@ class UpdatesFragment() : Fragment() {
         })
 
         // Bind to the screen error
-        updatesViewModel.getScreenError().observe(this, Observer {
+        updatesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                errorDescription.text = activity!!.getString(it.description)
+                errorDescription.text = requireActivity().getString(it.description)
                 errorContainer.visibility = View.VISIBLE
                 updateAll.isEnabled = false
                 progressBar.visibility = View.GONE
@@ -148,7 +145,7 @@ class UpdatesFragment() : Fragment() {
                 errorContainer.visibility = View.GONE
             }
         })
-        updatesViewModel.loadApplicationList(context!!)
+        updatesViewModel.loadApplicationList(requireContext())
 
 
         return view
@@ -160,7 +157,7 @@ class UpdatesFragment() : Fragment() {
             updatesViewModel.getApplications().value?.let {
                 it.forEach { application ->
                     progressBar2.visibility=View.VISIBLE
-                    application.checkForStateUpdate(context!!)
+                    application.checkForStateUpdate(requireContext())
                 }
                 val handler = Handler()
                 handler.postDelayed({

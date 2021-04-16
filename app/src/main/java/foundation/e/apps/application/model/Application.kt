@@ -1,35 +1,29 @@
 /*
-    Copyright (C) 2019  e Foundation
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2019-2021  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package foundation.e.apps.application.model
 
 import android.Manifest
-import android.R
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.util.Log
-import android.util.TypedValue
-import androidx.annotation.ColorInt
-import androidx.appcompat.view.ContextThemeWrapper
 import foundation.e.apps.MainActivity.Companion.mActivity
-import foundation.e.apps.pwa.PwaInstaller
 import foundation.e.apps.XAPK.XAPKFile
 import foundation.e.apps.api.AppDetailRequest
 import foundation.e.apps.api.AppDownloadedRequest
@@ -38,6 +32,7 @@ import foundation.e.apps.application.model.State.*
 import foundation.e.apps.application.model.data.*
 import foundation.e.apps.application.model.release.ReleaseData
 import foundation.e.apps.applicationmanager.ApplicationManager
+import foundation.e.apps.pwa.PwaInstaller
 import foundation.e.apps.utils.*
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -84,12 +79,10 @@ class Application(val packageName: String, private val applicationManager: Appli
             stateManager.find(context, basicData!!)
         } else if (searchAppsBasicData != null) {
             if (searchAppsBasicData!!.is_pwa) {
-//                stateManager.pwaFind()
             } else {
                 stateManager.searchAppsFind(context, searchAppsBasicData!!)
             }
         } else if (pwabasicdata != null) {
-//              stateManager.pwaFind()
         }
     }
 
@@ -100,7 +93,7 @@ class Application(val packageName: String, private val applicationManager: Appli
     }
 
     fun pwaInstall(context: Context) {
-        var error: Error? = null
+        var error: Error?
 
         Thread(Runnable {
             error = assertFullData(context)
@@ -154,15 +147,11 @@ class Application(val packageName: String, private val applicationManager: Appli
     }
 
     private fun canWriteStorage(activity: Activity): Boolean {
-        return if (android.os.Build.VERSION.SDK_INT >= 23) {
-            if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                activity.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        Constants.STORAGE_PERMISSION_REQUEST_CODE)
-                false
-            } else {
-                true
-            }
+        return if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            activity.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                                        Constants.STORAGE_PERMISSION_REQUEST_CODE)
+            false
         } else {
             true
         }
@@ -208,7 +197,6 @@ class Application(val packageName: String, private val applicationManager: Appli
         } else {
             true
         }
-        true
     }
 
     override fun onDownloadComplete(context: Context, status: Int) {
@@ -219,7 +207,7 @@ class Application(val packageName: String, private val applicationManager: Appli
                 Execute({
                     AppDownloadedRequest(basicData!!.id,fullData!!.getLastVersion()?.apkArchitecture).request()
                 }, {})
-                if(info.isXapk(fullData!!,basicData)){
+                if(info.isXapk(fullData!!)){
                     isInstalling=true
                     XAPKFile(info.getxApkFile(context,basicData!!),this)
                 }
@@ -290,7 +278,7 @@ class Application(val packageName: String, private val applicationManager: Appli
     private fun findBasicData(context: Context): Error? {
         var error: Error? = null
         if (Common.isNetworkAvailable(context)) {
-            PackageNameSearchRequest(packageName!!).request { applicationError, searchResult ->
+            PackageNameSearchRequest(packageName).request { applicationError, searchResult ->
                 when (applicationError) {
                     null -> {
                         error = Error.NO_RESULTS
@@ -480,7 +468,7 @@ class Application(val packageName: String, private val applicationManager: Appli
    */
     fun getAccentColor(context: Context): Int {
 
-        val color =context.resources.getColor(foundation.e.apps.R.color.colorAccent);
+        val color = context.getColor(foundation.e.apps.R.color.colorAccent);
         return color;
 
     }
