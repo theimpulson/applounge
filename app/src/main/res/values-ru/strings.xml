@@ -103,4 +103,11 @@
     <string name="microg_installed">Установленно</string>
     <string name="microg_not_installed">Не установлено</string>
     <string name="app_package_name">Имя пакета</string>
+    <string name="divider">Делитель</string>
+    <string name="image_carousel">Карусель изображений</string>
+    <string name="error_incident">Произошла ошибка</string>
+    <string name="package_name_help_example">Пример scr, показывающий пакет и его имя</string>
+    <string name="trackers_expand">Показать список трекеров</string>
+    <string name="permissions_expand">Показать список разрешений</string>
+    <string name="Signature_verification_failed">Ошибка проверки подписи, установка прерывается</string>
 </resources>
