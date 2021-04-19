@@ -103,4 +103,8 @@
     <string name="app_package_name">Paketname</string>
     <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
     <string name="Signature_verification_failed">Überprüfung der Signatur ist fehlgeschlagen, die Installation wird abgebrochen</string>
+    <string name="image_carousel">Bilder-Karussell</string>
+    <string name="error_incident">Ein Fehler ist aufgetreten</string>
+    <string name="trackers_expand">Zeige eine Liste der Verfolger</string>
+    <string name="permissions_expand">Zeige eine Liste der Erlaubnisse</string>
 </resources>
