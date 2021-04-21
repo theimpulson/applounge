@@ -106,6 +106,6 @@
     <string name="image_carousel">Bilder-Karussell</string>
     <string name="error_incident">Ein Fehler ist aufgetreten</string>
     <string name="trackers_expand">Zeige eine Liste der Verfolger (Tracker)</string>
-    <string name="permissions_expand">Zeige eine Liste der Erlaubnisse</string>
+    <string name="permissions_expand">Zeige Liste der Berechtigungen</string>
     <string name="divider">Trennzeichen</string>
 </resources>
