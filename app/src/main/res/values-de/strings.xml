@@ -76,7 +76,7 @@
     <string name="action_launch">Öffnen</string>
     <string name="action_update_all">Alle aktualisieren</string>
     <string name="action_update">Aktualisieren</string>
-    <string name="state_installing">Wird installiert</string>
+    <string name="state_installing">Installiert</string>
     <string name="action_cancel">Abbrechen</string>
     <string name="action_install">Installieren</string>
     <string name="app_rating_content_description">App-Bewertung</string>
@@ -92,7 +92,7 @@
     <string name="show_only_open_source_apps">Nur Open-Source-Apps anzeigen</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
     <string name="Show_all_apps">Alle Anwendungen anzeigen</string>
-    <string name="Show_applications">Anwendungen zeigen:</string>
+    <string name="Show_applications">Anwendungen anzeigen:</string>
     <string name="featured">Empfohlen</string>
     <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
     <string name="action_installing">Wird installiert</string>
@@ -105,6 +105,7 @@
     <string name="Signature_verification_failed">Überprüfung der Signatur ist fehlgeschlagen, die Installation wird abgebrochen</string>
     <string name="image_carousel">Bilder-Karussell</string>
     <string name="error_incident">Ein Fehler ist aufgetreten</string>
-    <string name="trackers_expand">Zeige eine Liste der Verfolger</string>
+    <string name="trackers_expand">Zeige eine Liste der Verfolger (Tracker)</string>
     <string name="permissions_expand">Zeige eine Liste der Erlaubnisse</string>
+    <string name="divider">Trennzeichen</string>
 </resources>
