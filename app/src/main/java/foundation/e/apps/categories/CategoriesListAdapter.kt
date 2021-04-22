@@ -21,16 +21,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
-import foundation.e.apps.R
 import foundation.e.apps.categories.category.CategoryActivity
 import foundation.e.apps.categories.model.Category
+import foundation.e.apps.databinding.CategoryListItemBinding
 import foundation.e.apps.utils.Constants
 
 class CategoriesListAdapter(private val context: Context, private var categories: ArrayList<Category>, color: Int?)
@@ -43,17 +39,20 @@ class CategoriesListAdapter(private val context: Context, private var categories
 
     }
 
-    class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val categoryContainer: RelativeLayout = view.findViewById(R.id.category_container)
-        val categoryIcon: ImageView = view.findViewById(R.id.category_icon)
-        val categoryTitle: TextView = view.findViewById(R.id.category_title)
+    class CategoryViewHolder(binding: CategoryListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        val categoryContainer = binding.categoryContainer
+        val categoryIcon = binding.categoryIcon
+        val categoryTitle = binding.categoryTitle
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val categoryContainer = LayoutInflater.from(parent.context).inflate(
-                R.layout.category_list_item,
-                parent, false)
-        return CategoryViewHolder(categoryContainer)
+        return CategoryViewHolder(
+            CategoryListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int {

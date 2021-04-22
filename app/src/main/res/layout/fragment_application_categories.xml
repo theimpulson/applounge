@@ -30,6 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
+        android:id="@+id/error_layout"
         layout="@layout/error_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
