@@ -41,6 +41,9 @@ android {
             signingConfig signingConfigs.config
         }
     }
+    buildFeatures {
+        viewBinding true
+    }
     lintOptions {
         lintConfig file("lint.xml")
         disable 'MissingTranslation'
