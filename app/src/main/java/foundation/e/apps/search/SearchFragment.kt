@@ -39,12 +39,16 @@ import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.common.ApplicationListAdapter
+import foundation.e.apps.databinding.FragmentSearchBinding
 import foundation.e.apps.search.viewmodel.SearchViewModel
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.SUGGESTION_KEY
 
 
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var searchViewModel: SearchViewModel
     private var focusView: View? = null
     private lateinit var searchView: SearchView
@@ -62,30 +66,33 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+
         setHasOptionsMenu(true)
 
         if (applicationManager == null) {
             return null
         }
 
-        val view = inflater.inflate(R.layout.fragment_search, container, false)
-
         searchViewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
-        focusView = view.findViewById(R.id.view)
-        searchView = view.findViewById(R.id.search_view)
-        recyclerView = view.findViewById(R.id.app_list)
-        progressBar = view.findViewById(R.id.progress_bar)
-        splashContainer = view.findViewById(R.id.splash_container)
-        var error_resolve =view.findViewById<TextView>(R.id.error_resolve)
-        val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
-        val errorDescription = view.findViewById<TextView>(R.id.error_description)
-        val loadMoreContainer = view.findViewById<RelativeLayout>(R.id.load_more_container)
-//set accent color to Error button (Retry )
-        error_resolve.setTextColor(Color.parseColor("#ffffff"))
-        error_resolve.setBackgroundColor(accentColorOS)
+
+        // Fragment variables
+        focusView = binding.view
+        searchView = binding.searchView
+        recyclerView = binding.appList
+        progressBar = binding.progressBar
+        splashContainer = binding.searchSplashLayout.splashContainer
+        val errorResolve = binding.errorLayout.errorResolve
+        val errorContainer = binding.errorLayout.errorContainer
+        val errorDescription = binding.errorLayout.errorDescription
+        val loadMoreContainer = binding.loadMoreContainer
+
+        //set accent color to Error button (Retry )
+        errorResolve.setTextColor(Color.parseColor("#ffffff"))
+        errorResolve.setBackgroundColor(accentColorOS)
 
 
-        error_resolve.visibility=View.GONE
+        errorResolve.visibility=View.GONE
         searchViewModel.initialise(applicationManager!!)
         recyclerView.visibility = View.GONE
         progressBar.visibility = View.GONE
@@ -96,7 +103,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             splashContainer.visibility = View.GONE
         }
         errorContainer.visibility = View.GONE
-        view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
+        errorResolve.setOnClickListener {
             loadMoreContainer.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             onQueryTextSubmit(searchView.query.toString())
@@ -182,7 +189,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         configureCloseButton(searchView)
 
 
-        return view
+        return binding.root
     }
 
     private fun automaticSearchMicroG() {
@@ -270,6 +277,11 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
             }
         }
         super.onResume()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     fun decrementApplicationUses() {
