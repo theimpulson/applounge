@@ -48,7 +48,7 @@ class UpdatesFragment() : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private var applicationList = ArrayList<Application>()
     var accentColorOS=0;
-    lateinit var progressBar2:ProgressBar
+    lateinit var reloadProgressBar: ProgressBar
 
     fun initialise(applicationManager: ApplicationManager, accentColorOS: Int) {
         this.applicationManager = applicationManager
@@ -64,13 +64,12 @@ class UpdatesFragment() : Fragment() {
 
         updatesViewModel = ViewModelProvider(this).get(UpdatesViewModel::class.java)
         recyclerView = view.findViewById(R.id.app_list)
-        progressBar2 = view.findViewById<ProgressBar>(R.id.progress_bar2)
         val updateAll = view.findViewById<Button>(R.id.update_all)
         updateAll.setTextColor(accentColorOS)
         val splashContainer = view.findViewById<LinearLayout>(R.id.splash_container)
         val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
         progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
-        val reloadProgressBar = view.findViewById<ProgressBar>(R.id.progress_bar2)
+        reloadProgressBar = view.findViewById<ProgressBar>(R.id.progress_bar2)
         reloadProgressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
 
         val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
@@ -156,12 +155,12 @@ class UpdatesFragment() : Fragment() {
         if (::updatesViewModel.isInitialized) {
             updatesViewModel.getApplications().value?.let {
                 it.forEach { application ->
-                    progressBar2.visibility=View.VISIBLE
+                    reloadProgressBar.visibility=View.VISIBLE
                     application.checkForStateUpdate(requireContext())
                 }
                 val handler = Handler()
                 handler.postDelayed({
-                    progressBar2.visibility=View.GONE
+                    reloadProgressBar.visibility=View.GONE
                 }, 10000)
 
             }
