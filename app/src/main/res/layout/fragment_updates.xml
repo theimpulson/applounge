@@ -92,6 +92,7 @@
         app:layout_constraintTop_toBottomOf="@id/progress_bar2"/>
 
     <include
+        android:id="@+id/updates_splash_layout"
         layout="@layout/updates_splash_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,6 +102,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <include
+        android:id="@+id/error_layout"
         layout="@layout/error_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
