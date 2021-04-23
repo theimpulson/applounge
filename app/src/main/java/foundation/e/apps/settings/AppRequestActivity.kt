@@ -23,65 +23,73 @@ import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import foundation.e.apps.R
+import foundation.e.apps.databinding.ActivityAppRequestBinding
 import foundation.e.apps.settings.viewmodel.AppRequestViewModel
 import foundation.e.apps.utils.Error
-import kotlinx.android.synthetic.main.activity_app_request.*
 
 class AppRequestActivity : AppCompatActivity(), TextWatcher {
+    private lateinit var binding: ActivityAppRequestBinding
     private lateinit var viewModel: AppRequestViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityAppRequestBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_app_request)
+        setContentView(binding.root)
 
         // Initialise toolbar
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewModel = ViewModelProvider(this).get(AppRequestViewModel::class.java)
-        progress_bar.visibility = View.GONE
-        app_request_error_text_view.visibility = View.GONE
-        package_name_edit_text.addTextChangedListener(this)
-        submit_button.setOnClickListener {
-            package_name_edit_text.visibility = View.GONE
-            submit_button.visibility = View.GONE
-            progress_bar.visibility = View.VISIBLE
-            app_request_error_text_view.visibility = View.GONE
+
+        // Activity Variables
+        val progressBar = binding.progressBar
+        val appRequestErrorTextView = binding.appRequestErrorTextView
+        val packageNameEditText = binding.packageNameEditText
+        val submitButton = binding.submitButton
+
+        progressBar.visibility = View.GONE
+        appRequestErrorTextView.visibility = View.GONE
+        packageNameEditText.addTextChangedListener(this)
+        submitButton.setOnClickListener {
+            packageNameEditText.visibility = View.GONE
+            submitButton.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+            appRequestErrorTextView.visibility = View.GONE
             viewModel.onSubmit(this)
         }
 
         // Bind enabled state of submit button to value in view model
         viewModel.isSubmitButtonEnabled.observe(this, Observer {
             if (it != null) {
-                submit_button.isEnabled = it
+                submitButton.isEnabled = it
             }
         })
 
         // Bind to the screen error
         viewModel.getScreenError().observe(this, Observer {
             if (it != null) {
-                progress_bar.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 if (it == Error.NO_ERROR) {
-                    package_name_edit_text.setText("")
-                    package_name_edit_text.visibility = View.VISIBLE
-                    submit_button.visibility = View.VISIBLE
-                    app_request_error_text_view.visibility = View.VISIBLE
-                    app_request_error_text_view.text =
+                    packageNameEditText.setText("")
+                    packageNameEditText.visibility = View.VISIBLE
+                    submitButton.visibility = View.VISIBLE
+                    appRequestErrorTextView.visibility = View.VISIBLE
+                    appRequestErrorTextView.text =
                             getString(R.string.app_request_successful_text)
-                    app_request_error_text_view.background = getDrawable(R.drawable.success_border)
+                    appRequestErrorTextView.background = getDrawable(R.drawable.success_border)
                 } else {
-                    package_name_edit_text.visibility = View.VISIBLE
-                    submit_button.visibility = View.VISIBLE
-                    app_request_error_text_view.visibility = View.VISIBLE
-                    app_request_error_text_view.text = getString(it.description)
-                    app_request_error_text_view.background = getDrawable(R.drawable.error_border)
+                    packageNameEditText.visibility = View.VISIBLE
+                    submitButton.visibility = View.VISIBLE
+                    appRequestErrorTextView.visibility = View.VISIBLE
+                    appRequestErrorTextView.text = getString(it.description)
+                    appRequestErrorTextView.background = getDrawable(R.drawable.error_border)
                 }
-                scroll_view.scrollTo(0, 0)
+                binding.scrollView.scrollTo(0, 0)
             }
         })
     }
