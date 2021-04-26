@@ -26,6 +26,8 @@ import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
+import foundation.e.apps.utils.Constants.MICROG_SHARED_PREF
+import foundation.e.apps.utils.PreferenceStorage
 
 class OutdatedApplicationsFinder(private val packageManager: PackageManager,
                                  private val callback: UpdatesWorkerInterface,
@@ -45,14 +47,20 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
 
     private fun getOutdatedApplications(context: Context): ArrayList<Application> {
         val result = ArrayList<Application>()
-        var application: Application? = loadMicroGVersion(context)[0]
-        if (application!!.state != State.INSTALLED) {
+        val application: Application = loadMicroGVersion(context)[0]
+        if (PreferenceStorage(context).getBoolean(
+                MICROG_SHARED_PREF,
+                false
+            )
+        ) {
             result.add(application)
         }
         val installedApplications = getInstalledApplications()
         installedApplications.forEach { packageName ->
-            val application = applicationManager.findOrCreateApp(packageName)
-            verifyApplication(application, result, context)
+            if (packageName != Constants.MICROG_PACKAGE) {
+                val app = applicationManager.findOrCreateApp(packageName)
+                verifyApplication(app, result, context)
+            }
         }
         return result
     }

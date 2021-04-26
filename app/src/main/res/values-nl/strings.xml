@@ -98,8 +98,6 @@
     <string name="Show_applications">Toon applicaties:</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
-    <string name="microg_installed">Geïnstalleerd</string>
-    <string name="microg_not_installed">Niet Geïnstalleerd</string>
     <string name="app_package_name">Pakket naam</string>
     <string name="Signature_verification_failed">Verificatie mislukt, installatie wordt afgebroken</string>
 </resources>

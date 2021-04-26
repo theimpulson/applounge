@@ -75,14 +75,6 @@
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme1"
             android:windowSoftInputMode="adjustResize" />
-
-
-        <provider
-            android:name=".MicroGProvider"
-            android:authorities="foundation.e.apps.micro.status"
-            android:exported="true"
-          />
-
     </application>
 
 </manifest>

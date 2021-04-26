@@ -36,6 +36,7 @@ object Constants {
     const val MICROG_ID = 149
     const val MICROG = "microG Exposure Notification version"
     const val MICROG_ICON_URI = "https://gitlab.e.foundation/uploads/-/system/project/avatar/149/ic_core_service_app.png?width=64"
+    const val MICROG_SHARED_PREF = "pref_microg_installed"
 
 
     // Search

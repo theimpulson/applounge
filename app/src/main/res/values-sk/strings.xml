@@ -84,8 +84,6 @@
     <string name="app_privacy_score">Súkromie</string>
     <string name="MANUALLY_INSTALL_updates_notification_text">Aktualizácie aplikácií sa nenainštalujú automaticky</string>
     <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Aktualizácie aplikácií sa nainštalujú automaticky</string>
-    <string name="microg_not_installed">Nenainštalovaný</string>
-    <string name="microg_installed">Nainštalovaný</string>
     <string name="preference_update_wifi_only_description">Automatická aktualizácia aplikácií len v sieťach bez merania objemu dát ako napríklad Wi-Fi</string>
     <string name="preference_update_wifi_only_title">Iba cez nemerané siete</string>
     <string name="updates_notification_unmetered_network_warning">Čaká sa na nemeranú sieť</string>

@@ -20,6 +20,15 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
+    signingConfigs {
+        config {
+            storeFile file("../platform.keystore")
+            storePassword 'android'
+            keyAlias 'platform'
+            keyPassword 'android'
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
@@ -27,6 +36,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        platform {
+            signingConfig signingConfigs.config
         }
     }
     lintOptions {

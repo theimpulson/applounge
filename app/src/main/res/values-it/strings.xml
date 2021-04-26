@@ -98,9 +98,6 @@
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
     <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
     <string name="exit">Tocca ancora INDIETRO per uscire</string>
-    <string name="microg_installed">Installato</string>
-    <string name="microg_not_installed">Non installato</string>
-    <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
     <string name="Signature_verification_failed">Verifica della firma non riuscita, installazione interrotta</string>
     <string name="app_package_name">Nome del pacchetto</string>
 </resources>
