@@ -26,6 +26,7 @@ import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Common
+import foundation.e.apps.utils.Constants.MICROG_SHARED_PREF
 import foundation.e.apps.utils.PreferenceStorage
 
 class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
@@ -37,7 +38,7 @@ class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
         val application: Application? = loadMicroGVersion(context[0])[0]
         println("versionname::-"+ application?.basicData!!.lastVersionNumber)
         if (PreferenceStorage(context[0])
-                        .getBoolean(context[0].getString(R.string.prefs_microg_vrsn_installed), false)
+                        .getBoolean(MICROG_SHARED_PREF, false)
                 && application.state == State.NOT_UPDATED) {
             applications.addAll(loadMicroGVersion(context[0]))
         }

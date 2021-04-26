@@ -27,10 +27,10 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import foundation.e.apps.MicroGProvider
 import foundation.e.apps.R
 import foundation.e.apps.XAPK.FsUtils.deleteFileOrDir
 import foundation.e.apps.utils.Constants
+import foundation.e.apps.utils.Constants.MICROG_SHARED_PREF
 import foundation.e.apps.utils.PreferenceStorage
 import java.io.File
 import java.io.IOException
@@ -126,7 +126,11 @@ class Installer(private val packageName: String,
             context.unregisterReceiver(receiver)
             Log.i(TAG, "Unregistered old broadcast receiver")
         } catch (exception: Exception) {
-            exception.printStackTrace()
+            if (exception !is IllegalArgumentException) {
+                exception.printStackTrace()
+            } else {
+                Log.d(TAG, "Broadcast receiver is already unregistered")
+            }
         }
         context.registerReceiver(receiver, IntentFilter().apply {
             addAction(Intent.ACTION_PACKAGE_ADDED)
@@ -146,18 +150,7 @@ class Installer(private val packageName: String,
                 callback.onInstallationComplete(context)
 
                 if (packageName == Constants.MICROG_PACKAGE) {
-                      PreferenceStorage(context).save(context.getString(R.string.prefs_microg_vrsn_installed), true)
-                    if (count(MicroGProvider.CONTENT_URI, context)) {
-                        val values = ContentValues()
-                        values.put(MicroGProvider.installStatus, "true")
-                        val state=context.contentResolver.update(MicroGProvider.CONTENT_URI, values,
-                                MicroGProvider.id + "=?", arrayOf("1"))
-                    } else {
-                        val values = ContentValues()
-                        values.put(MicroGProvider.installStatus, "true")
-                        val state=context.contentResolver.insert(MicroGProvider.CONTENT_URI, values);
-                    }
-
+                      PreferenceStorage(context).save(MICROG_SHARED_PREF, true)
                 }
             }
         }

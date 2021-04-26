@@ -99,9 +99,6 @@
     <string name="app_name">Приложения</string>
     <string name="error_install_failed">Приложение не может быть установлено. Пожалуйста, попробуйте позже.</string>
     <string name="exit">Пожалуйста, нажмите НАЗАД снова для выхода</string>
-    <string name="prefs_microg_vrsn_installed">Установленная версия MicroG</string>
-    <string name="microg_installed">Установленно</string>
-    <string name="microg_not_installed">Не установлено</string>
     <string name="app_package_name">Имя пакета</string>
     <string name="divider">Делитель</string>
     <string name="image_carousel">Карусель изображений</string>

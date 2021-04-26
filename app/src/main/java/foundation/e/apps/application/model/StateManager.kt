@@ -23,7 +23,9 @@ import foundation.e.apps.R
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.SearchAppsBasicData
 import foundation.e.apps.applicationmanager.ApplicationManager
+import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
+import foundation.e.apps.utils.Constants.MICROG_SHARED_PREF
 import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.PreferenceStorage
 import java.util.*
@@ -37,12 +39,13 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
 
     fun find(context: Context, basicData: BasicData) {
         if (basicData.name == Constants.MICROG) {
-            Log.e("MicroGStatus", PreferenceStorage(context).getBoolean(context.getString(R.string.prefs_microg_vrsn_installed), false).toString())
+            Common.updateMicroGStatus(context)
+            Log.e("MicroGStatus", PreferenceStorage(context).getBoolean(MICROG_SHARED_PREF, false).toString())
             val state = if (appManager.isInstalling(app) && !app.isInstalling) {
                 State.DOWNLOADING
             } else if (appManager.isInstalling(app) && app.isInstalling) {
                 State.INSTALLING
-            } else if (PreferenceStorage(context).getBoolean(context.getString(R.string.prefs_microg_vrsn_installed), false)) {
+            } else if (PreferenceStorage(context).getBoolean(MICROG_SHARED_PREF, false)) {
                 if (info.isLastVersionInstalled(context, basicData.lastVersionNumber)) {
                     State.NOT_UPDATED
                 } else {
@@ -75,7 +78,7 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
             State.DOWNLOADING
         } else if (appManager.isInstalling(app) && app.isInstalling) {
             State.INSTALLING
-        } else if (PreferenceStorage(context).getBoolean(context.getString(R.string.prefs_microg_vrsn_installed), false)) {
+        } else if (PreferenceStorage(context).getBoolean(MICROG_SHARED_PREF, false)) {
             if (info.isLastVersionInstalled(context, basicData.lastVersionNumber)) {
                 State.NOT_UPDATED
             } else {

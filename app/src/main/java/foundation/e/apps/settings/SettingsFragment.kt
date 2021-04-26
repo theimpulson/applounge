@@ -42,14 +42,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // Create preferences
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
-
-        val microGInstallState = preferenceManager.findPreference<Preference>(getString(R.string.prefs_microg_vrsn_installed))
-        microGInstallState?.summary = if (context?.let { PreferenceStorage(it).getBoolean(getString(R.string.prefs_microg_vrsn_installed), false) }!!) {
-            getString(R.string.microg_installed)
-        } else {
-            getString(R.string.microg_not_installed)
-        }
-
         // Handle update check interval changes
         val updateCheckInterval =
                 preferenceManager.findPreference<Preference>(getString(R.string.pref_update_interval_key)) as ListPreference

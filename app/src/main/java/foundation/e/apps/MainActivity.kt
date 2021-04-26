@@ -49,8 +49,10 @@ import foundation.e.apps.search.SearchFragment
 import foundation.e.apps.settings.SettingsFragment
 import foundation.e.apps.updates.UpdatesFragment
 import foundation.e.apps.updates.UpdatesManager
+import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.CURRENTLY_SELECTED_FRAGMENT_KEY
+import foundation.e.apps.utils.Constants.MICROG_SHARED_PREF
 import foundation.e.apps.utils.PreferenceStorage
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -110,6 +112,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         disableShiftingOfNabBarItems()
 
+        Common.updateMicroGStatus(this)
+
         initialiseUpdatesWorker()
 
 
@@ -132,15 +136,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onResume() {
         super.onResume()
-        if (retrieveStatus() != null) {
-            if (retrieveStatus().equals("true")) {
-                PreferenceStorage(this).save(getString(R.string.prefs_microg_vrsn_installed), true)
-            } else {
-                PreferenceStorage(this).save(getString(R.string.prefs_microg_vrsn_installed), false)
-            }
-        } else {
-            PreferenceStorage(this).save(getString(R.string.prefs_microg_vrsn_installed), false)
-        }
+        Common.updateMicroGStatus(this)
     }
 
     private fun openSearchFragment() {
@@ -171,19 +167,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottom_navigation_view.setItemTextColor(textColorStates)
 
     }
-
-    private fun retrieveStatus(): String? {
-        var status: String? = null
-        val c: Cursor? = contentResolver.query(MicroGProvider.CONTENT_URI, null, "id=?", arrayOf("1"), "installStatus")
-        if (c!!.moveToFirst()) {
-            do {
-                status = c.getString(c.getColumnIndex("installStatus"))
-            } while (c.moveToNext())
-        }
-        c.close()
-        return status
-    }
-
 
     private fun initialiseUpdatesWorker() {
         UpdatesManager(applicationContext).startWorker()

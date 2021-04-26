@@ -98,10 +98,7 @@
     <string name="action_installing">Wird installiert</string>
     <string name="more">mehr</string>
     <string name="exit">Bitte erneut auf ZURÜCK tippen zum Beenden</string>
-    <string name="microg_installed">Installiert</string>
-    <string name="microg_not_installed">Nicht installiert</string>
     <string name="app_package_name">Paketname</string>
-    <string name="prefs_microg_vrsn_installed">pref_microg_installed</string>
     <string name="Signature_verification_failed">Überprüfung der Signatur ist fehlgeschlagen, die Installation wird abgebrochen</string>
     <string name="image_carousel">Bilder-Karussell</string>
     <string name="error_incident">Ein Fehler ist aufgetreten</string>

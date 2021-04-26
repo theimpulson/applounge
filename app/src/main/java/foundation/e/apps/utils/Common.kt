@@ -32,6 +32,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import foundation.e.apps.categories.model.Category
+import foundation.e.apps.utils.Constants.MICROG_PACKAGE
+import foundation.e.apps.utils.Constants.MICROG_SHARED_PREF
 import java.net.URL
 import java.nio.file.Paths
 import java.util.*
@@ -126,6 +128,20 @@ object Common {
             preferredLocaleList.add(adjustedLocaleListCompat.get(index))
         }
         return preferredLocaleList
+    }
+
+    /*
+     * Updates shared preferences related to microG EN
+     * @param context Context
+     */
+    fun updateMicroGStatus(context: Context) {
+        val packageInfo = context.packageManager.getPackageInfo(MICROG_PACKAGE, 0)
+        val microgENversion = packageInfo.versionName
+        if (microgENversion.endsWith("-noen")) {
+            PreferenceStorage(context).save(MICROG_SHARED_PREF, false)
+        } else {
+            PreferenceStorage(context).save(MICROG_SHARED_PREF, true)
+        }
     }
 }
 
