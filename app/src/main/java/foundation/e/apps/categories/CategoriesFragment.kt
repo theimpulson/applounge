@@ -24,18 +24,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import foundation.e.apps.R
+import foundation.e.apps.databinding.FragmentCategoriesBinding
 
 class CategoriesFragment : Fragment() {
-
-
+    private var _binding: FragmentCategoriesBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_categories, container, false)
-        val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
-        val viewPager = view.findViewById<ViewPager>(R.id.view_pager)
+        _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
+
+        // Fragment variables
+        val tabLayout = binding.tabLayout
+        val viewPager = binding.viewPager
+
         var color = getAccentColor(requireActivity());
         viewPager.adapter = CategoriesViewPagerAdapter(requireActivity().supportFragmentManager, tabLayout.tabCount, color)
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
@@ -57,7 +60,12 @@ class CategoriesFragment : Fragment() {
 
             }
         })
-        return view
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     /*

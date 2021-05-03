@@ -25,30 +25,30 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.common.ApplicationListAdapter
+import foundation.e.apps.databinding.FragmentUpdatesBinding
 import foundation.e.apps.updates.viewmodel.UpdatesViewModel
 
 
 class UpdatesFragment() : Fragment() {
+    private var _binding: FragmentUpdatesBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var updatesViewModel: UpdatesViewModel
     private var applicationManager: ApplicationManager? = null
     private lateinit var recyclerView: RecyclerView
     private var applicationList = ArrayList<Application>()
     var accentColorOS=0;
-    lateinit var progressBar2:ProgressBar
+    lateinit var reloadProgressBar: ProgressBar
 
     fun initialise(applicationManager: ApplicationManager, accentColorOS: Int) {
         this.applicationManager = applicationManager
@@ -56,29 +56,31 @@ class UpdatesFragment() : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentUpdatesBinding.inflate(inflater, container, false)
+
         if (applicationManager == null) {
             return null
         }
 
-        val view = inflater.inflate(R.layout.fragment_updates, container, false)
-
         updatesViewModel = ViewModelProvider(this).get(UpdatesViewModel::class.java)
-        recyclerView = view.findViewById(R.id.app_list)
-        progressBar2 = view.findViewById<ProgressBar>(R.id.progress_bar2)
-        val updateAll = view.findViewById<Button>(R.id.update_all)
+
+        // Fragment variables
+        recyclerView = binding.appList
+        reloadProgressBar = binding.progressBar2
+        val updateAll = binding.updateAll
+        val splashContainer = binding.updatesSplashLayout.splashContainer
+        val progressBar = binding.progressBar
+        val errorContainer = binding.errorLayout.errorContainer
+        val errorDescription = binding.errorLayout.errorDescription
+        val errorResolve = binding.errorLayout.errorResolve
+
         updateAll.setTextColor(accentColorOS)
-        val splashContainer = view.findViewById<LinearLayout>(R.id.splash_container)
-        val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
         progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
-        val reloadProgressBar = view.findViewById<ProgressBar>(R.id.progress_bar2)
         reloadProgressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
 
-        val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
-        val errorDescription = view.findViewById<TextView>(R.id.error_description)
-
         //set accent color to Error button (Retry )
-        view.findViewById<TextView>(R.id.error_resolve).setTextColor(Color.parseColor("#ffffff"))
-        view.findViewById<TextView>(R.id.error_resolve).setBackgroundColor(accentColorOS)
+        errorResolve.setTextColor(Color.parseColor("#ffffff"))
+        errorResolve.setBackgroundColor(accentColorOS)
 
 
         // Initialise UI elements
@@ -96,7 +98,7 @@ class UpdatesFragment() : Fragment() {
         reloadProgressBar.visibility = View.GONE
         errorContainer.visibility = View.GONE
         splashContainer.visibility = View.GONE
-        view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
+        errorResolve.setOnClickListener {
             updateAll.isEnabled = false
             progressBar.visibility = View.VISIBLE
             updatesViewModel.loadApplicationList(requireContext())
@@ -148,7 +150,7 @@ class UpdatesFragment() : Fragment() {
         updatesViewModel.loadApplicationList(requireContext())
 
 
-        return view
+        return binding.root
     }
 
     override fun onResume() {
@@ -156,16 +158,21 @@ class UpdatesFragment() : Fragment() {
         if (::updatesViewModel.isInitialized) {
             updatesViewModel.getApplications().value?.let {
                 it.forEach { application ->
-                    progressBar2.visibility=View.VISIBLE
+                    reloadProgressBar.visibility=View.VISIBLE
                     application.checkForStateUpdate(requireContext())
                 }
                 val handler = Handler()
                 handler.postDelayed({
-                    progressBar2.visibility=View.GONE
+                    reloadProgressBar.visibility=View.GONE
                 }, 10000)
 
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     fun decrementApplicationUses() {

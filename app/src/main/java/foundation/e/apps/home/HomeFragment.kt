@@ -24,7 +24,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -36,10 +35,14 @@ import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.common.SmallApplicationListAdapter
+import foundation.e.apps.databinding.FragmentHomeBinding
 import foundation.e.apps.home.viewmodel.HomeViewModel
 
 
 class HomeFragment : Fragment() {
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var imageCarousel: ViewPager
     private lateinit var divider: View
@@ -54,24 +57,27 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+
         if (applicationManager == null) {
             return null
 
         }
 
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        imageCarousel = view.findViewById(R.id.image_carousel)
-        divider = view.findViewById(R.id.divider)
-        categoryList = view.findViewById(R.id.category_list)
-        progressBar = view.findViewById(R.id.progress_bar)
-        val errorContainer = view.findViewById<LinearLayout>(R.id.error_container)
-        val errorDescription = view.findViewById<TextView>(R.id.error_description)
-        //set accent color to Error button (Retry )
 
-        view.findViewById<TextView>(R.id.error_resolve).setTextColor(Color.parseColor("#ffffff"))
-        view.findViewById<TextView>(R.id.error_resolve).setBackgroundColor(accentColorOS)
+        // Fragment variables
+        imageCarousel = binding.imageCarousel
+        divider = binding.divider
+        categoryList = binding.categoryList
+        progressBar = binding.progressBar
+        val errorContainer = binding.errorLayout.errorContainer
+        val errorDescription = binding.errorLayout.errorDescription
+        val errorResolve = binding.errorLayout.errorResolve
+
+        //set accent color to Error button (Retry )
+        errorResolve.setTextColor(Color.parseColor("#ffffff"))
+        errorResolve.setBackgroundColor(accentColorOS)
 
         // Initialise UI elements
         homeViewModel.initialise(applicationManager!!)
@@ -81,7 +87,7 @@ class HomeFragment : Fragment() {
         categoryList.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
-        view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
+        errorResolve.setOnClickListener {
             progressBar.visibility = View.VISIBLE
             homeViewModel.loadCategories(requireContext())
         }
@@ -125,7 +131,7 @@ class HomeFragment : Fragment() {
                 homeViewModel.getCategories().value!!.isEmpty()) {
             homeViewModel.loadCategories(requireContext())
         }
-        return view
+        return binding.root
     }
 
     private fun setCustomScroller() {
@@ -154,6 +160,11 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     fun decrementApplicationUses() {

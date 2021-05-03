@@ -23,7 +23,6 @@ import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.database.Cursor
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -44,6 +43,7 @@ import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnection
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnectionCallback
 import foundation.e.apps.categories.CategoriesFragment
+import foundation.e.apps.databinding.ActivityMainBinding
 import foundation.e.apps.home.HomeFragment
 import foundation.e.apps.search.SearchFragment
 import foundation.e.apps.settings.SettingsFragment
@@ -52,13 +52,11 @@ import foundation.e.apps.updates.UpdatesManager
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.CURRENTLY_SELECTED_FRAGMENT_KEY
-import foundation.e.apps.utils.Constants.MICROG_SHARED_PREF
-import foundation.e.apps.utils.PreferenceStorage
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
         ApplicationManagerServiceConnectionCallback {
+    private lateinit var binding: ActivityMainBinding
 
     private var currentFragmentId = 0
     private val homeFragment = HomeFragment()
@@ -94,13 +92,15 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
         mActivity = this
         disableCategoryIfOpenSource()
 
 
-        bottom_navigation_view.setOnNavigationItemSelectedListener{
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener{
             if (selectFragment(it.itemId,it)) {
                 disableCategoryIfOpenSource()
                 currentFragmentId = it.itemId
@@ -163,8 +163,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         ))
 
-        bottom_navigation_view.setItemIconTintList(iconsColorStates)
-        bottom_navigation_view.setItemTextColor(textColorStates)
+        binding.bottomNavigationView.setItemIconTintList(iconsColorStates)
+        binding.bottomNavigationView.setItemTextColor(textColorStates)
 
     }
 
@@ -266,7 +266,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun showFragment(fragment: Fragment) {
-        bottom_navigation_view.menu.findItem(currentFragmentId).isChecked = true
+        binding.bottomNavigationView.menu.findItem(currentFragmentId).isChecked = true
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment)
@@ -275,7 +275,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     @SuppressLint("RestrictedApi")
     private fun disableShiftingOfNabBarItems() {
-        val menuView = bottom_navigation_view.getChildAt(0) as BottomNavigationMenuView
+        val menuView = binding.bottomNavigationView.getChildAt(0) as BottomNavigationMenuView
         try {
             val mShiftingMode = menuView.javaClass.getDeclaredField("mShiftingMode")
             mShiftingMode.isAccessible = true
@@ -295,7 +295,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     private fun disableCategoryIfOpenSource(){
         if(showApplicationTypePreference()=="open") {
-            bottom_navigation_view.menu.removeItem(R.id.menu_categories)
+            binding.bottomNavigationView.menu.removeItem(R.id.menu_categories)
         }
     }
 
@@ -304,7 +304,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE &&
                 grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            Snackbar.make(container, R.string.error_storage_permission_denied,
+            Snackbar.make(binding.container, R.string.error_storage_permission_denied,
                     Snackbar.LENGTH_LONG).show()
         }
     }

@@ -22,62 +22,75 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import foundation.e.apps.R
 import foundation.e.apps.categories.viewmodel.CategoriesViewModel
-import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.fragment_games_categories.view.*
+import foundation.e.apps.databinding.FragmentGamesCategoriesBinding
 
 class GamesFragment() : Fragment() {
+    private var _binding: FragmentGamesCategoriesBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var categoriesViewModel: CategoriesViewModel
 
     var color:Int = 0;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentGamesCategoriesBinding.inflate(inflater, container, false)
+
         categoriesViewModel = ViewModelProvider(this).get(CategoriesViewModel::class.java)
 
-        val view = inflater.inflate(R.layout.fragment_games_categories, container, false)
-        view.categories_list.layoutManager = LinearLayoutManager(context)
+        // Fragment variables
+        val categoriesList = binding.categoriesList
+        val progressBar = binding.progressBar
+        val errorContainer = binding.errorLayout.errorContainer
+        val errorResolve = binding.errorLayout.errorResolve
+        val errorDescription = binding.errorLayout.errorDescription
+
+        categoriesList.layoutManager = LinearLayoutManager(context)
         color = requireArguments().getInt("color",0)
-        view.categories_list.visibility = View.GONE
-        view.progress_bar.visibility = View.VISIBLE
-        view.error_container.visibility = View.GONE
-        view.findViewById<TextView>(R.id.error_resolve).setOnClickListener {
-            view.progress_bar.visibility = View.VISIBLE
+        categoriesList.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+        errorContainer.visibility = View.GONE
+       errorResolve.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
             categoriesViewModel.loadCategories(requireContext())
         }
-        view.error_resolve.setTextColor(Color.parseColor("#ffffff"))
-        view.error_resolve.setBackgroundColor(color)
+        errorResolve.setTextColor(Color.parseColor("#ffffff"))
+        errorResolve.setBackgroundColor(color)
 
 
         // Bind to the list of games categories
         categoriesViewModel.getGamesCategories().observe(viewLifecycleOwner, Observer {
             if (it!!.isNotEmpty()) {
-                view.categories_list.adapter = context?.let { context -> CategoriesListAdapter(context, it, color) }
-                view.categories_list.visibility = View.VISIBLE
-                view.progress_bar.visibility = View.GONE
+                categoriesList.adapter = context?.let { context -> CategoriesListAdapter(context, it, color) }
+                categoriesList.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
             }
         })
 
         // Bind to the screen error
         categoriesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                view.error_description.text = requireActivity().getString(it.description)
-                view.error_container.visibility = View.VISIBLE
-                view.progress_bar.visibility = View.GONE
+                errorDescription.text = requireActivity().getString(it.description)
+                errorContainer.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
             } else {
-                view.error_container.visibility = View.GONE
+                errorContainer.visibility = View.GONE
             }
         })
 
         if (categoriesViewModel.getGamesCategories().value!!.isEmpty()) {
             categoriesViewModel.loadCategories(requireContext())
         }
-        return view
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object{

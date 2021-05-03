@@ -14,7 +14,7 @@ android {
         minSdkVersion 25
         targetSdkVersion 29
         versionCode 10
-        versionName "1.1.6"
+        versionName "1.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -40,6 +40,9 @@ android {
         platform {
             signingConfig signingConfigs.config
         }
+    }
+    buildFeatures {
+        viewBinding true
     }
     lintOptions {
         lintConfig file("lint.xml")
