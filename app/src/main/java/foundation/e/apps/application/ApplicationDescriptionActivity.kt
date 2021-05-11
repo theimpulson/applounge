@@ -21,31 +21,32 @@ import android.os.Bundle
 import android.text.util.Linkify
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import foundation.e.apps.R
+import foundation.e.apps.databinding.ActivityApplicationDescriptionBinding
 import foundation.e.apps.utils.Constants.APPLICATION_DESCRIPTION_KEY
-import kotlinx.android.synthetic.main.activity_application_description.*
 
 class ApplicationDescriptionActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityApplicationDescriptionBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityApplicationDescriptionBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_application_description)
+        setContentView(binding.root)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setTitle(R.string.application_description_activity_title)
 
         if (intent != null) {
-            app_description.text = intent.getStringExtra(APPLICATION_DESCRIPTION_KEY)
-            Linkify.addLinks(app_description, Linkify.ALL)
+            binding.appDescription.text = intent.getStringExtra(APPLICATION_DESCRIPTION_KEY)
+            Linkify.addLinks(binding.appDescription, Linkify.ALL)
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when {
-            item?.itemId == android.R.id.home -> {
+            item.itemId == android.R.id.home -> {
                 finish()
             }
             else -> {

@@ -21,14 +21,14 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import foundation.e.apps.R
 import foundation.e.apps.application.SmallApplicationViewHolder
 import foundation.e.apps.application.model.Application
+import foundation.e.apps.databinding.SmallApplicationListItemBinding
 
 class SmallApplicationListAdapter(private val activity: Activity, private val applicationList: List<Application>) : RecyclerView.Adapter<SmallApplicationViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SmallApplicationViewHolder {
-        val listItemContainer = LayoutInflater.from(parent.context).inflate(R.layout.small_application_list_item, parent, false)
+        val listItemContainer = SmallApplicationListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SmallApplicationViewHolder(activity, listItemContainer)
     }
 

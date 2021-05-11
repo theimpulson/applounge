@@ -29,13 +29,12 @@ import androidx.viewpager.widget.PagerAdapter
 import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.R
 import foundation.e.apps.application.viewmodel.ApplicationViewModel
+import foundation.e.apps.databinding.ImageCarouselItemBinding
 import foundation.e.apps.home.model.BannerApplication
-import kotlinx.android.synthetic.main.image_carousel_item.view.*
 
 
-class ImageCarouselAdapter(context: Context, private val bannerApplications: ArrayList<BannerApplication>) : PagerAdapter() {
+class ImageCarouselAdapter(private val context: Context, private val bannerApplications: ArrayList<BannerApplication>) : PagerAdapter() {
 
-    private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private val applicationViewModel = ApplicationViewModel()
 
     override fun isViewFromObject(view: View, obj: Any): Boolean {
@@ -47,8 +46,9 @@ class ImageCarouselAdapter(context: Context, private val bannerApplications: Arr
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val view = layoutInflater.inflate(R.layout.image_carousel_item, container, false)
-        val wideImage = view.image
+        val binding = ImageCarouselItemBinding.inflate(LayoutInflater.from(context), container, false)
+        val view = binding.root
+        val wideImage = binding.image
         val image = getRoundedCornerBitmap(bannerApplications[position].image,mActivity)
         wideImage.setImageBitmap(image)
         wideImage.setOnClickListener {

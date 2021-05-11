@@ -17,7 +17,6 @@
 
 package foundation.e.apps.categories
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,8 +24,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
-import foundation.e.apps.R
 import foundation.e.apps.databinding.FragmentCategoriesBinding
+import foundation.e.apps.utils.Common
 
 class CategoriesFragment : Fragment() {
     private var _binding: FragmentCategoriesBinding? = null
@@ -39,7 +38,7 @@ class CategoriesFragment : Fragment() {
         val tabLayout = binding.tabLayout
         val viewPager = binding.viewPager
 
-        var color = getAccentColor(requireActivity());
+        val color = Common.getAccentColor(requireContext())
         viewPager.adapter = CategoriesViewPagerAdapter(requireActivity().supportFragmentManager, tabLayout.tabCount, color)
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 
@@ -66,18 +65,5 @@ class CategoriesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    /*
-  * get Accent color from OS
-  *
-  */
-    fun getAccentColor(context: Context): Int {
-
-        val color = context.getColor(R.color.colorAccent);
-
-
-        return color;
-
     }
 }

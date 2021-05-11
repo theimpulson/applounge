@@ -18,8 +18,6 @@
 package foundation.e.apps.application.model
 
 import android.content.Context
-import android.util.Log
-import foundation.e.apps.R
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.SearchAppsBasicData
 import foundation.e.apps.applicationmanager.ApplicationManager
@@ -30,7 +28,6 @@ import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.PreferenceStorage
 import java.util.*
 
-
 class StateManager(private val info: ApplicationInfo, private val app: Application, private val appManager: ApplicationManager) {
     private var listeners = Collections.synchronizedList(ArrayList<ApplicationStateListener>())
 
@@ -40,7 +37,6 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
     fun find(context: Context, basicData: BasicData) {
         if (basicData.name == Constants.MICROG) {
             Common.updateMicroGStatus(context)
-            Log.e("MicroGStatus", PreferenceStorage(context).getBoolean(MICROG_SHARED_PREF, false).toString())
             val state = if (appManager.isInstalling(app) && !app.isInstalling) {
                 State.DOWNLOADING
             } else if (appManager.isInstalling(app) && app.isInstalling) {

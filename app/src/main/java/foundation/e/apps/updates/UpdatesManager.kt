@@ -17,7 +17,9 @@
 
 package foundation.e.apps.updates
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.preference.PreferenceManager
 import androidx.work.*
@@ -26,17 +28,19 @@ import foundation.e.apps.updates.model.UpdatesWorker
 import foundation.e.apps.utils.Constants
 import java.util.concurrent.TimeUnit
 
-class UpdatesManager(private val applicationContext: Context) {
+class UpdatesManager: BroadcastReceiver() {
     private val TAG = "UpdatesManager"
-    private var automaticUpdateInterval: Int
 
-    init {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        automaticUpdateInterval =
+    override fun onReceive(context: Context?, intent: Intent?) {
+        if (context != null && intent?.action == Intent.ACTION_BOOT_COMPLETED) {
+            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+            val interval =
                 preferences.getString(
-                        applicationContext.getString(R.string.pref_update_interval_key),
-                        applicationContext.getString(R.string.preference_update_interval_default))!!
-                        .toInt()
+                    context.getString(R.string.pref_update_interval_key),
+                    context.getString(R.string.preference_update_interval_default))!!
+                    .toLong()
+            enqueueWork(context, interval, ExistingPeriodicWorkPolicy.KEEP)
+        }
     }
 
     private fun getWorkerConstraints() = Constraints.Builder().apply {
@@ -44,25 +48,19 @@ class UpdatesManager(private val applicationContext: Context) {
         setRequiredNetworkType(NetworkType.CONNECTED)
     }.build()
 
-    private fun getPeriodicWorkRequest() = PeriodicWorkRequest.Builder(
+    private fun getPeriodicWorkRequest(interval: Long): PeriodicWorkRequest {
+        return PeriodicWorkRequest.Builder(
             UpdatesWorker::class.java,
-            automaticUpdateInterval.toLong(),
+            interval,
             TimeUnit.HOURS).apply {
-        setConstraints(getWorkerConstraints())
-    }.build()
-
-    fun startWorker() {
-        Log.i(TAG, "UpdatesWorker interval: ${automaticUpdateInterval.toLong()} hours")
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(Constants.UPDATES_WORK_NAME,
-                ExistingPeriodicWorkPolicy.KEEP, getPeriodicWorkRequest())
-        Log.i(TAG, "UpdatesWorker started")
+            setConstraints(getWorkerConstraints())
+        }.build()
     }
 
-    fun replaceWorker(automaticUpdateInterval: Int) {
-        this.automaticUpdateInterval = automaticUpdateInterval
-        Log.i(TAG, "UpdatesWorker interval: ${automaticUpdateInterval.toLong()} hours")
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(Constants.UPDATES_WORK_NAME,
-                ExistingPeriodicWorkPolicy.REPLACE, getPeriodicWorkRequest())
+    fun enqueueWork(context: Context, interval: Long, existingPeriodicWorkPolicy: ExistingPeriodicWorkPolicy) {
+        Log.i(TAG, "UpdatesWorker interval: $interval hours")
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(Constants.UPDATES_WORK_NAME,
+                existingPeriodicWorkPolicy, getPeriodicWorkRequest(interval))
         Log.i(TAG, "UpdatesWorker started")
     }
 }

@@ -75,8 +75,8 @@ class UpdatesFragment() : Fragment() {
         val errorResolve = binding.errorLayout.errorResolve
 
         updateAll.setTextColor(accentColorOS)
-        progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
-        reloadProgressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.MULTIPLY)
+        progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
+        reloadProgressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
 
         //set accent color to Error button (Retry )
         errorResolve.setTextColor(Color.parseColor("#ffffff"))

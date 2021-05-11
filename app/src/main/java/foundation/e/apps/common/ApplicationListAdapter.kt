@@ -21,16 +21,16 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import foundation.e.apps.R
 import foundation.e.apps.application.ApplicationViewHolder
 import foundation.e.apps.application.model.Application
+import foundation.e.apps.databinding.ApplicationListItemBinding
 
 class ApplicationListAdapter(private val activity: Activity, private val applicationList: List<Application>, accentColorOS: Int) : RecyclerView.Adapter<ApplicationViewHolder>() {
 
 
     var accentColorOS=accentColorOS;
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ApplicationViewHolder {
-        val listItemContainer = LayoutInflater.from(parent.context).inflate(R.layout.application_list_item, parent, false)
+        val listItemContainer = ApplicationListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ApplicationViewHolder(activity, listItemContainer, accentColorOS)
     }
 

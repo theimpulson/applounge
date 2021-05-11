@@ -22,12 +22,8 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,12 +37,14 @@ import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnectionC
 import foundation.e.apps.categories.category.viewmodel.CategoryViewModel
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.common.ApplicationListAdapter
+import foundation.e.apps.databinding.ActivityCategoryBinding
+import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.CATEGORY_KEY
-import kotlinx.android.synthetic.main.activity_category.*
-import kotlinx.android.synthetic.main.error_layout.*
 
 class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectionCallback {
+
+    private lateinit var binding: ActivityCategoryBinding
 
     private lateinit var category: Category
     private lateinit var categoryViewModel: CategoryViewModel
@@ -56,30 +54,34 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
             ApplicationManagerServiceConnection(this)
     private var applicationList = ArrayList<Application>()
     private var isLoadingMoreApplications = false
-    var accentColorOS=0;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityCategoryBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_category)
-       getAccentColor()
+        setContentView(binding.root)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val accentColorOS = Common.getAccentColor(this)
+
+        val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         category = intent.getSerializableExtra(CATEGORY_KEY) as Category
         supportActionBar?.title = category.getTitle()
 
         categoryViewModel = ViewModelProvider(this).get(CategoryViewModel::class.java)
-        recyclerView = findViewById(R.id.app_list)
-        val loadMoreContainer = findViewById<RelativeLayout>(R.id.load_more_container)
-        progressBar = findViewById(R.id.progress_bar)
-        val errorContainer = findViewById<LinearLayout>(R.id.error_container)
-        val errorDescription = findViewById<TextView>(R.id.error_description)
+
+        // Activity variables
+        recyclerView = binding.appList
+        progressBar = binding.progressBar
+        val loadMoreContainer = binding.loadMoreContainer
+        val errorContainer = binding.errorLayout.errorContainer
+        val errorDescription = binding.errorLayout.errorDescription
+        val errorResolve = binding.errorLayout.errorResolve
 
         //set accent color to Error button (Retry )
-        findViewById<TextView>(R.id.error_resolve).setTextColor(Color.parseColor("#ffffff"))
-        findViewById<TextView>(R.id.error_resolve).setBackgroundColor(accentColorOS)
+        errorResolve.setTextColor(Color.parseColor("#ffffff"))
+        errorResolve.setBackgroundColor(accentColorOS)
 
 
         // Initialise UI elements
@@ -102,7 +104,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         })
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
-        findViewById<TextView>(R.id.error_resolve).setOnClickListener {
+        errorResolve.setOnClickListener {
             loadMoreContainer.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             categoryViewModel.loadApplications(this)
@@ -153,8 +155,8 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home ->
                 finish()
         }
@@ -166,7 +168,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE &&
                 grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            Snackbar.make(container, R.string.error_storage_permission_denied,
+            Snackbar.make(binding.container, R.string.error_storage_permission_denied,
                     Snackbar.LENGTH_LONG).show()
         }
     }
@@ -190,14 +192,5 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
             }
         }
         applicationManagerServiceConnection.unbindService(this)
-    }
-
-    /*
-   * get Accent color from OS
-   *
-   *  */
-    private fun getAccentColor() {
-
-        accentColorOS = this.getColor(R.color.colorAccent);
     }
 }

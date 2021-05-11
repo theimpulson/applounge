@@ -52,7 +52,7 @@ import foundation.e.apps.updates.UpdatesManager
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.CURRENTLY_SELECTED_FRAGMENT_KEY
-
+import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
         ApplicationManagerServiceConnectionCallback {
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private val codeRequestPermissions = 9527
     var doubleBackToExitPressedOnce = false;
     private var isReceiverRegistered = false
-    var accentColorOS = 0
+    private var accentColorOS by Delegates.notNull<Int>()
 
     init {
         instance = this
@@ -96,6 +96,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        accentColorOS = Common.getAccentColor(this)
+
         mActivity = this
         disableCategoryIfOpenSource()
 
@@ -114,9 +117,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         Common.updateMicroGStatus(this)
 
-        initialiseUpdatesWorker()
-
-
         // Show the home fragment by default
         currentFragmentId = if (savedInstanceState != null &&
                 savedInstanceState.containsKey(CURRENTLY_SELECTED_FRAGMENT_KEY)) {
@@ -129,7 +129,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         setupLangReceiver()
         applicationManagerServiceConnection.bindService(this)
 
-        getAccentColor();
         bottom_navigation_view_color()
         openSearchFragment()
     }
@@ -165,12 +164,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         binding.bottomNavigationView.setItemIconTintList(iconsColorStates)
         binding.bottomNavigationView.setItemTextColor(textColorStates)
-
-    }
-
-    private fun initialiseUpdatesWorker() {
-        UpdatesManager(applicationContext).startWorker()
-
 
     }
 
@@ -341,17 +334,4 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
         }, 2000)
     }
-
-    /*
-    * get Accent color from OS
-    *
-    *  */
-    private fun getAccentColor() {
-
-        accentColorOS = this.getColor(R.color.colorAccent);
-
-
-
-    }
-
 }

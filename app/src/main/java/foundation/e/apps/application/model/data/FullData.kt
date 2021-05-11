@@ -90,7 +90,7 @@ constructor(
         this.category = Category(categoryId, "")
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "UNCHECKED_CAST")
     @JsonAnySetter
     fun jsonCreator(name: String, value: Any) {
         if (name == basicData.latestDownloadableUpdate) {

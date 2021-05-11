@@ -461,15 +461,4 @@ class Application(val packageName: String, private val applicationManager: Appli
         Pwaupdate(pwaFullData.pwabasicdata, context)
         pwaFullData.pwabasicdata = pwabasicdata!!
     }
-
-    /*
-   * get Accent color from OS
-   *
-   */
-    fun getAccentColor(context: Context): Int {
-
-        val color = context.getColor(foundation.e.apps.R.color.colorAccent);
-        return color;
-
-    }
 }

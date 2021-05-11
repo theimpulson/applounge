@@ -21,12 +21,14 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.RatingBar
-import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -38,37 +40,36 @@ import foundation.e.apps.application.model.State
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.data.PwasBasicData
 import foundation.e.apps.application.viewmodel.ApplicationViewModel
+import foundation.e.apps.databinding.ApplicationListItemBinding
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Common.toMiB
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.Execute
-import kotlinx.android.synthetic.main.application_list_item.view.*
-import kotlinx.android.synthetic.main.install_button_layout.view.*
 
 
-class ApplicationViewHolder(private val activity: Activity, private val view: View, accentColorOS: Int) :
-        RecyclerView.ViewHolder(view),
+class ApplicationViewHolder(private val activity: Activity, binding: ApplicationListItemBinding, private val accentColorOS: Int) :
+        RecyclerView.ViewHolder(binding.root),
         ApplicationStateListener,
         Downloader.DownloadProgressCallback,
         BasicData.IconLoaderCallback,
         PwasBasicData.IconLoaderCallback {
 
 
-    private val icon: ImageView = view.app_icon
-    private val title: TextView = view.app_title
-    private val pwa_icon: TextView = view.pwa_sympol
-    private val author: TextView = view.app_author
-    private val ratingBar: RatingBar = view.app_rating_bar
-    private val rating: TextView = view.app_rating
-    private val privacyScore: TextView = view.app_privacy_score
-    private var installButton: Button = view.app_install
+    private val view = binding.root
+    private val icon = binding.appIcon
+    private val title = binding.appTitle
+    private val pwaSympol = binding.pwaSympol
+    private val author = binding.appAuthor
+    private val ratingBar = binding.appRatingBar
+    private val rating = binding.appRating
+    private val privacyScore = binding.appPrivacyScore
+    private var installButton = binding.simpleInstallButtonLayout.appInstall
     private var application: Application? = null
     private val applicationViewModel = ApplicationViewModel()
     private var downloader: Downloader? = null
-    var accentColorOS = accentColorOS;
     init {
-        pwa_icon.visibility = View.GONE
+        pwaSympol.visibility = View.GONE
         view.setOnClickListener {
             if (application != null) {
                 if (application!!.packageName != Constants.MICROG_PACKAGE)
@@ -76,11 +77,6 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
             }
         }
 
-
-        installButton.setTextColor(Color.parseColor("#ffffff"))
-        if (0 != this.accentColorOS) {
-            installButton.setBackgroundColor(this.accentColorOS)
-        }
         installButton.setOnClickListener {
             if (application?.fullData != null &&
                     application!!.fullData!!.getLastVersion() == null) {
@@ -100,7 +96,7 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
 
     fun createApplicationView(app: Application) {
 
-        pwa_icon.visibility = View.GONE
+        pwaSympol.visibility = View.GONE
         this.application = app
 
         if (app.basicData != null) {
@@ -111,7 +107,11 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
             application!!.addListener(this)
             title.text = application!!.basicData!!.name
             author.text = application!!.basicData!!.author
+
+            val drawable = ratingBar.progressDrawable
+            drawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
             ratingBar.rating = application!!.basicData!!.ratings.rating!!
+
             if (application!!.basicData!!.ratings.rating != -1f) {
                 rating.text = application!!.basicData!!.ratings.rating.toString()
             } else {
@@ -129,11 +129,26 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
             application!!.addListener(this)
             if (application!!.searchAppsBasicData != null) {
                 if (application!!.searchAppsBasicData!!.is_pwa) {
-                    pwa_icon.visibility = View.VISIBLE
+                    pwaSympol.visibility = View.VISIBLE
                 }
                 application!!.SearchAppsloadIcon(this)
                 title.text = application!!.searchAppsBasicData!!.name
                 author.text = application!!.searchAppsBasicData!!.author
+
+                val drawable = ratingBar.progressDrawable
+                drawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
+                ratingBar.rating = application!!.searchAppsBasicData!!.ratings.rating!!
+
+                if (application!!.searchAppsBasicData!!.ratings.rating != -1f) {
+                    rating.text = application!!.searchAppsBasicData!!.ratings.rating.toString()
+                } else {
+                    rating.text = activity.getString(R.string.not_available)
+                }
+                if (application!!.searchAppsBasicData!!.ratings.privacyRating != null && application!!.searchAppsBasicData!!.ratings.privacyRating != -1f) {
+                    privacyScore.text = application!!.searchAppsBasicData!!.ratings.privacyRating.toString()
+                } else {
+                    privacyScore.text = activity.getString(R.string.not_available)
+                }
             } else {
                 application!!.PwaloadIcon(this)
                 title.text = application!!.pwabasicdata!!.name
@@ -151,50 +166,37 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
 
     override fun stateChanged(state: State) {
         Execute({}, {
+            installButton.setTextColor(accentColorOS)
+
+            installButton.setBackgroundResource(R.drawable.app_installing_border_simple)
+            val drawable = installButton.background as GradientDrawable
+            drawable.setStroke(2, accentColorOS)
 
             installButton.text = activity.getString(state.installButtonTextId)
-
+            installButton.clearAnimation()
+            installButton.clearFocus()
             when (state) {
-
                 State.NOT_DOWNLOADED -> {
-                    if (0 != this.accentColorOS) {
-                        installButton.setTextColor(this.accentColorOS)
-                    } else {
-
-                        installButton.setTextColor(Color.parseColor("#0088ED"))
-                    }
-                    installButton.setBackgroundResource(R.drawable.app_install_border_simple)
                     installButton.isEnabled = true
                 }
-
+                State.DOWNLOADING ->{
+                    installButton.isEnabled = true
+                    installButton.background.clearColorFilter()
+                }
                 State.INSTALLED -> {
-
                     installButton.isEnabled =
                             Common.appHasLaunchActivity(activity, application!!.packageName)
-                    if (0 != this.accentColorOS) {
-                        installButton.setBackgroundColor(this.accentColorOS)
-                    } else {
-                        installButton.setBackgroundResource(R.drawable.app_install_border)
-                    }
                     installButton.setTextColor(Color.parseColor("#FAFAFA"))
-
+                    installButton.background.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
                 }
                 State.INSTALLING -> {
                     installButton.isEnabled = false
+                    installingAnimation()
                 }
                 State.NOT_UPDATED -> {
-                        installButton.setTextColor(Color.parseColor("#FAFAFA"))
-                        if (0 != this.accentColorOS) {
-                            installButton.setBackgroundColor(this.accentColorOS)
-                        } else {
-                            installButton.setBackgroundResource(R.drawable.app_install_border)
-                        }
-
                     installButton.isEnabled = true
-                }
-                else -> {
-                    installButton.setTextColor(Color.parseColor("#0088ED"))
-                    installButton.isEnabled = true
+                    installButton.setTextColor(Color.parseColor("#FAFAFA"))
+                    installButton.background.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
                 }
             }
 
@@ -208,12 +210,17 @@ class ApplicationViewHolder(private val activity: Activity, private val view: Vi
 
     @SuppressLint("SetTextI18n")
     override fun notifyDownloadProgress(count: Int, total: Int) {
-        installButton.setGravity(Gravity.CENTER)
         installButton.text = ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
-        installButton.setTextColor(Color.parseColor("#0088ED"))
-        installButton.setBackgroundResource(R.drawable.app_installing_border_simple)
     }
 
+    private fun installingAnimation() {
+        val anim = AlphaAnimation(0.0f, 1.0f)
+        anim.duration = 200 //You can manage the blinking time with this parameter
+        anim.startOffset = 20
+        anim.repeatMode = Animation.REVERSE
+        anim.repeatCount = Animation.INFINITE
+        installButton.startAnimation(anim)
+    }
     override fun anErrorHasOccurred(error: Error) {
         Snackbar.make(activity.findViewById(R.id.container),
                 activity.getString(error.description),

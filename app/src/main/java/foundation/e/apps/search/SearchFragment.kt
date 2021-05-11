@@ -20,13 +20,17 @@ package foundation.e.apps.search
 import android.app.Activity
 import android.database.MatrixCursor
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.appcompat.widget.SearchView
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
@@ -43,7 +47,6 @@ import foundation.e.apps.databinding.FragmentSearchBinding
 import foundation.e.apps.search.viewmodel.SearchViewModel
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.SUGGESTION_KEY
-
 
 class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
     private var _binding: FragmentSearchBinding? = null
@@ -87,7 +90,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         val errorDescription = binding.errorLayout.errorDescription
         val loadMoreContainer = binding.loadMoreContainer
 
-        //set accent color to Error button (Retry )
+        // Set accent color
+        progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
         errorResolve.setTextColor(Color.parseColor("#ffffff"))
         errorResolve.setBackgroundColor(accentColorOS)
 
@@ -119,7 +123,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ApplicationListAdapter(requireActivity(), applicationList, 0)
+        recyclerView.adapter = ApplicationListAdapter(requireActivity(), applicationList, accentColorOS)
         loadMoreContainer.visibility = View.GONE
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

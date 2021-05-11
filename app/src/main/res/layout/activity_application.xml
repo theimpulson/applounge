@@ -59,13 +59,24 @@
                 android:paddingStart="@dimen/layout_padding_large"
                 android:paddingEnd="@dimen/layout_padding_large">
 
-                <ImageView
-                    android:id="@+id/app_icon"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/app_icon_card"
                     android:layout_width="@dimen/app_icon_size_large"
                     android:layout_height="@dimen/app_icon_size_large"
                     android:layout_gravity="center_vertical"
                     android:contentDescription="@string/app_icon_content_description"
-                    android:src="@drawable/ic_app_default" />
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:id="@+id/app_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@string/app_icon_content_description"
+                        android:src="@drawable/ic_app_default" />
+                </androidx.cardview.widget.CardView>
 
 
 
@@ -214,7 +225,7 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="@dimen/layout_margin_medium"
-                    android:layout_toStartOf="@id/app_install"
+                    android:layout_toStartOf="@id/install_button_layout"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
@@ -224,6 +235,7 @@
 
 
                 <include
+                    android:id="@+id/install_button_layout"
                     android:layout_width="@dimen/install_button_width3"
                     android:layout_height="@dimen/install_button_height"
                     android:layout_alignParentEnd="true"
@@ -405,14 +417,14 @@
                                 android:drawableRight="@drawable/app_border_good"
                                 tools:text="App rating" />
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <ImageView
                                 android:id="@+id/good_border"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_toEndOf="@+id/app_rating"
                                 android:background="@drawable/ic_cat_green_ellipse"
-                                android:ellipsize="end"
-                                android:layout_toRightOf="@+id/app_rating"
-                                />
+                                android:contentDescription="@string/app_rating_description"
+                                android:ellipsize="end" />
                         </RelativeLayout>
 
                         <LinearLayout
@@ -486,14 +498,14 @@
                                 android:drawableRight="@drawable/app_border_neutral"
                                 tools:text="App privacy" />
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <ImageView
                                 android:id="@+id/neutral_border"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_toEndOf="@+id/app_privacy_score"
                                 android:background="@drawable/ic_yellow_ellipse"
-                                android:ellipsize="end"
-                                android:layout_toRightOf="@+id/app_privacy_score"
-                                />
+                                android:contentDescription="@string/app_privacy_description"
+                                android:ellipsize="end" />
                         </RelativeLayout>
 
                         <LinearLayout
