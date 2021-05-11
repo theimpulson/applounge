@@ -54,6 +54,7 @@ constructor(@param:JsonProperty("_id") val id: String,
             @param:JsonProperty("is_pwa") val is_pwa: Boolean,
             @param:JsonProperty("author") val author: String,
             @param:JsonProperty("is_web_app") val is_web_app: Boolean,
+            @param:JsonProperty("ratings") val ratings: BasicData.Ratings,
             @param:JsonProperty("category") val category: String,
             @param:JsonProperty("icon_image_path") val icon_uri: String,
             @param:JsonProperty("other_images_path") val imagesUri: Array<String>){

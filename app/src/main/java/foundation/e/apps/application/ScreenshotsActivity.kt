@@ -21,16 +21,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
-import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnection
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnectionCallback
+import foundation.e.apps.databinding.ActivityScreenshotsBinding
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.SELECTED_APPLICATION_SCREENSHOT_KEY
-import kotlinx.android.synthetic.main.activity_screenshots.*
 
 class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnectionCallback {
+    private lateinit var binding: ActivityScreenshotsBinding
+
     private val applicationManagerServiceConnection =
             ApplicationManagerServiceConnection(this)
     private lateinit var applicationPackageName: String
@@ -40,8 +41,9 @@ class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnec
     private val last_selected_screenshot_key = "last_selected_screenshot"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityScreenshotsBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_screenshots)
+        setContentView(binding.root)
 
         if (savedInstanceState != null &&
                 savedInstanceState.containsKey(last_selected_screenshot_key)) {
@@ -72,7 +74,7 @@ class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnec
         val pwasBasicData =application.pwabasicdata
 
         if(pwasBasicData!=null) {
-            screenshotsCarousel = screenshots_carousel
+            screenshotsCarousel = binding.screenshotsCarousel
             screenshotsCarousel.visibility = View.GONE
 
             pwasBasicData.loadImagesAsyncly {
@@ -84,7 +86,7 @@ class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnec
             }
         }
         else {
-            screenshotsCarousel = screenshots_carousel
+            screenshotsCarousel = binding.screenshotsCarousel
             screenshotsCarousel.visibility = View.GONE
 
             basicData!!.loadImagesAsyncly {

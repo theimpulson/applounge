@@ -143,6 +143,13 @@ object Common {
             PreferenceStorage(context).save(MICROG_SHARED_PREF, true)
         }
     }
+
+    /**
+     * Returns system default accent color
+     */
+    fun getAccentColor(context: Context): Int {
+        return context.getColor(foundation.e.apps.R.color.colorAccent)
+    }
 }
 
 class keyDeserializer : KeyDeserializer() {

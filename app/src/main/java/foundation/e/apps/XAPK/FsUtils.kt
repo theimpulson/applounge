@@ -18,7 +18,6 @@
 package foundation.e.apps.XAPK
 
 import android.os.Environment
-import android.text.TextUtils
 import foundation.e.apps.MainActivity
 import java.io.File
 
@@ -37,7 +36,7 @@ object FsUtils {
     }
 
     fun exists(filePath: String?): Boolean {
-        return !TextUtils.isEmpty(filePath) && exists(File(filePath))
+        return if (!filePath.isNullOrEmpty()) exists(File(filePath)) else false
     }
 
     fun exists(file: File?): Boolean {

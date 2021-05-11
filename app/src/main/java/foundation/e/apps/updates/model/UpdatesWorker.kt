@@ -25,7 +25,7 @@ import android.net.NetworkCapabilities
 import android.os.AsyncTask
 import android.util.Log
 import androidx.preference.PreferenceManager
-import androidx.work.Worker
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
@@ -35,7 +35,7 @@ import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
 
-class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context, params),
+class UpdatesWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params),
         UpdatesWorkerInterface {
     private val TAG = "UpdatesWorker"
     private val blocker = Object()
@@ -45,12 +45,16 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
     val applicationManager = ApplicationManager()
     private var error: Error? = null
 
-    override fun doWork(): Result {
-        Log.i(TAG, "Checking for app updates")
-        applicationManager.start(applicationContext)
-        loadOutdatedApplications(applicationManager)
-        Log.i(TAG, "Ids of apps with pending updates written to file")
-        return Result.success()
+    override suspend fun doWork(): Result {
+        return try {
+            Log.i(TAG, "Checking for app updates")
+            applicationManager.start(applicationContext)
+            loadOutdatedApplications(applicationManager)
+            Log.i(TAG, "Ids of apps with pending updates written to file")
+            Result.success()
+        } catch (error: Throwable) {
+            Result.failure()
+        }
     }
 
     private fun loadPreferences() {
@@ -96,7 +100,9 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
                         wifiOnly,
                         isConnectedToUnmeteredNetwork)
             }
-            if (installAutomatically && canWriteStorage(applicationContext)) {
+            if (installAutomatically &&
+                applicationContext.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            ) {
                 if (wifiOnly) {
                     if (isConnectedToUnmeteredNetwork) {
                         applications.forEach {
@@ -107,7 +113,6 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
                                 Log.i(TAG, "Updating ${it.packageName}")
                                 it.buttonClicked(applicationContext, null)
                             }
-
                         }
                     }
                 } else {
@@ -127,10 +132,6 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : Worker(context
             blocker.notify()
         }
     }
-
-    private fun canWriteStorage(context: Context) = !(android.os.Build.VERSION.SDK_INT >= 23 &&
-            context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-            PackageManager.PERMISSION_GRANTED)
 
     /*
      * Checks if the device is connected to a metered connection or not

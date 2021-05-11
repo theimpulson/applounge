@@ -17,7 +17,6 @@
 
 package foundation.e.apps.XAPK
 
-import android.os.Build
 import android.os.LocaleList
 import android.text.TextUtils
 import java.util.*

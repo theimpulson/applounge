@@ -18,6 +18,8 @@
 package foundation.e.apps.home
 
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,16 +30,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.common.SmallApplicationListAdapter
 import foundation.e.apps.databinding.FragmentHomeBinding
 import foundation.e.apps.home.viewmodel.HomeViewModel
-
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -75,7 +74,8 @@ class HomeFragment : Fragment() {
         val errorDescription = binding.errorLayout.errorDescription
         val errorResolve = binding.errorLayout.errorResolve
 
-        //set accent color to Error button (Retry )
+        // Set accent color
+        progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
         errorResolve.setTextColor(Color.parseColor("#ffffff"))
         errorResolve.setBackgroundColor(accentColorOS)
 
@@ -144,7 +144,7 @@ class HomeFragment : Fragment() {
         categoryList.removeAllViews()
         categories.forEach {
             val homeCategory = HomeCategory(requireContext(), it.key)
-            val applicationList = homeCategory.findViewById<RecyclerView>(R.id.application_list)
+            val applicationList = homeCategory.binding.applicationList
             applicationList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             applicationList.adapter = SmallApplicationListAdapter(requireActivity(), it.value)
             categoryList.addView(homeCategory)

@@ -19,7 +19,7 @@ package foundation.e.apps.api
 
 import android.content.Context
 import com.google.gson.Gson
-import com.google.gson.JsonParser
+import com.google.gson.JsonParser.parseReader
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.data.BasicData
 import foundation.e.apps.application.model.release.ReleaseData
@@ -35,7 +35,7 @@ class GitlabDataRequest {
         val url = Constants.RELEASE_API + Constants.MICROG_ID + Constants.RELEASE_ENDPOINT
         val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
         val isr = InputStreamReader(urlConnection.inputStream)
-        val element = JsonParser().parse(isr)
+        val element = parseReader(isr)
 
         val releaseList: List<ReleaseData> = Gson().fromJson(element.toString(),
                 Array<ReleaseData>::class.java).toList()

@@ -75,6 +75,13 @@
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme1"
             android:windowSoftInputMode="adjustResize" />
+
+        <receiver android:name=".updates.UpdatesManager">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

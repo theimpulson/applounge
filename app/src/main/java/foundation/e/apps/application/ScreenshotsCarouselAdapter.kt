@@ -24,12 +24,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.viewpager.widget.PagerAdapter
-import foundation.e.apps.R
-import kotlinx.android.synthetic.main.screenshots_carousel_item.view.*
+import foundation.e.apps.databinding.ScreenshotsCarouselItemBinding
 
-class ScreenshotsCarouselAdapter(context: Context, private val screenshots: List<Bitmap>) : PagerAdapter() {
-
-    private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+class ScreenshotsCarouselAdapter(private val context: Context, private val screenshots: List<Bitmap>) : PagerAdapter() {
 
     override fun isViewFromObject(view: View, obj: Any): Boolean {
         return view == obj as LinearLayout
@@ -40,10 +37,10 @@ class ScreenshotsCarouselAdapter(context: Context, private val screenshots: List
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val view = layoutInflater.inflate(R.layout.screenshots_carousel_item, container, false)
+        val binding = ScreenshotsCarouselItemBinding.inflate(LayoutInflater.from(context), container, false)
+        val view = binding.root
 
-        view.photo_view.setImageBitmap(screenshots[position])
-
+        binding.photoView.setImageBitmap(screenshots[position])
         container.addView(view)
         return view
     }

@@ -20,7 +20,6 @@ package foundation.e.apps.updates.model
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.AsyncTask
-import foundation.e.apps.R
 import foundation.e.apps.api.GitlabDataRequest
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.State
@@ -35,8 +34,7 @@ class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
         AsyncTask<Context, Void, ArrayList<Application>>() {
     override fun doInBackground(vararg context: Context): ArrayList<Application> {
         val applications = ArrayList<Application>()
-        val application: Application? = loadMicroGVersion(context[0])[0]
-        println("versionname::-"+ application?.basicData!!.lastVersionNumber)
+        val application: Application = loadMicroGVersion(context[0])[0]
         if (PreferenceStorage(context[0])
                         .getBoolean(MICROG_SHARED_PREF, false)
                 && application.state == State.NOT_UPDATED) {
@@ -45,8 +43,8 @@ class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
         try {
             val installedApplications = getInstalledApplications()
             installedApplications.forEach { packageName ->
-                val application = applicationManager.findOrCreateApp(packageName)
-                verifyApplication(application, applications, context)
+                val app = applicationManager.findOrCreateApp(packageName)
+                verifyApplication(app, applications, context)
             }
         } catch (exception: Exception) {
             exception.printStackTrace()

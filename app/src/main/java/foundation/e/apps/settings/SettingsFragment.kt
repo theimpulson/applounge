@@ -18,19 +18,16 @@
 package foundation.e.apps.settings
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.preference.CheckBoxPreference
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.work.ExistingPeriodicWorkPolicy
 import foundation.e.apps.MainActivity
 import foundation.e.apps.R
 import foundation.e.apps.updates.UpdatesManager
-import foundation.e.apps.utils.PreferenceStorage
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -46,7 +43,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val updateCheckInterval =
                 preferenceManager.findPreference<Preference>(getString(R.string.pref_update_interval_key)) as ListPreference
         updateCheckInterval.setOnPreferenceChangeListener { _, newValue ->
-            UpdatesManager(requireActivity().applicationContext).replaceWorker(newValue.toString().toInt())
+            context?.let { UpdatesManager().enqueueWork(it, newValue.toString().toLong(), ExistingPeriodicWorkPolicy.REPLACE) }
             true
         }
 
@@ -70,11 +67,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         //Show all apps when checked
-        var x = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.Show_all_apps)) as RadioButtonPreference
+        val x = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.Show_all_apps)) as RadioButtonPreference
         //Show only open-source apps when checked
-        var y = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.show_only_open_source_apps_key)) as RadioButtonPreference
+        val y = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.show_only_open_source_apps_key)) as RadioButtonPreference
         //Show only pwas when checked
-        var z = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.show_only_pwa_apps_key)) as RadioButtonPreference
+        val z = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.show_only_pwa_apps_key)) as RadioButtonPreference
 
         x.setOnPreferenceChangeListener { _, _ ->
             y.isChecked = false
@@ -98,33 +95,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-
-    private var working_dialog: ProgressDialog? = null
-
-    fun backToMainActivity() {
-        showWorkingDialog()
-        val worker = Executors.newSingleThreadScheduledExecutor()
-        val task = Runnable {
-            run {
-                removeWorkingDialog()
-                val intent = Intent(activity, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-                Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
-                requireActivity().finish()
-            }
-        }
-        worker.schedule(task, 1, TimeUnit.SECONDS)
-    }
-
-    private fun showWorkingDialog() {
-        working_dialog = ProgressDialog.show(context, "", "Applying Settings...", true)
-    }
-
-    private fun removeWorkingDialog() {
-        if (working_dialog != null) {
-            working_dialog!!.dismiss()
-            working_dialog = null
+    private fun backToMainActivity() {
+        Intent(context, MainActivity::class.java).also {
+            activity?.finish()
+            activity?.overridePendingTransition(0, 0);
+            startActivity(it)
+            activity?.overridePendingTransition(0, 0);
         }
     }
 }

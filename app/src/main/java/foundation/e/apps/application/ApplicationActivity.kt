@@ -24,6 +24,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Html
@@ -57,6 +59,7 @@ import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnection
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnectionCallback
 import foundation.e.apps.categories.category.CategoryActivity
+import foundation.e.apps.databinding.ActivityApplicationBinding
 import foundation.e.apps.pwa.PwaInstaller
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Common.toMiB
@@ -66,35 +69,38 @@ import foundation.e.apps.utils.Constants.APPLICATION_PACKAGE_NAME_KEY
 import foundation.e.apps.utils.Constants.SELECTED_APPLICATION_SCREENSHOT_KEY
 import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.Execute
-import kotlinx.android.synthetic.main.activity_application.*
-import kotlinx.android.synthetic.main.install_button_layout.*
 import kotlin.math.roundToInt
 
 class ApplicationActivity :
-        AppCompatActivity(),
-        ApplicationStateListener,
-        ApplicationManagerServiceConnectionCallback,
-        Downloader.DownloadProgressCallback,
-        BasicData.IconLoaderCallback,
-        PwasBasicData.IconLoaderCallback {
+    AppCompatActivity(),
+    ApplicationStateListener,
+    ApplicationManagerServiceConnectionCallback,
+    Downloader.DownloadProgressCallback,
+    BasicData.IconLoaderCallback,
+    PwasBasicData.IconLoaderCallback {
 
+    private lateinit var binding: ActivityApplicationBinding
 
     private lateinit var applicationPackageName: String
     private lateinit var application: Application
     private val applicationManagerServiceConnection =
-            ApplicationManagerServiceConnection(this)
+        ApplicationManagerServiceConnection(this)
     private var imageWidth = 0
     private var imageHeight = 0
     private var imageMargin = 0
     private var defaultElevation = 0f
     private val sharedPrefFile = "kotlinsharedpreference"
-    var accentColorOS = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityApplicationBinding.inflate(layoutInflater)
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_application)
-        good_border.visibility = View.GONE
-        neutral_border.visibility = View.GONE
+        setContentView(binding.root)
+
+        val accentColorOS = Common.getAccentColor(this)
+
+        binding.goodBorder.visibility = View.GONE
+        binding.neutralBorder.visibility = View.GONE
 
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -103,7 +109,7 @@ class ApplicationActivity :
         supportActionBar?.setDisplayShowTitleEnabled(false)
         sharedPreferences = this.getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
 
-        pwa_sympol.visibility = View.GONE
+        binding.pwaSympol.visibility = View.GONE
 
         initialiseDimensions()
         val applicationPackageName: String? = intent.getStringExtra(APPLICATION_PACKAGE_NAME_KEY)
@@ -112,27 +118,28 @@ class ApplicationActivity :
             applicationManagerServiceConnection.bindService(this)
         }
 
-        getAccentColor()
-        app_install.setTextColor(Color.parseColor("#ffffff"))
-        app_install.setBackgroundColor(accentColorOS)
-        app_category.setTextColor(accentColorOS)
-        app_expand_description.setTextColor(accentColorOS)
+        // Set accent color
+        binding.installButtonLayout.appInstall.setTextColor(Color.parseColor("#ffffff"))
+        binding.installButtonLayout.appInstall.background.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
+        binding.appDownloadProgress.progressDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
+        binding.appCategory.setTextColor(accentColorOS)
+        binding.appExpandDescription.setTextColor(accentColorOS)
 
 
     }
 
 
     private fun initialiseElevation() {
-        if (scroll_view.scrollY == 0) {
-            toolbar.elevation = 0f
+        if (binding.scrollView.scrollY == 0) {
+            binding.toolbar.elevation = 0f
         } else {
-            toolbar.elevation = defaultElevation
+            binding.toolbar.elevation = defaultElevation
         }
-        scroll_view.setOnScrollChangeListener { view, _, _, _, _ ->
+        binding.scrollView.setOnScrollChangeListener { view, _, _, _, _ ->
             if (view.scrollY == 0) {
-                toolbar.elevation = 0f
+                binding.toolbar.elevation = 0f
             } else {
-                toolbar.elevation = defaultElevation
+                binding.toolbar.elevation = defaultElevation
             }
         }
     }
@@ -141,28 +148,28 @@ class ApplicationActivity :
         application = applicationManager.findOrCreateApp(applicationPackageName)
         var error: Error? = null
         Execute({
-            error = application.assertFullData(this)
-        }, {
-            if (error == null) {
+                    error = application.assertFullData(this)
+                }, {
+                    if (error == null) {
 
-                onApplicationInfoLoaded()
-            } else {
-                Snackbar.make(container,
-                        getString(error!!.description),
-                        Snackbar.LENGTH_LONG).show()
+                        onApplicationInfoLoaded()
+                    } else {
+                        Snackbar.make(binding.container,
+                                      getString(error!!.description),
+                                      Snackbar.LENGTH_LONG).show()
 
-                // Close activity once snackbar has hidden
-                object : CountDownTimer(3500, 3500) {
-                    override fun onTick(p0: Long) {
-                        // Do nothing
+                        // Close activity once snackbar has hidden
+                        object : CountDownTimer(3500, 3500) {
+                            override fun onTick(p0: Long) {
+                                // Do nothing
+                            }
+
+                            override fun onFinish() {
+                                finish()
+                            }
+                        }.start()
                     }
-
-                    override fun onFinish() {
-                        finish()
-                    }
-                }.start()
-            }
-        })
+                })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -170,8 +177,8 @@ class ApplicationActivity :
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 finish()
             }
@@ -217,57 +224,56 @@ class ApplicationActivity :
 
             // Set the app title
             if (basicData.name.isNotEmpty()) {
-                app_title.text = basicData.name
+                binding.appTitle.text = basicData.name
             } else {
-                app_title.visibility = View.GONE
+                binding.appTitle.visibility = View.GONE
             }
 
 
             // Set the app author
             if (basicData.author.isNotEmpty()) {
-                app_author.text = basicData.author
+                binding.appAuthor.text = basicData.author
             } else {
-                app_author.visibility = View.GONE
+                binding.appAuthor.visibility = View.GONE
             }
 
             // Set the app category
             if (fullData.category.getTitle().isNotEmpty()) {
-                app_category.text = fullData.category.getTitle()
-                app_category.setOnClickListener {
+                binding.appCategory.text = fullData.category.getTitle()
+                binding.appCategory.setOnClickListener {
                     startActivity(Intent(this, CategoryActivity::class.java).apply {
                         putExtra(Constants.CATEGORY_KEY, fullData.category)
                     })
                 }
             } else {
-                app_category.visibility = View.GONE
+                binding.appCategory.visibility = View.GONE
             }
 
             // Set the app description
             if (fullData.description.isNotEmpty()) {
-                app_description.text = fullData.description
-                app_description_container.isEnabled = true
+                binding.appDescription.text = fullData.description
+                binding.appDescriptionContainer.isEnabled = true
             } else {
-                app_description.text = getString(R.string.not_available_full)
-                app_description_container.isEnabled = false
+                binding.appDescription.text = getString(R.string.not_available_full)
+                binding.appDescriptionContainer.isEnabled = false
             }
 
             // Handle clicks on description
-            app_description_container.setOnClickListener {
+            binding.appDescriptionContainer.setOnClickListener {
                 val intent = Intent(this, ApplicationDescriptionActivity::class.java)
                 intent.putExtra(APPLICATION_DESCRIPTION_KEY, application.fullData!!.description)
                 startActivity(intent)
             }
 
             // Set the app rating
-            val builder = textColorChange(getText(R.string.not_available).toString())
             if (basicData.ratings.rating != -1f) {
-                app_rating.text = basicData.ratings.rating.toString() + "/5"
+                binding.appRating.text = basicData.ratings.rating.toString() + "/5"
             } else {
-                app_rating.text = builder
+                binding.appRating.text = textColorChange(getText(R.string.not_available).toString())
             }
             setRatingBorder(basicData.ratings.rating)
 
-            app_rating_container.setOnClickListener {
+            binding.appRatingContainer.setOnClickListener {
                 val alertDialog = AlertDialog.Builder(this).create()
 
                 alertDialog.setIcon(R.drawable.ic_app_rating)
@@ -289,31 +295,29 @@ class ApplicationActivity :
 
             //Set the app licence
             if (fullData.licence.isNotEmpty()) {
-                app_licence.text = fullData.licence
+                binding.appLicence.text = fullData.licence
             } else {
-                app_licence.text = getString(R.string.not_available)
+                binding.appLicence.text = getString(R.string.not_available)
             }
 
             if (fullData.getLastVersion() != null) {
                 // Set app size
                 if (fullData.getLastVersion()!!.fileSize.isNotEmpty()) {
-                    app_size.text = fullData.getLastVersion()!!.fileSize
+                    binding.appSize.text = fullData.getLastVersion()!!.fileSize
                 } else {
-                    app_size.visibility = View.GONE
+                    binding.appSize.visibility = View.GONE
                 }
 
                 // Set the app privacy rating
-                val builder = textColorChange(getText(R.string.not_available).toString())
-
                 if (fullData.getLastVersion()!!.privacyRating != null &&
-                        fullData.getLastVersion()!!.privacyRating != -1) {
-                    app_privacy_score.text = fullData.getLastVersion()!!.privacyRating.toString() + "/10"
+                    fullData.getLastVersion()!!.privacyRating != -1) {
+                    binding.appPrivacyScore.text = fullData.getLastVersion()!!.privacyRating.toString() + "/10"
                     setPrivacyRatingBorder(fullData.getLastVersion()!!.privacyRating!!)
                 } else {
-                    app_privacy_score.text = builder
+                    binding.appPrivacyScore.text = textColorChange(getText(R.string.not_available).toString())
                     setPrivacyRatingBorder(-1)
                 }
-                app_privacy_container.setOnClickListener {
+                binding.appPrivacyContainer.setOnClickListener {
                     val message = layoutInflater.inflate(R.layout.privacy_dialog_message, null) as
                             TextView
 
@@ -338,40 +342,39 @@ class ApplicationActivity :
 
                 // Set app version
                 if (fullData.getLastVersion()!!.version.isNotEmpty()) {
-                    app_version.text = fullData.getLastVersion()!!.version
+                    binding.appVersion.text = fullData.getLastVersion()!!.version
                 } else {
-                    app_version.text = getString(R.string.not_available)
+                    binding.appVersion.text = getString(R.string.not_available)
                 }
                 // Set app package name.
                 if (fullData.packageName.isNotEmpty()) {
-                    app_package_name.text = fullData.packageName
+                    binding.appPackageName.text = fullData.packageName
                 } else {
-                    app_package_name.text = getString(R.string.not_available)
+                    binding.appPackageName.text = getString(R.string.not_available)
                 }
 
                 // Set app update timestamp
                 if (fullData.getLastVersion()!!.createdOn.isNotEmpty()) {
-                    app_updated_on.text = getFormattedTimestamp(fullData.getLastVersion()!!.createdOn)
+                    binding.appUpdatedOn.text = getFormattedTimestamp(fullData.getLastVersion()!!.createdOn)
                 } else {
-                    app_updated_on.text = getString(R.string.not_available)
+                    binding.appUpdatedOn.text = getString(R.string.not_available)
                 }
 
                 // Set app minimum required Android version
                 if (fullData.getLastVersion()!!.minAndroid.isNotEmpty()) {
-                    app_min_android.text =
-                            getFormattedMinSdkVersion(fullData.getLastVersion()!!.minAndroid)
+                    binding.appMinAndroid.text =
+                        getFormattedMinSdkVersion(fullData.getLastVersion()!!.minAndroid)
                 } else {
-                    app_min_android.text = getString(R.string.not_available)
+                    binding.appMinAndroid.text = getString(R.string.not_available)
                 }
             } else {
                 // Set app size
-                app_size.visibility = View.GONE
+                binding.appSize.visibility = View.GONE
 
                 // Set app privacy rating
-                val builder = textColorChange(getText(R.string.not_available).toString())
-                app_privacy_score.text = builder
+                binding.appPrivacyScore.text = textColorChange(getText(R.string.not_available).toString())
                 setPrivacyRatingBorder(-1)
-                app_privacy_container.setOnClickListener {
+                binding.appPrivacyContainer.setOnClickListener {
                     val alertDialog = AlertDialog.Builder(this).create()
                     alertDialog.setIcon(R.drawable.ic_dialog_info)
                     alertDialog.setTitle(R.string.app_privacy_score)
@@ -386,23 +389,23 @@ class ApplicationActivity :
                 }
 
                 // Set app version
-                app_version.text = getString(R.string.not_available_full)
+                binding.appVersion.text = getString(R.string.not_available_full)
 
                 // Set app update timestamp
-                app_updated_on.text = getString(R.string.not_available_full)
+                binding.appUpdatedOn.text = getString(R.string.not_available_full)
 
                 // Set app minimum required Android version
-                app_min_android.text = getString(R.string.not_available_full)
+                binding.appMinAndroid.text = getString(R.string.not_available_full)
             }
 
             // Handle clicks on app permissions
-            app_permissions_container.setOnClickListener {
+            binding.appPermissionsContainer.setOnClickListener {
                 val layout = layoutInflater.inflate(R.layout.custom_alert_dialog_layout, null)
                 val message = layout.findViewById<TextView>(R.id.message)
                 val alertDialog = AlertDialog.Builder(this).create()
                 alertDialog.setTitle(R.string.app_permissions_title)
                 if (fullData.getLastVersion() != null &&
-                        fullData.getLastVersion()!!.exodusPermissions != null) {
+                    fullData.getLastVersion()!!.exodusPermissions != null) {
                     if (fullData.getLastVersion()!!.exodusPermissions!!.isNotEmpty()) {
                         var rawMessage = ""
                         var index = 0
@@ -432,7 +435,7 @@ class ApplicationActivity :
             }
 
             // Handle clicks on app trackers
-            app_trackers_container.setOnClickListener {
+            binding.appTrackersContainer.setOnClickListener {
                 val layout = layoutInflater.inflate(R.layout.custom_alert_dialog_layout, null)
                 val message = layout.findViewById<TextView>(R.id.message)
 
@@ -446,7 +449,7 @@ class ApplicationActivity :
 
                 alertDialog.setTitle(R.string.app_trackers_title)
                 if (fullData.getLastVersion() != null &&
-                        fullData.getLastVersion()!!.exodusTrackers != null) {
+                    fullData.getLastVersion()!!.exodusTrackers != null) {
                     if (fullData.getLastVersion()!!.exodusTrackers!!.isNotEmpty()) {
                         var rawMessage = ""
                         var index = 0
@@ -479,7 +482,7 @@ class ApplicationActivity :
             stateChanged(application.state)
 
             // Handle clicks on app install button
-            app_install.setOnClickListener {
+            binding.installButtonLayout.appInstall.setOnClickListener {
                 onInstallButtonClick(fullData)
             }
         } else {
@@ -492,8 +495,8 @@ class ApplicationActivity :
     private fun onPwaApplicationLoaded() {
 
         application.PwaloadIcon(this)
-        pwa_sympol.visibility = View.VISIBLE
-        Ratings.visibility = View.GONE
+        binding.pwaSympol.visibility = View.VISIBLE
+        binding.Ratings.visibility = View.GONE
 
 
         val pwasBasicData = application.pwabasicdata
@@ -502,33 +505,33 @@ class ApplicationActivity :
 
         // Set the app title
         if (pwasBasicData!!.name.isNotEmpty()) {
-            app_title.text = pwasBasicData.name
+            binding.appTitle.text = pwasBasicData.name
         } else {
-            app_title.visibility = View.GONE
+            binding.appTitle.visibility = View.GONE
         }
 
         // Set the app description
         if (pwaFullData!!.description.isNotEmpty()) {
-            app_description.text = pwaFullData.description
-            app_description_container.isEnabled = true
+            binding.appDescription.text = pwaFullData.description
+            binding.appDescriptionContainer.isEnabled = true
         } else {
-            app_description.text = getString(R.string.not_available_full)
-            app_description_container.isEnabled = false
+            binding.appDescription.text = getString(R.string.not_available_full)
+            binding.appDescriptionContainer.isEnabled = false
         }
 
         if (pwaFullData.category.getTitle().isNotEmpty()) {
-            app_category.text = pwaFullData.category.getTitle()
-            app_category.setOnClickListener {
+            binding.appCategory.text = pwaFullData.category.getTitle()
+            binding.appCategory.setOnClickListener {
                 startActivity(Intent(this, CategoryActivity::class.java).apply {
                     putExtra(Constants.CATEGORY_KEY, pwaFullData.category)
                 })
             }
         } else {
-            app_category.visibility = View.GONE
+            binding.appCategory.visibility = View.GONE
         }
 
         // Handle clicks on description
-        app_description_container.setOnClickListener {
+        binding.appDescriptionContainer.setOnClickListener {
             val intent = Intent(this, ApplicationDescriptionActivity::class.java)
             intent.putExtra(APPLICATION_DESCRIPTION_KEY, application.pwaFullData!!.description)
             startActivity(intent)
@@ -541,29 +544,29 @@ class ApplicationActivity :
 
 
         // Handle clicks on app permissions
-        exodus_info_container.visibility = View.GONE
+        binding.exodusInfoContainer.visibility = View.GONE
 
         //app_information details
-        app_information_title.visibility = View.GONE
-        app_version_layout.visibility = View.GONE
-        app_updated_on_layout.visibility = View.GONE
-        app_requires.visibility = View.GONE
-        app_licence_layout.visibility = View.GONE
-        app_package_name_layout.visibility =View.GONE
+        binding.appInformationTitle.visibility = View.GONE
+        binding.appVersionLayout.visibility = View.GONE
+        binding.appUpdatedOnLayout.visibility = View.GONE
+        binding.appRequires.visibility = View.GONE
+        binding.appLicenceLayout.visibility = View.GONE
+        binding.appPackageNameLayout.visibility =View.GONE
 
 
         application.addListener(this)
         stateChanged(application.state)
 
         // Handle clicks on app install button
-        app_install.setOnClickListener {
+        binding.installButtonLayout.appInstall.setOnClickListener {
             onPwaInstallButtonClick(pwaFullData)
         }
     }
 
     override fun onIconLoaded(application: Application, bitmap: Bitmap) {
         if (application == this.application) {
-            app_icon.setImageBitmap(bitmap)
+            binding.appIcon.setImageBitmap(bitmap)
         }
     }
 
@@ -588,9 +591,9 @@ class ApplicationActivity :
 
 
         if (fullData.getLastVersion() == null) {
-            Snackbar.make(container,
-                    getString(Error.APK_UNAVAILABLE.description),
-                    Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.container,
+                          getString(Error.APK_UNAVAILABLE.description),
+                          Snackbar.LENGTH_LONG).show()
             return
         }
 
@@ -611,46 +614,46 @@ class ApplicationActivity :
 
     @SuppressLint("SetTextI18n")
     override fun notifyDownloadProgress(count: Int, total: Int) {
-        app_download_mb.text = "${toMiB(count)}/${toMiB(total)} MiB"
-        app_download_percentage.text =
-                ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
-        app_download_progress.max = total
-        app_download_progress.progress = count
+        binding.appDownloadMb.text = "${toMiB(count)}/${toMiB(total)} MiB"
+        binding.appDownloadPercentage.text =
+            ((toMiB(count) / toMiB(total)) * 100).toInt().toString() + "%"
+        binding.appDownloadProgress.max = total
+        binding.appDownloadProgress.progress = count
     }
 
     override fun anErrorHasOccurred(error: Error) {
-        Snackbar.make(container,
-                getString(error.description),
-                Snackbar.LENGTH_LONG).show()
+        Snackbar.make(binding.container,
+                      getString(error.description),
+                      Snackbar.LENGTH_LONG).show()
     }
 
     override fun stateChanged(state: State) {
         Execute({}, {
-            app_install.text = resources.getString(state.installButtonTextId)
+            binding.installButtonLayout.appInstall.text = resources.getString(state.installButtonTextId)
             when (state) {
                 State.INSTALLED -> {
-                    app_install.isEnabled =
-                            Common.appHasLaunchActivity(this, application.packageName)
-                    app_size.visibility = View.VISIBLE
-                    app_download_container.visibility = View.GONE
+                    binding.installButtonLayout.appInstall.isEnabled =
+                        Common.appHasLaunchActivity(this, application.packageName)
+                    binding.appSize.visibility = View.VISIBLE
+                    binding.appDownloadContainer.visibility = View.GONE
                 }
                 State.DOWNLOADING -> {
-                    app_install.isEnabled = true
-                    app_size.visibility = View.GONE
-                    app_download_mb.text = getString(R.string.state_installing)
-                    app_download_percentage.text = ""
-                    app_download_progress.progress = 0
-                    app_download_container.visibility = View.VISIBLE
+                    binding.installButtonLayout.appInstall.isEnabled = true
+                    binding.appSize.visibility = View.GONE
+                    binding.appDownloadMb.text = getString(R.string.state_installing)
+                    binding.appDownloadPercentage.text = ""
+                    binding.appDownloadProgress.progress = 0
+                    binding.appDownloadContainer.visibility = View.VISIBLE
                 }
                 State.INSTALLING -> {
-                    app_install.isEnabled = false
-                    app_size.visibility = View.VISIBLE
-                    app_download_container.visibility = View.GONE
+                    binding.installButtonLayout.appInstall.isEnabled = false
+                    binding.appSize.visibility = View.VISIBLE
+                    binding.appDownloadContainer.visibility = View.GONE
                 }
                 else -> {
-                    app_install.isEnabled = true
-                    app_size.visibility = View.VISIBLE
-                    app_download_container.visibility = View.GONE
+                    binding.installButtonLayout.appInstall.isEnabled = true
+                    binding.appSize.visibility = View.VISIBLE
+                    binding.appDownloadContainer.visibility = View.GONE
                 }
             }
         })
@@ -658,14 +661,14 @@ class ApplicationActivity :
 
     private fun setRatingBorder(rating: Float?) {
         when {
-            rating!! >= 7f -> {
-                app_rating.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cat_green_ellipse, 0)
+            rating!! >= 3.5f -> {
+                binding.appRating.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cat_green_ellipse, 0)
             }
-            rating >= 4f -> {
-                app_rating.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_yellow_ellipse, 0)
+            rating >= 2.0f -> {
+                binding.appRating.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_yellow_ellipse, 0)
             }
             else -> {
-                app_rating.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_red_ellipse, 0)
+                binding.appRating.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_red_ellipse, 0)
             }
         }
     }
@@ -673,34 +676,34 @@ class ApplicationActivity :
     private fun setPrivacyRatingBorder(rating: Int) {
         when {
             rating >= 7 -> {
-                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cat_green_ellipse, 0)
+                binding.appPrivacyScore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cat_green_ellipse, 0)
             }
             rating >= 4 -> {
-                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_yellow_ellipse, 0)
+                binding.appPrivacyScore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_yellow_ellipse, 0)
             }
             else -> {
-                app_privacy_score.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_red_ellipse, 0)
+                binding.appPrivacyScore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_red_ellipse, 0)
             }
         }
     }
 
     private fun showImages(images: List<Bitmap>) {
-        app_screenshots_progress_bar.visibility = View.GONE
+        binding.appScreenshotsProgressBar.visibility = View.GONE
         if (images.isEmpty()) {
-            app_screenshots_error.visibility = View.VISIBLE
+            binding.appScreenshotsError.visibility = View.VISIBLE
             return
         } else {
-            app_screenshots_error.visibility = View.GONE
+            binding.appScreenshotsError.visibility = View.GONE
         }
-        app_images_container.removeAllViews()
+        binding.appImagesContainer.removeAllViews()
         images.forEach {
             val imageView = ImageView(this)
             val layoutParams =
-                    if (it.height < it.width) {
-                        LinearLayout.LayoutParams((imageHeight * 1.78).toInt(), imageHeight)
-                    } else {
-                        LinearLayout.LayoutParams(imageWidth, imageHeight)
-                    }
+                if (it.height < it.width) {
+                    LinearLayout.LayoutParams((imageHeight * 1.78).toInt(), imageHeight)
+                } else {
+                    LinearLayout.LayoutParams(imageWidth, imageHeight)
+                }
             layoutParams.leftMargin = imageMargin
             layoutParams.rightMargin = imageMargin
             imageView.layoutParams = layoutParams
@@ -709,15 +712,15 @@ class ApplicationActivity :
             val outValue = TypedValue()
             theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
             imageView.foreground = getDrawable(outValue.resourceId)
-            app_images_container.addView(imageView)
+            binding.appImagesContainer.addView(imageView)
             imageView.setOnClickListener { _ ->
                 val intent = Intent(this, ScreenshotsActivity::class.java)
                 intent.putExtra(APPLICATION_PACKAGE_NAME_KEY, application.packageName)
                 intent.putExtra(SELECTED_APPLICATION_SCREENSHOT_KEY, images.indexOf(it))
                 startActivity(intent)
             }
-            app_images_scroll_view.visibility = View.VISIBLE
-            app_images_container.visibility = View.VISIBLE
+            binding.appImagesScrollView.visibility = View.VISIBLE
+            binding.appImagesContainer.visibility = View.VISIBLE
         }
     }
 
@@ -727,8 +730,8 @@ class ApplicationActivity :
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 application.buttonClicked(this, this)
             } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Snackbar.make(container, R.string.error_storage_permission_denied,
-                        Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.container, R.string.error_storage_permission_denied,
+                              Snackbar.LENGTH_LONG).show()
             }
         }
     }
@@ -747,9 +750,5 @@ class ApplicationActivity :
             application.decrementUses()
             applicationManagerServiceConnection.unbindService(this)
         }
-    }
-
-    private fun getAccentColor() {
-        accentColorOS = this.getColor(R.color.colorAccent);
     }
 }

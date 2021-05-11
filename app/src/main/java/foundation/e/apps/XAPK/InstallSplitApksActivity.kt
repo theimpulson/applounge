@@ -26,7 +26,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.RequiresApi
-import com.makeramen.roundedimageview.BuildConfig
+import foundation.e.apps.BuildConfig
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException

@@ -17,7 +17,6 @@
 
 package foundation.e.apps.XAPK
 
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.MainThread
