@@ -105,4 +105,5 @@
     <string name="trackers_expand">Zeige eine Liste der Verfolger (Tracker)</string>
     <string name="permissions_expand">Zeige Liste der Berechtigungen</string>
     <string name="divider">Trennzeichen</string>
+    <string name="package_name_help_example">Quellenbeispiel, das ein Paket und dessen Name anzeigt</string>
 </resources>
