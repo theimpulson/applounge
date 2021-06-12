@@ -91,7 +91,7 @@
     <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
     <string name="more">Meer</string>
     <string name="featured">Aanbevolen</string>
-    <string name="action_installing">Aan het installeren</string>
+    <string name="action_installing">Installeren...</string>
     <string name="show_only_pwa_apps">Toon enkel PWAs (Progressive Web Applications)</string>
     <string name="show_only_open_source_apps">Toon enkel open source apps</string>
     <string name="Show_all_apps">Toon alle apps</string>
