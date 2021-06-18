@@ -37,12 +37,11 @@
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorNavigationBarBackground"
         android:theme="@style/BottomNavigationViewTheme"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:itemIconTint="@drawable/tab_color"
         app:itemTextColor="@drawable/tab_color"
-        app:menu="@menu/activity_main_menu"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/activity_main_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

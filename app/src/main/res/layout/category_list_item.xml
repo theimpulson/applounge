@@ -36,7 +36,7 @@
         android:layout_marginStart="@dimen/layout_margin_medium"
         android:src="@drawable/ic_cat_default"
         android:contentDescription="@string/menu_categories"
-        app:tint="@color/color_category_icon" />
+        app:tint="@color/colorAccent" />
 
     <TextView
         android:id="@+id/category_title"

@@ -20,7 +20,7 @@
 
 <ImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:src="@color/color_category_icon"
+    android:src="@color/colorDivider"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:scaleType="fitXY"

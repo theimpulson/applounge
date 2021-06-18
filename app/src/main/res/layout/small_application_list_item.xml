@@ -27,7 +27,7 @@
     android:foreground="@drawable/app_category_border"
     android:padding="@dimen/layout_padding_medium"
     android:paddingBottom="@dimen/layout_padding_large"
-    android:background="#FFFFFF">
+    android:background="@color/colorBackground">
 
 
     <androidx.cardview.widget.CardView
@@ -68,7 +68,7 @@
         android:gravity="center"
         android:maxLines="2"
         android:minLines="2"
-        android:textColor="@android:color/black"
+        android:textColor="@color/colorTextPrimary"
         android:textSize="@dimen/text_size_small"
         tools:text="App title" />
 

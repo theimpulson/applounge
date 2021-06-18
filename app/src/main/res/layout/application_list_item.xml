@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorTextPrimary"
             android:textSize="@dimen/text_size_medium"
             tools:text="App title" />
 
@@ -100,7 +100,7 @@
                 android:layout_marginStart="@dimen/layout_margin_small"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorTextPrimary"
                 android:textSize="@dimen/text_size_small"
                 tools:text="4.3" />
 
@@ -181,7 +181,7 @@
                 android:layout_marginStart="@dimen/layout_margin_small"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorTextPrimary"
                 android:textSize="@dimen/text_size_small"
                 tools:text="91%" />
 

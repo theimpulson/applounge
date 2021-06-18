@@ -17,7 +17,6 @@
 
 package foundation.e.apps.categories
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,9 +40,6 @@ class CategoriesFragment : Fragment() {
         val color = Common.getAccentColor(requireContext())
         viewPager.adapter = CategoriesViewPagerAdapter(requireActivity().supportFragmentManager, tabLayout.tabCount, color)
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
-
-        tabLayout.setSelectedTabIndicatorColor(color);
-        tabLayout.setTabTextColors(Color.parseColor("#000000"), color);
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {

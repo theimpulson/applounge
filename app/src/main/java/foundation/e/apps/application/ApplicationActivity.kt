@@ -119,8 +119,6 @@ class ApplicationActivity :
         }
 
         // Set accent color
-        binding.installButtonLayout.appInstall.setTextColor(Color.parseColor("#ffffff"))
-        binding.installButtonLayout.appInstall.background.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
         binding.appDownloadProgress.progressDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
         binding.appCategory.setTextColor(accentColorOS)
         binding.appExpandDescription.setTextColor(accentColorOS)
@@ -205,7 +203,7 @@ class ApplicationActivity :
     private fun textColorChange(text: String): SpannableStringBuilder {
         val builder = SpannableStringBuilder();
         val redSpannable = SpannableString(text);
-        redSpannable.setSpan(ForegroundColorSpan(R.color.colorDarkGray), 0, text.length, 0);
+        redSpannable.setSpan(ForegroundColorSpan(R.color.colorTextSecondary), 0, text.length, 0);
         builder.append(redSpannable);
         return builder
     }

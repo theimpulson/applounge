@@ -28,7 +28,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorNavigationBarBackground"
         android:elevation="@dimen/default_elevation"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
@@ -94,7 +94,7 @@
                     android:enabled="false"
                     android:foreground="?android:selectableItemBackground"
                     android:text="@string/submit_button_text"
-                    android:textColor="?android:textColorPrimaryInverse"
+                    android:textColor="@android:color/white"
                     app:layout_constraintTop_toBottomOf="@id/package_name_edit_text" />
 
                 <View
