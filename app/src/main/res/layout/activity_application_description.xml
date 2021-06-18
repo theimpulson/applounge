@@ -28,7 +28,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorNavigationBarBackground"
         android:elevation="@dimen/default_elevation"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
@@ -46,16 +46,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:padding="@dimen/layout_margin_large"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorTextPrimary"
             android:textIsSelectable="true"
             android:textSize="@dimen/text_size_medium" />
 
     </ScrollView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_divider_height"
-        android:background="@color/colorDivider"
-        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

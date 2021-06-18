@@ -26,9 +26,9 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorNavigationBarBackground"
         app:tabSelectedTextColor="@color/colorInstall"
-        app:tabTextColor="@color/colorAccent"
+        app:tabTextColor="@color/colorTextPrimary"
         app:tabIndicatorColor="@color/colorInstall"
         android:elevation="@dimen/default_elevation"
         app:layout_constraintTop_toTopOf="parent">

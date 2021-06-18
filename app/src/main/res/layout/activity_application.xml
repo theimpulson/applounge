@@ -29,7 +29,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorNavigationBarBackground"
         android:elevation="0dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
@@ -94,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/colorTextPrimary"
                         android:textSize="@dimen/text_size_large"
                         tools:text="App title" />
 
@@ -151,10 +151,10 @@
                 android:ellipsize="end"
                 android:foreground="?android:selectableItemBackground"
                 android:maxLines="1"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:textSize="@dimen/text_size_medium"
                 android:textColor="@color/colorInstall"
-                android:layout_marginRight="@dimen/layout_margin_large"
+                android:layout_marginEnd="@dimen/layout_margin_large"
                 tools:text="App category" />
 
 
@@ -242,7 +242,7 @@
                     android:ellipsize="end"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/layout_margin_medium2"
-                    layout="@layout/install_button_layout" />
+                    layout="@layout/simple_install_button_layout" />
 
 
 
@@ -379,7 +379,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="@string/app_ratings_title"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/colorTextPrimary"
                     android:textSize="@dimen/text_size_large"
                     android:textStyle="bold" />
 
@@ -411,7 +411,7 @@
                                 android:layout_height="wrap_content"
                                 android:maxLines="1"
                                 android:layout_gravity="left"
-                                android:textColor="@android:color/black"
+                                android:textColor="@color/colorTextPrimary"
                                 android:drawablePadding="5dp"
                                 android:textSize="@dimen/text_size_extra_large"
                                 android:drawableRight="@drawable/app_border_good"
@@ -492,7 +492,7 @@
                                 android:layout_height="wrap_content"
                                 android:maxLines="1"
                                 android:layout_gravity="start"
-                                android:textColor="@android:color/black"
+                                android:textColor="@color/colorTextPrimary"
                                 android:textSize="@dimen/text_size_extra_large"
                                 android:drawablePadding="5dp"
                                 android:drawableRight="@drawable/app_border_neutral"
@@ -562,7 +562,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="@string/app_privacy_title"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/colorTextPrimary"
                     android:textSize="@dimen/text_size_large"
                     android:textStyle="bold" />
 
@@ -664,7 +664,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="@string/app_information_title"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/colorTextPrimary"
                     android:textSize="@dimen/text_size_large"
                     android:textStyle="bold" />
 
@@ -694,7 +694,7 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/app_version"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/colorTextPrimary"
                             android:textSize="@dimen/text_size_large" />
 
                     </LinearLayout>
@@ -736,7 +736,7 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/app_updated_on"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/colorTextPrimary"
                             android:textSize="@dimen/text_size_large" />
 
                     </LinearLayout>
@@ -778,7 +778,7 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/app_min_android"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/colorTextPrimary"
                             android:textSize="@dimen/text_size_large" />
 
                     </LinearLayout>
@@ -820,7 +820,7 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/app_licence"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/colorTextPrimary"
                             android:textSize="@dimen/text_size_large" />
 
                     </LinearLayout>
@@ -862,7 +862,7 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/app_package_name"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/colorTextPrimary"
                             android:textSize="@dimen/text_size_large" />
 
                     </LinearLayout>
@@ -883,12 +883,6 @@
         </LinearLayout>
 
     </foundation.e.apps.utils.CustomNestedScrollView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_divider_height"
-        android:background="@color/colorDivider"
-        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

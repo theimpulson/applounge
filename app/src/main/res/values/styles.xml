@@ -18,19 +18,21 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">@color/colorAccent</item>
-
+        <item name="android:textColorPrimary">@color/colorTextPrimary</item>
+        <item name="android:textColorSecondary">@color/colorTextSecondary</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-
         <item name="autoCompleteTextViewStyle">@style/SearchSuggestionTheme</item>
         <item name="textAppearanceSearchResultTitle">@style/SearchSuggestionTextTheme</item>
 
         <item name="colorControlNormal">@color/colorInstall</item>
         <item name="colorControlActivated">@color/colorInstall</item>
+        <item name="android:navigationBarColor">@color/colorNavigationBarBackground</item>
+        <item name="android:statusBarColor">@color/colorNavigationBarBackground</item>
+        <item name="toolbarNavigationButtonStyle">@style/Toolbar.Button.Navigation.Tinted</item>
     </style>
 
     <style name="AppTheme1" parent="android:Theme">
@@ -39,7 +41,7 @@
     <style name="AppTheme" parent="BaseTheme"></style>
 
     <style name="SearchSuggestionTheme" parent="Widget.AppCompat.Light.AutoCompleteTextView">
-        <item name="android:popupBackground">#FAFAFA</item>
+        <item name="android:popupBackground">@color/colorBackground</item>
     </style>
 
     <style name="SearchSuggestionTextTheme" parent="TextAppearance.AppCompat.SearchResult.Title">
@@ -51,12 +53,16 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="BottomNavigationViewTheme" parent="Theme.AppCompat.Light">
+    <style name="BottomNavigationViewTheme" parent="Theme.AppCompat.DayNight">
         <item name="colorPrimary">@color/colorAccent</item>
     </style>
 
     <style name="ToolbarTheme" parent="Widget.AppCompat.Toolbar">
-        <item name="colorControlNormal">@lineageos.platform:color/color_default_accent</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
+    </style>
+
+    <style name="Toolbar.Button.Navigation.Tinted" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="tint">@color/colorAccent</item>
     </style>
 
 </resources>

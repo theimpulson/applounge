@@ -117,7 +117,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         val from = arrayOf(SUGGESTION_KEY)
         val to = intArrayOf(android.R.id.text1)
         searchView.suggestionsAdapter = SimpleCursorAdapter(context,
-                android.R.layout.simple_list_item_1, null, from, to,
+                R.layout.custom_simple_list_item, null, from, to,
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
 
         // Initialise recycler view
