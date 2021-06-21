@@ -68,4 +68,8 @@ object Constants {
     const val UPDATES_NOTIFICATION_CHANNEL_TITLE = "App updates"
     const val UPDATES_NOTIFICATION_CLICK_EXTRA = "updates_notification_click_extra"
 
+    // Integrity Verification
+    const val F_DROID_PACKAGES_URL = "https://f-droid.org/en/packages/"
+    const val SYSTEM_PACKAGES_JSON_FILE_URL = "https://gitlab.e.foundation/e/apps/apps/-/raw/e169c1905114d97af867b051f96c38166f4782e2/app/src/main/assets/systemApp.json"
+
 }
