@@ -6,7 +6,7 @@
     <string name="action_update">Bijwerken</string>
     <string name="state_installing">Installeren</string>
     <string name="action_cancel">Annuleren</string>
-    <string name="action_install">Installeren</string>
+    <string name="action_install">Installeer</string>
     <string name="app_rating_content_description">App beoordeling</string>
     <string name="app_privacy_score_content_description">App-privacyscore</string>
     <string name="app_icon_content_description">App icoon</string>
@@ -91,7 +91,7 @@
     <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
     <string name="more">Meer</string>
     <string name="featured">Aanbevolen</string>
-    <string name="action_installing">Installeren...</string>
+    <string name="action_installing">Installeren</string>
     <string name="show_only_pwa_apps">Toon enkel PWAs (Progressive Web Applications)</string>
     <string name="show_only_open_source_apps">Toon enkel open source apps</string>
     <string name="Show_all_apps">Toon alle apps</string>
@@ -100,4 +100,8 @@
     <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
     <string name="app_package_name">Pakket naam</string>
     <string name="Signature_verification_failed">Verificatie mislukt, installatie wordt afgebroken</string>
+    <string name="image_carousel">Afbeelding carrousel</string>
+    <string name="error_incident">Er is een fout opgetreden</string>
+    <string name="trackers_expand">Toon lijst met trackers</string>
+    <string name="permissions_expand">Toon lijst met machtigingen</string>
 </resources>
