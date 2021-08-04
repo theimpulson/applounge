@@ -15,23 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
-import android.content.Context
-import android.os.Build
-import android.os.Handler
-import androidx.annotation.RequiresApi
-import foundation.e.apps.application.model.InstallerInterface
+object StringUtils {
 
-object LaunchUtils {
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    fun startInstallSplitApksActivity(mActivity: Context, apksBean: ApksBean, callback: InstallerInterface) {
-        mActivity.startActivity(InstallSplitApksActivity.newInstanceIntent(mActivity, apksBean))
-        val handler = Handler()
-        handler.postDelayed({
-            callback.onInstallationComplete(mActivity)
-        }, 10000)
-
+    fun parseInt(num: String): Int? {
+        return try {
+            num.toInt()
+        } catch (e: Exception) {
+            null
+        }
     }
-
 }

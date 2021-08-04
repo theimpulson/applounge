@@ -49,20 +49,19 @@ class HomePwaRequest {
         }
     }
 
-
     data class Result(val success: Boolean, val home: Home)
 
     data class Home(
-            @JsonProperty("headings")
-            val headings: Map<String, String>?,
-            @JsonProperty(BANNER_APPS_KEY)
-            val bannerApps: List<PwasBasicData>,
-            @JsonProperty(POPULAR_APPS_KEY)
-            val topUpdatedApps: List<PwasBasicData>,
-            @JsonProperty(POPULAR_GAMES_KEY)
-            val topUpdatedGames: List<PwasBasicData>,
-            @JsonProperty(DISCOVER_KEY)
-            val discover: List<PwasBasicData>
+        @JsonProperty("headings")
+        val headings: Map<String, String>?,
+        @JsonProperty(BANNER_APPS_KEY)
+        val bannerApps: List<PwasBasicData>,
+        @JsonProperty(POPULAR_APPS_KEY)
+        val topUpdatedApps: List<PwasBasicData>,
+        @JsonProperty(POPULAR_GAMES_KEY)
+        val topUpdatedGames: List<PwasBasicData>,
+        @JsonProperty(DISCOVER_KEY)
+        val discover: List<PwasBasicData>
     ) {
 
         companion object {
@@ -70,8 +69,10 @@ class HomePwaRequest {
             private const val POPULAR_APPS_KEY = "popular_apps"
             private const val POPULAR_GAMES_KEY = "popular_games"
             private const val DISCOVER_KEY = "discover"
-            private val KEYS = setOf(POPULAR_APPS_KEY,
-                    POPULAR_GAMES_KEY, DISCOVER_KEY)
+            private val KEYS = setOf(
+                POPULAR_APPS_KEY,
+                POPULAR_GAMES_KEY, DISCOVER_KEY
+            )
         }
 
         fun getBannerApps(applicationManager: ApplicationManager, context: Context): ArrayList<Application> {
@@ -83,7 +84,7 @@ class HomePwaRequest {
             KEYS.forEach {
                 var heading = headings?.get(it)
                 heading = heading
-                        ?: "" // Use default heading as empty to let it generate from the key itself.
+                    ?: "" // Use default heading as empty to let it generate from the key itself.
                 val parsedApps = when (it) {
                     POPULAR_APPS_KEY -> ApplicationParser.PwaParseToApps(applicationManager, context, topUpdatedApps.toTypedArray())
                     POPULAR_GAMES_KEY -> ApplicationParser.PwaParseToApps(applicationManager, context, topUpdatedGames.toTypedArray())

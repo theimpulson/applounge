@@ -22,7 +22,6 @@ import android.util.Log
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
-
 fun Bitmap.toByteArray(): ByteArray? {
     // Try go guesstimate how much space the icon will take when serialized
     // to avoid unnecessary allocations/copies during the write.

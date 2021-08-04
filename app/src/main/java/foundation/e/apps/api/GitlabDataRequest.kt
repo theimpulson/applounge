@@ -27,9 +27,7 @@ import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.*
 import java.io.InputStreamReader
 
-
 class GitlabDataRequest {
-
 
     fun requestGmsCoreRelease(callback: (Error?, GitlabDataResult?) -> Unit) = try {
         val url = Constants.RELEASE_API + Constants.MICROG_ID + Constants.RELEASE_ENDPOINT
@@ -37,11 +35,13 @@ class GitlabDataRequest {
         val isr = InputStreamReader(urlConnection.inputStream)
         val element = parseReader(isr)
 
-        val releaseList: List<ReleaseData> = Gson().fromJson(element.toString(),
-                Array<ReleaseData>::class.java).toList()
+        val releaseList: List<ReleaseData> = Gson().fromJson(
+            element.toString(),
+            Array<ReleaseData>::class.java
+        ).toList()
         urlConnection.disconnect()
 
-        val osReleaseType = OsInfo().getOSReleaseType()
+        val osReleaseType = OsInfo.getOSReleaseType()
         var releaseUrl = ""
 
         releaseList[0].assets.links.forEach {
@@ -50,9 +50,15 @@ class GitlabDataRequest {
             }
         }
 
-        callback.invoke(null, GitlabDataResult(SystemAppDataSource.createDataSource(Constants.MICROG_ID.toString(),
-                releaseList[0].tag_name, Constants.MICROG_ICON_URI, releaseUrl)))
-
+        callback.invoke(
+            null,
+            GitlabDataResult(
+                SystemAppDataSource.createDataSource(
+                    Constants.MICROG_ID.toString(),
+                    releaseList[0].tag_name, Constants.MICROG_ICON_URI, releaseUrl
+                )
+            )
+        )
     } catch (e: Exception) {
         callback.invoke(Error.findError(e), null)
     }
@@ -62,6 +68,4 @@ class GitlabDataRequest {
             return ApplicationParser.parseSystemAppData(applicationManager, context, data)
         }
     }
-
-
 }

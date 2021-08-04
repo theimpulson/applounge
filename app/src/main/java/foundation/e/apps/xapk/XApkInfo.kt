@@ -15,22 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
-import android.os.Bundle
-import com.trello.rxlifecycle3.components.support.RxAppCompatActivity
-
-abstract class BaseActivity : RxAppCompatActivity() {
-    protected val logTag: String by lazy { javaClass.simpleName }
-    protected val mContext by lazy { this }
-    protected val mActivity: BaseActivity by lazy { this }
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        nextStep()
-        finish()
-    }
-
-    protected open fun nextStep() {}
+data class XApkInfo(
+    var label: String,
+    var packageName: String,
+    var versionCode: Int,
+    var versionName: String,
+    var appSize: Long,
+    var lastModified: Long,
+    var path: String
+) {
+    constructor() : this(String(), String(), 0, String(), 0, 0, String())
 }

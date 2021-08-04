@@ -36,7 +36,7 @@ class ApplicationsFragment() : Fragment() {
 
     private lateinit var categoriesViewModel: CategoriesViewModel
 
-    var color:Int = 0;
+    var color: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentApplicationCategoriesBinding.inflate(inflater, container, false)
@@ -51,7 +51,7 @@ class ApplicationsFragment() : Fragment() {
         val errorDescription = binding.errorLayout.errorDescription
 
         categoriesList.layoutManager = LinearLayoutManager(context)
-        color = requireArguments().getInt("color",0)
+        color = requireArguments().getInt("color", 0)
         categoriesList.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
@@ -64,27 +64,33 @@ class ApplicationsFragment() : Fragment() {
         errorResolve.setBackgroundColor(color)
 
         // Bind to the list of applications categories
-        categoriesViewModel.getApplicationsCategories().observe(viewLifecycleOwner, Observer {
-            if (it!!.isNotEmpty()) {
-                //Add New Category
-                if (!it.any { Category -> Category.id == "system_apps" })
-                    it.add(Category("system_apps"))
-                categoriesList.adapter = context?.let { context -> CategoriesListAdapter(context, it, color) }
-                categoriesList.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
+        categoriesViewModel.getApplicationsCategories().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it!!.isNotEmpty()) {
+                    // Add New Category
+                    if (!it.any { Category -> Category.id == "system_apps" })
+                        it.add(Category("system_apps"))
+                    categoriesList.adapter = context?.let { context -> CategoriesListAdapter(context, it, color) }
+                    categoriesList.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                }
             }
-        })
+        )
 
         // Bind to the screen error
-        categoriesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                errorDescription.text = requireActivity().getString(it.description)
-                errorContainer.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-            } else {
-                errorContainer.visibility = View.GONE
+        categoriesViewModel.getScreenError().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it != null) {
+                    errorDescription.text = requireActivity().getString(it.description)
+                    errorContainer.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                } else {
+                    errorContainer.visibility = View.GONE
+                }
             }
-        })
+        )
 
         if (categoriesViewModel.getApplicationsCategories().value!!.isEmpty()) {
             categoriesViewModel.loadCategories(requireContext())
@@ -97,13 +103,13 @@ class ApplicationsFragment() : Fragment() {
         _binding = null
     }
 
-    companion object{
-        fun newInstance(color:Int?) : ApplicationsFragment{
+    companion object {
+        fun newInstance(color: Int?): ApplicationsFragment {
             val applicationsFragment = ApplicationsFragment()
             val bundle = Bundle()
-            bundle.putInt("color",color!!)
+            bundle.putInt("color", color!!)
             applicationsFragment.arguments = bundle
-            return  applicationsFragment
+            return applicationsFragment
         }
     }
 }

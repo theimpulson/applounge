@@ -29,10 +29,12 @@ import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.MICROG_SHARED_PREF
 import foundation.e.apps.utils.PreferenceStorage
 
-class OutdatedApplicationsFinder(private val packageManager: PackageManager,
-                                 private val callback: UpdatesWorkerInterface,
-                                 private val applicationManager: ApplicationManager) :
-        AsyncTask<Context, Any, Any>() {
+class OutdatedApplicationsFinder(
+    private val packageManager: PackageManager,
+    private val callback: UpdatesWorkerInterface,
+    private val applicationManager: ApplicationManager
+) :
+    AsyncTask<Context, Any, Any>() {
 
     private var result: ArrayList<Application>? = null
 
@@ -65,8 +67,11 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
         return result
     }
 
-    private fun verifyApplication(application: Application, apps: ArrayList<Application>,
-                                  context: Context) {
+    private fun verifyApplication(
+        application: Application,
+        apps: ArrayList<Application>,
+        context: Context
+    ) {
         val error = application.assertBasicData(context)
         if (error == null && application.state == State.NOT_UPDATED) {
             apps.add(application)
@@ -89,21 +94,20 @@ class OutdatedApplicationsFinder(private val packageManager: PackageManager,
         return result
     }
 
-
     private fun loadMicroGVersion(context: Context): List<Application> {
         var gitlabData: GitlabDataRequest.GitlabDataResult? = null
         GitlabDataRequest()
-                .requestGmsCoreRelease { applicationError, listGitlabData ->
+            .requestGmsCoreRelease { applicationError, listGitlabData ->
 
-                    when (applicationError) {
-                        null -> {
-                            gitlabData = listGitlabData!!
-                        }
-                        else -> {
-                           print("error")
-                        }
+                when (applicationError) {
+                    null -> {
+                        gitlabData = listGitlabData!!
+                    }
+                    else -> {
+                        print("error")
                     }
                 }
+            }
         return if (gitlabData != null) {
             gitlabData!!.getApplications(applicationManager, context)
         } else {

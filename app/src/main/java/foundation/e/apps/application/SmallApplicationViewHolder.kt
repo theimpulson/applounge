@@ -24,7 +24,6 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.GradientDrawable
-import android.view.Gravity
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import androidx.appcompat.content.res.AppCompatResources
@@ -44,13 +43,12 @@ import foundation.e.apps.utils.Common.toMiB
 import foundation.e.apps.utils.Error
 import foundation.e.apps.utils.Execute
 
-
 class SmallApplicationViewHolder(private val activity: Activity, binding: SmallApplicationListItemBinding) :
-        RecyclerView.ViewHolder(binding.root),
-        ApplicationStateListener,
-        Downloader.DownloadProgressCallback,
-        BasicData.IconLoaderCallback,
-        PwasBasicData.IconLoaderCallback{
+    RecyclerView.ViewHolder(binding.root),
+    ApplicationStateListener,
+    Downloader.DownloadProgressCallback,
+    BasicData.IconLoaderCallback,
+    PwasBasicData.IconLoaderCallback {
 
     private val view = binding.root
     private val icon = binding.appIcon
@@ -71,28 +69,31 @@ class SmallApplicationViewHolder(private val activity: Activity, binding: SmallA
 
         installButton.setOnClickListener {
             if (application?.fullData != null &&
-                    application!!.fullData!!.getLastVersion() == null) {
-                Snackbar.make(view, activity.getString(
-                        Error.APK_UNAVAILABLE.description),
-                        Snackbar.LENGTH_LONG).show()
-            }
-            else if(application?.pwabasicdata!=null){
+                application!!.fullData!!.getLastVersion() == null
+            ) {
+                Snackbar.make(
+                    view,
+                    activity.getString(
+                        Error.APK_UNAVAILABLE.description
+                    ),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            } else if (application?.pwabasicdata != null) {
                 application?.pwaInstall(activity)
-            }
-            else{
+            } else {
                 application?.buttonClicked(activity, activity)
             }
         }
     }
     fun createApplicationView(app: Application) {
-        if(app.basicData!=null) {
+        if (app.basicData != null) {
             this.application?.removeListener(this)
             this.application = app
             icon.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_app_default))
             application!!.loadIcon(this)
             application!!.addListener(this)
             title.text = application!!.basicData!!.name
-        }else if(app.pwabasicdata!=null){
+        } else if (app.pwabasicdata != null) {
             this.application?.removeListener(this)
             this.application = app
             icon.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_app_default))
@@ -111,41 +112,44 @@ class SmallApplicationViewHolder(private val activity: Activity, binding: SmallA
     }
 
     override fun stateChanged(state: State) {
-        Execute({}, {
-            installButton.setTextColor(accentColorOS)
+        Execute(
+            {},
+            {
+                installButton.setTextColor(accentColorOS)
 
-            installButton.setBackgroundResource(R.drawable.app_installing_border_simple)
-            val drawable = installButton.background as GradientDrawable
-            drawable.setStroke(2, accentColorOS)
+                installButton.setBackgroundResource(R.drawable.app_installing_border_simple)
+                val drawable = installButton.background as GradientDrawable
+                drawable.setStroke(2, accentColorOS)
 
-            installButton.text = activity.getString(state.installButtonTextId)
-            installButton.clearAnimation()
-            installButton.clearFocus()
-            when (state) {
-                State.NOT_DOWNLOADED ->{
-                    installButton.isEnabled = true
-                }
-                State.DOWNLOADING ->{
-                    installButton.isEnabled = true
-                    installButton.background.clearColorFilter()
-                }
-                State.INSTALLED -> {
-                    installButton.isEnabled =
+                installButton.text = activity.getString(state.installButtonTextId)
+                installButton.clearAnimation()
+                installButton.clearFocus()
+                when (state) {
+                    State.NOT_DOWNLOADED -> {
+                        installButton.isEnabled = true
+                    }
+                    State.DOWNLOADING -> {
+                        installButton.isEnabled = true
+                        installButton.background.clearColorFilter()
+                    }
+                    State.INSTALLED -> {
+                        installButton.isEnabled =
                             Common.appHasLaunchActivity(activity, application!!.packageName)
-                    installButton.setTextColor(Color.parseColor("#FAFAFA"))
-                    installButton.background.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
-                }
-                State.INSTALLING -> {
-                    installButton.isEnabled = false
-                    installingAnimation()
-                }
-                State.NOT_UPDATED -> {
-                    installButton.isEnabled = true
-                    installButton.setTextColor(Color.parseColor("#FAFAFA"))
-                    installButton.background.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
+                        installButton.setTextColor(Color.parseColor("#FAFAFA"))
+                        installButton.background.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
+                    }
+                    State.INSTALLING -> {
+                        installButton.isEnabled = false
+                        installingAnimation()
+                    }
+                    State.NOT_UPDATED -> {
+                        installButton.isEnabled = true
+                        installButton.setTextColor(Color.parseColor("#FAFAFA"))
+                        installButton.background.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
+                    }
                 }
             }
-        })
+        )
     }
 
     override fun downloading(downloader: Downloader) {
@@ -160,7 +164,7 @@ class SmallApplicationViewHolder(private val activity: Activity, binding: SmallA
 
     private fun installingAnimation() {
         val anim = AlphaAnimation(0.0f, 1.0f)
-        anim.duration = 200 //You can manage the blinking time with this parameter
+        anim.duration = 200 // You can manage the blinking time with this parameter
         anim.startOffset = 20
         anim.repeatMode = Animation.REVERSE
         anim.repeatCount = Animation.INFINITE
@@ -168,10 +172,11 @@ class SmallApplicationViewHolder(private val activity: Activity, binding: SmallA
     }
 
     override fun anErrorHasOccurred(error: Error) {
-        Snackbar.make(activity.findViewById(R.id.container),
-                activity.getString(error.description),
-                Snackbar.LENGTH_LONG).show()
-
+        Snackbar.make(
+            activity.findViewById(R.id.container),
+            activity.getString(error.description),
+            Snackbar.LENGTH_LONG
+        ).show()
     }
 
     fun onViewRecycled() {

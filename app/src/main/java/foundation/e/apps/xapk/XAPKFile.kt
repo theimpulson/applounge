@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
 import foundation.e.apps.MainActivity.Companion.mActivity
 import foundation.e.apps.application.model.InstallerInterface
@@ -23,11 +23,10 @@ import java.io.File
 
 class XAPKFile(x: File, callback: InstallerInterface) {
 
-    init{
-        val fileName =getSingleXApkAssetInfo(x)
-        fileName?.xApkInfo?.let { it1 -> ViewUtils.installXApk(mActivity, it1,callback) }
+    init {
+        val fileName = getSingleXApkAssetInfo(x)
+        fileName?.xApkInfo?.let { it1 -> ViewUtils.installXApk(mActivity, it1, callback) }
     }
-
 
     fun getSingleXApkAssetInfo(xApkFile: File): ApkAssetBean? {
         var apkAssetBean: ApkAssetBean? = null

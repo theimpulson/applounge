@@ -42,7 +42,6 @@ class ListPwasRequest(private val category: String, private val page: Int, priva
             val result = reader.readValue<ListPwasResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result)
-
         } catch (e: Exception) {
             callback.invoke(Error.findError(e), null)
         }

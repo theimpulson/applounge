@@ -34,7 +34,6 @@ package foundation.e.apps.api
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import android.content.Context
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -57,7 +56,7 @@ class AllAppsSearchRequest(private val keyword: String, private val page: Int, p
 
     fun request(callback: (Error?, SearchResult?) -> Unit) {
         try {
-            var appType =mActivity.showApplicationTypePreference()
+            var appType = mActivity.showApplicationTypePreference()
             val url = Constants.BASE_URL + "apps?action=search&type=$appType&source=$appType&keyword=${URLEncoder.encode(keyword, "utf-8")}&page=$page&nres=$resultsPerPage"
             val urlConnection = Common.createConnection(url, Constants.REQUEST_METHOD_GET)
             val result = reader.readValue<SearchResult>(urlConnection.inputStream)
@@ -76,6 +75,3 @@ class AllAppsSearchRequest(private val keyword: String, private val page: Int, p
         }
     }
 }
-
-
-

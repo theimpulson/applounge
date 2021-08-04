@@ -38,17 +38,18 @@ class BannerApplicationLoader(private val apps: ArrayList<Application>, private 
         val bannerApplications = ArrayList<BannerApplication>()
 
 //      Show App logo if "Show only open Source apps"  or "Show pwa apps " condition is checked
-        if(apps.isEmpty()){
-            val icon = BitmapFactory.decodeResource(mActivity.getResources(),
-                R.mipmap.ic_launcher2)
-                bannerApplications.add(BannerApplication(null, icon))
-        }
-        else{
+        if (apps.isEmpty()) {
+            val icon = BitmapFactory.decodeResource(
+                mActivity.getResources(),
+                R.mipmap.ic_launcher2
+            )
+            bannerApplications.add(BannerApplication(null, icon))
+        } else {
             apps.forEach { application ->
                 if (application.basicData!!.imagesUri.isNotEmpty()) {
                     val image = Array(1) { application.basicData!!.imagesUri[0] }
                     ImagesLoader(image).loadImages().forEach {
-                    bannerApplications.add(BannerApplication(application, it))
+                        bannerApplications.add(BannerApplication(application, it))
                     }
                 } else {
                     application.decrementUses()
@@ -57,5 +58,4 @@ class BannerApplicationLoader(private val apps: ArrayList<Application>, private 
         }
         return bannerApplications
     }
-
 }

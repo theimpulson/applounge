@@ -28,7 +28,7 @@ import foundation.e.apps.updates.model.UpdatesWorker
 import foundation.e.apps.utils.Constants
 import java.util.concurrent.TimeUnit
 
-class UpdatesManager: BroadcastReceiver() {
+class UpdatesManager : BroadcastReceiver() {
     private val TAG = "UpdatesManager"
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -37,7 +37,8 @@ class UpdatesManager: BroadcastReceiver() {
             val interval =
                 preferences.getString(
                     context.getString(R.string.pref_update_interval_key),
-                    context.getString(R.string.preference_update_interval_default))!!
+                    context.getString(R.string.preference_update_interval_default)
+                )!!
                     .toLong()
             enqueueWork(context, interval, ExistingPeriodicWorkPolicy.KEEP)
         }
@@ -52,15 +53,18 @@ class UpdatesManager: BroadcastReceiver() {
         return PeriodicWorkRequest.Builder(
             UpdatesWorker::class.java,
             interval,
-            TimeUnit.HOURS).apply {
+            TimeUnit.HOURS
+        ).apply {
             setConstraints(getWorkerConstraints())
         }.build()
     }
 
     fun enqueueWork(context: Context, interval: Long, existingPeriodicWorkPolicy: ExistingPeriodicWorkPolicy) {
         Log.i(TAG, "UpdatesWorker interval: $interval hours")
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(Constants.UPDATES_WORK_NAME,
-                existingPeriodicWorkPolicy, getPeriodicWorkRequest(interval))
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            Constants.UPDATES_WORK_NAME,
+            existingPeriodicWorkPolicy, getPeriodicWorkRequest(interval)
+        )
         Log.i(TAG, "UpdatesWorker started")
     }
 }

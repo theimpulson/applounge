@@ -51,8 +51,9 @@ class ApplicationInfo(private val packageName: String) {
         } else {
 
             if (lastVersionNumber.isBlank() ||
-                    !lastVersionNumber.contains("(") ||
-                    !lastVersionNumber.contains(")")) {
+                !lastVersionNumber.contains("(") ||
+                !lastVersionNumber.contains(")")
+            ) {
                 return true
             }
             if (!Common.isSystemApp(context.packageManager, packageName)) {
@@ -61,8 +62,8 @@ class ApplicationInfo(private val packageName: String) {
                     val matcher = pattern.matcher(lastVersionNumber)
                     matcher.find()
                     val updateVersionCode = matcher.group()
-                            .replace("(", "")
-                            .replace(")", "")
+                        .replace("(", "")
+                        .replace(")", "")
                     return updateVersionCode.toLong() <= PackageInfoCompat.getLongVersionCode(packageInfo)
                 } catch (exception: Exception) {
                 }
@@ -89,8 +90,10 @@ class ApplicationInfo(private val packageName: String) {
 
     fun getApkFile(context: Context, data: BasicData): File {
 
-        return File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
-                getApkFilename(data))
+        return File(
+            context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+            getApkFilename(data)
+        )
     }
 
     fun getxApkFilename(basicData: BasicData): String {
@@ -99,8 +102,10 @@ class ApplicationInfo(private val packageName: String) {
 
     fun getxApkFile(context: Context, data: BasicData): File {
 
-        return File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
-                getxApkFilename(data))
+        return File(
+            context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+            getxApkFilename(data)
+        )
     }
 
     fun launch(context: Context) {

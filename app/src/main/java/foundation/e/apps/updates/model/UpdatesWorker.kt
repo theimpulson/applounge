@@ -35,8 +35,9 @@ import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
 
-class UpdatesWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params),
-        UpdatesWorkerInterface {
+class UpdatesWorker(context: Context, params: WorkerParameters) :
+    CoroutineWorker(context, params),
+    UpdatesWorkerInterface {
     private val TAG = "UpdatesWorker"
     private val blocker = Object()
     private var notifyAvailable = true
@@ -60,20 +61,36 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : CoroutineWorke
     private fun loadPreferences() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         notifyAvailable =
-                preferences.getBoolean(applicationContext.getString(
-                        R.string.pref_update_notify_key), true)
+            preferences.getBoolean(
+                applicationContext.getString(
+                    R.string.pref_update_notify_key
+                ),
+                true
+            )
         installAutomatically =
-                preferences.getBoolean(applicationContext.getString(
-                        R.string.pref_update_install_automatically_key), true)
+            preferences.getBoolean(
+                applicationContext.getString(
+                    R.string.pref_update_install_automatically_key
+                ),
+                true
+            )
         wifiOnly =
-                preferences.getBoolean(applicationContext.getString(
-                        R.string.pref_update_wifi_only_key), true)
+            preferences.getBoolean(
+                applicationContext.getString(
+                    R.string.pref_update_wifi_only_key
+                ),
+                true
+            )
     }
 
     private fun loadOutdatedApplications(applicationManager: ApplicationManager) {
-        OutdatedApplicationsFinder(applicationContext.packageManager, this,
-                applicationManager).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                applicationContext)
+        OutdatedApplicationsFinder(
+            applicationContext.packageManager, this,
+            applicationManager
+        ).executeOnExecutor(
+            AsyncTask.THREAD_POOL_EXECUTOR,
+            applicationContext
+        )
         synchronized(blocker) {
             blocker.wait()
         }
@@ -83,8 +100,10 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : CoroutineWorke
         Log.i(TAG, "${applications.size} app updates found")
         if (applications.size > 0) {
             loadPreferences()
-            applicationContext.openFileOutput(Constants.OUTDATED_APPLICATIONS_FILENAME,
-                    Context.MODE_PRIVATE).use {
+            applicationContext.openFileOutput(
+                Constants.OUTDATED_APPLICATIONS_FILENAME,
+                Context.MODE_PRIVATE
+            ).use {
                 applications.forEach { application ->
                     it.write((application.basicData!!.packageName + "\n").toByteArray())
                 }
@@ -94,11 +113,12 @@ class UpdatesWorker(context: Context, params: WorkerParameters) : CoroutineWorke
             val isConnectedToUnmeteredNetwork = isConnectedToUnmeteredNetwork(applicationContext)
             if (notifyAvailable) {
                 UpdatesNotifier().showNotification(
-                        applicationContext,
-                        applications.size,
-                        installAutomatically,
-                        wifiOnly,
-                        isConnectedToUnmeteredNetwork)
+                    applicationContext,
+                    applications.size,
+                    installAutomatically,
+                    wifiOnly,
+                    isConnectedToUnmeteredNetwork
+                )
             }
             if (installAutomatically &&
                 applicationContext.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED

@@ -29,10 +29,8 @@ import foundation.e.apps.MainActivity
 import foundation.e.apps.R
 import foundation.e.apps.updates.UpdatesManager
 
-
 class SettingsFragment : PreferenceFragmentCompat() {
     private var oldCheckedPreference: RadioButtonPreference? = null
-
 
     @SuppressLint("RestrictedApi")
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -41,7 +39,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // Handle update check interval changes
         val updateCheckInterval =
-                preferenceManager.findPreference<Preference>(getString(R.string.pref_update_interval_key)) as ListPreference
+            preferenceManager.findPreference<Preference>(getString(R.string.pref_update_interval_key)) as ListPreference
         updateCheckInterval.setOnPreferenceChangeListener { _, newValue ->
             context?.let { UpdatesManager().enqueueWork(it, newValue.toString().toLong(), ExistingPeriodicWorkPolicy.REPLACE) }
             true
@@ -59,18 +57,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // Launch AppRequestActivity when "Request app" preference is clicked
         val requestApp =
-                preferenceManager.findPreference<Preference>(getString(R.string.pref_apps_request_app_key))
-                        as Preference
+            preferenceManager.findPreference<Preference>(getString(R.string.pref_apps_request_app_key))
+                as Preference
         requestApp.setOnPreferenceClickListener { _ ->
             startActivity(Intent(context, AppRequestActivity::class.java))
             true
         }
 
-        //Show all apps when checked
+        // Show all apps when checked
         val x = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.Show_all_apps)) as RadioButtonPreference
-        //Show only open-source apps when checked
+        // Show only open-source apps when checked
         val y = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.show_only_open_source_apps_key)) as RadioButtonPreference
-        //Show only pwas when checked
+        // Show only pwas when checked
         val z = preferenceManager.findPreference<RadioButtonPreference>(getString(R.string.show_only_pwa_apps_key)) as RadioButtonPreference
 
         x.setOnPreferenceChangeListener { _, _ ->
@@ -98,9 +96,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun backToMainActivity() {
         Intent(context, MainActivity::class.java).also {
             activity?.finish()
-            activity?.overridePendingTransition(0, 0);
+            activity?.overridePendingTransition(0, 0)
             startActivity(it)
-            activity?.overridePendingTransition(0, 0);
+            activity?.overridePendingTransition(0, 0)
         }
     }
 }

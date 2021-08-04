@@ -23,9 +23,7 @@ import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
 import java.util.*
 
-
 class SystemAppExistsRequest(private val keyword: String) {
-
 
     fun request(callback: (Error?, ArrayList<String?>) -> Unit) {
         try {
@@ -41,5 +39,4 @@ class SystemAppExistsRequest(private val keyword: String) {
             callback.invoke(Error.findError(e), ArrayList())
         }
     }
-
 }

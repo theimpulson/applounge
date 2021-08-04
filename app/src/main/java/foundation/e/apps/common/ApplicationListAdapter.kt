@@ -27,15 +27,14 @@ import foundation.e.apps.databinding.ApplicationListItemBinding
 
 class ApplicationListAdapter(private val activity: Activity, private val applicationList: List<Application>, accentColorOS: Int) : RecyclerView.Adapter<ApplicationViewHolder>() {
 
-
-    var accentColorOS=accentColorOS;
+    var accentColorOS = accentColorOS
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ApplicationViewHolder {
         val listItemContainer = ApplicationListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ApplicationViewHolder(activity, listItemContainer, accentColorOS)
     }
 
     override fun onBindViewHolder(holder: ApplicationViewHolder, position: Int) {
-        holder.createApplicationView(applicationList[position] )
+        holder.createApplicationView(applicationList[position])
     }
 
     override fun getItemCount() = applicationList.size

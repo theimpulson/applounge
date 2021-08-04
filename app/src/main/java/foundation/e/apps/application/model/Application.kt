@@ -24,7 +24,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import foundation.e.apps.MainActivity.Companion.mActivity
-import foundation.e.apps.XAPK.XAPKFile
 import foundation.e.apps.api.AppDetailRequest
 import foundation.e.apps.api.AppDownloadedRequest
 import foundation.e.apps.api.PackageNameSearchRequest
@@ -34,11 +33,11 @@ import foundation.e.apps.application.model.release.ReleaseData
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.pwa.PwaInstaller
 import foundation.e.apps.utils.*
+import foundation.e.apps.xapk.XAPKFile
 import java.util.concurrent.atomic.AtomicInteger
 
 class Application(val packageName: String, private val applicationManager: ApplicationManager) :
-        DownloaderInterface, InstallerInterface {
-
+    DownloaderInterface, InstallerInterface {
 
     private val uses = AtomicInteger(0)
     private val info = ApplicationInfo(packageName)
@@ -49,7 +48,6 @@ class Application(val packageName: String, private val applicationManager: Appli
     var pwabasicdata: PwasBasicData? = null
     var pwaFullData: PwaFullData? = null
     var searchAppsBasicData: SearchAppsBasicData? = null
-
 
     fun addListener(listener: ApplicationStateListener) {
         stateManager.addListener(listener)
@@ -95,27 +93,28 @@ class Application(val packageName: String, private val applicationManager: Appli
     fun pwaInstall(context: Context) {
         var error: Error?
 
-        Thread(Runnable {
-            error = assertFullData(context)
+        Thread(
+            Runnable {
+                error = assertFullData(context)
 
-            mActivity.runOnUiThread(Runnable {
-                run {
+                mActivity.runOnUiThread(
+                    Runnable {
+                        run {
 
-                    if (error == null) {
-                        val intent = Intent(context, PwaInstaller::class.java)
-                        intent.putExtra("NAME", pwaFullData!!.name)
-                        intent.putExtra("URL", pwaFullData!!.url)
-                        context.startActivity(intent)
-                    } else {
-                        stateManager.notifyError(error!!)
+                            if (error == null) {
+                                val intent = Intent(context, PwaInstaller::class.java)
+                                intent.putExtra("NAME", pwaFullData!!.name)
+                                intent.putExtra("URL", pwaFullData!!.url)
+                                context.startActivity(intent)
+                            } else {
+                                stateManager.notifyError(error!!)
+                            }
+                        }
                     }
-                }
-            })
-
-        }).start()
-
+                )
+            }
+        ).start()
     }
-
 
     @Synchronized
     fun buttonClicked(context: Context, activity: Activity?) {
@@ -148,9 +147,12 @@ class Application(val packageName: String, private val applicationManager: Appli
 
     private fun canWriteStorage(activity: Activity): Boolean {
         return if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            activity.requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                                        Constants.STORAGE_PERMISSION_REQUEST_CODE)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            activity.requestPermissions(
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                Constants.STORAGE_PERMISSION_REQUEST_CODE
+            )
             false
         } else {
             true
@@ -204,14 +206,16 @@ class Application(val packageName: String, private val applicationManager: Appli
             if (basicData?.packageName == Constants.MICROG_PACKAGE) {
                 installSystemApp(context)
             } else {
-                Execute({
-                    AppDownloadedRequest(basicData!!.id,fullData!!.getLastVersion()?.apkArchitecture).request()
-                }, {})
-                if(info.isXapk(fullData!!)){
-                    isInstalling=true
-                    XAPKFile(info.getxApkFile(context,basicData!!),this)
-                }
-                else {
+                Execute(
+                    {
+                        AppDownloadedRequest(basicData!!.id, fullData!!.getLastVersion()?.apkArchitecture).request()
+                    },
+                    {}
+                )
+                if (info.isXapk(fullData!!)) {
+                    isInstalling = true
+                    XAPKFile(info.getxApkFile(context, basicData!!), this)
+                } else {
                     install(context)
                 }
             }
@@ -356,7 +360,6 @@ class Application(val packageName: String, private val applicationManager: Appli
         return error
     }
 
-
     private fun findPwaFullData(context: Context): Error? {
         if (pwabasicdata == null) {
             val error = findBasicData(context)
@@ -414,7 +417,6 @@ class Application(val packageName: String, private val applicationManager: Appli
         }
         return error
     }
-
 
     fun loadIcon(iconLoaderCallback: BasicData.IconLoaderCallback) {
         basicData?.loadIconAsync(this, iconLoaderCallback)

@@ -45,9 +45,12 @@ class ThreadedListeners(private val action: () -> Unit) {
 
     private fun execSynchronized() {
         synchronized(waiter) {
-            Execute({}, {
-                action()
-            })
+            Execute(
+                {},
+                {
+                    action()
+                }
+            )
             waiter.wait()
         }
     }

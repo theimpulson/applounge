@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
 import android.os.Handler
 import android.os.Looper
@@ -40,39 +40,41 @@ object XApkInstallUtils {
 
     @MainThread
     fun installXApk(xApkFile: File, callback: InstallerInterface, xApkInstallProgressCallback: XApkInstallProgressCallback?) {
-        Thread(Runnable {
-            var zipFile: ZipFile? = null
-            try {
-                handler.post {
-                    xApkInstallProgressCallback?.onStart()
-                }
-                parseXApkZipFile(xApkFile)?.apply {
-                    zipFile = this
-                    getXApkManifest(this)?.apply {
-                        if (this.xApkVersion < 2) {
-                            handler.post {
-                                xApkInstallProgressCallback?.onError(InstallError.LowerVersionError)
+        Thread(
+            Runnable {
+                var zipFile: ZipFile? = null
+                try {
+                    handler.post {
+                        xApkInstallProgressCallback?.onStart()
+                    }
+                    parseXApkZipFile(xApkFile)?.apply {
+                        zipFile = this
+                        getXApkManifest(this)?.apply {
+                            if (this.xApkVersion < 2) {
+                                handler.post {
+                                    xApkInstallProgressCallback?.onError(InstallError.LowerVersionError)
+                                }
+                                return@Runnable
                             }
-                            return@Runnable
-                        }
-                        if (this.useObbs()) {
-                            installXApkObb(zipFile!!, this, xApkInstallProgressCallback)
-                        }
-                        if (this.useSplitApks()) {
-                            installSplitApks(xApkFile, zipFile!!,callback, this, xApkInstallProgressCallback)
+                            if (this.useObbs()) {
+                                installXApkObb(zipFile!!, this, xApkInstallProgressCallback)
+                            }
+                            if (this.useSplitApks()) {
+                                installSplitApks(xApkFile, zipFile!!, callback, this, xApkInstallProgressCallback)
+                            }
                         }
                     }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                try {
-                    zipFile?.close()
                 } catch (e: Exception) {
                     e.printStackTrace()
+                } finally {
+                    try {
+                        zipFile?.close()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             }
-        }).start()
+        ).start()
     }
 
     interface XApkInstallProgressCallback {
@@ -104,9 +106,8 @@ object XApkInstallUtils {
         return xApkManifest
     }
 
-
     @WorkerThread
-         fun parseXApkZipFile(xApkFile: File): ZipFile? {
+    fun parseXApkZipFile(xApkFile: File): ZipFile? {
         var zipFile: ZipFile? = null
         if (FsUtils.exists(xApkFile)) {
             try {
@@ -118,10 +119,8 @@ object XApkInstallUtils {
         return zipFile
     }
 
-
-
     @WorkerThread
-     private fun getXApkManifest(zipFile: ZipFile): XApkManifest? {
+    private fun getXApkManifest(zipFile: ZipFile): XApkManifest? {
         var xApkManifest: XApkManifest? = null
         getZipFileInputStream(zipFile, "manifest.json")?.let {
             xApkManifest = JsonUtils.objectFromJson(InputStreamReader(it, "UTF-8"), XApkManifest::class.java)
@@ -129,8 +128,11 @@ object XApkInstallUtils {
         return xApkManifest
     }
 
-    private fun installXApkObb(zipFile: ZipFile, xApkManifest: XApkManifest,
-                               xApkInstallProgressCallback: XApkInstallProgressCallback?){
+    private fun installXApkObb(
+        zipFile: ZipFile,
+        xApkManifest: XApkManifest,
+        xApkInstallProgressCallback: XApkInstallProgressCallback?
+    ) {
         var obbSuccess = false
         if (xApkManifest.useObbs()) {
             val obbTotalSize = getXApkObbTotalSize(zipFile, xApkManifest)
@@ -154,18 +156,23 @@ object XApkInstallUtils {
                                 }
                             }
                         }
-                    })
+                    }
+                )
             }
-            if (!obbSuccess){
+            if (!obbSuccess) {
                 xApkInstallProgressCallback?.onError(InstallError.ObbError)
             }
         }
     }
-    private fun installSplitApks(xApkFile: File, zipFile: ZipFile, callback: InstallerInterface,
-                                 xApkManifest: XApkManifest,
-                                 xApkInstallProgressCallback: XApkInstallProgressCallback?){
-        val fileList= arrayListOf<String>()
-        if (xApkManifest.useSplitApks()){
+    private fun installSplitApks(
+        xApkFile: File,
+        zipFile: ZipFile,
+        callback: InstallerInterface,
+        xApkManifest: XApkManifest,
+        xApkInstallProgressCallback: XApkInstallProgressCallback?
+    ) {
+        val fileList = arrayListOf<String>()
+        if (xApkManifest.useSplitApks()) {
             val totalLength = getXApkTotalSize(zipFile, xApkManifest)
             var percent = 0
             var currentTotal = 0L
@@ -173,20 +180,23 @@ object XApkInstallUtils {
                 var singFileOffset = 0L
                 getZipFileInputStream(zipFile, it.fileName)?.apply {
                     val tempApk = File(AppFolder.getXApkInstallTempFolder(xApkManifest.packageName), it.fileName)
-                    val isApkSuccess = FileWriterUtils.writeFileFromIS(tempApk, this, object : FileWriterUtils.FileWriterProgressCallback {
-                        override fun onProgress(currentOffset: Long) {
-                            val updateOffset = currentOffset - singFileOffset
-                            singFileOffset = currentOffset
-                            currentTotal += updateOffset
-                            val percent1 = FormatUtils.formatPercent(currentTotal, totalLength)
-                            if (percent1 > percent) {
-                                percent = percent1
-                                handler.post {
-                                    xApkInstallProgressCallback?.onApkProgress(currentTotal,totalLength,percent)
+                    val isApkSuccess = FileWriterUtils.writeFileFromIS(
+                        tempApk, this,
+                        object : FileWriterUtils.FileWriterProgressCallback {
+                            override fun onProgress(currentOffset: Long) {
+                                val updateOffset = currentOffset - singFileOffset
+                                singFileOffset = currentOffset
+                                currentTotal += updateOffset
+                                val percent1 = FormatUtils.formatPercent(currentTotal, totalLength)
+                                if (percent1 > percent) {
+                                    percent = percent1
+                                    handler.post {
+                                        xApkInstallProgressCallback?.onApkProgress(currentTotal, totalLength, percent)
+                                    }
                                 }
                             }
                         }
-                    })
+                    )
                     if (isApkSuccess && FsUtils.exists(tempApk)) {
                         fileList.add(tempApk.absolutePath)
                     }
@@ -194,14 +204,17 @@ object XApkInstallUtils {
             }
             if (fileList.isNotEmpty()) {
                 handler.post {
-                    xApkInstallProgressCallback?.onCompedApks(ApksBean().apply {
-                        this.label = xApkManifest.label
-                        this.packageName = xApkManifest.packageName
-                        this.splitApkPaths = fileList
-                        this.outputFileDir = AppFolder.getXApkInstallTempFolder(packageName).absolutePath
-                        this.iconPath = xApkFile.absolutePath
-                        this.apkAssetType = ApkAssetType.XAPK
-                    },callback)
+                    xApkInstallProgressCallback?.onCompedApks(
+                        ApksBean().apply {
+                            this.label = xApkManifest.label
+                            this.packageName = xApkManifest.packageName
+                            this.splitApkPaths = fileList
+                            this.outputFileDir = AppFolder.getXApkInstallTempFolder(packageName).absolutePath
+                            this.iconPath = xApkFile.absolutePath
+                            this.apkAssetType = ApkAssetType.XAPK
+                        },
+                        callback
+                    )
                 }
             } else {
                 handler.post {
@@ -210,7 +223,6 @@ object XApkInstallUtils {
             }
         }
     }
-
 
     @WorkerThread
     private fun getZipFileInputStream(zipFile: ZipFile, inputName: String, isRaw: Boolean = false): InputStream? {
@@ -254,5 +266,3 @@ object XApkInstallUtils {
         }
     }
 }
-
-

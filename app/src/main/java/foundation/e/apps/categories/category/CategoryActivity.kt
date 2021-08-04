@@ -51,10 +51,9 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private val applicationManagerServiceConnection =
-            ApplicationManagerServiceConnection(this)
+        ApplicationManagerServiceConnection(this)
     private var applicationList = ArrayList<Application>()
     private var isLoadingMoreApplications = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityCategoryBinding.inflate(layoutInflater)
@@ -79,10 +78,9 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         val errorDescription = binding.errorLayout.errorDescription
         val errorResolve = binding.errorLayout.errorResolve
 
-        //set accent color to Error button (Retry )
+        // set accent color to Error button (Retry )
         errorResolve.setTextColor(Color.parseColor("#ffffff"))
         errorResolve.setBackgroundColor(accentColorOS)
-
 
         // Initialise UI elements
         recyclerView.visibility = View.GONE
@@ -100,7 +98,6 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
                     loadMoreContainer.visibility = View.GONE
                 }
             }
-
         })
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
@@ -116,34 +113,40 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         recyclerView.adapter = ApplicationListAdapter(this, applicationList, accentColorOS)
 
         // Bind to the list of applications in this activity's category
-        categoryViewModel.getApplications().observe(this, Observer {
-            if (it != null) {
-                applicationList.clear()
-                applicationList.addAll(it)
-                progressBar.visibility = View.GONE
-                recyclerView.adapter?.notifyDataSetChanged()
-                recyclerView.visibility = View.VISIBLE
-                loadMoreContainer.visibility = View.GONE
-                isLoadingMoreApplications = false
-            }
-        })
-
-        // Bind to the screen error
-        categoryViewModel.getScreenError().observe(this, Observer {
-            if (it != null) {
-                if (!isLoadingMoreApplications) {
-                    errorDescription.text = getString(it.description)
-                    errorContainer.visibility = View.VISIBLE
+        categoryViewModel.getApplications().observe(
+            this,
+            Observer {
+                if (it != null) {
+                    applicationList.clear()
+                    applicationList.addAll(it)
                     progressBar.visibility = View.GONE
-                    loadMoreContainer.visibility = View.GONE
-                } else {
+                    recyclerView.adapter?.notifyDataSetChanged()
+                    recyclerView.visibility = View.VISIBLE
                     loadMoreContainer.visibility = View.GONE
                     isLoadingMoreApplications = false
                 }
-            } else {
-                errorContainer.visibility = View.GONE
             }
-        })
+        )
+
+        // Bind to the screen error
+        categoryViewModel.getScreenError().observe(
+            this,
+            Observer {
+                if (it != null) {
+                    if (!isLoadingMoreApplications) {
+                        errorDescription.text = getString(it.description)
+                        errorContainer.visibility = View.VISIBLE
+                        progressBar.visibility = View.GONE
+                        loadMoreContainer.visibility = View.GONE
+                    } else {
+                        loadMoreContainer.visibility = View.GONE
+                        isLoadingMoreApplications = false
+                    }
+                } else {
+                    errorContainer.visibility = View.GONE
+                }
+            }
+        )
 
         applicationManagerServiceConnection.bindService(this)
     }
@@ -163,13 +166,19 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         return true
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE &&
-                grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            Snackbar.make(binding.container, R.string.error_storage_permission_denied,
-                    Snackbar.LENGTH_LONG).show()
+            grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED
+        ) {
+            Snackbar.make(
+                binding.container, R.string.error_storage_permission_denied,
+                Snackbar.LENGTH_LONG
+            ).show()
         }
     }
 

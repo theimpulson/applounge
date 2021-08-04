@@ -102,7 +102,6 @@ class ApplicationActivity :
         binding.goodBorder.visibility = View.GONE
         binding.neutralBorder.visibility = View.GONE
 
-
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -122,10 +121,7 @@ class ApplicationActivity :
         binding.appDownloadProgress.progressDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
         binding.appCategory.setTextColor(accentColorOS)
         binding.appExpandDescription.setTextColor(accentColorOS)
-
-
     }
-
 
     private fun initialiseElevation() {
         if (binding.scrollView.scrollY == 0) {
@@ -145,29 +141,34 @@ class ApplicationActivity :
     override fun onServiceBind(applicationManager: ApplicationManager) {
         application = applicationManager.findOrCreateApp(applicationPackageName)
         var error: Error? = null
-        Execute({
-                    error = application.assertFullData(this)
-                }, {
-                    if (error == null) {
+        Execute(
+            {
+                error = application.assertFullData(this)
+            },
+            {
+                if (error == null) {
 
-                        onApplicationInfoLoaded()
-                    } else {
-                        Snackbar.make(binding.container,
-                                      getString(error!!.description),
-                                      Snackbar.LENGTH_LONG).show()
+                    onApplicationInfoLoaded()
+                } else {
+                    Snackbar.make(
+                        binding.container,
+                        getString(error!!.description),
+                        Snackbar.LENGTH_LONG
+                    ).show()
 
-                        // Close activity once snackbar has hidden
-                        object : CountDownTimer(3500, 3500) {
-                            override fun onTick(p0: Long) {
-                                // Do nothing
-                            }
+                    // Close activity once snackbar has hidden
+                    object : CountDownTimer(3500, 3500) {
+                        override fun onTick(p0: Long) {
+                            // Do nothing
+                        }
 
-                            override fun onFinish() {
-                                finish()
-                            }
-                        }.start()
-                    }
-                })
+                        override fun onFinish() {
+                            finish()
+                        }
+                    }.start()
+                }
+            }
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -201,10 +202,10 @@ class ApplicationActivity :
 
     @SuppressLint("ResourceAsColor")
     private fun textColorChange(text: String): SpannableStringBuilder {
-        val builder = SpannableStringBuilder();
-        val redSpannable = SpannableString(text);
-        redSpannable.setSpan(ForegroundColorSpan(R.color.colorTextSecondary), 0, text.length, 0);
-        builder.append(redSpannable);
+        val builder = SpannableStringBuilder()
+        val redSpannable = SpannableString(text)
+        redSpannable.setSpan(ForegroundColorSpan(R.color.colorTextSecondary), 0, text.length, 0)
+        builder.append(redSpannable)
         return builder
     }
 
@@ -219,14 +220,12 @@ class ApplicationActivity :
             // Load the app icon
             application.loadIcon(this)
 
-
             // Set the app title
             if (basicData.name.isNotEmpty()) {
                 binding.appTitle.text = basicData.name
             } else {
                 binding.appTitle.visibility = View.GONE
             }
-
 
             // Set the app author
             if (basicData.author.isNotEmpty()) {
@@ -239,9 +238,11 @@ class ApplicationActivity :
             if (fullData.category.getTitle().isNotEmpty()) {
                 binding.appCategory.text = fullData.category.getTitle()
                 binding.appCategory.setOnClickListener {
-                    startActivity(Intent(this, CategoryActivity::class.java).apply {
-                        putExtra(Constants.CATEGORY_KEY, fullData.category)
-                    })
+                    startActivity(
+                        Intent(this, CategoryActivity::class.java).apply {
+                            putExtra(Constants.CATEGORY_KEY, fullData.category)
+                        }
+                    )
                 }
             } else {
                 binding.appCategory.visibility = View.GONE
@@ -277,12 +278,11 @@ class ApplicationActivity :
                 alertDialog.setIcon(R.drawable.ic_app_rating)
                 alertDialog.setTitle(R.string.app_rating)
                 alertDialog.setMessage(getString(R.string.app_rating_description))
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok))
-                { _, _ ->
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok)) { _, _ ->
                     alertDialog.dismiss()
                 }
                 alertDialog.show()
-                var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
                 b.setTextColor(Color.parseColor("#0088ED"))
             }
 
@@ -291,7 +291,7 @@ class ApplicationActivity :
                 showImages(it)
             }
 
-            //Set the app licence
+            // Set the app licence
             if (fullData.licence.isNotEmpty()) {
                 binding.appLicence.text = fullData.licence
             } else {
@@ -308,7 +308,8 @@ class ApplicationActivity :
 
                 // Set the app privacy rating
                 if (fullData.getLastVersion()!!.privacyRating != null &&
-                    fullData.getLastVersion()!!.privacyRating != -1) {
+                    fullData.getLastVersion()!!.privacyRating != -1
+                ) {
                     binding.appPrivacyScore.text = fullData.getLastVersion()!!.privacyRating.toString() + "/10"
                     setPrivacyRatingBorder(fullData.getLastVersion()!!.privacyRating!!)
                 } else {
@@ -317,7 +318,7 @@ class ApplicationActivity :
                 }
                 binding.appPrivacyContainer.setOnClickListener {
                     val message = layoutInflater.inflate(R.layout.privacy_dialog_message, null) as
-                            TextView
+                        TextView
 
                     @Suppress("DEPRECATION")
                     message.setText((Html.fromHtml("Score out of 10. Computed using <a href=\'https://exodus-privacy.eu.org\'>Exodus Privacy analyses</a>, based on permissions and trackers used in the app")))
@@ -329,12 +330,11 @@ class ApplicationActivity :
                     alertDialog.setIcon(R.drawable.ic_dialog_info)
                     alertDialog.setTitle(R.string.app_privacy_score)
                     alertDialog.setView(message)
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
-                    { _, _ ->
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok)) { _, _ ->
                         alertDialog.dismiss()
                     }
                     alertDialog.show()
-                    var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
                     b.setTextColor(Color.parseColor("#0088ED"))
                 }
 
@@ -377,12 +377,11 @@ class ApplicationActivity :
                     alertDialog.setIcon(R.drawable.ic_dialog_info)
                     alertDialog.setTitle(R.string.app_privacy_score)
                     alertDialog.setMessage(getString(R.string.app_privacy_description))
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
-                    { _, _ ->
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok)) { _, _ ->
                         alertDialog.dismiss()
                     }
                     alertDialog.show()
-                    var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
                     b.setTextColor(Color.parseColor("#0088ED"))
                 }
 
@@ -403,7 +402,8 @@ class ApplicationActivity :
                 val alertDialog = AlertDialog.Builder(this).create()
                 alertDialog.setTitle(R.string.app_permissions_title)
                 if (fullData.getLastVersion() != null &&
-                    fullData.getLastVersion()!!.exodusPermissions != null) {
+                    fullData.getLastVersion()!!.exodusPermissions != null
+                ) {
                     if (fullData.getLastVersion()!!.exodusPermissions!!.isNotEmpty()) {
                         var rawMessage = ""
                         var index = 0
@@ -422,12 +422,11 @@ class ApplicationActivity :
                     message.text = getString(R.string.not_available_full)
                 }
                 alertDialog.setView(layout)
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
-                { _, _ ->
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok)) { _, _ ->
                     alertDialog.dismiss()
                 }
                 alertDialog.show()
-                var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
                 b.setTextColor(Color.parseColor("#0088ED"))
                 layout.findViewById<TextView>(R.id.privacy_message).movementMethod = LinkMovementMethod.getInstance()
             }
@@ -447,7 +446,8 @@ class ApplicationActivity :
 
                 alertDialog.setTitle(R.string.app_trackers_title)
                 if (fullData.getLastVersion() != null &&
-                    fullData.getLastVersion()!!.exodusTrackers != null) {
+                    fullData.getLastVersion()!!.exodusTrackers != null
+                ) {
                     if (fullData.getLastVersion()!!.exodusTrackers!!.isNotEmpty()) {
                         var rawMessage = ""
                         var index = 0
@@ -466,12 +466,11 @@ class ApplicationActivity :
                     message.text = getString(R.string.not_available_full)
                 }
                 alertDialog.setView(layout)
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok))
-                { _, _ ->
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok)) { _, _ ->
                     alertDialog.dismiss()
                 }
                 alertDialog.show()
-                var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
                 b.setTextColor(Color.parseColor("#0088ED"))
                 linkMessage.movementMethod = LinkMovementMethod.getInstance()
             }
@@ -486,7 +485,6 @@ class ApplicationActivity :
         } else {
             onPwaApplicationLoaded()
         }
-
     }
 
     @SuppressLint("NewApi")
@@ -496,10 +494,8 @@ class ApplicationActivity :
         binding.pwaSympol.visibility = View.VISIBLE
         binding.Ratings.visibility = View.GONE
 
-
         val pwasBasicData = application.pwabasicdata
         val pwaFullData = application.pwaFullData
-
 
         // Set the app title
         if (pwasBasicData!!.name.isNotEmpty()) {
@@ -520,9 +516,11 @@ class ApplicationActivity :
         if (pwaFullData.category.getTitle().isNotEmpty()) {
             binding.appCategory.text = pwaFullData.category.getTitle()
             binding.appCategory.setOnClickListener {
-                startActivity(Intent(this, CategoryActivity::class.java).apply {
-                    putExtra(Constants.CATEGORY_KEY, pwaFullData.category)
-                })
+                startActivity(
+                    Intent(this, CategoryActivity::class.java).apply {
+                        putExtra(Constants.CATEGORY_KEY, pwaFullData.category)
+                    }
+                )
             }
         } else {
             binding.appCategory.visibility = View.GONE
@@ -540,18 +538,16 @@ class ApplicationActivity :
             showImages(it)
         }
 
-
         // Handle clicks on app permissions
         binding.exodusInfoContainer.visibility = View.GONE
 
-        //app_information details
+        // app_information details
         binding.appInformationTitle.visibility = View.GONE
         binding.appVersionLayout.visibility = View.GONE
         binding.appUpdatedOnLayout.visibility = View.GONE
         binding.appRequires.visibility = View.GONE
         binding.appLicenceLayout.visibility = View.GONE
-        binding.appPackageNameLayout.visibility =View.GONE
-
+        binding.appPackageNameLayout.visibility = View.GONE
 
         application.addListener(this)
         stateChanged(application.state)
@@ -587,11 +583,12 @@ class ApplicationActivity :
     private fun onInstallButtonClick(fullData: FullData) {
         // Make sure the APK is available for download
 
-
         if (fullData.getLastVersion() == null) {
-            Snackbar.make(binding.container,
-                          getString(Error.APK_UNAVAILABLE.description),
-                          Snackbar.LENGTH_LONG).show()
+            Snackbar.make(
+                binding.container,
+                getString(Error.APK_UNAVAILABLE.description),
+                Snackbar.LENGTH_LONG
+            ).show()
             return
         }
 
@@ -620,41 +617,46 @@ class ApplicationActivity :
     }
 
     override fun anErrorHasOccurred(error: Error) {
-        Snackbar.make(binding.container,
-                      getString(error.description),
-                      Snackbar.LENGTH_LONG).show()
+        Snackbar.make(
+            binding.container,
+            getString(error.description),
+            Snackbar.LENGTH_LONG
+        ).show()
     }
 
     override fun stateChanged(state: State) {
-        Execute({}, {
-            binding.installButtonLayout.appInstall.text = resources.getString(state.installButtonTextId)
-            when (state) {
-                State.INSTALLED -> {
-                    binding.installButtonLayout.appInstall.isEnabled =
-                        Common.appHasLaunchActivity(this, application.packageName)
-                    binding.appSize.visibility = View.VISIBLE
-                    binding.appDownloadContainer.visibility = View.GONE
-                }
-                State.DOWNLOADING -> {
-                    binding.installButtonLayout.appInstall.isEnabled = true
-                    binding.appSize.visibility = View.GONE
-                    binding.appDownloadMb.text = getString(R.string.state_installing)
-                    binding.appDownloadPercentage.text = ""
-                    binding.appDownloadProgress.progress = 0
-                    binding.appDownloadContainer.visibility = View.VISIBLE
-                }
-                State.INSTALLING -> {
-                    binding.installButtonLayout.appInstall.isEnabled = false
-                    binding.appSize.visibility = View.VISIBLE
-                    binding.appDownloadContainer.visibility = View.GONE
-                }
-                else -> {
-                    binding.installButtonLayout.appInstall.isEnabled = true
-                    binding.appSize.visibility = View.VISIBLE
-                    binding.appDownloadContainer.visibility = View.GONE
+        Execute(
+            {},
+            {
+                binding.installButtonLayout.appInstall.text = resources.getString(state.installButtonTextId)
+                when (state) {
+                    State.INSTALLED -> {
+                        binding.installButtonLayout.appInstall.isEnabled =
+                            Common.appHasLaunchActivity(this, application.packageName)
+                        binding.appSize.visibility = View.VISIBLE
+                        binding.appDownloadContainer.visibility = View.GONE
+                    }
+                    State.DOWNLOADING -> {
+                        binding.installButtonLayout.appInstall.isEnabled = true
+                        binding.appSize.visibility = View.GONE
+                        binding.appDownloadMb.text = getString(R.string.state_installing)
+                        binding.appDownloadPercentage.text = ""
+                        binding.appDownloadProgress.progress = 0
+                        binding.appDownloadContainer.visibility = View.VISIBLE
+                    }
+                    State.INSTALLING -> {
+                        binding.installButtonLayout.appInstall.isEnabled = false
+                        binding.appSize.visibility = View.VISIBLE
+                        binding.appDownloadContainer.visibility = View.GONE
+                    }
+                    else -> {
+                        binding.installButtonLayout.appInstall.isEnabled = true
+                        binding.appSize.visibility = View.VISIBLE
+                        binding.appDownloadContainer.visibility = View.GONE
+                    }
                 }
             }
-        })
+        )
     }
 
     private fun setRatingBorder(rating: Float?) {
@@ -728,8 +730,10 @@ class ApplicationActivity :
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 application.buttonClicked(this, this)
             } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Snackbar.make(binding.container, R.string.error_storage_permission_denied,
-                              Snackbar.LENGTH_LONG).show()
+                Snackbar.make(
+                    binding.container, R.string.error_storage_permission_denied,
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
         }
     }

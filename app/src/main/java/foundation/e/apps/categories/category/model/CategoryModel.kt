@@ -48,38 +48,43 @@ class CategoryModel : CategoryModelInterface {
         var apps: ArrayList<Application>? = null
         if (Common.isNetworkAvailable(context)) {
             if (category == "system_apps") {
-                Execute({
-                    apps = loadApplicationsSynced(context)
-                }, {
-                    if (error == null && apps != null) {
-                        val result = ArrayList<Application>()
-                        result.addAll(apps!!)
-                        if (apps!!.size != 0) {
-                            categoryApplicationsList.value = result
+                Execute(
+                    {
+                        apps = loadApplicationsSynced(context)
+                    },
+                    {
+                        if (error == null && apps != null) {
+                            val result = ArrayList<Application>()
+                            result.addAll(apps!!)
+                            if (apps!!.size != 0) {
+                                categoryApplicationsList.value = result
+                            }
+                        } else {
+                            screenError.value = error
                         }
-                    } else {
-                        screenError.value = error
                     }
-                })
-
+                )
             } else {
 
-                Execute({
-                    apps = loadApplicationsSynced(context)
-                }, {
-                    if (error == null && apps != null) {
-                        val result = ArrayList<Application>()
-                        categoryApplicationsList.value?.let {
-                            result.addAll(it)
+                Execute(
+                    {
+                        apps = loadApplicationsSynced(context)
+                    },
+                    {
+                        if (error == null && apps != null) {
+                            val result = ArrayList<Application>()
+                            categoryApplicationsList.value?.let {
+                                result.addAll(it)
+                            }
+                            result.addAll(apps!!)
+                            if (apps!!.size != 0) {
+                                categoryApplicationsList.value = result
+                            }
+                        } else {
+                            screenError.value = error
                         }
-                        result.addAll(apps!!)
-                        if (apps!!.size != 0) {
-                            categoryApplicationsList.value = result
-                        }
-                    } else {
-                        screenError.value = error
                     }
-                })
+                )
                 page++
             }
         } else {
@@ -94,37 +99,36 @@ class CategoryModel : CategoryModelInterface {
         val appType = MainActivity.mActivity.showApplicationTypePreference()
         if (category == "system_apps") {
             GitlabDataRequest()
-                    .requestGmsCoreRelease { applicationError, listGitlabData ->
+                .requestGmsCoreRelease { applicationError, listGitlabData ->
 
-                        when (applicationError) {
-                            null -> {
-                                gitlabData = listGitlabData!!
-                            }
-                            else -> {
-                                error = applicationError
-                            }
+                    when (applicationError) {
+                        null -> {
+                            gitlabData = listGitlabData!!
+                        }
+                        else -> {
+                            error = applicationError
                         }
                     }
+                }
             return if (gitlabData != null) {
                 gitlabData!!.getApplications(applicationManager, context)
             } else {
                 null
             }
-
         }
 
         if (appType == "pwa") {
             ListPwasRequest(category, page, Constants.RESULTS_PER_PAGE)
-                    .request { applicationError, listPwasResult ->
-                        when (applicationError) {
-                            null -> {
-                                listPwas = listPwasResult!!
-                            }
-                            else -> {
-                                error = applicationError
-                            }
+                .request { applicationError, listPwasResult ->
+                    when (applicationError) {
+                        null -> {
+                            listPwas = listPwasResult!!
+                        }
+                        else -> {
+                            error = applicationError
                         }
                     }
+                }
             return if (listPwas != null) {
                 listPwas!!.getApplications(applicationManager, context)
             } else {
@@ -132,23 +136,20 @@ class CategoryModel : CategoryModelInterface {
             }
         }
         ListApplicationsRequest(category, page, Constants.RESULTS_PER_PAGE)
-                .request { applicationError, listApplicationsResult ->
-                    when (applicationError) {
-                        null -> {
-                            listApplications = listApplicationsResult!!
-                        }
-                        else -> {
-                            error = applicationError
-                        }
+            .request { applicationError, listApplicationsResult ->
+                when (applicationError) {
+                    null -> {
+                        listApplications = listApplicationsResult!!
+                    }
+                    else -> {
+                        error = applicationError
                     }
                 }
+            }
         return if (listApplications != null) {
             listApplications!!.getApplications(applicationManager, context)
         } else {
             null
         }
-
     }
-
-
 }

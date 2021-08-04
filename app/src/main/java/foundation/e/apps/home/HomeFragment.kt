@@ -48,11 +48,11 @@ class HomeFragment : Fragment() {
     private lateinit var categoryList: LinearLayout
     private lateinit var progressBar: ProgressBar
     private var applicationManager: ApplicationManager? = null
-    var accentColorOS=0;
+    var accentColorOS = 0
 
     fun initialise(applicationManager: ApplicationManager, accentColorOS: Int) {
         this.applicationManager = applicationManager
-        this.accentColorOS=accentColorOS;
+        this.accentColorOS = accentColorOS
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -60,7 +60,6 @@ class HomeFragment : Fragment() {
 
         if (applicationManager == null) {
             return null
-
         }
 
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -93,42 +92,52 @@ class HomeFragment : Fragment() {
         }
 
         // Bind image carousel adapter to banner images in view model
-        homeViewModel.getBannerApplications().observe(viewLifecycleOwner, Observer {
-            if (homeViewModel.getBannerApplications().value!!.isNotEmpty()) {
-                imageCarousel.adapter = ImageCarouselAdapter(requireActivity(), homeViewModel.getBannerApplications().value!!)
-                imageCarousel.clipToPadding = false;
-                imageCarousel.setPadding(170, 10, 170, 10);
-                imageCarousel.pageMargin =50
-                imageCarousel.setCurrentItem(0, false)
-                imageCarousel.visibility = View.VISIBLE
-                // Automatically switch between images for one round
-                ImageCarouselSwitcher(homeViewModel.getBannerApplications().value!!.size, imageCarousel).start()
+        homeViewModel.getBannerApplications().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (homeViewModel.getBannerApplications().value!!.isNotEmpty()) {
+                    imageCarousel.adapter = ImageCarouselAdapter(requireActivity(), homeViewModel.getBannerApplications().value!!)
+                    imageCarousel.clipToPadding = false
+                    imageCarousel.setPadding(170, 10, 170, 10)
+                    imageCarousel.pageMargin = 50
+                    imageCarousel.setCurrentItem(0, false)
+                    imageCarousel.visibility = View.VISIBLE
+                    // Automatically switch between images for one round
+                    ImageCarouselSwitcher(homeViewModel.getBannerApplications().value!!.size, imageCarousel).start()
+                }
             }
-        })
+        )
 
         // Bind categories adapter to categories in view model
-        homeViewModel.getCategories().observe(viewLifecycleOwner, Observer {
-            if (homeViewModel.getCategories().value!!.isNotEmpty()) {
-                showCategories(it!!)
-                categoryList.visibility = View.VISIBLE
-                divider.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
+        homeViewModel.getCategories().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (homeViewModel.getCategories().value!!.isNotEmpty()) {
+                    showCategories(it!!)
+                    categoryList.visibility = View.VISIBLE
+                    divider.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                }
             }
-        })
+        )
 
         // Bind to the screen error
-        homeViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                errorDescription.text = requireActivity().getString(it.description)
-                errorContainer.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-            } else {
-                errorContainer.visibility = View.GONE
+        homeViewModel.getScreenError().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it != null) {
+                    errorDescription.text = requireActivity().getString(it.description)
+                    errorContainer.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                } else {
+                    errorContainer.visibility = View.GONE
+                }
             }
-        })
+        )
 
         if (homeViewModel.getBannerApplications().value!!.isEmpty() ||
-                homeViewModel.getCategories().value!!.isEmpty()) {
+            homeViewModel.getCategories().value!!.isEmpty()
+        ) {
             homeViewModel.loadCategories(requireContext())
         }
         return binding.root
@@ -175,7 +184,7 @@ class HomeFragment : Fragment() {
                 }
             }
             homeViewModel.getBannerApplications().value!!.forEach {
-                if(it.application!=null)
+                if (it.application != null)
                     it.application.decrementUses()
             }
         }

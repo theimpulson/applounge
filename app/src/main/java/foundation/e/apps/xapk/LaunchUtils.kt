@@ -15,32 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
-import com.google.gson.GsonBuilder
-import java.io.Reader
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import foundation.e.apps.application.model.InstallerInterface
 
-
-object JsonUtils {
-    val gson by lazy { GsonBuilder().excludeFieldsWithoutExposeAnnotation().create() }
-
-
-
-    fun <T> objectFromJson(json: Reader, classOfT: Class<T>): T? {
-        return try {
-            gson.fromJson(json, classOfT)
-        } catch (e: Exception) {
-            null
-        }
-
+object LaunchUtils {
+    fun startInstallSplitApksActivity(mActivity: Context, apksBean: ApksBean, callback: InstallerInterface) {
+        mActivity.startActivity(InstallSplitApksActivity.newInstanceIntent(mActivity, apksBean))
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed(
+            {
+                callback.onInstallationComplete(mActivity)
+            },
+            10000
+        )
     }
-
-
-
-
-
-
-
-
 }
-

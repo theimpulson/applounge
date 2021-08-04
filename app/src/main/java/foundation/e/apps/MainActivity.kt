@@ -17,8 +17,6 @@
 
 package foundation.e.apps
 
-
-
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
@@ -26,6 +24,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.ColorRes
@@ -37,7 +36,6 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.applicationmanager.ApplicationManagerServiceConnection
@@ -48,14 +46,15 @@ import foundation.e.apps.home.HomeFragment
 import foundation.e.apps.search.SearchFragment
 import foundation.e.apps.settings.SettingsFragment
 import foundation.e.apps.updates.UpdatesFragment
-import foundation.e.apps.updates.UpdatesManager
 import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.CURRENTLY_SELECTED_FRAGMENT_KEY
 import kotlin.properties.Delegates
 
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
-        ApplicationManagerServiceConnectionCallback {
+class MainActivity :
+    AppCompatActivity(),
+    BottomNavigationView.OnNavigationItemSelectedListener,
+    ApplicationManagerServiceConnectionCallback {
     private lateinit var binding: ActivityMainBinding
 
     private var currentFragmentId = 0
@@ -63,9 +62,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private val searchFragment = SearchFragment()
     private val updatesFragment = UpdatesFragment()
     private val applicationManagerServiceConnection =
-            ApplicationManagerServiceConnection(this)
+        ApplicationManagerServiceConnection(this)
     private val codeRequestPermissions = 9527
-    var doubleBackToExitPressedOnce = false;
+    var doubleBackToExitPressedOnce = false
     private var isReceiverRegistered = false
     private var accentColorOS by Delegates.notNull<Int>()
 
@@ -77,7 +76,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         private var instance: MainActivity? = null
 
         lateinit var mActivity: MainActivity
-        var sharedPreferences : SharedPreferences?=null
+        var sharedPreferences: SharedPreferences? = null
         val sharedPrefFile = "kotlinsharedpreference"
 
         /*
@@ -88,8 +87,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             return instance!!.applicationContext
         }
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -102,9 +99,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         mActivity = this
         disableCategoryIfOpenSource()
 
-
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener{
-            if (selectFragment(it.itemId,it)) {
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
+            if (selectFragment(it.itemId, it)) {
                 disableCategoryIfOpenSource()
                 currentFragmentId = it.itemId
                 return@setOnNavigationItemSelectedListener true
@@ -112,14 +108,14 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             return@setOnNavigationItemSelectedListener false
         }
 
-
         disableShiftingOfNabBarItems()
 
         Common.updateMicroGStatus(this)
 
         // Show the home fragment by default
         currentFragmentId = if (savedInstanceState != null &&
-                savedInstanceState.containsKey(CURRENTLY_SELECTED_FRAGMENT_KEY)) {
+            savedInstanceState.containsKey(CURRENTLY_SELECTED_FRAGMENT_KEY)
+        ) {
             savedInstanceState.getInt(CURRENTLY_SELECTED_FRAGMENT_KEY)
         } else if (intent.hasExtra(Constants.UPDATES_NOTIFICATION_CLICK_EXTRA)) {
             R.id.menu_updates
@@ -139,32 +135,38 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun openSearchFragment() {
-        if (intent.getBooleanExtra(Constants.OPEN_SEARCH,false)) {
+        if (intent.getBooleanExtra(Constants.OPEN_SEARCH, false)) {
             currentFragmentId = R.id.menu_search
             val bundle = Bundle()
-            bundle.putString(Constants.MICROG_QUERY,"microg")
-            searchFragment.arguments= bundle
+            bundle.putString(Constants.MICROG_QUERY, "microg")
+            searchFragment.arguments = bundle
         }
     }
 
-
     private fun bottom_navigation_view_color() {
         val iconsColorStates =
-                ColorStateList(arrayOf(intArrayOf(-android.R.attr.state_checked),
-                        intArrayOf(android.R.attr.state_checked)), intArrayOf(
-                        Color.parseColor("#C4CFD9"),
-                        accentColorOS
-        ))
+            ColorStateList(
+                arrayOf(
+                    intArrayOf(-android.R.attr.state_checked),
+                    intArrayOf(android.R.attr.state_checked)
+                ),
+                intArrayOf(
+                    Color.parseColor("#C4CFD9"),
+                    accentColorOS
+                )
+            )
 
-        val textColorStates = ColorStateList(arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)), intArrayOf(
+        val textColorStates = ColorStateList(
+            arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)),
+            intArrayOf(
                 Color.parseColor("#C4CFD9"),
                 accentColorOS
 
-        ))
+            )
+        )
 
         binding.bottomNavigationView.setItemIconTintList(iconsColorStates)
         binding.bottomNavigationView.setItemTextColor(textColorStates)
-
     }
 
     override fun onServiceBind(applicationManager: ApplicationManager) {
@@ -179,7 +181,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        if (selectFragment(item.itemId,item)) {
+        if (selectFragment(item.itemId, item)) {
             currentFragmentId = item.itemId
             return true
         }
@@ -205,7 +207,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         val normalDrawable = item.icon
         val wrapDrawable = DrawableCompat.wrap(normalDrawable)
 
-        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(context, color))//context.resources.getColor(color))
+        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(context, color)) // context.resources.getColor(color))
         item.icon = wrapDrawable
     }
 
@@ -226,7 +228,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.menu_search -> {
-                item?.setIcon(lineageos.platform.R.drawable.ic_search)
+                item?.setIcon(R.drawable.ic_search)
                 showFragment(searchFragment)
                 return true
             }
@@ -236,7 +238,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.menu_settings -> {
-                item?.setIcon(lineageos.platform.R.drawable.ic_settings)
+                item?.setIcon(R.drawable.ic_settings)
                 showFragment(SettingsFragment())
                 return true
             }
@@ -253,7 +255,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
             val filter = IntentFilter(Intent.ACTION_LOCALE_CHANGED)
             registerReceiver(mLangReceiver, filter)
-            isReceiverRegistered = true;
+            isReceiverRegistered = true
         }
         return mLangReceiver
     }
@@ -261,9 +263,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private fun showFragment(fragment: Fragment) {
         binding.bottomNavigationView.menu.findItem(currentFragmentId).isChecked = true
         supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.frame_layout, fragment)
-                .commitAllowingStateLoss();
+            .beginTransaction()
+            .replace(R.id.frame_layout, fragment)
+            .commitAllowingStateLoss()
     }
 
     @SuppressLint("RestrictedApi")
@@ -282,23 +284,34 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         for (i in 0 until menuView.childCount) {
             val itemView = menuView.getChildAt(i) as BottomNavigationItemView
-            itemView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);            itemView.setChecked(itemView.itemData.isChecked)
+            itemView.setLabelVisibilityMode(BottomNavigationView.LABEL_VISIBILITY_LABELED)
+            itemView.itemData?.isChecked?.let {
+                itemView.setChecked(
+                    it
+                )
+            }
         }
     }
 
-    private fun disableCategoryIfOpenSource(){
-        if(showApplicationTypePreference()=="open") {
+    private fun disableCategoryIfOpenSource() {
+        if (showApplicationTypePreference() == "open") {
             binding.bottomNavigationView.menu.removeItem(R.id.menu_categories)
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE &&
-                grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            Snackbar.make(binding.container, R.string.error_storage_permission_denied,
-                    Snackbar.LENGTH_LONG).show()
+            grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED
+        ) {
+            Snackbar.make(
+                binding.container, R.string.error_storage_permission_denied,
+                Snackbar.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -325,13 +338,16 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             return
         }
 
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, R.string.exit, Toast.LENGTH_SHORT).show();
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this, R.string.exit, Toast.LENGTH_SHORT).show()
 
-        Handler().postDelayed(Runnable() {
-            run {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000)
+        Handler(Looper.getMainLooper()).postDelayed(
+            Runnable() {
+                run {
+                    doubleBackToExitPressedOnce = false
+                }
+            },
+            2000
+        )
     }
 }

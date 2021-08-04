@@ -33,7 +33,7 @@ class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnec
     private lateinit var binding: ActivityScreenshotsBinding
 
     private val applicationManagerServiceConnection =
-            ApplicationManagerServiceConnection(this)
+        ApplicationManagerServiceConnection(this)
     private lateinit var applicationPackageName: String
     private lateinit var application: Application
     private lateinit var screenshotsCarousel: ViewPager
@@ -46,16 +46,16 @@ class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnec
         setContentView(binding.root)
 
         if (savedInstanceState != null &&
-                savedInstanceState.containsKey(last_selected_screenshot_key)) {
+            savedInstanceState.containsKey(last_selected_screenshot_key)
+        ) {
             lastSelectedScreenshotIndex = savedInstanceState.getInt(last_selected_screenshot_key)
-
         } else if (intent.hasExtra(SELECTED_APPLICATION_SCREENSHOT_KEY)) {
             lastSelectedScreenshotIndex =
-                    intent.getIntExtra(SELECTED_APPLICATION_SCREENSHOT_KEY, 0)
+                intent.getIntExtra(SELECTED_APPLICATION_SCREENSHOT_KEY, 0)
         }
 
         val applicationPackageName: String? =
-                intent.getStringExtra(Constants.APPLICATION_PACKAGE_NAME_KEY)
+            intent.getStringExtra(Constants.APPLICATION_PACKAGE_NAME_KEY)
         if (!applicationPackageName.isNullOrEmpty()) {
             this.applicationPackageName = applicationPackageName
             applicationManagerServiceConnection.bindService(this)
@@ -69,11 +69,10 @@ class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnec
 
     private fun onApplicationInfoLoaded() {
 
-
         val basicData = application.basicData
-        val pwasBasicData =application.pwabasicdata
+        val pwasBasicData = application.pwabasicdata
 
-        if(pwasBasicData!=null) {
+        if (pwasBasicData != null) {
             screenshotsCarousel = binding.screenshotsCarousel
             screenshotsCarousel.visibility = View.GONE
 
@@ -84,8 +83,7 @@ class ScreenshotsActivity : AppCompatActivity(), ApplicationManagerServiceConnec
                     screenshotsCarousel.visibility = View.VISIBLE
                 }
             }
-        }
-        else {
+        } else {
             screenshotsCarousel = binding.screenshotsCarousel
             screenshotsCarousel.visibility = View.GONE
 

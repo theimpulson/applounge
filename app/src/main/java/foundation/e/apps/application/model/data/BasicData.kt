@@ -30,50 +30,53 @@ import foundation.e.apps.utils.ImagesLoader
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
-
 class BasicData @JsonCreator
-constructor(@param:JsonProperty("_id") val id: String,
-            @param:JsonProperty("name") val name: String,
-            @param:JsonProperty("package_name") val packageName: String,
-            @param:JsonProperty("latest_version_number") var lastVersionNumber: String,
-            @param:JsonProperty("latest_version_code") var lastVersionCode: Long,
-            @param:JsonProperty("latest_downloaded_version") val latestDownloadableUpdate: String,
-            @param:JsonProperty("x86_64_latest_downloaded_version") val x86_64_latestDownloadableUpdate: String,
-            @param:JsonProperty("x86_64_latest_version_number") val x86_64_lastVersionNumber: String = "-1",
-            @param:JsonProperty("x86_64_latest_version_code") var x86_64_lastVersionCode: Long = -1,
-            @param:JsonProperty("armeabi_latest_downloaded_version") val armeabi_latestDownloadableUpdate: String,
-            @param:JsonProperty("armeabi_latest_version_number") val armeabi_lastVersionNumber: String = "-1",
-            @param:JsonProperty("armeabi_latest_version_code") var armeabi_lastVersionCode: Long = -1,
-            @param:JsonProperty("arm64-v8a_latest_downloaded_version") val arm64_v8a_latest_latestDownloadableUpdate: String,
-            @param:JsonProperty("arm64-v8a_latest_version_number") val arm64_v8a_lastVersionNumber: String = "-1",
-            @param:JsonProperty("arm64-v8a_latest_version_code") var arm64_v8a_lastVersionCode: Long = -1,
-            @param:JsonProperty("x86_latest_downloaded_version") val x86_latestDownloadableUpdate: String,
-            @param:JsonProperty("x86_latest_version_number") val x86_lastVersionNumber: String = "-1",
-            @param:JsonProperty("x86_latest_version_code") var x86_lastVersionCode: Long = -1,
-            @param:JsonProperty("armeabi-v7a_latest_downloaded_version") val armeabi_v7a_latestDownloadableUpdate: String,
-            @param:JsonProperty("armeabi-v7a_latest_version_number") val armeabi_v7a_lastVersionNumber: String = "-1",
-            @param:JsonProperty("armeabi-v7a_latest_version_code") var armeabi_v7a_lastVersionCode: Long = -1,
-            @param:JsonProperty("architectures") val apkArchitecture: ArrayList<String>?,
-            @param:JsonProperty("author") val author: String,
-            @param:JsonProperty("icon_image_path") val iconUri: String,
-            @param:JsonProperty("other_images_path") val imagesUri: Array<String>,
-            @param:JsonProperty("exodus_score") val privacyRating: Float?,
-            @param:JsonProperty("ratings") val ratings: Ratings,
-            @param:JsonProperty("category") val category: String,
-            @param:JsonProperty("is_pwa") val is_pwa: Boolean,
-            var downloadUrl: String? = null) {
-
+constructor(
+    @param:JsonProperty("_id") val id: String,
+    @param:JsonProperty("name") val name: String,
+    @param:JsonProperty("package_name") val packageName: String,
+    @param:JsonProperty("latest_version_number") var lastVersionNumber: String,
+    @param:JsonProperty("latest_version_code") var lastVersionCode: Long,
+    @param:JsonProperty("latest_downloaded_version") val latestDownloadableUpdate: String,
+    @param:JsonProperty("x86_64_latest_downloaded_version") val x86_64_latestDownloadableUpdate: String,
+    @param:JsonProperty("x86_64_latest_version_number") val x86_64_lastVersionNumber: String = "-1",
+    @param:JsonProperty("x86_64_latest_version_code") var x86_64_lastVersionCode: Long = -1,
+    @param:JsonProperty("armeabi_latest_downloaded_version") val armeabi_latestDownloadableUpdate: String,
+    @param:JsonProperty("armeabi_latest_version_number") val armeabi_lastVersionNumber: String = "-1",
+    @param:JsonProperty("armeabi_latest_version_code") var armeabi_lastVersionCode: Long = -1,
+    @param:JsonProperty("arm64-v8a_latest_downloaded_version") val arm64_v8a_latest_latestDownloadableUpdate: String,
+    @param:JsonProperty("arm64-v8a_latest_version_number") val arm64_v8a_lastVersionNumber: String = "-1",
+    @param:JsonProperty("arm64-v8a_latest_version_code") var arm64_v8a_lastVersionCode: Long = -1,
+    @param:JsonProperty("x86_latest_downloaded_version") val x86_latestDownloadableUpdate: String,
+    @param:JsonProperty("x86_latest_version_number") val x86_lastVersionNumber: String = "-1",
+    @param:JsonProperty("x86_latest_version_code") var x86_lastVersionCode: Long = -1,
+    @param:JsonProperty("armeabi-v7a_latest_downloaded_version") val armeabi_v7a_latestDownloadableUpdate: String,
+    @param:JsonProperty("armeabi-v7a_latest_version_number") val armeabi_v7a_lastVersionNumber: String = "-1",
+    @param:JsonProperty("armeabi-v7a_latest_version_code") var armeabi_v7a_lastVersionCode: Long = -1,
+    @param:JsonProperty("architectures") val apkArchitecture: ArrayList<String>?,
+    @param:JsonProperty("author") val author: String,
+    @param:JsonProperty("icon_image_path") val iconUri: String,
+    @param:JsonProperty("other_images_path") val imagesUri: Array<String>,
+    @param:JsonProperty("exodus_score") val privacyRating: Float?,
+    @param:JsonProperty("ratings") val ratings: Ratings,
+    @param:JsonProperty("category") val category: String,
+    @param:JsonProperty("is_pwa") val is_pwa: Boolean,
+    var downloadUrl: String? = null
+) {
 
     private var icon: Bitmap? = null
     private var images: List<Bitmap>? = null
 
     fun loadImagesAsyncly(getter: (List<Bitmap>) -> Unit) {
         if (images == null) {
-            Execute({
-                loadImagesSynced()
-            }, {
-                getter.invoke(images!!)
-            })
+            Execute(
+                {
+                    loadImagesSynced()
+                },
+                {
+                    getter.invoke(images!!)
+                }
+            )
         } else {
             getter.invoke(images!!)
         }
@@ -89,15 +92,18 @@ constructor(@param:JsonProperty("_id") val id: String,
     fun loadIconAsync(application: Application, iconLoaderCallback: IconLoaderCallback) {
         if (icon == null) {
             var error: Error? = null
-            Execute({
-                error = loadIconSynced()
-            }, {
-                if (error == null) {
-                    icon?.let {
-                        iconLoaderCallback.onIconLoaded(application, it)
+            Execute(
+                {
+                    error = loadIconSynced()
+                },
+                {
+                    if (error == null) {
+                        icon?.let {
+                            iconLoaderCallback.onIconLoaded(application, it)
+                        }
                     }
                 }
-            })
+            )
         } else {
             iconLoaderCallback.onIconLoaded(application, icon!!)
         }
@@ -106,15 +112,18 @@ constructor(@param:JsonProperty("_id") val id: String,
     fun loadSystemAppIconAsync(application: Application, iconLoaderCallback: IconLoaderCallback) {
         if (icon == null) {
             var error: Error? = null
-            Execute({
-                error = loadIconSynced()
-            }, {
-                if (error == null) {
-                    icon?.let {
-                        iconLoaderCallback.onIconLoaded(application, it)
+            Execute(
+                {
+                    error = loadIconSynced()
+                },
+                {
+                    if (error == null) {
+                        icon?.let {
+                            iconLoaderCallback.onIconLoaded(application, it)
+                        }
                     }
                 }
-            })
+            )
         } else {
             iconLoaderCallback.onIconLoaded(application, icon!!)
         }
@@ -152,8 +161,10 @@ constructor(@param:JsonProperty("_id") val id: String,
         }
     }
 
-    class Ratings(@param:JsonProperty("usageQualityScore") val rating: Float?,
-                  @param:JsonProperty("privacyScore") val privacyRating: Float?)
+    class Ratings(
+        @param:JsonProperty("usageQualityScore") val rating: Float?,
+        @param:JsonProperty("privacyScore") val privacyRating: Float?
+    )
 
     interface IconLoaderCallback {
         fun onIconLoaded(application: Application, bitmap: Bitmap)
@@ -162,44 +173,51 @@ constructor(@param:JsonProperty("_id") val id: String,
     fun getLastVersion(): String? {
         if (apkArchitecture != null) {
 
-            //An ordered list of ABIs supported by this device. The most preferred ABI is the first element in the list.
+            // An ordered list of ABIs supported by this device. The most preferred ABI is the first element in the list.
             val arch = android.os.Build.SUPPORTED_ABIS.toList()
             when (arch[0]) {
                 "arm64-v8a" -> {
-                    return largestVersion(Pair(arm64_v8a_lastVersionNumber, arm64_v8a_lastVersionCode),
-                            Pair(armeabi_v7a_lastVersionNumber, armeabi_v7a_lastVersionCode),
-                            Pair(armeabi_lastVersionNumber, armeabi_lastVersionCode),
-                            Pair(lastVersionNumber, lastVersionCode))
+                    return largestVersion(
+                        Pair(arm64_v8a_lastVersionNumber, arm64_v8a_lastVersionCode),
+                        Pair(armeabi_v7a_lastVersionNumber, armeabi_v7a_lastVersionCode),
+                        Pair(armeabi_lastVersionNumber, armeabi_lastVersionCode),
+                        Pair(lastVersionNumber, lastVersionCode)
+                    )
                 }
 
                 "armeabi-v7a" -> {
                     return largestVersion(
-                            Pair(armeabi_v7a_lastVersionNumber, armeabi_v7a_lastVersionCode),
-                            Pair(armeabi_lastVersionNumber, armeabi_lastVersionCode),
-                            Pair(lastVersionNumber, lastVersionCode))
+                        Pair(armeabi_v7a_lastVersionNumber, armeabi_v7a_lastVersionCode),
+                        Pair(armeabi_lastVersionNumber, armeabi_lastVersionCode),
+                        Pair(lastVersionNumber, lastVersionCode)
+                    )
                 }
 
                 "armeabi" -> {
                     return largestVersion(
-                            Pair(armeabi_lastVersionNumber, armeabi_lastVersionCode),
-                            Pair(lastVersionNumber, lastVersionCode))
+                        Pair(armeabi_lastVersionNumber, armeabi_lastVersionCode),
+                        Pair(lastVersionNumber, lastVersionCode)
+                    )
                 }
 
                 "x86-64" -> {
                     return largestVersion(
-                            Pair(x86_64_lastVersionNumber, x86_64_lastVersionCode),
-                            Pair(x86_lastVersionNumber, x86_lastVersionCode),
-                            Pair(lastVersionNumber, lastVersionCode))
+                        Pair(x86_64_lastVersionNumber, x86_64_lastVersionCode),
+                        Pair(x86_lastVersionNumber, x86_lastVersionCode),
+                        Pair(lastVersionNumber, lastVersionCode)
+                    )
                 }
 
                 "x86" -> {
-                    return largestVersion(Pair(x86_lastVersionNumber, x86_lastVersionCode),
-                            Pair(lastVersionNumber, lastVersionCode))
+                    return largestVersion(
+                        Pair(x86_lastVersionNumber, x86_lastVersionCode),
+                        Pair(lastVersionNumber, lastVersionCode)
+                    )
                 }
             }
         }
 
-        return lastVersionNumber //universal
+        return lastVersionNumber // universal
     }
 
     private fun largestVersion(vararg versions: Pair<String, Long>): String {
@@ -212,6 +230,4 @@ constructor(@param:JsonProperty("_id") val id: String,
         }
         return largestVersion.first
     }
-
-
 }

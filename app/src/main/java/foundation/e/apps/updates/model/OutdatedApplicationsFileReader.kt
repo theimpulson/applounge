@@ -28,16 +28,19 @@ import foundation.e.apps.utils.Common
 import foundation.e.apps.utils.Constants.MICROG_SHARED_PREF
 import foundation.e.apps.utils.PreferenceStorage
 
-class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
-                                     private val applicationManager: ApplicationManager,
-                                     private val callback: UpdatesModelInterface) :
-        AsyncTask<Context, Void, ArrayList<Application>>() {
+class OutdatedApplicationsFileReader(
+    private val packageManager: PackageManager,
+    private val applicationManager: ApplicationManager,
+    private val callback: UpdatesModelInterface
+) :
+    AsyncTask<Context, Void, ArrayList<Application>>() {
     override fun doInBackground(vararg context: Context): ArrayList<Application> {
         val applications = ArrayList<Application>()
         val application: Application = loadMicroGVersion(context[0])[0]
         if (PreferenceStorage(context[0])
-                        .getBoolean(MICROG_SHARED_PREF, false)
-                && application.state == State.NOT_UPDATED) {
+            .getBoolean(MICROG_SHARED_PREF, false) &&
+            application.state == State.NOT_UPDATED
+        ) {
             applications.addAll(loadMicroGVersion(context[0]))
         }
         try {
@@ -66,8 +69,11 @@ class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
         return result
     }
 
-    private fun verifyApplication(application: Application, apps: ArrayList<Application>,
-                                  context: Array<out Context>) {
+    private fun verifyApplication(
+        application: Application,
+        apps: ArrayList<Application>,
+        context: Array<out Context>
+    ) {
         val error = application.assertBasicData(context[0])
         if (error == null && application.state == State.NOT_UPDATED) {
             apps.add(application)
@@ -79,22 +85,21 @@ class OutdatedApplicationsFileReader(private val packageManager: PackageManager,
     private fun loadMicroGVersion(context: Context): List<Application> {
         var gitlabData: GitlabDataRequest.GitlabDataResult? = null
         GitlabDataRequest()
-                .requestGmsCoreRelease { applicationError, listGitlabData ->
+            .requestGmsCoreRelease { applicationError, listGitlabData ->
 
-                    when (applicationError) {
-                        null -> {
-                            gitlabData = listGitlabData!!
-                        }
-                        else -> {
-                            print("error occurred")
-                        }
+                when (applicationError) {
+                    null -> {
+                        gitlabData = listGitlabData!!
+                    }
+                    else -> {
+                        print("error occurred")
                     }
                 }
+            }
         return if (gitlabData != null) {
             gitlabData!!.getApplications(applicationManager, context)
         } else {
             emptyList()
         }
     }
-
 }

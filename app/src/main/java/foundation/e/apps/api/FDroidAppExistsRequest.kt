@@ -22,9 +22,7 @@ import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
 import java.util.*
 
-
 class FDroidAppExistsRequest(private val keyword: String) {
-
 
     fun request(callback: (Error?, ArrayList<Int?>) -> Unit) {
         try {
@@ -40,5 +38,4 @@ class FDroidAppExistsRequest(private val keyword: String) {
             callback.invoke(Error.findError(e), ArrayList())
         }
     }
-
 }

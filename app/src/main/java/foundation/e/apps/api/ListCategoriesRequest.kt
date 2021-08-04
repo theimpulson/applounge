@@ -47,10 +47,11 @@ class ListCategoriesRequest {
     }
 
     class ListCategoriesResult @JsonCreator
-    constructor(@JsonProperty("apps") val appsCategories: Array<String>,
-                @JsonProperty("games") val gamesCategories: Array<String>,
-                @JsonProperty ("translations") val translations : Map <String,String>) : Serializable {
-
+    constructor(
+        @JsonProperty("apps") val appsCategories: Array<String>,
+        @JsonProperty("games") val gamesCategories: Array<String>,
+        @JsonProperty("translations") val translations: Map <String, String>
+    ) : Serializable {
 
         fun appsParseResult(): ArrayList<Category> {
             val appCategories = ArrayList<Category>()

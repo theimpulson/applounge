@@ -31,7 +31,7 @@ class AppRequestModel : AppRequestModelInterface {
         screenError.value = null
         if (Common.isNetworkAvailable(context)) {
             AppRequestTask(packageName, this)
-                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
         } else {
             screenError.value = Error.NO_INTERNET
         }
@@ -43,9 +43,10 @@ class AppRequestModel : AppRequestModelInterface {
 }
 
 class AppRequestTask(
-        private val packageName: String,
-        private val callback: AppRequestModelInterface) :
-        AsyncTask<Void, Void, Error?>() {
+    private val packageName: String,
+    private val callback: AppRequestModelInterface
+) :
+    AsyncTask<Void, Void, Error?>() {
 
     override fun doInBackground(vararg p0: Void?): Error? {
         var error: Error? = null
