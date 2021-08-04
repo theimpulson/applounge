@@ -54,13 +54,10 @@ class AppDetailRequest(private val id: String) {
             val result = reader.readValue<Result>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, result.app)
-
-
         } catch (e: Exception) {
             callback.invoke(Error.findError(e), null)
         }
     }
-
 
     fun Pwarequest(callback: (Error?, PwaFullData?) -> Unit) {
         try {
@@ -69,7 +66,6 @@ class AppDetailRequest(private val id: String) {
             val PwaResult = Pwareader.readValue<PwaResult>(urlConnection.inputStream)
             urlConnection.disconnect()
             callback.invoke(null, PwaResult.app)
-
         } catch (e: Exception) {
             callback.invoke(Error.findError(e), null)
         }
@@ -81,5 +77,3 @@ class AppDetailRequest(private val id: String) {
     class PwaResult @JsonCreator
     constructor(@JsonProperty("app") val app: PwaFullData)
 }
-
-

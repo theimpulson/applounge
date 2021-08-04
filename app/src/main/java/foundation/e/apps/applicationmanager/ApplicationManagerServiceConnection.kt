@@ -26,12 +26,18 @@ import android.os.Message
 import android.os.Messenger
 
 class ApplicationManagerServiceConnection(
-        private val callback: ApplicationManagerServiceConnectionCallback) : ServiceConnection {
+    private val callback: ApplicationManagerServiceConnectionCallback
+) : ServiceConnection {
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        Messenger(service).send(Message.obtain(null, 0, { result: ApplicationManager ->
-            callback.onServiceBind(result)
-        }))
+        Messenger(service).send(
+            Message.obtain(
+                null, 0,
+                { result: ApplicationManager ->
+                    callback.onServiceBind(result)
+                }
+            )
+        )
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
@@ -45,5 +51,4 @@ class ApplicationManagerServiceConnection(
     fun unbindService(context: Context) {
         context.unbindService(this)
     }
-
 }

@@ -64,34 +64,40 @@ class AppRequestActivity : AppCompatActivity(), TextWatcher {
         }
 
         // Bind enabled state of submit button to value in view model
-        viewModel.isSubmitButtonEnabled.observe(this, Observer {
-            if (it != null) {
-                submitButton.isEnabled = it
+        viewModel.isSubmitButtonEnabled.observe(
+            this,
+            Observer {
+                if (it != null) {
+                    submitButton.isEnabled = it
+                }
             }
-        })
+        )
 
         // Bind to the screen error
-        viewModel.getScreenError().observe(this, Observer {
-            if (it != null) {
-                progressBar.visibility = View.GONE
-                if (it == Error.NO_ERROR) {
-                    packageNameEditText.setText("")
-                    packageNameEditText.visibility = View.VISIBLE
-                    submitButton.visibility = View.VISIBLE
-                    appRequestErrorTextView.visibility = View.VISIBLE
-                    appRequestErrorTextView.text =
+        viewModel.getScreenError().observe(
+            this,
+            Observer {
+                if (it != null) {
+                    progressBar.visibility = View.GONE
+                    if (it == Error.NO_ERROR) {
+                        packageNameEditText.setText("")
+                        packageNameEditText.visibility = View.VISIBLE
+                        submitButton.visibility = View.VISIBLE
+                        appRequestErrorTextView.visibility = View.VISIBLE
+                        appRequestErrorTextView.text =
                             getString(R.string.app_request_successful_text)
-                    appRequestErrorTextView.background = getDrawable(R.drawable.success_border)
-                } else {
-                    packageNameEditText.visibility = View.VISIBLE
-                    submitButton.visibility = View.VISIBLE
-                    appRequestErrorTextView.visibility = View.VISIBLE
-                    appRequestErrorTextView.text = getString(it.description)
-                    appRequestErrorTextView.background = getDrawable(R.drawable.error_border)
+                        appRequestErrorTextView.background = getDrawable(R.drawable.success_border)
+                    } else {
+                        packageNameEditText.visibility = View.VISIBLE
+                        submitButton.visibility = View.VISIBLE
+                        appRequestErrorTextView.visibility = View.VISIBLE
+                        appRequestErrorTextView.text = getString(it.description)
+                        appRequestErrorTextView.background = getDrawable(R.drawable.error_border)
+                    }
+                    binding.scrollView.scrollTo(0, 0)
                 }
-                binding.scrollView.scrollTo(0, 0)
             }
-        })
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

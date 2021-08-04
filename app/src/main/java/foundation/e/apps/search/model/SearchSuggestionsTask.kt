@@ -23,28 +23,30 @@ import foundation.e.apps.api.AllAppsSearchRequest
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Constants
 
-class SearchSuggestionsTask(private val searchQuery: String,
-                            private val applicationManager: ApplicationManager,
-                            private val callback: SearchModelInterface)
-    : AsyncTask<Context, Void, ArrayList<String>>() {
+class SearchSuggestionsTask(
+    private val searchQuery: String,
+    private val applicationManager: ApplicationManager,
+    private val callback: SearchModelInterface
+) :
+    AsyncTask<Context, Void, ArrayList<String>>() {
 
     override fun doInBackground(vararg context: Context): ArrayList<String> {
         val searchSuggestions = ArrayList<String>()
 
         AllAppsSearchRequest(searchQuery, 1, Constants.SUGGESTIONS_RESULTS)
-                .request { applicationError, searchResult ->
-                    when (applicationError) {
-                        null -> {
-                            val applications = searchResult!!.getApplications(applicationManager, context[0])
-                            applications.forEach {
-                                searchSuggestions.add(it.searchAppsBasicData!!.name)
-                            }
-                        }
-                        else -> {
-                            // Do nothing
+            .request { applicationError, searchResult ->
+                when (applicationError) {
+                    null -> {
+                        val applications = searchResult!!.getApplications(applicationManager, context[0])
+                        applications.forEach {
+                            searchSuggestions.add(it.searchAppsBasicData!!.name)
                         }
                     }
+                    else -> {
+                        // Do nothing
+                    }
                 }
+            }
 
         return searchSuggestions
     }
@@ -52,7 +54,7 @@ class SearchSuggestionsTask(private val searchQuery: String,
     override fun onPostExecute(result: ArrayList<String>) {
         /*User type following string it will add microG element into array list*/
         if ("microG Exposure Notification version".contains(searchQuery, true)) {
-            result.add(0,"microG Exposure Notification version")
+            result.add(0, "microG Exposure Notification version")
         }
         callback.onSearchSuggestionsRetrieved(searchQuery, result)
     }

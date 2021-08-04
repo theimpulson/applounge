@@ -15,16 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-data class XSplitApks(
-    @Expose
-    @SerializedName("file")
-    var fileName: String,
-    @Expose
-    @SerializedName("id")
-    var _id: String
-)
+@SuppressLint("ParcelCreator")
+@Parcelize
+data class ApksBean(
+    var packageName: String,
+    var label: String,
+    var iconPath: String,
+    var apkAssetType: ApkAssetType?,
+    var outputFileDir: String,
+    var splitApkPaths: ArrayList<String>?
+) : Parcelable {
+
+    constructor() : this(String(), String(), String(), null, String(), null)
+}

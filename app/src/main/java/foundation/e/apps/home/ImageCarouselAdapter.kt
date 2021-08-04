@@ -32,7 +32,6 @@ import foundation.e.apps.application.viewmodel.ApplicationViewModel
 import foundation.e.apps.databinding.ImageCarouselItemBinding
 import foundation.e.apps.home.model.BannerApplication
 
-
 class ImageCarouselAdapter(private val context: Context, private val bannerApplications: ArrayList<BannerApplication>) : PagerAdapter() {
 
     private val applicationViewModel = ApplicationViewModel()
@@ -49,12 +48,12 @@ class ImageCarouselAdapter(private val context: Context, private val bannerAppli
         val binding = ImageCarouselItemBinding.inflate(LayoutInflater.from(context), container, false)
         val view = binding.root
         val wideImage = binding.image
-        val image = getRoundedCornerBitmap(bannerApplications[position].image,mActivity)
+        val image = getRoundedCornerBitmap(bannerApplications[position].image, mActivity)
         wideImage.setImageBitmap(image)
         wideImage.setOnClickListener {
-           if(mActivity.showApplicationTypePreference()=="open" || mActivity.showApplicationTypePreference()=="pwa"){
-               return@setOnClickListener
-           }
+            if (mActivity.showApplicationTypePreference() == "open" || mActivity.showApplicationTypePreference() == "pwa") {
+                return@setOnClickListener
+            }
             applicationViewModel.onApplicationClick(view.context, bannerApplications[position].application!!)
         }
 
@@ -67,15 +66,21 @@ class ImageCarouselAdapter(private val context: Context, private val bannerAppli
     }
 
     @SuppressLint("ResourceAsColor")
-    fun getRoundedCornerBitmap(bitmap: Bitmap,context:Context): Bitmap {
-        val output = Bitmap.createBitmap(bitmap.width, bitmap.height,
-                Bitmap.Config.ARGB_8888)
+    fun getRoundedCornerBitmap(bitmap: Bitmap, context: Context): Bitmap {
+        val output = Bitmap.createBitmap(
+            bitmap.width, bitmap.height,
+            Bitmap.Config.ARGB_8888
+        )
 
         val canvas = Canvas(output)
-        val borderSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1.toFloat(),
-                context.getResources().getDisplayMetrics()).toInt()
-        val cornerSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8.toFloat(),
-                context.getResources().getDisplayMetrics()).toInt()
+        val borderSizePx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 1.toFloat(),
+            context.getResources().getDisplayMetrics()
+        ).toInt()
+        val cornerSizePx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 8.toFloat(),
+            context.getResources().getDisplayMetrics()
+        ).toInt()
         val paint = Paint()
         val rect = Rect(0, 0, output.width, output.height)
         val rectF = RectF(rect)

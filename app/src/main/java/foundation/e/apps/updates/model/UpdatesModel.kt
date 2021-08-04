@@ -36,11 +36,10 @@ class UpdatesModel : UpdatesModelInterface {
         this.context = context
         if (Common.isNetworkAvailable(context)) {
             OutdatedApplicationsFileReader(context.packageManager, applicationManager!!, this)
-                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
         } else {
             screenError.value = Error.NO_INTERNET
         }
-
     }
 
     override fun onAppsFound(applications: ArrayList<Application>) {

@@ -46,31 +46,34 @@ class CategoriesModel : CategoriesModelInterface {
         lateinit var result: ListCategoriesRequest.ListCategoriesResult
         var error: Error? = null
         if (Common.isNetworkAvailable(context)) {
-            Execute({
-                ListCategoriesRequest().request { applicationError, listCategoriesResult ->
-                    when (applicationError) {
-                        null -> {
-                            result = listCategoriesResult!!
-                        }
-                        else -> {
-                            error = applicationError
+            Execute(
+                {
+                    ListCategoriesRequest().request { applicationError, listCategoriesResult ->
+                        when (applicationError) {
+                            null -> {
+                                result = listCategoriesResult!!
+                            }
+                            else -> {
+                                error = applicationError
+                            }
                         }
                     }
+                },
+                {
+                    if (error == null) {
+                        parseResult(result)
+                    }
+                    screenError.value = error
                 }
-            }, {
-                if (error == null) {
-                    parseResult(result)
-                }
-                screenError.value = error
-            })
+            )
         } else {
             screenError.value = Error.NO_INTERNET
         }
     }
 
     private fun parseResult(result: ListCategoriesRequest.ListCategoriesResult) {
-        val apps=result.appsParseResult()
-        val games=result.gameParseResult()
+        val apps = result.appsParseResult()
+        val games = result.gameParseResult()
         applicationsCategoriesList.value = apps
         gamesCategoriesList.value = games
     }

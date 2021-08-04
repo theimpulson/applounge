@@ -25,7 +25,7 @@ import foundation.e.apps.utils.Error
 
 class AppRequestViewModel : ViewModel(), AppRequestViewModelInterface {
     private val model = AppRequestModel()
-    private var packageName = "";
+    private var packageName = ""
     var isSubmitButtonEnabled = MutableLiveData<Boolean>()
 
     init {

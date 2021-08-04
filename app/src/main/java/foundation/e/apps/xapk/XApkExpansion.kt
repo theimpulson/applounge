@@ -15,18 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
-import android.content.Context
-import android.net.Uri
-import androidx.core.content.FileProvider
-import foundation.e.apps.BuildConfig
-import java.io.File
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-object UriUtils {
-    private val fileProviderPath by lazy { "${BuildConfig.APPLICATION_ID}.fileprovider" }
-
-    fun fromFileProvider(mContext: Context, file: File): Uri {
-        return FileProvider.getUriForFile(mContext, fileProviderPath, file)
-    }
+data class XApkExpansion(
+    @Expose
+    @SerializedName("file")
+    var xFile: String,
+    @Expose
+    @SerializedName("install_location")
+    var installLocation: String,
+    @Expose
+    @SerializedName("install_path")
+    var installPath: String
+) {
+    constructor() : this(String(), "", String())
 }

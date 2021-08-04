@@ -47,7 +47,7 @@ class SearchModel : SearchModelInterface {
         if (searchQuery.length >= Constants.MIN_SEARCH_TERM_LENGTH) {
             if (Common.isNetworkAvailable(context)) {
                 SearchSuggestionsTask(searchQuery, applicationManager, this)
-                        .executeOnExecutor(Common.EXECUTOR, context)
+                    .executeOnExecutor(Common.EXECUTOR, context)
             }
         } else {
             suggestionList.value = null
@@ -55,8 +55,9 @@ class SearchModel : SearchModelInterface {
     }
 
     override fun onSearchSuggestionsRetrieved(
-            searchTerm: String,
-            suggestionsList: ArrayList<String>) {
+        searchTerm: String,
+        suggestionsList: ArrayList<String>
+    ) {
         if (searchTerm == searchQuery) {
             this.suggestionList.value = suggestionsList
         }
@@ -75,7 +76,7 @@ class SearchModel : SearchModelInterface {
         if (Common.isNetworkAvailable(context)) {
             pageNumber++
             SearchElement(searchQuery, pageNumber, applicationManager, this)
-                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
         } else {
             screenError.value = Error.NO_INTERNET
         }

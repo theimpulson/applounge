@@ -48,7 +48,6 @@ class PwaInstaller : AppCompatActivity() {
     private val sharedPrefFile = "kotlinsharedpreference"
     var scaledBitmap: Bitmap? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_application)
@@ -76,14 +75,13 @@ class PwaInstaller : AppCompatActivity() {
         editor.apply()
     }
 
-
     private fun installer(name: String, pwaUrl: Uri) {
-        //TODO: Add in content provider first and then make a shortcut
+        // TODO: Add in content provider first and then make a shortcut
         setBooleanConfig(name)
         val contentResolver = contentResolver
         Thread {
             run {
-                Looper.prepare() //Call looper.prepare()
+                Looper.prepare() // Call looper.prepare()
                 try {
                     val uri = PwasBasicData.thisActivity!!.uri
                     val url = URL(Constants.BASE_URL + "media/" + uri)
@@ -94,8 +92,10 @@ class PwaInstaller : AppCompatActivity() {
                     icon = BitmapFactory.decodeStream(urlConnection.inputStream)
                 } catch (e: FileNotFoundException) {
                     val x = R.drawable.pwa_default_icon
-                    icon = BitmapFactory.decodeResource(mActivity.getResources(),
-                            x)
+                    icon = BitmapFactory.decodeResource(
+                        mActivity.getResources(),
+                        x
+                    )
                 }
                 val intent = Intent()
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -121,10 +121,10 @@ class PwaInstaller : AppCompatActivity() {
                         intent.putExtra("PWA_ID", db_id)
                         Toast.makeText(this, "Shortcut created", Toast.LENGTH_SHORT).show()
                         val shortcut = ShortcutInfo.Builder(mActivity, pwaUrl.toString())
-                                .setShortLabel(name)
-                                .setIcon(Icon.createWithBitmap(icon))
-                                .setIntent(intent)
-                                .build()
+                            .setShortLabel(name)
+                            .setIcon(Icon.createWithBitmap(icon))
+                            .setIntent(intent)
+                            .build()
                         shortcutManager.requestPinShortcut(shortcut, null)
                     }
                 } else {

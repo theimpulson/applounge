@@ -48,28 +48,27 @@ import java.io.InputStream
 import java.security.MessageDigest
 import java.security.Security
 
-
 class IntegrityVerificationTask(
-        private val applicationInfo: ApplicationInfo,
-        private val fullData: FullData,
-        private val integrityVerificationCallback: IntegrityVerificationCallback) :
-        AsyncTask<Context, Void, Context>() {
+    private val applicationInfo: ApplicationInfo,
+    private val fullData: FullData,
+    private val integrityVerificationCallback: IntegrityVerificationCallback
+) :
+    AsyncTask<Context, Void, Context>() {
     private var verificationSuccessful: Boolean = false
     private var TAG = "IntegrityVerificationTask"
 
-
     override fun doInBackground(vararg context: Context): Context {
-       try {
-           verificationSuccessful = if (isSystemApplication(fullData.packageName)) {
-               verifySystemSignature(context[0])
-           } else if (isfDroidApplication(fullData.packageName)) {
-               verifyFdroidSignature(context[0])
-           } else{
-               checkGoogleApp(context[0])
-           }
-       }catch (e: Exception){
-           e.printStackTrace()
-       }
+        try {
+            verificationSuccessful = if (isSystemApplication(fullData.packageName)) {
+                verifySystemSignature(context[0])
+            } else if (isfDroidApplication(fullData.packageName)) {
+                verifyFdroidSignature(context[0])
+            } else {
+                checkGoogleApp(context[0])
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         return context[0]
     }
 
@@ -77,10 +76,10 @@ class IntegrityVerificationTask(
         return verifyShaSum(context)
     }
 
-    private fun verifyShaSum(context: Context) :Boolean {
+    private fun verifyShaSum(context: Context): Boolean {
         if (!fullData.getLastVersion()!!.apkSHA.isNullOrEmpty()) {
             return getApkFileSha1(applicationInfo.getApkOrXapkFile(context, fullData, fullData.basicData)) ==
-                    fullData.getLastVersion()!!.apkSHA
+                fullData.getLastVersion()!!.apkSHA
         }
         return false
     }
@@ -88,7 +87,7 @@ class IntegrityVerificationTask(
     private fun verifySystemSignature(context: Context): Boolean {
         if (!fullData.getLastVersion()?.signature.isNullOrEmpty()) {
             return fullData.getLastVersion()?.signature ==
-                    getSystemSignature(context.packageManager)?.toCharsString()
+                getSystemSignature(context.packageManager)?.toCharsString()
         }
         return false
     }
@@ -109,50 +108,56 @@ class IntegrityVerificationTask(
         return null
     }
 
-    private fun verifyFdroidSignature(context: Context) : Boolean {
+    private fun verifyFdroidSignature(context: Context): Boolean {
         Security.addProvider(BouncyCastleProvider())
         return verifyAPKSignature(
-                context,
-                BufferedInputStream(FileInputStream(
-                        applicationInfo.getApkFile(context,
-                                fullData.basicData).absolutePath)),
-                fullData.getLastVersion()!!.signature.byteInputStream(Charsets.UTF_8),
-                context.assets.open("f-droid.org-signing-key.gpg"))
+            context,
+            BufferedInputStream(
+                FileInputStream(
+                    applicationInfo.getApkFile(
+                        context,
+                        fullData.basicData
+                    ).absolutePath
+                )
+            ),
+            fullData.getLastVersion()!!.signature.byteInputStream(Charsets.UTF_8),
+            context.assets.open("f-droid.org-signing-key.gpg")
+        )
     }
 
     private fun isfDroidApplication(packageName: String): Boolean {
         var fDroidAppExistsResponse = 0
         FDroidAppExistsRequest(packageName)
-                .request { applicationError, searchResult ->
-                    when (applicationError) {
-                        null -> {
-                            if (searchResult.size > 0) {
-                                fDroidAppExistsResponse = searchResult[0]!!
-                            }
-                        }
-                        else -> {
-                            Log.e(TAG, applicationError.toString())
+            .request { applicationError, searchResult ->
+                when (applicationError) {
+                    null -> {
+                        if (searchResult.size > 0) {
+                            fDroidAppExistsResponse = searchResult[0]!!
                         }
                     }
+                    else -> {
+                        Log.e(TAG, applicationError.toString())
+                    }
                 }
+            }
         return fDroidAppExistsResponse == 200
     }
 
     private fun isSystemApplication(packageName: String): Boolean {
         var jsonResponse = ""
         SystemAppExistsRequest(packageName)
-                .request { applicationError, searchResult ->
-                    when (applicationError) {
-                        null -> {
-                            if (searchResult.size > 0) {
-                                jsonResponse = searchResult[0].toString()
-                            }
-                        }
-                        else -> {
-                            Log.e(TAG, applicationError.toString())
+            .request { applicationError, searchResult ->
+                when (applicationError) {
+                    null -> {
+                        if (searchResult.size > 0) {
+                            jsonResponse = searchResult[0].toString()
                         }
                     }
+                    else -> {
+                        Log.e(TAG, applicationError.toString())
+                    }
                 }
+            }
         try {
             if (packageName == JSONObject(jsonResponse).get(packageName)) {
                 return true
@@ -169,8 +174,8 @@ class IntegrityVerificationTask(
 
     override fun onPostExecute(context: Context) {
         integrityVerificationCallback.onIntegrityVerified(context, verificationSuccessful)
-        if (!verificationSuccessful){
-             Toast.makeText(context, R.string.not_able_install, Toast.LENGTH_LONG).show()
+        if (!verificationSuccessful) {
+            Toast.makeText(context, R.string.not_able_install, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -195,14 +200,15 @@ class IntegrityVerificationTask(
     }
 
     private fun verifyAPKSignature(
-            context: Context,
-            apkInputStream: BufferedInputStream,
-            apkSignatureInputStream: InputStream,
-            publicKeyInputStream: InputStream): Boolean {
+        context: Context,
+        apkInputStream: BufferedInputStream,
+        apkSignatureInputStream: InputStream,
+        publicKeyInputStream: InputStream
+    ): Boolean {
         try {
 
             var jcaPGPObjectFactory =
-                    JcaPGPObjectFactory(PGPUtil.getDecoderStream(apkSignatureInputStream))
+                JcaPGPObjectFactory(PGPUtil.getDecoderStream(apkSignatureInputStream))
             val pgpSignatureList: PGPSignatureList
 
             val pgpObject = jcaPGPObjectFactory.nextObject()
@@ -214,9 +220,10 @@ class IntegrityVerificationTask(
             }
 
             val pgpPublicKeyRingCollection =
-                    PGPPublicKeyRingCollection(
-                            PGPUtil.getDecoderStream(publicKeyInputStream),
-                            JcaKeyFingerprintCalculator())
+                PGPPublicKeyRingCollection(
+                    PGPUtil.getDecoderStream(publicKeyInputStream),
+                    JcaKeyFingerprintCalculator()
+                )
 
             val signature = pgpSignatureList.get(0)
             val key = pgpPublicKeyRingCollection.getPublicKey(signature.keyID)
@@ -240,11 +247,9 @@ class IntegrityVerificationTask(
             Handler(Looper.getMainLooper()).post {
                 Toast.makeText(context, context.resources.getString(R.string.Signature_verification_failed), Toast.LENGTH_LONG).show()
             }
-
         }
 
-        return false;
-
+        return false
     }
 }
 

@@ -26,5 +26,4 @@ interface ApplicationStateListener {
     fun downloading(downloader: Downloader)
 
     fun anErrorHasOccurred(error: Error)
-
 }

@@ -19,11 +19,11 @@ package foundation.e.apps.categories.model
 
 import foundation.e.apps.R
 import java.io.Serializable
+import java.util.*
 
 class Category(val id: String, val result: String = "") : Serializable {
     private val title: String
     private val iconResource: Int
-
 
     init {
         title = getCategoryTitle(id)
@@ -34,7 +34,7 @@ class Category(val id: String, val result: String = "") : Serializable {
         if (result.isNotEmpty()) return result
         else {
             val title = categoryId.replace("_", " ")
-            return title.capitalize()
+            return title.replaceFirstChar { it.uppercase() }
         }
     }
 
@@ -197,4 +197,3 @@ class Category(val id: String, val result: String = "") : Serializable {
         return iconResource
     }
 }
-

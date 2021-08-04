@@ -15,17 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
-object FormatUtils {
+import android.os.Bundle
+import com.trello.rxlifecycle3.components.support.RxAppCompatActivity
 
+abstract class BaseActivity : RxAppCompatActivity() {
+    protected val logTag: String by lazy { javaClass.simpleName }
+    protected val mContext by lazy { this }
+    protected val mActivity: BaseActivity by lazy { this }
 
-    fun formatPercent(progress: Long, count: Long): Int {
-        return if (count < progress) {
-            0
-        } else {
-            (progress * 1f / count * 100f).toInt()
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        nextStep()
+        finish()
     }
 
+    protected open fun nextStep() {}
 }

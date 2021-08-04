@@ -15,24 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
-import android.annotation.SuppressLint
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+object FormatUtils {
 
-@SuppressLint("ParcelCreator")
-@Parcelize
- data class ApksBean(
-    var packageName: String,
-    var label: String,
-    var iconPath: String,
-    var apkAssetType: ApkAssetType?,
-    var outputFileDir: String,
-    var splitApkPaths: ArrayList<String>?
-) : Parcelable {
-
-    constructor() : this(String(), String(), String(), null, String(), null)
+    fun formatPercent(progress: Long, count: Long): Int {
+        return if (count < progress) {
+            0
+        } else {
+            (progress * 1f / count * 100f).toInt()
+        }
+    }
 }
-
-

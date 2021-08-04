@@ -17,18 +17,20 @@
 
 package foundation.e.apps.application.model
 
-class Version(val downloadFlag: String?,
-              val downloadLink: String,
-              val minAndroid: String,
-              val apkSHA: String?,
-              val createdOn: String,
-              val version: String,
-              val signature: String,
-              val fileSize: String,
-              val updateDate: String,
-              val updateName: String,
-              val privacyRating: Int?,
-              val exodusPermissions: ArrayList<String>?,
-              val exodusTrackers: ArrayList<String>?,
-              val apkArchitecture: String?,
-              val is_xapk :Boolean)
+class Version(
+    val downloadFlag: String?,
+    val downloadLink: String,
+    val minAndroid: String,
+    val apkSHA: String?,
+    val createdOn: String,
+    val version: String,
+    val signature: String,
+    val fileSize: String,
+    val updateDate: String,
+    val updateName: String,
+    val privacyRating: Int?,
+    val exodusPermissions: ArrayList<String>?,
+    val exodusTrackers: ArrayList<String>?,
+    val apkArchitecture: String?,
+    val is_xapk: Boolean
+)

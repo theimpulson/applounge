@@ -27,25 +27,28 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import foundation.e.apps.XAPK.FsUtils.deleteFileOrDir
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Constants.MICROG_SHARED_PREF
 import foundation.e.apps.utils.PreferenceStorage
+import foundation.e.apps.xapk.FsUtils.deleteFileOrDir
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
-class Installer(private val packageName: String,
-                private val apk: File,
-                private val callback: InstallerInterface) {
+class Installer(
+    private val packageName: String,
+    private val apk: File,
+    private val callback: InstallerInterface
+) {
     private val TAG = "Installer"
 
     fun install(context: Context) {
         try {
             Log.i(TAG, "Installing $packageName")
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.INSTALL_PACKAGES)
-                    == PackageManager.PERMISSION_GRANTED) {
+                == PackageManager.PERMISSION_GRANTED
+            ) {
                 val inputStream = File(apk.absolutePath).inputStream()
                 Log.i(TAG, "Opened input stream to $packageName APK")
                 installApplication(context, inputStream)
@@ -73,7 +76,7 @@ class Installer(private val packageName: String,
     private fun installApplication(context: Context, inputStream: InputStream): Boolean {
         val packageInstaller = context.packageManager.packageInstaller
         val sessionParams =
-                PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
+            PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
         val sessionId = packageInstaller.createSession(sessionParams)
         val session = packageInstaller.openSession(sessionId)
 
@@ -131,38 +134,42 @@ class Installer(private val packageName: String,
                 Log.d(TAG, "Broadcast receiver is already unregistered")
             }
         }
-        context.registerReceiver(receiver, IntentFilter().apply {
-            addAction(Intent.ACTION_PACKAGE_ADDED)
-            addDataScheme("package")
-        })
+        context.registerReceiver(
+            receiver,
+            IntentFilter().apply {
+                addAction(Intent.ACTION_PACKAGE_ADDED)
+                addDataScheme("package")
+            }
+        )
     }
 
     private var receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == Intent.ACTION_PACKAGE_ADDED &&
-                    (intent.data?.encodedSchemeSpecificPart == packageName)) {
+                (intent.data?.encodedSchemeSpecificPart == packageName)
+            ) {
                 Log.i(TAG, "Broadcast received")
                 var path = apk.absolutePath.split("Download")
-                //delete all APK file after install
-                deleteFileOrDir(path[0] + "Download");
+                // delete all APK file after install
+                deleteFileOrDir(path[0] + "Download")
 
                 callback.onInstallationComplete(context)
 
                 if (packageName == Constants.MICROG_PACKAGE) {
-                      PreferenceStorage(context).save(MICROG_SHARED_PREF, true)
+                    PreferenceStorage(context).save(MICROG_SHARED_PREF, true)
                 }
             }
         }
     }
 
-
     fun count(uri: Uri, context: Context): Boolean {
-        val cursor: Cursor? = context.contentResolver.query(uri, arrayOf("id"),
-                null, null, null)
+        val cursor: Cursor? = context.contentResolver.query(
+            uri, arrayOf("id"),
+            null, null, null
+        )
         Log.e("TAG", "count: " + cursor?.count)
         val status = cursor?.count!! > 0
         cursor.close()
         return status
     }
-
 }

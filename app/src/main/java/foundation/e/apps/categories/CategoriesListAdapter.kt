@@ -29,14 +29,16 @@ import foundation.e.apps.categories.model.Category
 import foundation.e.apps.databinding.CategoryListItemBinding
 import foundation.e.apps.utils.Constants
 
-class CategoriesListAdapter(private val context: Context, private var categories: ArrayList<Category>, color: Int?)
-    : RecyclerView.Adapter<CategoriesListAdapter.CategoryViewHolder>() {
+class CategoriesListAdapter(private val context: Context, private var categories: ArrayList<Category>, color: Int?) :
+    RecyclerView.Adapter<CategoriesListAdapter.CategoryViewHolder>() {
 
-    val color = color;
+    val color = color
     init {
-        categories = ArrayList(categories.sortedWith(
-                compareBy({ it.getTitle() }, { it.getTitle() })))
-
+        categories = ArrayList(
+            categories.sortedWith(
+                compareBy({ it.getTitle() }, { it.getTitle() })
+            )
+        )
     }
 
     class CategoryViewHolder(binding: CategoryListItemBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -61,7 +63,6 @@ class CategoriesListAdapter(private val context: Context, private var categories
 
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-
 
         holder.categoryIcon.setImageDrawable(AppCompatResources.getDrawable(context, categories[position].getIconResource()))
         if (color != null) {

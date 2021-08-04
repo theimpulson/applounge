@@ -15,32 +15,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageInstaller
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import androidx.annotation.RequiresApi
 import foundation.e.apps.BuildConfig
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 
-
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class InstallSplitApksActivity : BaseActivity() {
-    private  var apksBean: ApksBean?=null
+    private var apksBean: ApksBean? = null
 
-    companion object{
+    companion object {
         private const val KEY_PARAM = "params_apks"
         private const val PACKAGE_INSTALLED_ACTION = BuildConfig.APPLICATION_ID + ".SESSION_API_PACKAGE_INSTALLED"
 
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         fun newInstanceIntent(mActivity: Context, apksBean: ApksBean): Intent {
             return Intent(mActivity, InstallSplitApksActivity::class.java).apply {
                 this.putExtra(KEY_PARAM, apksBean)
@@ -51,9 +46,10 @@ class InstallSplitApksActivity : BaseActivity() {
     override fun nextStep() {
         super.nextStep()
         apksBean = intent.getParcelableExtra(KEY_PARAM)
-        if (apksBean == null
-            || apksBean!!.splitApkPaths.isNullOrEmpty()
-            || apksBean!!.packageName.isEmpty()) {
+        if (apksBean == null ||
+            apksBean!!.splitApkPaths.isNullOrEmpty() ||
+            apksBean!!.packageName.isEmpty()
+        ) {
             finish()
             return
         }
@@ -91,7 +87,6 @@ class InstallSplitApksActivity : BaseActivity() {
             finish()
             return
         }
-
     }
 
     @Throws(IOException::class)
@@ -144,17 +139,14 @@ class InstallSplitApksActivity : BaseActivity() {
                 status == PackageInstaller.STATUS_FAILURE_CONFLICT ||
                 status == PackageInstaller.STATUS_FAILURE_INCOMPATIBLE ||
                 status == PackageInstaller.STATUS_FAILURE_INVALID ||
-                status == PackageInstaller.STATUS_FAILURE_STORAGE) {
+                status == PackageInstaller.STATUS_FAILURE_STORAGE
+            ) {
                 apksBean?.outputFileDir.let {
-                    if (FsUtils.exists(it)){
+                    if (FsUtils.exists(it)) {
                         FsUtils.deleteFileOrDir(it)
                     }
                 }
             }
         }
     }
-
-
 }
-
-

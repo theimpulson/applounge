@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
 import foundation.e.apps.BuildConfig
 import foundation.e.apps.MainActivity
@@ -36,13 +36,11 @@ object AppFolder {
     val tempFolder: File?
         get() = createAppFolderDirectory(TEMP_FOLDER_NAME)
 
-
     fun getXApkInstallTempFolder(packageName: String): File {
         val tempFile = File(tempFolder, packageName)
         FsUtils.createOnNotFound(tempFile)
         return tempFile
     }
-
 
     private fun createAppFolderDirectory(directoryName: String): File? {
         return FsUtils.createOnNotFound(File(appFolder, directoryName))
@@ -58,5 +56,4 @@ object AppFolder {
                 null
             }
         }
-
 }

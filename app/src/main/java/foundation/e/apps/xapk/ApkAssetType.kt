@@ -15,13 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.application.model.release
+package foundation.e.apps.xapk
 
-import com.google.gson.annotations.SerializedName
-
-data class Evidences(
-
-    @SerializedName("sha") val sha: String,
-    @SerializedName("filepath") val filepath: String,
-    @SerializedName("collected_at") val collected_at: String
-)
+enum class ApkAssetType(val suffix: String) {
+    Apk(".apk"),
+    XAPK(".xapk"),
+    Apks(".apks")
+}

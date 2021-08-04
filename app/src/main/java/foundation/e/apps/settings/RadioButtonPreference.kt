@@ -28,8 +28,7 @@ class RadioButtonPreference : CheckBoxPreference {
 
     constructor(context: Context, attrs: AttributeSet? = null) : super(context, attrs) { setView() }
 
-
-    private fun setView(){
+    private fun setView() {
         widgetLayoutResource = R.layout.preference_widget_radiobutton
     }
 

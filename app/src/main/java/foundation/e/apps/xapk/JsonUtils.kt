@@ -15,20 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import com.google.gson.GsonBuilder
+import java.io.Reader
 
+object JsonUtils {
+    val gson by lazy { GsonBuilder().excludeFieldsWithoutExposeAnnotation().create() }
 
-data class XApkExpansion(@Expose
-                         @SerializedName("file")
-                         var xFile: String,
-                         @Expose
-                         @SerializedName("install_location")
-                         var installLocation: String,
-                         @Expose
-                         @SerializedName("install_path")
-                         var installPath: String) {
-    constructor() : this(String(), "", String())
+    fun <T> objectFromJson(json: Reader, classOfT: Class<T>): T? {
+        return try {
+            gson.fromJson(json, classOfT)
+        } catch (e: Exception) {
+            null
+        }
+    }
 }

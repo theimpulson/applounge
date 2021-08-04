@@ -29,11 +29,12 @@ import foundation.e.apps.R
 import foundation.e.apps.application.model.data.FullData
 import foundation.e.apps.utils.Constants
 
-class Downloader(private val applicationInfo: ApplicationInfo,
-                 private val fullData: FullData,
-                 private val downloaderInterface: DownloaderInterface) :
-        IntegrityVerificationCallback {
-
+class Downloader(
+    private val applicationInfo: ApplicationInfo,
+    private val fullData: FullData,
+    private val downloaderInterface: DownloaderInterface
+) :
+    IntegrityVerificationCallback {
 
     private lateinit var downloadManager: DownloadManager
     private lateinit var request: DownloadManager.Request
@@ -82,8 +83,10 @@ class Downloader(private val applicationInfo: ApplicationInfo,
     }
 
     private fun registerReceivers(context: Context) {
-        context.registerReceiver(onComplete,
-                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+        context.registerReceiver(
+            onComplete,
+            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+        )
     }
 
     private fun unregisterReceivers(context: Context) {
@@ -93,33 +96,38 @@ class Downloader(private val applicationInfo: ApplicationInfo,
     private fun initialiseDownloadManagerRequest(context: Context) {
 
         request = DownloadManager.Request(
-                Uri.parse(
-                        Constants.DOWNLOAD_URL + fullData.getLastVersion()!!.downloadLink))
-                .apply {
-                    setTitle(fullData.basicData.name)
-                    setDescription(context.getString(R.string.download_notification_description))
-                    setDestinationInExternalFilesDir(
-                            context,
-                            Environment.DIRECTORY_DOWNLOADS,
-                            applicationInfo.getApkOrXapkFileName(fullData, fullData.basicData))
-                }
+            Uri.parse(
+                Constants.DOWNLOAD_URL + fullData.getLastVersion()!!.downloadLink
+            )
+        )
+            .apply {
+                setTitle(fullData.basicData.name)
+                setDescription(context.getString(R.string.download_notification_description))
+                setDestinationInExternalFilesDir(
+                    context,
+                    Environment.DIRECTORY_DOWNLOADS,
+                    applicationInfo.getApkOrXapkFileName(fullData, fullData.basicData)
+                )
+            }
     }
 
     private fun initialiseDownloadManagerRequestForSystemApps(context: Context) {
 
         request = DownloadManager.Request(
-                Uri.parse(
-                        fullData.downloadUrl))
-                .apply {
-                    setTitle(fullData.name)
-                    setDescription(context.getString(R.string.download_notification_description))
-                    setDestinationInExternalFilesDir(
-                            context,
-                            Environment.DIRECTORY_DOWNLOADS,
-                            fullData.basicData.let { applicationInfo.getApkFilename(it) })
-                }
+            Uri.parse(
+                fullData.downloadUrl
+            )
+        )
+            .apply {
+                setTitle(fullData.name)
+                setDescription(context.getString(R.string.download_notification_description))
+                setDestinationInExternalFilesDir(
+                    context,
+                    Environment.DIRECTORY_DOWNLOADS,
+                    fullData.basicData.let { applicationInfo.getApkFilename(it) }
+                )
+            }
     }
-
 
     private fun handleDownloadUpdates() {
         notifier.start()
@@ -133,14 +141,17 @@ class Downloader(private val applicationInfo: ApplicationInfo,
             }
 
             downloadedBytes = cursor.getInt(
-                    cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
+            )
             totalBytes = cursor.getInt(
-                    cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
+            )
 
             val downloadStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
             cursor.close()
             if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL ||
-                    downloadStatus == DownloadManager.STATUS_FAILED) {
+                downloadStatus == DownloadManager.STATUS_FAILED
+            ) {
                 break
             }
         }
@@ -158,10 +169,11 @@ class Downloader(private val applicationInfo: ApplicationInfo,
             if (status != null && status == DownloadManager.STATUS_SUCCESSFUL) {
                 fullData.let {
                     IntegrityVerificationTask(
-                            applicationInfo,
-                            it,
-                            this@Downloader)
-                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
+                        applicationInfo,
+                        it,
+                        this@Downloader
+                    )
+                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
                 }
             } else {
                 downloaderInterface.onDownloadComplete(context, DownloadManager.STATUS_FAILED)

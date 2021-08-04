@@ -35,7 +35,7 @@ class GamesFragment() : Fragment() {
 
     private lateinit var categoriesViewModel: CategoriesViewModel
 
-    var color:Int = 0;
+    var color: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentGamesCategoriesBinding.inflate(inflater, container, false)
@@ -50,37 +50,42 @@ class GamesFragment() : Fragment() {
         val errorDescription = binding.errorLayout.errorDescription
 
         categoriesList.layoutManager = LinearLayoutManager(context)
-        color = requireArguments().getInt("color",0)
+        color = requireArguments().getInt("color", 0)
         categoriesList.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
-       errorResolve.setOnClickListener {
+        errorResolve.setOnClickListener {
             progressBar.visibility = View.VISIBLE
             categoriesViewModel.loadCategories(requireContext())
         }
         errorResolve.setTextColor(Color.parseColor("#ffffff"))
         errorResolve.setBackgroundColor(color)
 
-
         // Bind to the list of games categories
-        categoriesViewModel.getGamesCategories().observe(viewLifecycleOwner, Observer {
-            if (it!!.isNotEmpty()) {
-                categoriesList.adapter = context?.let { context -> CategoriesListAdapter(context, it, color) }
-                categoriesList.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
+        categoriesViewModel.getGamesCategories().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it!!.isNotEmpty()) {
+                    categoriesList.adapter = context?.let { context -> CategoriesListAdapter(context, it, color) }
+                    categoriesList.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                }
             }
-        })
+        )
 
         // Bind to the screen error
-        categoriesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                errorDescription.text = requireActivity().getString(it.description)
-                errorContainer.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-            } else {
-                errorContainer.visibility = View.GONE
+        categoriesViewModel.getScreenError().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it != null) {
+                    errorDescription.text = requireActivity().getString(it.description)
+                    errorContainer.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                } else {
+                    errorContainer.visibility = View.GONE
+                }
             }
-        })
+        )
 
         if (categoriesViewModel.getGamesCategories().value!!.isEmpty()) {
             categoriesViewModel.loadCategories(requireContext())
@@ -93,13 +98,13 @@ class GamesFragment() : Fragment() {
         _binding = null
     }
 
-    companion object{
-        fun newInstance(color:Int?) : GamesFragment{
+    companion object {
+        fun newInstance(color: Int?): GamesFragment {
             val gamesFragment = GamesFragment()
             val bundle = Bundle()
-            bundle.putInt("color",color!!)
+            bundle.putInt("color", color!!)
             gamesFragment.arguments = bundle
-            return  gamesFragment
+            return gamesFragment
         }
     }
 }

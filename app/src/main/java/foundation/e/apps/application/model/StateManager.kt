@@ -56,11 +56,17 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
                 State.DOWNLOADING
             } else if (appManager.isInstalling(app) && app.isInstalling) {
                 State.INSTALLING
-            } else if (info.isLastVersionInstalled(context,
-                            basicData.getLastVersion() ?: "")) {
+            } else if (info.isLastVersionInstalled(
+                    context,
+                    basicData.getLastVersion() ?: ""
+                )
+            ) {
                 State.INSTALLED
-            } else if (info.isInstalled(context) && !info.isLastVersionInstalled(context,
-                            basicData.getLastVersion() ?: "")) {
+            } else if (info.isInstalled(context) && !info.isLastVersionInstalled(
+                    context,
+                    basicData.getLastVersion() ?: ""
+                )
+            ) {
                 State.NOT_UPDATED
             } else {
                 State.NOT_DOWNLOADED
@@ -91,11 +97,17 @@ class StateManager(private val info: ApplicationInfo, private val app: Applicati
             State.DOWNLOADING
         } else if (appManager.isInstalling(app) && app.isInstalling) {
             State.INSTALLING
-        } else if (info.isLastVersionInstalled(context,
-                        basicData.getLastVersion() ?: "")) {
+        } else if (info.isLastVersionInstalled(
+                context,
+                basicData.getLastVersion() ?: ""
+            )
+        ) {
             State.INSTALLED
-        } else if (info.isInstalled(context) && !info.isLastVersionInstalled(context,
-                        basicData.getLastVersion() ?: "")) {
+        } else if (info.isInstalled(context) && !info.isLastVersionInstalled(
+                context,
+                basicData.getLastVersion() ?: ""
+            )
+        ) {
             State.NOT_UPDATED
         } else {
             State.NOT_DOWNLOADED

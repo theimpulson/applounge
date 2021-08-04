@@ -22,6 +22,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +39,6 @@ import foundation.e.apps.common.ApplicationListAdapter
 import foundation.e.apps.databinding.FragmentUpdatesBinding
 import foundation.e.apps.updates.viewmodel.UpdatesViewModel
 
-
 class UpdatesFragment() : Fragment() {
     private var _binding: FragmentUpdatesBinding? = null
     private val binding get() = _binding!!
@@ -47,12 +47,12 @@ class UpdatesFragment() : Fragment() {
     private var applicationManager: ApplicationManager? = null
     private lateinit var recyclerView: RecyclerView
     private var applicationList = ArrayList<Application>()
-    var accentColorOS=0;
+    var accentColorOS = 0
     lateinit var reloadProgressBar: ProgressBar
 
     fun initialise(applicationManager: ApplicationManager, accentColorOS: Int) {
         this.applicationManager = applicationManager
-        this.accentColorOS=accentColorOS;
+        this.accentColorOS = accentColorOS
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -78,10 +78,9 @@ class UpdatesFragment() : Fragment() {
         progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
         reloadProgressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
 
-        //set accent color to Error button (Retry )
+        // set accent color to Error button (Retry )
         errorResolve.setTextColor(Color.parseColor("#ffffff"))
         errorResolve.setBackgroundColor(accentColorOS)
-
 
         // Initialise UI elements
         updatesViewModel.initialise(applicationManager!!)
@@ -110,45 +109,49 @@ class UpdatesFragment() : Fragment() {
         recyclerView.adapter = ApplicationListAdapter(requireActivity(), applicationList, accentColorOS)
 
         // Bind recycler view adapter to outdated applications list in view model
-        updatesViewModel.getApplications().observe(viewLifecycleOwner, Observer {
-            if (it != null) {
+        updatesViewModel.getApplications().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it != null) {
 
-
-                applicationList.clear()
-                applicationList.addAll(it)
-                progressBar.visibility = View.GONE
-                reloadProgressBar.visibility=View.GONE
-                recyclerView.adapter?.notifyDataSetChanged()
-                recyclerView.scrollToPosition(0)
-                if (applicationList.isEmpty()) {
-                    recyclerView.visibility = View.GONE
-                    splashContainer.visibility = View.VISIBLE
-                    updateAll.isEnabled = false
-                } else {
-                    splashContainer.visibility = View.GONE
-                    recyclerView.visibility = View.VISIBLE
-                    updateAll.isEnabled = true
+                    applicationList.clear()
+                    applicationList.addAll(it)
+                    progressBar.visibility = View.GONE
+                    reloadProgressBar.visibility = View.GONE
+                    recyclerView.adapter?.notifyDataSetChanged()
+                    recyclerView.scrollToPosition(0)
+                    if (applicationList.isEmpty()) {
+                        recyclerView.visibility = View.GONE
+                        splashContainer.visibility = View.VISIBLE
+                        updateAll.isEnabled = false
+                    } else {
+                        splashContainer.visibility = View.GONE
+                        recyclerView.visibility = View.VISIBLE
+                        updateAll.isEnabled = true
+                    }
                 }
             }
-        })
+        )
 
         // Bind to the screen error
-        updatesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                errorDescription.text = requireActivity().getString(it.description)
-                errorContainer.visibility = View.VISIBLE
-                updateAll.isEnabled = false
-                progressBar.visibility = View.GONE
-                reloadProgressBar.visibility = View.GONE
+        updatesViewModel.getScreenError().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it != null) {
+                    errorDescription.text = requireActivity().getString(it.description)
+                    errorContainer.visibility = View.VISIBLE
+                    updateAll.isEnabled = false
+                    progressBar.visibility = View.GONE
+                    reloadProgressBar.visibility = View.GONE
 
-                splashContainer.visibility = View.GONE
-                recyclerView.visibility = View.GONE
-            } else {
-                errorContainer.visibility = View.GONE
+                    splashContainer.visibility = View.GONE
+                    recyclerView.visibility = View.GONE
+                } else {
+                    errorContainer.visibility = View.GONE
+                }
             }
-        })
+        )
         updatesViewModel.loadApplicationList(requireContext())
-
 
         return binding.root
     }
@@ -158,14 +161,16 @@ class UpdatesFragment() : Fragment() {
         if (::updatesViewModel.isInitialized) {
             updatesViewModel.getApplications().value?.let {
                 it.forEach { application ->
-                    reloadProgressBar.visibility=View.VISIBLE
+                    reloadProgressBar.visibility = View.VISIBLE
                     application.checkForStateUpdate(requireContext())
                 }
-                val handler = Handler()
-                handler.postDelayed({
-                    reloadProgressBar.visibility=View.GONE
-                }, 10000)
-
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed(
+                    {
+                        reloadProgressBar.visibility = View.GONE
+                    },
+                    10000
+                )
             }
         }
     }

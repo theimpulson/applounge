@@ -15,19 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.XAPK
+package foundation.e.apps.xapk
 
+import android.os.LocaleList
+import android.text.TextUtils
+import java.util.*
 
+class LocaleUtils {
 
-object StringUtils {
-
-
-    fun parseInt(num: String): Int? {
-        return try {
-            num.toInt()
-        } catch (e: Exception) {
-            null
+    val systemLocal: Locale
+        get() {
+            return LocaleList.getDefault().get(0)
         }
+
+    private fun forLanguageTag(languageTag: String): Locale {
+        return Locale.forLanguageTag(languageTag)
     }
 
+    private fun toLanguageTag(locale: Locale): String {
+        val language = locale.language
+        val country = locale.country
+        val variant = locale.variant
+        return when {
+            TextUtils.isEmpty(country) -> language
+            TextUtils.isEmpty(variant) -> "$language-$country"
+            else -> "$language-$country-$variant"
+        }
+    }
 }

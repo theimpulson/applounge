@@ -49,25 +49,23 @@ class HomeRequest {
         }
     }
 
-
-
     data class Result(val success: Boolean, val home: Home)
 
     data class Home(
-            @JsonProperty("headings")
-            val headings: Map<String, String>?,
-            @JsonProperty(BANNER_APPS_KEY)
-            val bannerApps: List<BasicData>,
-            @JsonProperty(TOP_UPDATED_APPS_KEY)
-            val topUpdatedApps: List<BasicData>,
-            @JsonProperty(TOP_UPDATED_GAMES_KEY)
-            val topUpdatedGames: List<BasicData>,
-            @JsonProperty(POPULAR_APPS_24_HOUR_KEY)
-            val popularAppsIn24Hours: List<BasicData>,
-            @JsonProperty(POPULAR_GAMES_24_HOUR_KEY)
-            val popularGamesIn24Hours: List<BasicData>,
-            @JsonProperty(DISCOVER_KEY)
-            val discover: List<BasicData>
+        @JsonProperty("headings")
+        val headings: Map<String, String>?,
+        @JsonProperty(BANNER_APPS_KEY)
+        val bannerApps: List<BasicData>,
+        @JsonProperty(TOP_UPDATED_APPS_KEY)
+        val topUpdatedApps: List<BasicData>,
+        @JsonProperty(TOP_UPDATED_GAMES_KEY)
+        val topUpdatedGames: List<BasicData>,
+        @JsonProperty(POPULAR_APPS_24_HOUR_KEY)
+        val popularAppsIn24Hours: List<BasicData>,
+        @JsonProperty(POPULAR_GAMES_24_HOUR_KEY)
+        val popularGamesIn24Hours: List<BasicData>,
+        @JsonProperty(DISCOVER_KEY)
+        val discover: List<BasicData>
     ) {
 
         companion object {
@@ -77,9 +75,11 @@ class HomeRequest {
             private const val POPULAR_APPS_24_HOUR_KEY = "popular_apps_in_last_24_hours"
             private const val POPULAR_GAMES_24_HOUR_KEY = "popular_games_in_last_24_hours"
             private const val DISCOVER_KEY = "discover"
-            private val KEYS = setOf(TOP_UPDATED_APPS_KEY,
-                    TOP_UPDATED_GAMES_KEY, POPULAR_APPS_24_HOUR_KEY,
-                    POPULAR_GAMES_24_HOUR_KEY, DISCOVER_KEY)
+            private val KEYS = setOf(
+                TOP_UPDATED_APPS_KEY,
+                TOP_UPDATED_GAMES_KEY, POPULAR_APPS_24_HOUR_KEY,
+                POPULAR_GAMES_24_HOUR_KEY, DISCOVER_KEY
+            )
         }
 
         fun getBannerApps(applicationManager: ApplicationManager, context: Context): ArrayList<Application> {
@@ -91,7 +91,7 @@ class HomeRequest {
             KEYS.forEach {
                 var heading = headings?.get(it)
                 heading = heading
-                        ?: "" // Use default heading as empty to let it generate from the key itself.
+                    ?: "" // Use default heading as empty to let it generate from the key itself.
                 val parsedApps = when (it) {
                     TOP_UPDATED_APPS_KEY -> ApplicationParser.parseToApps(applicationManager, context, topUpdatedApps.toTypedArray())
                     TOP_UPDATED_GAMES_KEY -> ApplicationParser.parseToApps(applicationManager, context, topUpdatedGames.toTypedArray())

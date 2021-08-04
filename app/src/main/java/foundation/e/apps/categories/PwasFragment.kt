@@ -57,24 +57,30 @@ class PwasFragment : Fragment() {
         }
 
         // Bind to the list of pwas categories
-        categoriesViewModel.getPwasCategories().observe(viewLifecycleOwner, Observer {
-            if (it!!.isNotEmpty()) {
-                categoriesList.adapter = context?.let { context -> CategoriesListAdapter(context, it, null) }
-                categoriesList.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
+        categoriesViewModel.getPwasCategories().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it!!.isNotEmpty()) {
+                    categoriesList.adapter = context?.let { context -> CategoriesListAdapter(context, it, null) }
+                    categoriesList.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                }
             }
-        })
+        )
 
         // Bind to the screen error
-        categoriesViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                errorDescription.text = requireActivity().getString(it.description)
-                errorContainer.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-            } else {
-                errorContainer.visibility = View.GONE
+        categoriesViewModel.getScreenError().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it != null) {
+                    errorDescription.text = requireActivity().getString(it.description)
+                    errorContainer.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                } else {
+                    errorContainer.visibility = View.GONE
+                }
             }
-        })
+        )
 
         if (categoriesViewModel.getPwasCategories().value!!.isEmpty()) {
             categoriesViewModel.loadCategories(requireContext())

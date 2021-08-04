@@ -26,29 +26,32 @@ import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.utils.Constants
 import foundation.e.apps.utils.Error
 
-class SearchElement(private val query: String, private val pageNumber: Int,
-                    private val applicationManager: ApplicationManager,
-                    private val callback: SearchModelInterface) :
-        AsyncTask<Context, Void, ArrayList<Application>>() {
+class SearchElement(
+    private val query: String,
+    private val pageNumber: Int,
+    private val applicationManager: ApplicationManager,
+    private val callback: SearchModelInterface
+) :
+    AsyncTask<Context, Void, ArrayList<Application>>() {
     private var error: Error? = null
 
     override fun doInBackground(vararg params: Context): ArrayList<Application> {
         val apps = ArrayList<Application>()
         if ("microG Exposure Notification version".contains(query, true)) {
-                apps.addAll(loadMicroGVersion(params[0]))
+            apps.addAll(loadMicroGVersion(params[0]))
         }
 
         AllAppsSearchRequest(query, pageNumber, Constants.RESULTS_PER_PAGE)
-                .request { applicationError, searchResult ->
-                    when (applicationError) {
-                        null -> {
-                            apps.addAll(searchResult!!.getApplications(applicationManager, params[0]))
-                        }
-                        else -> {
-                            error = applicationError
-                        }
+            .request { applicationError, searchResult ->
+                when (applicationError) {
+                    null -> {
+                        apps.addAll(searchResult!!.getApplications(applicationManager, params[0]))
+                    }
+                    else -> {
+                        error = applicationError
                     }
                 }
+            }
 
         return apps
     }
@@ -61,17 +64,17 @@ class SearchElement(private val query: String, private val pageNumber: Int,
     private fun loadMicroGVersion(context: Context): List<Application> {
         var gitlabData: GitlabDataRequest.GitlabDataResult? = null
         GitlabDataRequest()
-                .requestGmsCoreRelease { applicationError, listGitlabData ->
+            .requestGmsCoreRelease { applicationError, listGitlabData ->
 
-                    when (applicationError) {
-                        null -> {
-                            gitlabData = listGitlabData!!
-                        }
-                        else -> {
-                            error = applicationError
-                        }
+                when (applicationError) {
+                    null -> {
+                        gitlabData = listGitlabData!!
+                    }
+                    else -> {
+                        error = applicationError
                     }
                 }
+            }
         return if (gitlabData != null) {
             gitlabData!!.getApplications(applicationManager, context)
         } else {

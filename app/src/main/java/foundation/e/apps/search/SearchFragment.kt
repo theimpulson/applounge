@@ -61,11 +61,11 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
     private var applicationList = ArrayList<Application>()
     private var applicationManager: ApplicationManager? = null
     private var isLoadingMoreApplications = false
-    var accentColorOS=0;
+    var accentColorOS = 0
 
     fun initialise(applicationManager: ApplicationManager, accentColorOS: Int) {
         this.applicationManager = applicationManager
-        this.accentColorOS=accentColorOS;
+        this.accentColorOS = accentColorOS
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -95,13 +95,13 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         errorResolve.setTextColor(Color.parseColor("#ffffff"))
         errorResolve.setBackgroundColor(accentColorOS)
 
-
-        errorResolve.visibility=View.GONE
+        errorResolve.visibility = View.GONE
         searchViewModel.initialise(applicationManager!!)
         recyclerView.visibility = View.GONE
         progressBar.visibility = View.GONE
         if (searchViewModel.getScreenError().value == null &&
-                searchViewModel.getApplications().value == null) {
+            searchViewModel.getApplications().value == null
+        ) {
             splashContainer.visibility = View.VISIBLE
         } else {
             splashContainer.visibility = View.GONE
@@ -116,9 +116,11 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         // Initialise search view
         val from = arrayOf(SUGGESTION_KEY)
         val to = intArrayOf(android.R.id.text1)
-        searchView.suggestionsAdapter = SimpleCursorAdapter(context,
-                R.layout.custom_simple_list_item, null, from, to,
-                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
+        searchView.suggestionsAdapter = SimpleCursorAdapter(
+            context,
+            R.layout.custom_simple_list_item, null, from, to,
+            CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER
+        )
 
         // Initialise recycler view
         recyclerView.setHasFixedSize(true)
@@ -128,7 +130,8 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(1) &&
-                        applicationList.size >= Constants.RESULTS_PER_PAGE) {
+                    applicationList.size >= Constants.RESULTS_PER_PAGE
+                ) {
                     loadMoreContainer.visibility = View.VISIBLE
                     recyclerView.scrollToPosition(applicationList.size - 1)
                     if (!isLoadingMoreApplications) {
@@ -142,47 +145,56 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         })
 
         // Bind search view suggestions adapter to search suggestions list in view model
-        searchViewModel.getSuggestions().observe(viewLifecycleOwner, Observer {
-            populateSuggestionsAdapter(it)
-        })
+        searchViewModel.getSuggestions().observe(
+            viewLifecycleOwner,
+            Observer {
+                populateSuggestionsAdapter(it)
+            }
+        )
 
         // Bind recycler view adapter to search results list in view model
-        searchViewModel.getApplications().observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                applicationList.clear()
-                applicationList.addAll(it)
-                progressBar.visibility = View.GONE
-                recyclerView.adapter?.notifyDataSetChanged()
-                if (!isLoadingMoreApplications) {
-                    recyclerView.scrollToPosition(0)
-                }
-                loadMoreContainer.visibility = View.GONE
-                isLoadingMoreApplications = false
-                if (applicationList.isEmpty()) {
-                    recyclerView.visibility = View.GONE
-                } else {
-                    recyclerView.visibility = View.VISIBLE
-                }
-            }
-        })
-
-        // Bind to the screen error
-        searchViewModel.getScreenError().observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                if (!isLoadingMoreApplications) {
+        searchViewModel.getApplications().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it != null) {
                     applicationList.clear()
-                    errorDescription.text = requireActivity().getString(it.description)
-                    errorContainer.visibility = View.VISIBLE
+                    applicationList.addAll(it)
                     progressBar.visibility = View.GONE
-                    loadMoreContainer.visibility = View.GONE
-                } else {
+                    recyclerView.adapter?.notifyDataSetChanged()
+                    if (!isLoadingMoreApplications) {
+                        recyclerView.scrollToPosition(0)
+                    }
                     loadMoreContainer.visibility = View.GONE
                     isLoadingMoreApplications = false
+                    if (applicationList.isEmpty()) {
+                        recyclerView.visibility = View.GONE
+                    } else {
+                        recyclerView.visibility = View.VISIBLE
+                    }
                 }
-            } else {
-                errorContainer.visibility = View.GONE
             }
-        })
+        )
+
+        // Bind to the screen error
+        searchViewModel.getScreenError().observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it != null) {
+                    if (!isLoadingMoreApplications) {
+                        applicationList.clear()
+                        errorDescription.text = requireActivity().getString(it.description)
+                        errorContainer.visibility = View.VISIBLE
+                        progressBar.visibility = View.GONE
+                        loadMoreContainer.visibility = View.GONE
+                    } else {
+                        loadMoreContainer.visibility = View.GONE
+                        isLoadingMoreApplications = false
+                    }
+                } else {
+                    errorContainer.visibility = View.GONE
+                }
+            }
+        )
 
         // Handle suggestion clicks
         searchView.setOnSuggestionListener(this)
@@ -192,23 +204,21 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
         configureCloseButton(searchView)
 
-
         return binding.root
     }
 
     private fun automaticSearchMicroG() {
         if (arguments?.getString(Constants.MICROG_QUERY) != null) {
             val query = arguments?.getString(Constants.MICROG_QUERY).toString()
-            searchView.setQuery(query,true)
+            searchView.setQuery(query, true)
             hideKeyboard(activity as Activity)
             focusView!!.requestFocus()
             recyclerView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             splashContainer.visibility = View.GONE
-            searchViewModel.onSearchQuerySubmitted(requireContext(),query)
+            searchViewModel.onSearchQuerySubmitted(requireContext(), query)
         }
     }
-
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {
@@ -229,11 +239,9 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
         return true
     }
 
-
-
     private fun configureCloseButton(searchView: SearchView) {
 
-        val searchClose =  searchView.javaClass.getDeclaredField("mCloseButton")
+        val searchClose = searchView.javaClass.getDeclaredField("mCloseButton")
         searchClose.isAccessible = true
         val closeImage = searchClose.get(searchView) as ImageView
         closeImage.setImageResource(R.drawable.ic_close_button) // your image here
@@ -262,9 +270,9 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
     private fun hideKeyboard(activity: Activity) {
         val inputMethodManager = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        //Find the currently focused view, so we can grab the correct window token from it.
+        // Find the currently focused view, so we can grab the correct window token from it.
         var view = activity.currentFocus
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        // If no view currently has focus, create a new one, just so we can grab a window token from it
         if (view == null) {
             view = View(activity)
         }
