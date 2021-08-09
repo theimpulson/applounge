@@ -107,4 +107,5 @@
     <string name="divider">Trennzeichen</string>
     <string name="package_name_help_example">Quellenbeispiel, das ein Paket und dessen Name anzeigt</string>
     <string name="not_able_install">Diese App kann nicht installiert werden! Die Überprüfung ist fehlgeschlagen.</string>
+    <string name="misc">Verschiedenes</string>
 </resources>
