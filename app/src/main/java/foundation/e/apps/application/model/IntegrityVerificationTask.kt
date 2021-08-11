@@ -159,9 +159,8 @@ class IntegrityVerificationTask(
                 }
             }
         try {
-            if (packageName == JSONObject(jsonResponse).get(packageName)) {
-                return true
-            }
+
+            return JSONObject(jsonResponse).has(packageName);
         } catch (e: Exception) {
             if (e is JSONException) {
                 Log.d(TAG, "$packageName is not a system application")
