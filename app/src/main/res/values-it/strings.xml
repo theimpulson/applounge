@@ -100,4 +100,12 @@
     <string name="exit">Tocca ancora INDIETRO per uscire</string>
     <string name="Signature_verification_failed">Verifica della firma non riuscita, installazione interrotta</string>
     <string name="app_package_name">Nome del pacchetto</string>
+    <string name="misc">Varie</string>
+    <string name="not_able_install">Non è possibile installare questa applicazione! verifica fallita</string>
+    <string name="divider">Divisore</string>
+    <string name="image_carousel">Carosello immagini</string>
+    <string name="error_incident">Si è verificato un errore</string>
+    <string name="package_name_help_example">Esempio di scr che mostra un pacchetto e il suo nome</string>
+    <string name="trackers_expand">Mostra l\'elenco dei trackers</string>
+    <string name="permissions_expand">Mostra l\'elenco dei permessi</string>
 </resources>
