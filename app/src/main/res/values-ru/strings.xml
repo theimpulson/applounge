@@ -107,4 +107,6 @@
     <string name="trackers_expand">Показать список трекеров</string>
     <string name="permissions_expand">Показать список разрешений</string>
     <string name="Signature_verification_failed">Ошибка проверки подписи, установка прерывается</string>
+    <string name="misc">Разное</string>
+    <string name="not_able_install">Не удалось установить это приложение! проверка не удалась</string>
 </resources>
