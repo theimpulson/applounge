@@ -52,7 +52,7 @@
     <string name="menu_home">Главная</string>
     <string name="more">подробнее</string>
     <string name="application_description_activity_title">Описание</string>
-    <string name="ok"><font fgcolor="#FF0088ED">ОК</font></string>
+    <string name="ok"><font fgcolor="#FF0088ED">Ок</font></string>
     <string name="no_trackers">Не используются трекеры</string>
     <string name="no_permissions">Нет запрошенных разрешений</string>
     <string name="download_notification_description">Загрузка</string>
