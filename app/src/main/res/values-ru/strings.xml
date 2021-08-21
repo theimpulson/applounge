@@ -93,7 +93,7 @@
     <string name="app_rating_content_description">Рейтинг приложения</string>
     <string name="app_privacy_score_content_description">Показатель конфиденциальности приложения</string>
     <string name="app_icon_content_description">Иконка приложения</string>
-    <string name="service_description">Этот сервис используется приложеним Apps для управления, загрузки и установки приложений. Остановка сервиса может привести к сбою в загрузке приложений.</string>
+    <string name="service_description">Этот сервис используется приложением Apps для управления, загрузки и установки приложений. Остановка сервиса может привести к сбою в загрузке приложений.</string>
     <string name="not_available_full">Не доступно</string>
     <string name="not_available">Н/Д</string>
     <string name="app_name">Приложения</string>
