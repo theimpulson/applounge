@@ -88,7 +88,7 @@
     <string name="state_installing">Установка</string>
     <string name="featured">Рекомендуемые</string>
     <string name="action_installing">Установка</string>
-    <string name="action_cancel">Оменить</string>
+    <string name="action_cancel">Отменить</string>
     <string name="action_install">Установить</string>
     <string name="app_rating_content_description">Рейтинг приложения</string>
     <string name="app_privacy_score_content_description">Показатель конфиденциальности приложения</string>
