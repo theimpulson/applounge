@@ -23,6 +23,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.Signature
 import android.os.AsyncTask
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -49,18 +50,24 @@ import java.security.MessageDigest
 import java.security.Security
 
 class IntegrityVerificationTask(
-    private val applicationInfo: ApplicationInfo,
-    private val fullData: FullData,
-    private val integrityVerificationCallback: IntegrityVerificationCallback
+        private val applicationInfo: ApplicationInfo,
+        private val fullData: FullData,
+        private val integrityVerificationCallback: IntegrityVerificationCallback
 ) :
+
     AsyncTask<Context, Void, Context>() {
+    private lateinit var systemJsonData: JSONObject
     private var verificationSuccessful: Boolean = false
     private var TAG = "IntegrityVerificationTask"
+
+
 
     override fun doInBackground(vararg context: Context): Context {
         try {
             verificationSuccessful = if (isSystemApplication(fullData.packageName)) {
-                verifySystemSignature(context[0])
+                //verifySystemSignature(context[0])
+                verifySystemValues(context[0])
+
             } else if (isfDroidApplication(fullData.packageName)) {
                 verifyFdroidSignature(context[0])
             } else {
@@ -89,7 +96,28 @@ class IntegrityVerificationTask(
             return fullData.getLastVersion()?.signature ==
                 getSystemSignature(context.packageManager)?.toCharsString()
         }
+        else{
+
+        }
         return false
+    }
+    private fun verifySystemValues(context: Context): Boolean {
+
+        val pm: PackageManager = context.packageManager
+        val fullPath: String = applicationInfo.getApkFile(
+                context,
+                fullData.basicData
+        ).absolutePath
+        val info = pm.getPackageArchiveInfo(fullPath, 0)
+        if (info != null) {
+            Log.e("TAG", ".................."+ info.packageName)
+            Log.e("TAG", ".................."+ info.signatures)
+        };
+
+        return false;
+//
+//        return (fullData.basicData.id==systemJsonData.getString("project_id")
+//                && fullData.basicData.name==systemJsonData.getString("app_name"))
     }
 
     private fun getFirstSignature(pkg: PackageInfo?): Signature? {
@@ -111,17 +139,17 @@ class IntegrityVerificationTask(
     private fun verifyFdroidSignature(context: Context): Boolean {
         Security.addProvider(BouncyCastleProvider())
         return verifyAPKSignature(
-            context,
-            BufferedInputStream(
-                FileInputStream(
-                    applicationInfo.getApkFile(
-                        context,
-                        fullData.basicData
-                    ).absolutePath
-                )
-            ),
-            fullData.getLastVersion()!!.signature.byteInputStream(Charsets.UTF_8),
-            context.assets.open("f-droid.org-signing-key.gpg")
+                context,
+                BufferedInputStream(
+                        FileInputStream(
+                                applicationInfo.getApkFile(
+                                        context,
+                                        fullData.basicData
+                                ).absolutePath
+                        )
+                ),
+                fullData.getLastVersion()!!.signature.byteInputStream(Charsets.UTF_8),
+                context.assets.open("f-droid.org-signing-key.gpg")
         )
     }
 
@@ -159,8 +187,14 @@ class IntegrityVerificationTask(
                 }
             }
         try {
-
-            return JSONObject(jsonResponse).has(packageName);
+            if(JSONObject(jsonResponse).has(packageName)){
+                 systemJsonData = JSONObject(jsonResponse).getJSONObject(packageName);
+                return true
+            }
+            else{
+                return false
+            }
+           // return JSONObject(jsonResponse).has(packageName);
         } catch (e: Exception) {
             if (e is JSONException) {
                 Log.d(TAG, "$packageName is not a system application")
@@ -199,10 +233,10 @@ class IntegrityVerificationTask(
     }
 
     private fun verifyAPKSignature(
-        context: Context,
-        apkInputStream: BufferedInputStream,
-        apkSignatureInputStream: InputStream,
-        publicKeyInputStream: InputStream
+            context: Context,
+            apkInputStream: BufferedInputStream,
+            apkSignatureInputStream: InputStream,
+            publicKeyInputStream: InputStream
     ): Boolean {
         try {
 
@@ -220,8 +254,8 @@ class IntegrityVerificationTask(
 
             val pgpPublicKeyRingCollection =
                 PGPPublicKeyRingCollection(
-                    PGPUtil.getDecoderStream(publicKeyInputStream),
-                    JcaKeyFingerprintCalculator()
+                        PGPUtil.getDecoderStream(publicKeyInputStream),
+                        JcaKeyFingerprintCalculator()
                 )
 
             val signature = pgpSignatureList.get(0)
