@@ -23,7 +23,6 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.Signature
 import android.os.AsyncTask
-import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -49,6 +48,7 @@ import java.io.InputStream
 import java.security.MessageDigest
 import java.security.Security
 
+
 class IntegrityVerificationTask(
         private val applicationInfo: ApplicationInfo,
         private val fullData: FullData,
@@ -65,7 +65,9 @@ class IntegrityVerificationTask(
     override fun doInBackground(vararg context: Context): Context {
         try {
             verificationSuccessful = if (isSystemApplication(fullData.packageName)) {
-                verifySystemSignature(context[0])
+
+                verifyAPKSignature(context[0])
+            // verifySystemSignature(context[0])
                // verifySystemValues(context[0])
 
             } else if (isfDroidApplication(fullData.packageName)) {
@@ -100,7 +102,31 @@ class IntegrityVerificationTask(
     }
 
     //get signature from apk and check
+    private fun verifyAPKSignature(context: Context): Boolean {
 
+        //get Signature from APK
+        if (getAPKSignature(context)!=null) {
+            return getAPKSignature(context)?.toCharsString() ==
+                    getSystemSignature(context.packageManager)?.toCharsString()
+        }
+        return false
+    }
+
+    private fun getAPKSignature(context: Context): Signature? {
+        try {
+            val fullPath: String = applicationInfo.getApkFile(
+                    context,
+                    fullData.basicData
+            ).absolutePath
+
+            val releaseSig = context.packageManager.getPackageArchiveInfo(fullPath, PackageManager.GET_SIGNATURES)
+            return getFirstSignature(releaseSig)
+
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.d(TAG, "Unable to find the package: android")
+        }
+        return null
+    }
 
 
     private fun verifySystemValues(context: Context): Boolean {
@@ -112,8 +138,8 @@ class IntegrityVerificationTask(
         ).absolutePath
         val info = pm.getPackageArchiveInfo(fullPath, 0)
         if (info != null) {
-            Log.e("TAG", ".................."+ info.packageName)
-            Log.e("TAG", ".................."+ info.signatures)
+            Log.e("TAG", ".................." + info.packageName)
+            Log.e("TAG", ".................." + info.signatures)
         }
 
         return false;
