@@ -65,11 +65,7 @@ class IntegrityVerificationTask(
     override fun doInBackground(vararg context: Context): Context {
         try {
             verificationSuccessful = if (isSystemApplication(fullData.packageName)) {
-
                 verifyAPKSignature(context[0])
-            // verifySystemSignature(context[0])
-               // verifySystemValues(context[0])
-
             } else if (isfDroidApplication(fullData.packageName)) {
                 verifyFdroidSignature(context[0])
             } else {
@@ -141,11 +137,7 @@ class IntegrityVerificationTask(
             Log.e("TAG", ".................." + info.packageName)
             Log.e("TAG", ".................." + info.signatures)
         }
-
         return false;
-//
-//        return (fullData.basicData.id==systemJsonData.getString("project_id")
-//                && fullData.basicData.name==systemJsonData.getString("app_name"))
     }
 
     private fun getFirstSignature(pkg: PackageInfo?): Signature? {
