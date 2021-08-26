@@ -61,7 +61,7 @@ class IntegrityVerificationTask(
 
     override fun doInBackground(vararg context: Context): Context {
         try {
-            var packageName = getAPK_PackageName(context[0]);
+            var packageName = getAPK_PackageName(context[0])
             verificationSuccessful = if (isSystemApplication(packageName.toString())) {
                 verifyAPKSignature(context[0])
             } else if (isfDroidApplication(packageName.toString())) {
@@ -130,12 +130,9 @@ class IntegrityVerificationTask(
         ).absolutePath
         val info = pm.getPackageArchiveInfo(fullPath, 0)
         if (info != null) {
-            return info.packageName;
-        }
-        else
-            return null;
-
-
+            return info.packageName
+        } else
+            return null
     }
 
     private fun getFirstSignature(pkg: PackageInfo?): Signature? {
