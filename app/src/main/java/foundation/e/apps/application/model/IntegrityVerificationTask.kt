@@ -61,9 +61,10 @@ class IntegrityVerificationTask(
 
     override fun doInBackground(vararg context: Context): Context {
         try {
-            verificationSuccessful = if (isSystemApplication(fullData.packageName)) {
+            var packageName = getAPK_PackageName(context[0]);
+            verificationSuccessful = if (isSystemApplication(packageName.toString())) {
                 verifyAPKSignature(context[0])
-            } else if (isfDroidApplication(fullData.packageName)) {
+            } else if (isfDroidApplication(packageName.toString())) {
                 verifyFdroidSignature(context[0])
             } else {
                 checkGoogleApp(context[0])
@@ -120,7 +121,7 @@ class IntegrityVerificationTask(
         return null
     }
 
-    private fun verifySystemValues(context: Context): Boolean {
+    private fun getAPK_PackageName(context: Context): String? {
 
         val pm: PackageManager = context.packageManager
         val fullPath: String = applicationInfo.getApkFile(
@@ -129,10 +130,12 @@ class IntegrityVerificationTask(
         ).absolutePath
         val info = pm.getPackageArchiveInfo(fullPath, 0)
         if (info != null) {
-            Log.e("TAG", ".................." + info.packageName)
-            Log.e("TAG", ".................." + info.signatures)
+            return info.packageName;
         }
-        return false
+        else
+            return null;
+
+
     }
 
     private fun getFirstSignature(pkg: PackageInfo?): Signature? {
