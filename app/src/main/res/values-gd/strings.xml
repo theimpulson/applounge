@@ -1,2 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="misc">Measgaichte</string>
+    <string name="not_able_install">Cha b’ urrainn dhuinn an aplacaid seo a stàladh! Dh’fhàillig leis an dearbhadh</string>
+    <string name="divider">Sgaradair</string>
+    <string name="image_carousel">Timcheallan dhealbhan</string>
+    <string name="error_incident">Thachair mearachd</string>
+    <string name="package_name_help_example">Ball-eisimpleir a sheallas pacaid ’s an t-ainm a th’ oirre</string>
+    <string name="trackers_expand">Seall liosta nan tracaichean</string>
+    <string name="permissions_expand">Seall liosta nan ceadan</string>
+    <string name="Signature_verification_failed">Dh’fhàillig le dearbhadh an t-soidhnidh, a’ sgur dhen stàladh</string>
+    <string name="pwa_icon">Progressive Web App</string>
+    <string name="error_apk_incompatible">Chan eil an aplacaid seo co-chòrdail ris an uidheam agad.</string>
+    <string name="error_no_error">Chan eil mearachd ann.</string>
+    <string name="error_package_already_exists">Tha an aplacaid seo ri fhaighinn no chaidh a h-iarraidh mu thràth.</string>
+    <string name="error_invalid_package_name">Cha b’ urrainn dhuinn an t-iarrtas a chur a-null. Cuir a-steach ainm pacaide dligheach.</string>
+    <string name="error_no_screenshots_available">Chan eil glacadh-sgrìn ri làimh</string>
+    <string name="error_resolve">Feuch ris a-rithist</string>
+    <string name="error_install_failed">Cha b’ urrainn dhuinn an aplacaid a stàladh! Feuch ris a-rithist an ceann greis.</string>
+    <string name="error_apk_corrupt">Chaidh an luchdadh a-nuas a bhriseadh! Feuch ris a-rithist an ceann greis.</string>
+    <string name="error_apk_unavailable">Chan eil an aplacaid seo ri fhaighinn an-dràsta! Feuch ris a-rithist an ceann greis.</string>
+    <string name="error_no_results">Cha deach aplacaid a lorg.</string>
+    <string name="error_unknown">Chaidh rudeigin ceàrr! Feuch ris a-rithist an ceann greis.</string>
+    <string name="error_request_timeout">Thug am frithealaiche ro fhada a’ freagairt! Feuch ris a-rithist an ceann greis.</string>
+    <string name="error_server_unavailable">Chan eil am frithealaiche ri fhaighinn! Feuch ris a-rithist an ceann greis.</string>
+    <string name="error_no_internet">Chan urrainn dhuinn ceangal a dhèanamh! Thoir sùil air a’ cheangal ris an eadar-lìon agad is feuch ris a-rithist.</string>
+    <string name="error_storage_permission_denied">Tha feum air inntrigeadh dhan stòras airson aplacaidean a luchdadh a-nuas.</string>
+    <string name="show_only_pwa_apps">Na seall ach Progressive Web Apps</string>
+    <string name="show_only_open_source_apps">Na seall ach aplacaidean le bun-tùs fosgailte</string>
+    <string name="Show_all_apps">Seall na h-uile aplacaid</string>
+    <string name="Show_applications">Seall na h-aplacaidean:</string>
+    <string name="package_name_find_text">Airson an t-ainm pacaide a lorg a tha air aplacaid a chaidh a stàladh air an uidheam agad, tadhail air “Roghainnean an t-siostaim” &gt; “Aplacaidean” &gt; [an aplacaid agad]. Bu chòir dhut ainm na pacaide fhaicinn aig bonn na duilleige.
+\n*Faodaidh seo a bhith beagan eadar-dhealaichte air cuid a dh’uidheaman.</string>
+    <string name="package_name_find_title">Ciamar a lorgas mi ainm pacaide air aplacaid\?</string>
+    <string name="package_name_help_text">’S e aithnichear àraidh do dh’aplacaid Android a th’ ann an ainm pacaide. Tha litrichean beaga air ainmean phacaidean mar as trice is iad ’gan sgrìobhadh san fhòrmat seo: “àrainn.companaidh.aplacaid”</string>
+    <string name="package_name_help_title">Dè tha an t-ainm a th’ air a’ phacaid\?</string>
+    <string name="app_request_successful_text">Chaidh an aplacaid iarraidh!</string>
+    <string name="submit_button_text">Cuir a-null</string>
+    <string name="edit_text_hint">Ainm na pacaide</string>
+    <string name="preference_apps_request_app_summary">Iarr aplacaid nach eil ri faighinn aig an àm seo</string>
+    <string name="preference_apps_request_app_title">Iarr aplacaid</string>
+    <string name="preference_update_notify_available_description">Seall brath nuair a bhios ùrachadh air aplacaid ri fhaighinn</string>
+    <string name="preference_update_notify_available_title">Seall na h-ùrachaidhean a tha ri fhaighinn</string>
+    <string name="preference_update_install_automatically_description">Luchdaich a-nuas is stàlaich ùrachaidhean air aplacaidean sa chùlaibh</string>
+    <string name="preference_update_install_automatically_title">Stàlaich na h-ùrachaidhean gu fèin-obrachail</string>
+    <string name="preference_update_wifi_only_description">Ùraich aplacaidean gu fèin-obrachail air lìonraidhean neo-mheadaraichte a-mhàin, can WiFi</string>
+    <string name="preference_update_wifi_only_title">Air lìonraidhean neo-mheadaraichte a-mhàin</string>
+    <string name="preference_update_interval_title">Eadaramh toirt sùil airson ùrachaidhean</string>
+    <string name="preference_update_interval_default">24</string>
+    <string name="preference_updates_title">Ùrachaidhean</string>
+    <string name="updates_notification_unmetered_network_warning">A’ feitheamh ri lìonra neo-mheadaraichte</string>
+    <string name="MANUALLY_INSTALL_updates_notification_text">Cha dèid ùrachaidhean nan aplacaidean a stàladh gu fèin-obrachail</string>
+    <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Thèid ùrachaidhean nan aplacaidean a stàladh gu fèin-obrachail</string>
+    <plurals name="updates_notification_title">
+        <item quantity="one">Tha %1$d ùrachadh air aplacaid ri fhaighinn</item>
+        <item quantity="two">Tha %1$d ùrachadh air aplacaidean ri fhaighinn</item>
+        <item quantity="few">Tha %1$d ùrachaidhean air aplacaidean ri fhaighinn</item>
+        <item quantity="other">Tha %1$d ùrachadh air aplacaidean ri fhaighinn</item>
+    </plurals>
+    <string name="updates_splash_title">Tha gach aplacaid cho ùr ’s a ghabhas</string>
+    <string name="search_splash_title">Lorg aplacaid</string>
+    <string name="games_categories_title">Geamannan</string>
+    <string name="applications_categories_title">Aplacaidean</string>
+    <string name="menu_settings">Roghainnean</string>
+    <string name="menu_updates">Ùrachaidhean</string>
+    <string name="menu_search">Lorg</string>
+    <string name="menu_categories">Roinnean-seòrsa</string>
+    <string name="menu_home">Dachaigh</string>
+    <string name="more">barrachd</string>
+    <string name="application_description_activity_title">Tuairisgeul</string>
+    <string name="exit">Briog air “Air ais” a-rithist airson fhàgail</string>
+    <string name="ok"><font fgcolor="#FF0088ED">Ceart ma-thà</font></string>
+    <string name="no_trackers">Gun tracaiche</string>
+    <string name="no_permissions">Cha deach cead iarraidh</string>
+    <string name="download_notification_description">’Ga luchdadh a-nuas</string>
+    <string name="app_package_name">Ainm na pacaid</string>
+    <string name="app_licence">Ceadachas</string>
+    <string name="app_min_android">Riatanasan</string>
+    <string name="app_updated_on">Air ùrachadh</string>
+    <string name="app_version">Tionndadh</string>
+    <string name="app_information_title">Fiosrachadh</string>
+    <string name="app_trackers_title">Tracaichean</string>
+    <string name="app_permissions_title">Ceadan</string>
+    <string name="app_privacy_title">Sgrùdaidhean na prìobhaideachd</string>
+    <string name="app_rating_description">Sgòr à 5. Air àireamhachadh le rangachaidhean na h-aplacaid leis an luchd-chleachdaidh.</string>
+    <string name="app_rating">Rangachadh</string>
+    <string name="app_privacy_description_short">Air àireamhachadh le <a href="https://exodus-privacy.eu.org">sgrùdadh Exodus Privacy</a>.</string>
+    <string name="app_privacy_description">Sgòr à 10. Air àireamhachadh le <a href="https://exodus-privacy.eu.org">sgrùdaidhean Exodus Privacy</a>, stèidhichte air na ceadan is tracaichean a tha ’gan cleachdadh leis an aplacaid.</string>
+    <string name="app_privacy_score">Prìobhaideachd</string>
+    <string name="app_ratings_title">Rangachaidhean</string>
+    <string name="action_launch">Fosgail</string>
+    <string name="action_update_all">Ùraich na h-uile</string>
+    <string name="action_update">Ùraich</string>
+    <string name="state_installing">’Ga stàladh</string>
+    <string name="featured">’Ga bhrosnachadh</string>
+    <string name="action_installing">’Ga stàladh</string>
+    <string name="action_cancel">Sguir dheth</string>
+    <string name="action_install">Stàlaich</string>
+    <string name="app_rating_content_description">Rangachadh na h-aplacaid</string>
+    <string name="app_privacy_score_content_description">Sgòr prìobhaideachd na h-aplacaid</string>
+    <string name="app_icon_content_description">Ìomhaigheag na h-aplacaid</string>
+    <string name="service_description">Tha an t-seirbheis seo ’ga cleachdadh le “Aplacaidean” airson aplacaidean a stiùireadh, a luchdadh a-nuas is a stàladh. Ma chuireas tu stad oirre, dh’fhaoidte gum fàillig luchdaidhean a-nuas nan aplacaidean.</string>
+    <string name="not_available_full">Chan eil seo ri fhaighinn</string>
+    <string name="not_available">Chan eil seo iomchaidh</string>
+    <string name="app_name">Aplacaidean</string>
+</resources>
