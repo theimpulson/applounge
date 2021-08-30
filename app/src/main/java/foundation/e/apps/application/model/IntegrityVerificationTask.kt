@@ -87,13 +87,6 @@ class IntegrityVerificationTask(
         return false
     }
 
-    private fun verifySystemSignature(context: Context): Boolean {
-        if (!fullData.getLastVersion()?.signature.isNullOrEmpty()) {
-            return fullData.getLastVersion()?.signature ==
-                getSystemSignature(context.packageManager)?.toCharsString()
-        }
-        return false
-    }
 
     // get signature from apk and check
     private fun verifyAPKSignature(context: Context): Boolean {
