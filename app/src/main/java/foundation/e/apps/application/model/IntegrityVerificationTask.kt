@@ -87,8 +87,6 @@ class IntegrityVerificationTask(
         return false
     }
 
-
-
     private fun verifyAPKSignature(context: Context): Boolean {
 
         if (getAPKSignature(context) != null) {
@@ -198,7 +196,6 @@ class IntegrityVerificationTask(
                 systemJsonData = JSONObject(jsonResponse).getJSONObject(packageName)
                 return true
             }
-
         } catch (e: Exception) {
             if (e is JSONException) {
                 Log.d(TAG, "$packageName is not a system application")
