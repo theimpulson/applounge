@@ -71,5 +71,5 @@ object Constants {
 
     // Integrity Verification
     const val F_DROID_PACKAGES_URL = "https://f-droid.org/en/packages/"
-    const val SYSTEM_PACKAGES_JSON_FILE_URL = "https://gitlab.e.foundation/e/apps/apps/-/raw/issue-3328JSON/app/src/main/assets/systemApp.json"
+    const val SYSTEM_PACKAGES_JSON_FILE_URL = "https://gitlab.e.foundation/e/apps/apps/-/raw/master/app/src/main/assets/systemApp.json"
 }
