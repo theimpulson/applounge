@@ -53,15 +53,18 @@ class IntegrityVerificationTask(
     private val fullData: FullData,
     private val integrityVerificationCallback: IntegrityVerificationCallback
 ) :
+
     AsyncTask<Context, Void, Context>() {
+    private lateinit var systemJsonData: JSONObject
     private var verificationSuccessful: Boolean = false
     private var TAG = "IntegrityVerificationTask"
 
     override fun doInBackground(vararg context: Context): Context {
         try {
-            verificationSuccessful = if (isSystemApplication(fullData.packageName)) {
-                verifySystemSignature(context[0])
-            } else if (isfDroidApplication(fullData.packageName)) {
+            val packageName = getAPK_PackageName(context[0])
+            verificationSuccessful = if (isSystemApplication(packageName.toString())) {
+                verifyAPKSignature(context[0])
+            } else if (isfDroidApplication(packageName.toString())) {
                 verifyFdroidSignature(context[0])
             } else {
                 checkGoogleApp(context[0])
@@ -84,12 +87,42 @@ class IntegrityVerificationTask(
         return false
     }
 
-    private fun verifySystemSignature(context: Context): Boolean {
-        if (!fullData.getLastVersion()?.signature.isNullOrEmpty()) {
-            return fullData.getLastVersion()?.signature ==
+    private fun verifyAPKSignature(context: Context): Boolean {
+
+        if (getAPKSignature(context) != null) {
+            return getAPKSignature(context)?.toCharsString() ==
                 getSystemSignature(context.packageManager)?.toCharsString()
         }
         return false
+    }
+
+    private fun getAPKSignature(context: Context): Signature? {
+        try {
+            val fullPath: String = applicationInfo.getApkFile(
+                context,
+                fullData.basicData
+            ).absolutePath
+
+            val releaseSig = context.packageManager.getPackageArchiveInfo(fullPath, PackageManager.GET_SIGNATURES)
+            return getFirstSignature(releaseSig)
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.d(TAG, "Unable to find the package: android")
+        }
+        return null
+    }
+
+    private fun getAPK_PackageName(context: Context): String? {
+
+        val pm: PackageManager = context.packageManager
+        val fullPath: String = applicationInfo.getApkFile(
+            context,
+            fullData.basicData
+        ).absolutePath
+        val info = pm.getPackageArchiveInfo(fullPath, 0)
+        if (info != null) {
+            return info.packageName
+        } else
+            return null
     }
 
     private fun getFirstSignature(pkg: PackageInfo?): Signature? {
@@ -159,7 +192,8 @@ class IntegrityVerificationTask(
                 }
             }
         try {
-            if (packageName == JSONObject(jsonResponse).get(packageName)) {
+            if (JSONObject(jsonResponse).has(packageName)) {
+                systemJsonData = JSONObject(jsonResponse).getJSONObject(packageName)
                 return true
             }
         } catch (e: Exception) {
