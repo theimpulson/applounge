@@ -61,7 +61,7 @@ class IntegrityVerificationTask(
 
     override fun doInBackground(vararg context: Context): Context {
         try {
-            var packageName = getAPK_PackageName(context[0])
+            val packageName = getAPK_PackageName(context[0])
             verificationSuccessful = if (isSystemApplication(packageName.toString())) {
                 verifyAPKSignature(context[0])
             } else if (isfDroidApplication(packageName.toString())) {
@@ -88,10 +88,9 @@ class IntegrityVerificationTask(
     }
 
 
-    // get signature from apk and check
+
     private fun verifyAPKSignature(context: Context): Boolean {
 
-        // get Signature from APK
         if (getAPKSignature(context) != null) {
             return getAPKSignature(context)?.toCharsString() ==
                 getSystemSignature(context.packageManager)?.toCharsString()
@@ -198,10 +197,8 @@ class IntegrityVerificationTask(
             if (JSONObject(jsonResponse).has(packageName)) {
                 systemJsonData = JSONObject(jsonResponse).getJSONObject(packageName)
                 return true
-            } else {
-                return false
             }
-            // return JSONObject(jsonResponse).has(packageName);
+
         } catch (e: Exception) {
             if (e is JSONException) {
                 Log.d(TAG, "$packageName is not a system application")
