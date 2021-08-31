@@ -103,4 +103,11 @@
     <string name="not_available_full">Chan eil seo ri fhaighinn</string>
     <string name="not_available">Chan eil seo iomchaidh</string>
     <string name="app_name">Aplacaidean</string>
+    <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
+    <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
+    <string name="pref_apps_request_app_key">pref_apps_request_app</string>
+    <string name="pref_update_notify_key">pref_update_notify</string>
+    <string name="pref_update_install_automatically_key">pref_update_install_automatically</string>
+    <string name="pref_update_wifi_only_key">pref_update_wifi_only</string>
+    <string name="pref_update_interval_key">pref_update_interval</string>
 </resources>
