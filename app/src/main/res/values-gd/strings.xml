@@ -5,7 +5,7 @@
     <string name="divider">Sgaradair</string>
     <string name="image_carousel">Timcheallan dhealbhan</string>
     <string name="error_incident">Thachair mearachd</string>
-    <string name="package_name_help_example">Ball-eisimpleir a sheallas pacaid ’s an t-ainm a th’ oirre</string>
+    <string name="package_name_help_example">Ball-eisimpleir de bhun-tùs a sheallas pacaid ’s an t-ainm a th’ oirre</string>
     <string name="trackers_expand">Seall liosta nan tracaichean</string>
     <string name="permissions_expand">Seall liosta nan ceadan</string>
     <string name="Signature_verification_failed">Dh’fhàillig le dearbhadh an t-soidhnidh, a’ sgur dhen stàladh</string>
