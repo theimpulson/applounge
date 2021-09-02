@@ -29,7 +29,6 @@ import android.util.Log
 import android.widget.Toast
 import foundation.e.apps.R
 import foundation.e.apps.api.FDroidAppExistsRequest
-import foundation.e.apps.api.SystemAppExistsRequest
 import foundation.e.apps.application.model.data.FullData
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.openpgp.PGPCompressedData
@@ -41,10 +40,7 @@ import org.bouncycastle.openpgp.operator.bc.BcPGPContentVerifierBuilderProvider
 import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.BufferedInputStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
+import java.io.*
 import java.security.MessageDigest
 import java.security.Security
 
@@ -62,7 +58,7 @@ class IntegrityVerificationTask(
     override fun doInBackground(vararg context: Context): Context {
         try {
             val packageName = getAPK_PackageName(context[0])
-            verificationSuccessful = if (isSystemApplication(packageName.toString())) {
+            verificationSuccessful = if (isSystemApplication(context[0], packageName.toString())) {
                 verifyAPKSignature(context[0])
             } else if (isfDroidApplication(packageName.toString())) {
                 verifyFdroidSignature(context[0])
@@ -176,21 +172,25 @@ class IntegrityVerificationTask(
         return fDroidAppExistsResponse == 200
     }
 
-    private fun isSystemApplication(packageName: String): Boolean {
-        var jsonResponse = ""
-        SystemAppExistsRequest(packageName)
-            .request { applicationError, searchResult ->
-                when (applicationError) {
-                    null -> {
-                        if (searchResult.size > 0) {
-                            jsonResponse = searchResult[0].toString()
-                        }
-                    }
-                    else -> {
-                        Log.e(TAG, applicationError.toString())
-                    }
-                }
-            }
+    fun loadJSONFromAsset(context: Context): String? {
+        var json: String? = null
+        json = try {
+            val inputStream: InputStream = context.getAssets().open("systemApp.json")
+            val size = inputStream.available()
+            val buffer = ByteArray(size)
+            inputStream.read(buffer)
+            inputStream.close()
+            String(buffer, charset("UTF-8"))
+        } catch (ex: IOException) {
+            ex.printStackTrace()
+            return null
+        }
+        return json
+    }
+
+    private fun isSystemApplication(context: Context, packageName: String): Boolean {
+        var jsonResponse = loadJSONFromAsset(context)
+
         try {
             if (JSONObject(jsonResponse).has(packageName)) {
                 systemJsonData = JSONObject(jsonResponse).getJSONObject(packageName)
