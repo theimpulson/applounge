@@ -88,4 +88,15 @@
     <string name="preference_update_wifi_only_title">Iba cez nemerané siete</string>
     <string name="updates_notification_unmetered_network_warning">Čaká sa na nemeranú sieť</string>
     <string name="app_privacy_description_short">Vypočítané pomocou <a href="https://exodus-privacy.eu.org">Exodus Privacy</a>.</string>
+    <string name="app_privacy_description">Skóre z 10. Vypočítané pomocou <a href="https://exodus-privacy.eu.org">analýz Exodus Privacy</a> na základe povolení a sledovačov použitých v aplikácii.</string>
+    <string name="not_available">Nedostupné</string>
+    <string name="Signature_verification_failed">Overenie podpisu zlyhalo, inštalácia sa prerušuje</string>
+    <string name="permissions_expand">Zobraziť zoznam povolení</string>
+    <string name="trackers_expand">Zobraziť zoznam sledovačov</string>
+    <string name="package_name_help_example">Príklad obrazovky zobrazujúci balík a jeho názov</string>
+    <string name="image_carousel">Obrázkový kolotoč</string>
+    <string name="error_incident">Vyskytla sa chyba</string>
+    <string name="not_able_install">Nie je možné nainštalovať túto aplikáciu! overenie zlyhalo</string>
+    <string name="divider">Oddeľovač</string>
+    <string name="app_package_name">Názov balíka</string>
 </resources>
