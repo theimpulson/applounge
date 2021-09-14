@@ -104,4 +104,8 @@
     <string name="error_incident">Er is een fout opgetreden</string>
     <string name="trackers_expand">Toon lijst met trackers</string>
     <string name="permissions_expand">Toon lijst met machtigingen</string>
+    <string name="misc">Diversen</string>
+    <string name="not_able_install">Kan deze app niet installeren! Verificatie mislukt</string>
+    <string name="divider">Afscheider</string>
+    <string name="package_name_help_example">Voorbeeld scr, die een package met de naam weergeeft</string>
 </resources>
