@@ -82,7 +82,7 @@
     <string name="app_rating_content_description">App-Bewertung</string>
     <string name="app_privacy_score_content_description">App-Datenschutzbewertung</string>
     <string name="app_icon_content_description">App-Symbol</string>
-    <string name="service_description">Dieser Dienst wird von Apps zum Verwalten, Herunterladen und Installieren von Apps verwendet. Ihn zu beenden, kann zu Fehlern beim Herunterladen von Apps führen.</string>
+    <string name="service_description">Dieser Service wird von Apps zur Verwaltung, zum Download und zur Installation von Applikationen verwendet. Das Service zu stoppen kann zu Fehlern beim Download von Applikationen führen.</string>
     <string name="not_available_full">Nicht verfügbar</string>
     <string name="not_available">n.v.</string>
     <string name="app_name">Apps</string>
