@@ -17,7 +17,6 @@
 
 package foundation.e.apps.home
 
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
@@ -31,6 +30,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
+import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.applicationmanager.ApplicationManager
 import foundation.e.apps.categories.model.Category
@@ -75,7 +75,7 @@ class HomeFragment : Fragment() {
 
         // Set accent color
         progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
-        errorResolve.setTextColor(Color.parseColor("#ffffff"))
+        errorResolve.setTextColor(resources.getColor(R.color.color_default_view_on_accent, null))
         errorResolve.setBackgroundColor(accentColorOS)
 
         // Initialise UI elements

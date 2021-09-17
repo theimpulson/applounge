@@ -23,16 +23,12 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Html
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
-import android.text.style.ForegroundColorSpan
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Menu
@@ -44,6 +40,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.MainActivity.Companion.sharedPreferences
 import foundation.e.apps.R
@@ -200,15 +197,6 @@ class ApplicationActivity :
         defaultElevation = Math.ceil(resources.getDimension(R.dimen.default_elevation) * logicalDensity.toDouble()).toFloat()
     }
 
-    @SuppressLint("ResourceAsColor")
-    private fun textColorChange(text: String): SpannableStringBuilder {
-        val builder = SpannableStringBuilder()
-        val redSpannable = SpannableString(text)
-        redSpannable.setSpan(ForegroundColorSpan(R.color.colorTextSecondary), 0, text.length, 0)
-        builder.append(redSpannable)
-        return builder
-    }
-
     private fun onApplicationInfoLoaded() {
         initialiseElevation()
 
@@ -268,7 +256,8 @@ class ApplicationActivity :
             if (basicData.ratings.rating != -1f) {
                 binding.appRating.text = basicData.ratings.rating.toString() + "/5"
             } else {
-                binding.appRating.text = textColorChange(getText(R.string.not_available).toString())
+                binding.appRating.text = getText(R.string.not_available)
+                binding.appRating.setTextColor(ContextCompat.getColor(this, R.color.colorTextSecondary))
             }
             setRatingBorder(basicData.ratings.rating)
 
@@ -283,7 +272,7 @@ class ApplicationActivity :
                 }
                 alertDialog.show()
                 var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                b.setTextColor(Color.parseColor("#0088ED"))
+                b.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
             }
 
             // Load the app screenshots
@@ -313,7 +302,8 @@ class ApplicationActivity :
                     binding.appPrivacyScore.text = fullData.getLastVersion()!!.privacyRating.toString() + "/10"
                     setPrivacyRatingBorder(fullData.getLastVersion()!!.privacyRating!!)
                 } else {
-                    binding.appPrivacyScore.text = textColorChange(getText(R.string.not_available).toString())
+                    binding.appPrivacyScore.text = getText(R.string.not_available)
+                    binding.appPrivacyScore.setTextColor(ContextCompat.getColor(this, R.color.colorTextSecondary))
                     setPrivacyRatingBorder(-1)
                 }
                 binding.appPrivacyContainer.setOnClickListener {
@@ -322,7 +312,7 @@ class ApplicationActivity :
 
                     @Suppress("DEPRECATION")
                     message.setText((Html.fromHtml("Score out of 10. Computed using <a href=\'https://exodus-privacy.eu.org\'>Exodus Privacy analyses</a>, based on permissions and trackers used in the app")))
-                    message.setLinkTextColor(Color.parseColor("#0088ED"))
+                    message.setLinkTextColor(ContextCompat.getColor(this, R.color.colorAccent))
                     message.setMovementMethod(LinkMovementMethod.getInstance())
 
                     message.movementMethod = (LinkMovementMethod.getInstance())
@@ -335,7 +325,7 @@ class ApplicationActivity :
                     }
                     alertDialog.show()
                     var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                    b.setTextColor(Color.parseColor("#0088ED"))
+                    b.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
                 }
 
                 // Set app version
@@ -370,7 +360,8 @@ class ApplicationActivity :
                 binding.appSize.visibility = View.GONE
 
                 // Set app privacy rating
-                binding.appPrivacyScore.text = textColorChange(getText(R.string.not_available).toString())
+                binding.appPrivacyScore.text = getText(R.string.not_available)
+                binding.appPrivacyScore.setTextColor(ContextCompat.getColor(this, R.color.colorTextSecondary))
                 setPrivacyRatingBorder(-1)
                 binding.appPrivacyContainer.setOnClickListener {
                     val alertDialog = AlertDialog.Builder(this).create()
@@ -382,7 +373,7 @@ class ApplicationActivity :
                     }
                     alertDialog.show()
                     var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                    b.setTextColor(Color.parseColor("#0088ED"))
+                    b.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
                 }
 
                 // Set app version
@@ -427,7 +418,7 @@ class ApplicationActivity :
                 }
                 alertDialog.show()
                 var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                b.setTextColor(Color.parseColor("#0088ED"))
+                b.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
                 layout.findViewById<TextView>(R.id.privacy_message).movementMethod = LinkMovementMethod.getInstance()
             }
 
@@ -439,7 +430,7 @@ class ApplicationActivity :
                 val linkMessage = layout.findViewById<TextView>(R.id.privacy_message)
                 @Suppress("DEPRECATION")
                 linkMessage.setText((Html.fromHtml("Computed using <a href=\'https://exodus-privacy.eu.org\'>Exodus Privacy analyses</a>.")))
-                linkMessage.setLinkTextColor(Color.parseColor("#0088ED"))
+                linkMessage.setLinkTextColor(ContextCompat.getColor(this, R.color.colorAccent))
                 linkMessage.setMovementMethod(LinkMovementMethod.getInstance())
 
                 val alertDialog = AlertDialog.Builder(this).create()
@@ -471,7 +462,7 @@ class ApplicationActivity :
                 }
                 alertDialog.show()
                 var b = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                b.setTextColor(Color.parseColor("#0088ED"))
+                b.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
                 linkMessage.movementMethod = LinkMovementMethod.getInstance()
             }
 

@@ -18,7 +18,6 @@
 package foundation.e.apps.categories.category
 
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -79,7 +78,7 @@ class CategoryActivity : AppCompatActivity(), ApplicationManagerServiceConnectio
         val errorResolve = binding.errorLayout.errorResolve
 
         // set accent color to Error button (Retry )
-        errorResolve.setTextColor(Color.parseColor("#ffffff"))
+        errorResolve.setTextColor(resources.getColor(R.color.color_default_view_on_accent, null))
         errorResolve.setBackgroundColor(accentColorOS)
 
         // Initialise UI elements

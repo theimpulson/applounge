@@ -17,7 +17,6 @@
 
 package foundation.e.apps.categories
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import foundation.e.apps.R
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.categories.viewmodel.CategoriesViewModel
 import foundation.e.apps.databinding.FragmentApplicationCategoriesBinding
@@ -60,7 +60,7 @@ class ApplicationsFragment() : Fragment() {
             categoriesViewModel.loadCategories(requireContext())
         }
 
-        errorResolve.setTextColor(Color.parseColor("#ffffff"))
+        errorResolve.setTextColor(resources.getColor(R.color.color_default_view_on_accent, null))
         errorResolve.setBackgroundColor(color)
 
         // Bind to the list of applications categories
