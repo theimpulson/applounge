@@ -21,7 +21,6 @@ import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -151,7 +150,7 @@ class MainActivity :
                     intArrayOf(android.R.attr.state_checked)
                 ),
                 intArrayOf(
-                    Color.parseColor("#C4CFD9"),
+                    ContextCompat.getColor(this, R.color.colorDarkGray),
                     accentColorOS
                 )
             )
@@ -159,7 +158,7 @@ class MainActivity :
         val textColorStates = ColorStateList(
             arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)),
             intArrayOf(
-                Color.parseColor("#C4CFD9"),
+                ContextCompat.getColor(this, R.color.colorDarkGray),
                 accentColorOS
 
             )

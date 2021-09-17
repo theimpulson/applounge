@@ -17,7 +17,6 @@
 
 package foundation.e.apps.updates
 
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
@@ -32,6 +31,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import foundation.e.apps.R
 import foundation.e.apps.application.model.Application
 import foundation.e.apps.application.model.State
 import foundation.e.apps.applicationmanager.ApplicationManager
@@ -79,7 +79,7 @@ class UpdatesFragment() : Fragment() {
         reloadProgressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
 
         // set accent color to Error button (Retry )
-        errorResolve.setTextColor(Color.parseColor("#ffffff"))
+        errorResolve.setTextColor(resources.getColor(R.color.color_default_view_on_accent, null))
         errorResolve.setBackgroundColor(accentColorOS)
 
         // Initialise UI elements

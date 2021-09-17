@@ -27,7 +27,7 @@
         android:scaleX="0.5"
         android:scaleY="0.5">
         <path
-            android:fillColor="@color/colorTextSecondary"
+            android:fillColor="@color/colorAccent"
             android:pathData="M304,256c0,26.5 -21.5,48 -48,48s-48,-21.5 -48,-48 21.5,-48 48,-48 48,21.5 48,48zM424,208c-26.5,0 -48,21.5 -48,48s21.5,48 48,48 48,-21.5 48,-48 -21.5,-48 -48,-48zM88,208c-26.5,0 -48,21.5 -48,48s21.5,48 48,48 48,-21.5 48,-48 -21.5,-48 -48,-48z" />
     </group>
 </vector>

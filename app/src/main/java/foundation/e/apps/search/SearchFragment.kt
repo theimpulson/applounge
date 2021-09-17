@@ -19,7 +19,6 @@ package foundation.e.apps.search
 
 import android.app.Activity
 import android.database.MatrixCursor
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
@@ -92,7 +91,7 @@ class SearchFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.On
 
         // Set accent color
         progressBar.indeterminateDrawable.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
-        errorResolve.setTextColor(Color.parseColor("#ffffff"))
+        errorResolve.setTextColor(resources.getColor(R.color.color_default_view_on_accent, null))
         errorResolve.setBackgroundColor(accentColorOS)
 
         errorResolve.visibility = View.GONE

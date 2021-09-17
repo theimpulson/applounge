@@ -20,7 +20,6 @@ package foundation.e.apps.application
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.GradientDrawable
@@ -28,6 +27,7 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.R
@@ -187,7 +187,7 @@ class ApplicationViewHolder(private val activity: Activity, binding: Application
                     State.INSTALLED -> {
                         installButton.isEnabled =
                             Common.appHasLaunchActivity(activity, application!!.packageName)
-                        installButton.setTextColor(Color.parseColor("#FAFAFA"))
+                        installButton.setTextColor(ContextCompat.getColor(activity, R.color.color_default_view_on_accent))
                         installButton.background.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
                     }
                     State.INSTALLING -> {
@@ -196,7 +196,7 @@ class ApplicationViewHolder(private val activity: Activity, binding: Application
                     }
                     State.NOT_UPDATED -> {
                         installButton.isEnabled = true
-                        installButton.setTextColor(Color.parseColor("#FAFAFA"))
+                        installButton.setTextColor(ContextCompat.getColor(activity, R.color.color_default_view_on_accent))
                         installButton.background.colorFilter = PorterDuffColorFilter(accentColorOS, PorterDuff.Mode.SRC_IN)
                     }
                 }

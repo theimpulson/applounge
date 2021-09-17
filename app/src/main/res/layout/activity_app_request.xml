@@ -94,7 +94,7 @@
                     android:enabled="false"
                     android:foreground="?android:selectableItemBackground"
                     android:text="@string/submit_button_text"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/color_default_view_on_accent"
                     app:layout_constraintTop_toBottomOf="@id/package_name_edit_text" />
 
                 <View

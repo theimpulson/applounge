@@ -31,8 +31,7 @@
         android:layout_width="@dimen/app_icon_size"
         android:layout_height="@dimen/app_icon_size"
         android:src="@drawable/ic_error"
-        android:contentDescription="@string/error_incident"
-        app:tint="@android:color/darker_gray" />
+        android:contentDescription="@string/error_incident" />
 
     <TextView
         android:id="@+id/error_description"
