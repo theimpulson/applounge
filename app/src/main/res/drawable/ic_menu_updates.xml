@@ -1,0 +1,43 @@
+<!--
+  ~ Copyright (C) 2019-2021  E FOUNDATION
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="25dp"
+    android:height="25dp"
+    android:viewportWidth="25"
+    android:viewportHeight="25"
+    android:tint="?android:attr/colorAccent"
+    >
+  <path
+      android:pathData="M7.899,10.1943C8.1911,9.9006 8.6659,9.8994 8.9596,10.1915L12.5436,13.7568L16.1075,10.1929C16.4004,9.9 16.8752,9.9 17.1681,10.1929C17.461,10.4858 17.461,10.9607 17.1681,11.2536L13.0753,15.3464C12.7829,15.6388 12.3091,15.6394 12.016,15.3478L7.9017,11.2549C7.6081,10.9628 7.6068,10.4879 7.899,10.1943Z"
+      android:strokeAlpha="0.8"
+      android:fillColor="@android:color/white"
+      android:fillType="evenOdd"
+      android:fillAlpha="0.8"/>
+  <path
+      android:pathData="M12.5449,1.8947C12.9591,1.8947 13.2949,2.2305 13.2949,2.6447V14.8161C13.2949,15.2303 12.9591,15.5661 12.5449,15.5661C12.1307,15.5661 11.7949,15.2303 11.7949,14.8161V2.6447C11.7949,2.2305 12.1307,1.8947 12.5449,1.8947Z"
+      android:strokeAlpha="0.8"
+      android:fillColor="@android:color/white"
+      android:fillType="evenOdd"
+      android:fillAlpha="0.8"/>
+  <path
+      android:pathData="M3.6523,5.6018C3.6523,5.1876 3.9881,4.8518 4.4023,4.8518H6.3523C6.7666,4.8518 7.1023,5.1876 7.1023,5.6018C7.1023,6.016 6.7666,6.3518 6.3523,6.3518H5.1523V21.1376H19.9381V6.3518H18.6523C18.2381,6.3518 17.9023,6.016 17.9023,5.6018C17.9023,5.1876 18.2381,4.8518 18.6523,4.8518H20.6881C21.1023,4.8518 21.4381,5.1876 21.4381,5.6018V21.8876C21.4381,22.3018 21.1023,22.6376 20.6881,22.6376H4.4023C3.9881,22.6376 3.6523,22.3018 3.6523,21.8876V5.6018Z"
+      android:strokeAlpha="0.8"
+      android:fillColor="@android:color/white"
+      android:fillType="evenOdd"
+      android:fillAlpha="0.8"/>
+</vector>

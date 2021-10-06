@@ -1,0 +1,55 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <PreferenceCategory android:title="@string/preference_updates_title">
+        <ListPreference
+            android:defaultValue="@string/preference_update_interval_default"
+            android:dialogTitle="@string/preference_update_interval_title"
+            android:entries="@array/update_interval_names"
+            android:entryValues="@array/update_interval_values"
+            android:key="updateCheckIntervals"
+            android:summary="%s"
+            android:title="@string/preference_update_interval_title" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="updateNotify"
+            android:summary="@string/preference_update_notify_available_description"
+            android:title="@string/preference_update_notify_available_title" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="updateInstallAuto"
+            android:summary="@string/preference_update_install_automatically_description"
+            android:title="@string/preference_update_install_automatically_title" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="updateUnmeteredOnly"
+            android:summary="@string/preference_update_wifi_only_description"
+            android:title="@string/preference_update_wifi_only_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/Show_applications">
+        <foundation.e.apps.settings.RadioButtonPreference
+            android:defaultValue="true"
+            android:key="showAllApplications"
+            android:title="@string/Show_all_apps" />
+
+        <foundation.e.apps.settings.RadioButtonPreference
+            android:key="showFOSSApplications"
+            android:title="@string/show_only_open_source_apps" />
+
+        <foundation.e.apps.settings.RadioButtonPreference
+            android:key="showPWAApplications"
+            android:title="@string/show_only_pwa_apps" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/misc">
+        <Preference
+            android:key="requestApplication"
+            android:summary="@string/preference_apps_request_app_summary"
+            android:title="@string/preference_apps_request_app_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

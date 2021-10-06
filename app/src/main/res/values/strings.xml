@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Apps</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Bottom Navigation Bar -->
+    <string name="menu_home">Home</string>
+    <string name="menu_categories">Categories</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_updates">Updates</string>
+    <string name="menu_settings">Settings</string>
+
+    <!-- Settings Fragment -->
+    <string name="preference_updates_title">Updates</string>
+    <string name="misc">Miscellaneous</string>
+    <string name="preference_update_interval_default">24</string>
+    <string name="preference_update_interval_title">Update check interval</string>
+    <string name="preference_update_wifi_only_title">Only on un-metered networks</string>
+    <string name="preference_update_wifi_only_description">Update apps automatically only on un-metered networks such as Wi-Fi</string>
+    <string name="preference_update_install_automatically_title">Automatically install updates</string>
+    <string name="preference_update_install_automatically_description">Download and install app updates in the background</string>
+    <string name="preference_update_notify_available_title">Show available updates</string>
+    <string name="preference_update_notify_available_description">Show a notification when app updates are available</string>
+    <string name="Show_applications">Show applications:</string>
+    <string name="Show_all_apps">Show all apps</string>
+    <string name="show_only_open_source_apps">Show only open-source apps</string>
+    <string name="show_only_pwa_apps">Show only PWAs</string>
+
+    <!-- AppRequest Fragment -->
+    <string name="preference_apps_request_app_title">Request app</string>
+    <string name="preference_apps_request_app_summary">Request an app that is currently unavailable</string>
+    <string name="edit_text_hint">Package name</string>
+    <string name="submit_button_text">Submit</string>
+    <string name="app_request_successful_text">App request successfully placed!</string>
+    <string name="package_name_help_title">What is a package name?</string>
+    <string name="package_name_help_text">A package name is a unique identifier for an Android app. Package names are usually in lowercase and written in the following format: \"domain.company.application\"</string>
+    <string name="package_name_find_title">How to find the package name of an app?</string>
+    <string name="package_name_find_text">To find the package name of an app that is installed on your device, go to System Settings > Apps > [your app]. The package name should be listed at the bottom of the page.\n*This process may vary on some devices.</string>
+
+</resources>
