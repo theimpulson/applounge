@@ -5,18 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.cleanapk.CleanAPKInterface.Companion.ACTION_SEARCH
-import foundation.e.apps.api.cleanapk.CleanAPKRepository
-import foundation.e.apps.api.cleanapk.data.app.App
-import foundation.e.apps.api.cleanapk.data.home.HomeScreen
 import foundation.e.apps.api.cleanapk.data.search.Search
+import foundation.e.apps.api.fused.FusedAPIRepository
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-// TODO: Remove the cleanAPK repo injection in favour of central API
 class HomeViewModel @Inject constructor(
-    private val cleanAPKRepository: CleanAPKRepository
+    private val fusedAPIRepository: FusedAPIRepository
 ) : ViewModel() {
 
     // TODO: Get rid of code below
@@ -24,7 +21,7 @@ class HomeViewModel @Inject constructor(
 
     fun searchApp() {
         viewModelScope.launch {
-            myResponse.value = cleanAPKRepository.searchOrListApps("whatsapp", ACTION_SEARCH)
+            myResponse.value = fusedAPIRepository.searchOrListApps("whatsapp", ACTION_SEARCH)
         }
     }
 }

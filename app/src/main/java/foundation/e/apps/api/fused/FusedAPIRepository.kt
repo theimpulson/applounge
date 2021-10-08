@@ -1,5 +1,6 @@
-package foundation.e.apps.api.cleanapk
+package foundation.e.apps.api.fused
 
+import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.data.app.App
 import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.download.Download
@@ -8,16 +9,14 @@ import foundation.e.apps.api.cleanapk.data.search.Search
 import retrofit2.Response
 import javax.inject.Inject
 
-
-class CleanAPKRepository @Inject constructor(
-    private val cleanAPKInterface: CleanAPKInterface
+class FusedAPIRepository @Inject constructor(
+    private val fusedAPIImpl: FusedAPIImpl
 ) {
-
     suspend fun getHomeScreenData(
         type: String = CleanAPKInterface.APP_TYPE_ANY,
         source: String = CleanAPKInterface.APP_SOURCE_ANY
     ): Response<HomeScreen> {
-        return cleanAPKInterface.getHomeScreenData(type, source)
+        return fusedAPIImpl.getHomeScreenData(type, source)
     }
 
     suspend fun getAppOrPWADetailsByID(
@@ -25,7 +24,7 @@ class CleanAPKRepository @Inject constructor(
         architectures: List<String>? = null,
         type: String? = null
     ): Response<App> {
-        return cleanAPKInterface.getAppOrPWADetailsByID(id, architectures, type)
+        return fusedAPIImpl.getAppOrPWADetailsByID(id, architectures, type)
     }
 
     suspend fun searchOrListApps(
@@ -37,7 +36,7 @@ class CleanAPKRepository @Inject constructor(
         page: Int = 1,
         by: String? = null
     ): Response<Search> {
-        return cleanAPKInterface.searchOrListApps(keyword, action, source, type, nres, page, by)
+        return fusedAPIImpl.searchOrListApps(keyword, action, source, type, nres, page, by)
     }
 
     suspend fun getDownloadInfo(
@@ -45,13 +44,13 @@ class CleanAPKRepository @Inject constructor(
         version: String? = null,
         architecture: String? = null
     ): Response<Download> {
-        return cleanAPKInterface.getDownloadInfo(id, version, architecture)
+        return fusedAPIImpl.getDownloadInfo(id, version, architecture)
     }
 
     suspend fun getCategoriesList(
         type: String = CleanAPKInterface.APP_TYPE_ANY,
         source: String = CleanAPKInterface.APP_SOURCE_ANY
     ): Response<Categories> {
-        return cleanAPKInterface.getCategoriesList(type, source)
+        return fusedAPIImpl.getCategoriesList(type, source)
     }
 }
