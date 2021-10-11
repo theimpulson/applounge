@@ -1,4 +1,4 @@
-package foundation.e.apps.api.cleanapk
+package foundation.e.apps.api.gplay.token
 
 import dagger.Module
 import dagger.Provides
@@ -10,19 +10,19 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RetrofitModule {
+object TokenModule {
 
     /**
-     * Provides an instance of Retrofit to work with CleanAPK API
-     * @return instance of [CleanAPKInterface]
+     * Provides an instance of Retrofit to work with Token API
+     * @return instance of [TokenInterface]
      */
     @Singleton
     @Provides
-    fun provideCleanAPKInterface(): CleanAPKInterface {
+    fun provideTokenInterface(): TokenInterface {
         return Retrofit.Builder()
-            .baseUrl(CleanAPKInterface.BASE_URL)
+            .baseUrl(TokenInterface.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(CleanAPKInterface::class.java)
+            .create(TokenInterface::class.java)
     }
 }
