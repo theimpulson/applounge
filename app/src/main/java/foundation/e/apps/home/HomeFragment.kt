@@ -1,6 +1,7 @@
 package foundation.e.apps.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,7 +21,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding = FragmentHomeBinding.bind(view)
 
         // TODO: Get rid of code below
-        homeViewModel.getPlayDetails()
+        homeViewModel.getAuthData()
+        homeViewModel.authData.observe(viewLifecycleOwner, {
+            it?.let { Log.d(TAG, it) }
+        })
     }
 
 }

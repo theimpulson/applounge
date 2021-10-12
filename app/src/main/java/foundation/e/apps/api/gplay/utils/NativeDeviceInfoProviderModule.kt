@@ -1,4 +1,4 @@
-package foundation.e.apps.api.gplay
+package foundation.e.apps.api.gplay.utils
 
 import android.app.ActivityManager
 import android.content.Context
@@ -67,7 +67,7 @@ object NativeDeviceInfoProviderModule {
             setProperty("Platforms", Build.SUPPORTED_ABIS.joinToString(separator = ","))
 
             // Supported Features
-            setProperty("Features", getFeatures().joinToString(separator = ","))
+            setProperty("Features", getFeatures(context).joinToString(separator = ","))
             // Shared Locales
             setProperty("Locales", getLocales(context).joinToString(separator = ","))
             // Shared Libraries
@@ -88,7 +88,7 @@ object NativeDeviceInfoProviderModule {
             )
 
             // Google Related Props
-            val gsfVersionProvider = NativeGsfVersionProvider(applicationContext)
+            val gsfVersionProvider = NativeGsfVersionProvider(context)
             setProperty("Client", "android-google")
             setProperty("GSF.version", "${gsfVersionProvider.getGsfVersionCode(true)}")
             setProperty("Vending.version", "${gsfVersionProvider.getVendingVersionCode(true)}")
@@ -102,12 +102,23 @@ object NativeDeviceInfoProviderModule {
             setProperty("CellOperator", "310")
             setProperty("SimOperator", "38")
         }
-
-        if (isHuawei())
-            stripHuaweiProperties(properties)
-
         return properties
     }
+
+    private fun getFeatures(context: Context): List<String> {
+        val featureStringList: MutableList<String> = ArrayList()
+        try {
+            val availableFeatures = context.packageManager.systemAvailableFeatures
+            for (feature in availableFeatures) {
+                if (feature.name.isNotEmpty()) {
+                    featureStringList.add(feature.name)
+                }
+            }
+        } catch (e: Exception) {
+        }
+        return featureStringList
+    }
+
 
     private fun getLocales(context: Context): List<String> {
         val localeList: MutableList<String> = ArrayList()
@@ -132,18 +143,5 @@ object NativeDeviceInfoProviderModule {
         } catch (e: Exception) {
         }
         return libraries
-    }
-
-    private fun stripHuaweiProperties(properties: Properties): Properties {
-        // Add i-Phoney properties
-        properties["Build.HARDWARE"] = "unknown"
-        properties["Build.BOOTLOADER"] = "unknown"
-        properties["Build.BRAND"] = "PassionFruit"
-        properties["Build.DEVICE"] = "ProPlus5GFold"
-        properties["Build.MODEL"] = "iPhoney"
-        properties["Build.MANUFACTURER"] = "PassionFruit"
-        properties["Build.PRODUCT"] = "iPhoney_24"
-        properties["Build.ID"] = "ABC.123"
-        return properties
     }
 }

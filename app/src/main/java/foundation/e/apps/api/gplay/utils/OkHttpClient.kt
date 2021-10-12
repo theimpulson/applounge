@@ -1,4 +1,4 @@
-package foundation.e.apps.api.gplay
+package foundation.e.apps.api.gplay.utils
 
 import android.util.Log
 import com.aurora.gplayapi.data.models.PlayResponse
