@@ -20,6 +20,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding = FragmentHomeBinding.bind(view)
 
         // TODO: Get rid of code below
+        homeViewModel.getPlayDetails()
     }
 
 }

@@ -9,7 +9,9 @@ import foundation.e.apps.api.cleanapk.data.home.HomeScreen
 import foundation.e.apps.api.cleanapk.data.search.Search
 import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FusedAPIImpl @Inject constructor(
     private val cleanAPKRepository: CleanAPKRepository
 ) {

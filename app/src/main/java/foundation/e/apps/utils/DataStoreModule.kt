@@ -8,8 +8,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.api.gplay.token.data.Token
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class DataStoreManager @Inject constructor(@ApplicationContext private val context: Context) {
+@Singleton
+class DataStoreModule @Inject constructor(@ApplicationContext private val context: Context) {
 
     private val preferenceDataStoreName = "Settings"
     private val Context.dataStore by preferencesDataStore(preferenceDataStoreName)

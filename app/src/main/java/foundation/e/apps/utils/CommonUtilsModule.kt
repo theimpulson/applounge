@@ -4,11 +4,14 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.lang.reflect.Modifier
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -64,12 +67,14 @@ object CommonUtilsModule {
     }
 
     /**
-     * Provides manager to manage preferences datastore
-     * @return an instance of [DataStoreManager]
+     * Provides an instance of [Gson] to work with
+     * @return an instance of [Gson]
      */
     @Singleton
     @Provides
-    fun provideDataStoreManager(@ApplicationContext context: Context): DataStoreManager {
-        return DataStoreManager(context)
+    fun provideGsonInstance(): Gson {
+        return GsonBuilder()
+            .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.STATIC)
+            .create()
     }
 }
