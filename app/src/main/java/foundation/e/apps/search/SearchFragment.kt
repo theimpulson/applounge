@@ -36,10 +36,12 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
         _binding = FragmentSearchBinding.bind(view)
 
         // AuthData
-        searchViewModel.getAuthData()
         searchViewModel.authData.observe(viewLifecycleOwner, {
-            it?.let { string ->
-                Log.d(TAG, string)
+            if (it.isNullOrEmpty()) {
+                Log.d(TAG, "Fetching new authentication data")
+                searchViewModel.getAuthData()
+            } else {
+                Log.d(TAG, "Authentication data is available!")
             }
         })
 
@@ -82,6 +84,9 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
     }
 
     override fun onSuggestionClick(position: Int): Boolean {
+        searchViewModel.searchSuggest.value?.let {
+            searchView.setQuery(it[position].suggestedQuery, true)
+        }
         return true
     }
 
