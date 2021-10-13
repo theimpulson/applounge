@@ -1,6 +1,5 @@
 package foundation.e.apps.search
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
@@ -8,14 +7,12 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.helpers.SearchHelper
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.api.gplay.token.TokenRepository
 import foundation.e.apps.api.gplay.utils.OkHttpClient
 import foundation.e.apps.utils.DataStoreModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
