@@ -1,7 +1,6 @@
 package foundation.e.apps.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,19 +11,20 @@ import foundation.e.apps.databinding.FragmentHomeBinding
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    private lateinit var binding: FragmentHomeBinding
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
     private val homeViewModel: HomeViewModel by viewModels()
     private val TAG = HomeFragment::class.java.simpleName
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentHomeBinding.bind(view)
+        _binding = FragmentHomeBinding.bind(view)
+    }
 
-        // TODO: Get rid of code below
-        homeViewModel.getAuthData()
-        homeViewModel.authData.observe(viewLifecycleOwner, {
-            it?.let { Log.d(TAG, it) }
-        })
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }
