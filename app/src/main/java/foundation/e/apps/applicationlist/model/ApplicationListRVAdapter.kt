@@ -1,4 +1,3 @@
 package foundation.e.apps.applicationlist.model
 
-class ApplicationListRVAdapter {
-}
+class ApplicationListRVAdapter

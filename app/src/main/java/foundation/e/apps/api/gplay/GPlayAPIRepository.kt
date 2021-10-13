@@ -1,5 +1,6 @@
 package foundation.e.apps.api.gplay
 
+import com.aurora.gplayapi.data.models.AuthData
 import javax.inject.Inject
 
 class GPlayAPIRepository @Inject constructor(
@@ -10,7 +11,7 @@ class GPlayAPIRepository @Inject constructor(
         return gPlayAPIImpl.fetchAuthData()
     }
 
-    fun getSearchSuggestions(query: String) {
-        return gPlayAPIImpl.getSearchSuggestions(query)
+    suspend fun getSearchSuggestions(query: String, authData: AuthData) {
+        return gPlayAPIImpl.getSearchSuggestions(query, authData)
     }
 }

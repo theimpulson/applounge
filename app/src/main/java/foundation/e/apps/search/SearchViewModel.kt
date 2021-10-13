@@ -7,38 +7,34 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.helpers.SearchHelper
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import foundation.e.apps.api.gplay.token.TokenRepository
+import foundation.e.apps.api.gplay.GPlayAPIImpl
+import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.api.gplay.utils.OkHttpClient
 import foundation.e.apps.utils.DataStoreModule
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val tokenRepository: TokenRepository,
+    private val gPlayAPIRepository: GPlayAPIRepository,
     private val gson: Gson,
-    private val dataStoreModule: DataStoreModule
+    dataStoreModule: DataStoreModule
 ) : ViewModel() {
 
     private val TAG = SearchViewModel::class.java.simpleName
 
     val authData: LiveData<String?> = dataStoreModule.authData.asLiveData()
-
     val searchSuggest: MutableLiveData<List<SearchSuggestEntry>?> = MutableLiveData()
     val searchResult: MutableLiveData<List<App>> = MutableLiveData()
 
-    // TODO: Move below stuff to gplayimpl class and use FusedAPI
     fun getAuthData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val data = async { tokenRepository.getAuthData() }
-            data.await()?.let {
-                dataStoreModule.saveCredentials(it)
-            }
+        viewModelScope.launch {
+            gPlayAPIRepository.fetchAuthData()
         }
     }
 
+    // TODO: Move below stuff to gplayimpl class and use FusedAPI
     fun getSearchSuggestions(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val data = authData.value?.let { gson.fromJson(it, AuthData::class.java) }

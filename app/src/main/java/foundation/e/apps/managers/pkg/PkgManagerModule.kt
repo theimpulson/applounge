@@ -28,8 +28,8 @@ class PkgManagerModule @Inject constructor(
     fun isInstalled(packageName: String, versionCode: Int): Boolean {
         return try {
             val packageInfo = getPackageInfo(packageName)
-            if (packageInfo != null) {
-                return packageInfo.versionCode >= versionCode
+            packageInfo?.let {
+                return PackageInfoCompat.getLongVersionCode(it).toInt() >= versionCode
             }
             true
         } catch (e: PackageManager.NameNotFoundException) {
@@ -40,8 +40,8 @@ class PkgManagerModule @Inject constructor(
     fun isUpdatable(packageName: String, versionCode: Long): Boolean {
         return try {
             val packageInfo = getPackageInfo(packageName)
-            if (packageInfo != null) {
-                return versionCode > PackageInfoCompat.getLongVersionCode(packageInfo).toInt()
+            packageInfo?.let {
+                return versionCode > PackageInfoCompat.getLongVersionCode(it).toInt()
             }
             true
         } catch (e: PackageManager.NameNotFoundException) {
@@ -52,13 +52,14 @@ class PkgManagerModule @Inject constructor(
     fun getInstalledVersion(packageName: String): String {
         return try {
             val packageInfo = getPackageInfo(packageName)
-            if (packageInfo != null) {
-                "${packageInfo.versionName} (${
-                    PackageInfoCompat.getLongVersionCode(packageInfo).toInt()
+            packageInfo?.let {
+                return "${it.versionName} (${
+                    PackageInfoCompat.getLongVersionCode(
+                        it
+                    ).toInt()
                 })"
-            } else {
-                ""
             }
+            ""
         } catch (e: PackageManager.NameNotFoundException) {
             ""
         }
@@ -68,7 +69,7 @@ class PkgManagerModule @Inject constructor(
         return packageManager.getLaunchIntentForPackage(packageName)
     }
 
-    fun getPackageInfo(packageName: String): PackageInfo? {
+    private fun getPackageInfo(packageName: String): PackageInfo? {
         return packageManager.getPackageInfo(packageName, 0)
     }
 
@@ -100,7 +101,6 @@ class PkgManagerModule @Inject constructor(
 
     /**
      * Checks if the given [packageName] is a system app or not
-     * @param packageManager [PackageManager]
      * @param packageName package to verify
      * @return true if the app is system app. false otherwise
      */
