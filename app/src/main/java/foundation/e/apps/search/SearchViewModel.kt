@@ -9,15 +9,18 @@ import com.aurora.gplayapi.helpers.SearchHelper
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.gplay.GPlayAPIRepository
+import foundation.e.apps.api.gplay.token.TokenRepository
 import foundation.e.apps.api.gplay.utils.OkHttpClient
 import foundation.e.apps.utils.DataStoreModule
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val gPlayAPIRepository: GPlayAPIRepository,
+    private val tokenRepository: TokenRepository,
     private val gson: Gson,
     private val dataStoreModule: DataStoreModule
 ) : ViewModel() {
@@ -31,17 +34,19 @@ class SearchViewModel @Inject constructor(
 
     // TODO: Move below stuff to gplayimpl class and use FusedAPI
     fun getAuthData() {
-        viewModelScope.launch {
-            gPlayAPIRepository.fetchAuthData()
+        viewModelScope.launch(Dispatchers.IO) {
+            val data = async { tokenRepository.getAuthData() }
+            data.await()?.let {
+                dataStoreModule.saveCredentials(it)
+            }
         }
     }
 
     fun getSearchSuggestions(query: String) {
-        Log.d(TAG, query)
         viewModelScope.launch(Dispatchers.IO) {
             val data = authData.value?.let { gson.fromJson(it, AuthData::class.java) }
             data?.let {
-                val searchHelper = SearchHelper(data).using(OkHttpClient)
+                val searchHelper = SearchHelper(it).using(OkHttpClient)
                 searchSuggest.postValue(searchHelper.searchSuggestions(query))
             }
         }

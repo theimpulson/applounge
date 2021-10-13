@@ -61,7 +61,6 @@ object OkHttpClient : IHttpClient {
             )
             .method(POST, requestBody)
             .build()
-        Log.d("request", request.toString())
         return processRequest(request)
     }
 
@@ -72,7 +71,6 @@ object OkHttpClient : IHttpClient {
             0,
             body.size
         )
-        Log.d("request", post(url, headers, requestBody).toString())
         return post(url, headers, requestBody)
     }
 
@@ -92,7 +90,6 @@ object OkHttpClient : IHttpClient {
             .headers(headers.toHeaders())
             .method(GET, null)
             .build()
-        Log.d("request", request.toString())
         return processRequest(request)
     }
 
@@ -120,7 +117,6 @@ object OkHttpClient : IHttpClient {
             .headers(headers.toHeaders())
             .method(GET, null)
             .build()
-        Log.d("request", request.toString())
         return processRequest(request)
     }
 
@@ -144,14 +140,11 @@ object OkHttpClient : IHttpClient {
 
             if (response.body != null) {
                 responseBytes = response.body!!.bytes()
-//                Log.d("response",response.body.toString())
             }
 
             if (!isSuccessful) {
                 errorString = response.message
             }
-        }.also {
-            Log.i("OKHTTP [${response.code}] ${response.request.url}", "")
         }
     }
 }

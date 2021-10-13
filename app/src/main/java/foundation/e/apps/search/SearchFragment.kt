@@ -4,6 +4,7 @@ import android.app.Activity
 import android.database.MatrixCursor
 import android.os.Bundle
 import android.provider.BaseColumns
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -28,11 +29,19 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
     private val TAG = SearchFragment::class.java.simpleName
     private val SUGGESTION_KEY = "suggestion"
 
-    private lateinit var searchView: androidx.appcompat.widget.SearchView
+    private lateinit var searchView: SearchView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchBinding.bind(view)
+
+        // AuthData
+        searchViewModel.getAuthData()
+        searchViewModel.authData.observe(viewLifecycleOwner, {
+            it?.let { string ->
+                Log.d(TAG, string)
+            }
+        })
 
         // Setup SearchView
         setHasOptionsMenu(true)
@@ -58,13 +67,13 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {
             hideKeyboard(activity as Activity)
+            view?.requestFocus()
         }
-        view?.requestFocus()
         return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        newText?.let { searchViewModel.getSearchSuggestions(newText) }
+        newText?.let { searchViewModel.getSearchSuggestions(it) }
         return true
     }
 
@@ -90,7 +99,8 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
 
 
     private fun hideKeyboard(activity: Activity) {
-        val inputMethodManager = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         val view = activity.currentFocus
         inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
     }
@@ -98,9 +108,9 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
 
     private fun populateSuggestionsAdapter(suggestions: List<SearchSuggestEntry>?) {
         val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SUGGESTION_KEY))
-        if (suggestions != null) {
-            for (i in suggestions.indices) {
-                cursor.addRow(arrayOf(i, suggestions[i].suggestedQuery))
+        suggestions?.let {
+            for (i in it.indices) {
+                cursor.addRow(arrayOf(i, it[i].suggestedQuery))
             }
         }
         searchView.suggestionsAdapter.changeCursor(cursor)
