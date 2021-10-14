@@ -15,13 +15,14 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="BaseTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
         <item name="android:textColorSecondary">@color/colorTextSecondary</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
@@ -31,6 +32,7 @@
         <item name="colorControlNormal">@color/colorInstall</item>
         <item name="colorControlActivated">@color/colorInstall</item>
         <item name="android:navigationBarColor">@color/colorNavigationBarBackground</item>
+        <item name="android:navigationBarDividerColor" tools:targetApi="o_mr1">@color/colorNavigationBarBackground</item>
         <item name="android:statusBarColor">@color/colorNavigationBarBackground</item>
         <item name="toolbarNavigationButtonStyle">@style/Toolbar.Button.Navigation.Tinted</item>
     </style>
@@ -38,7 +40,7 @@
     <style name="AppTheme1" parent="android:Theme">
         <item name="android:windowDisablePreview">true</item>
     </style>
-    <style name="AppTheme" parent="BaseTheme"></style>
+    <style name="AppTheme" parent="BaseTheme" />
 
     <style name="SearchSuggestionTheme" parent="Widget.AppCompat.Light.AutoCompleteTextView">
         <item name="android:popupBackground">@color/colorBackground</item>
