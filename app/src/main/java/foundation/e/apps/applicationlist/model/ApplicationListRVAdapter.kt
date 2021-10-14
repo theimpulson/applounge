@@ -1,3 +1,40 @@
 package foundation.e.apps.applicationlist.model
 
-class ApplicationListRVAdapter
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import foundation.e.apps.api.cleanapk.CleanAPKInterface
+import foundation.e.apps.api.cleanapk.data.search.App
+import foundation.e.apps.databinding.ApplicationListItemBinding
+import javax.inject.Singleton
+
+@Singleton
+class ApplicationListRVAdapter(val list: List<App>) :
+    RecyclerView.Adapter<ApplicationListRVAdapter.ViewHolder>() {
+
+    inner class ViewHolder(val binding: ApplicationListItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
+            ApplicationListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.binding.apply {
+            appAuthor.text = list[position].author
+            appTitle.text = list[position].name
+            appIcon.load(CleanAPKInterface.ASSET_URL + list[position].icon_image_path)
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+}

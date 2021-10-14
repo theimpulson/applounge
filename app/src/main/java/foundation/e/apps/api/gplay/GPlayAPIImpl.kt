@@ -17,7 +17,9 @@ class GPlayAPIImpl @Inject constructor(
     private val dataStoreModule: DataStoreModule
 ) {
 
-    val searchSuggestEntry: MutableLiveData<List<SearchSuggestEntry>> = MutableLiveData()
+    companion object {
+        var searchResult: List<SearchSuggestEntry>? = null
+    }
 
     suspend fun fetchAuthData() = withContext(Dispatchers.IO) {
         val data = async { tokenRepository.getAuthData() }
@@ -28,6 +30,6 @@ class GPlayAPIImpl @Inject constructor(
     suspend fun getSearchSuggestions(query: String, authData: AuthData) =
         withContext(Dispatchers.IO) {
             val searchHelper = SearchHelper(authData).using(OkHttpClient)
-            searchSuggestEntry.postValue(searchHelper.searchSuggestions(query))
+            searchResult = searchHelper.searchSuggestions(query)
         }
 }

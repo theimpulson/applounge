@@ -13,9 +13,11 @@ import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.aurora.gplayapi.SearchSuggestEntry
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
+import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentSearchBinding
 
 @AndroidEntryPoint
@@ -64,12 +66,21 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
         searchViewModel.searchSuggest.observe(viewLifecycleOwner, {
             it?.let { populateSuggestionsAdapter(it) }
         })
+
+        // Setup Search Results
+        searchViewModel.searchResult.observe(viewLifecycleOwner, {
+            val adapter = ApplicationListRVAdapter(it)
+            binding.recyclerView.adapter = adapter
+            binding.recyclerView.visibility = View.VISIBLE
+            binding.recyclerView.layoutManager = LinearLayoutManager(view.context)
+        })
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let {
             hideKeyboard(activity as Activity)
             view?.requestFocus()
+            searchViewModel.getSearchResults(it)
         }
         return false
     }
