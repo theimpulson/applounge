@@ -23,7 +23,7 @@
     android:layout_height="wrap_content"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center_vertical"
-    android:background="@color/colorBackground"
+    android:background="@color/colorForeground"
     android:textColor="@color/colorTextPrimary"
     android:paddingStart="?android:attr/listPreferredItemPaddingStart"
     android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
