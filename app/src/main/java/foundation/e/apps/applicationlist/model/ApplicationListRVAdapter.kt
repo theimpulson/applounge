@@ -34,10 +34,11 @@ class ApplicationListRVAdapter :
         holder.binding.apply {
             appAuthor.text = oldList[position].author
             appTitle.text = oldList[position].name
-            if (oldList[position].origin == Origin.CLEANAPK) {
-                appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path)
-            } else if (oldList[position].origin == Origin.GPLAY) {
+            appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path)
+            source.text = Origin.CLEANAPK.name
+            if (oldList[position].origin == Origin.GPLAY) {
                 appIcon.load(oldList[position].icon_image_path)
+                source.text = Origin.GPLAY.name
             }
         }
     }

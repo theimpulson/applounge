@@ -7,6 +7,7 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.helpers.SearchHelper
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.data.search.CleanAPKSearchApp
 import foundation.e.apps.api.cleanapk.data.search.Ratings
 import foundation.e.apps.api.data.Origin
@@ -57,14 +58,29 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    // TODO: FIX THE CRAP CODING | DON'T SHIP IN PRODUCTION
     fun getSearchResults(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            // GPLAY API WORK
             val data = authData.value?.let { gson.fromJson(it, AuthData::class.java) }
             data?.let { it ->
                 val searchHelper = SearchHelper(it).using(OkHttpClient)
-                searchResult.postValue(searchHelper.searchResults(query).appList.map { app ->
+                val response = mutableListOf<CleanAPKSearchApp>()
+                val gplayResponse = searchHelper.searchResults(query).appList.map { app ->
                     app.transform()
-                })
+                }
+                val cleanapkResponse =
+                    fusedAPIRepository.searchOrListApps(
+                        keyword = query,
+                        action = CleanAPKInterface.ACTION_SEARCH,
+                        source = CleanAPKInterface.APP_SOURCE_FOSS
+                    ).body()
+
+                cleanapkResponse?.let {
+                    response.addAll(it.apps)
+                    response.addAll(gplayResponse)
+                }
+                searchResult.postValue(response)
             }
         }
     }
@@ -84,6 +100,7 @@ class SearchViewModel @Inject constructor(
         )
     }
 
+    // Search CLEANAPK
 //    fun getSearchResults(query: String) {
 //        viewModelScope.launch {
 //            val response =

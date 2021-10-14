@@ -110,10 +110,10 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/ic_lock" />
+                android:src="@drawable/ic_source" />
 
             <TextView
-                android:id="@+id/app_privacy_score"
+                android:id="@+id/source"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
