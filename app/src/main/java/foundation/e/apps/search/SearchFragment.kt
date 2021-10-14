@@ -8,12 +8,14 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.appcompat.widget.SearchView
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.aurora.gplayapi.SearchSuggestEntry
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
@@ -32,6 +34,8 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
     private val SUGGESTION_KEY = "suggestion"
 
     private lateinit var searchView: SearchView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var recyclerView: RecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,7 +53,10 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
 
         // Setup SearchView
         setHasOptionsMenu(true)
+
         searchView = binding.searchView
+        progressBar = binding.progressBar
+
         searchView.setOnSuggestionListener(this)
         searchView.setOnQueryTextListener(this)
         configureCloseButton(searchView)
@@ -68,13 +75,18 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
         })
 
         // Setup Search Results
-        val adapter = ApplicationListRVAdapter()
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.visibility = View.VISIBLE
-        binding.recyclerView.layoutManager = LinearLayoutManager(view.context)
+        val listAdapter = ApplicationListRVAdapter()
+        recyclerView = binding.recyclerView
+        recyclerView.apply {
+            adapter = listAdapter
+            visibility = View.GONE
+            layoutManager = LinearLayoutManager(view.context)
+        }
 
         searchViewModel.searchResult.observe(viewLifecycleOwner, {
-            adapter.setData(it)
+            listAdapter.setData(it)
+            progressBar.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
         })
     }
 
@@ -82,6 +94,8 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
         query?.let {
             hideKeyboard(activity as Activity)
             view?.requestFocus()
+            progressBar.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
             searchViewModel.getSearchResults(it)
         }
         return false
