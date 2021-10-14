@@ -26,6 +26,8 @@ class SearchViewModel @Inject constructor(
     val searchSuggest: MutableLiveData<List<SearchSuggestEntry>?> = MutableLiveData()
     val searchResult: MutableLiveData<List<CleanAPKSearchApp>> = MutableLiveData()
 
+    // TODO: GET RID OF AUTH DATA LOGIC COMPLETELY
+    // Search function shouldn't care about authentication check, that's backend's job
     fun getAuthData() {
         viewModelScope.launch {
             fusedAPIRepository.fetchAuthData()
@@ -41,11 +43,9 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    // TODO: Move below stuff to gplayimpl class and use FusedAPI
     // TODO: FIX THE CRAP CODING | DON'T SHIP IN PRODUCTION
     fun getSearchResults(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            // GPLAY API WORK
             val data = authData.value?.let { gson.fromJson(it, AuthData::class.java) }
             data?.let { it ->
                 val response = mutableListOf<CleanAPKSearchApp>()
