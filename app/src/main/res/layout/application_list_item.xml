@@ -5,10 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground"
-    android:paddingStart="8dp"
-    android:paddingTop="8dp"
-    android:paddingEnd="8dp">
+    android:layout_margin="8dp"
+    android:background="?android:selectableItemBackground">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/app_icon_card"
@@ -82,7 +80,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textSize="14sp"
-                tools:text="4.3" />
+                android:text="@string/not_available"/>
 
         </LinearLayout>
 
@@ -101,6 +99,31 @@
             android:layout_height="50dp"
             android:text="@string/install"
             android:textAllCaps="false" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_lock" />
+
+            <TextView
+                android:id="@+id/app_privacy_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/not_available"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

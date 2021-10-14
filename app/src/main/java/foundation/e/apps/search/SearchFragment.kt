@@ -79,7 +79,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
         recyclerView = binding.recyclerView
         recyclerView.apply {
             adapter = listAdapter
-            visibility = View.GONE
             layoutManager = LinearLayoutManager(view.context)
         }
 

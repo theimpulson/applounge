@@ -67,7 +67,8 @@ class SearchViewModel @Inject constructor(
 
     fun getSearchResults(query: String) {
         viewModelScope.launch {
-            val response = fusedAPIRepository.searchOrListApps(query, CleanAPKInterface.ACTION_SEARCH)
+            val response =
+                fusedAPIRepository.searchOrListApps(query, CleanAPKInterface.ACTION_SEARCH)
             if (response.isSuccessful) {
                 searchResult.value = response.body()?.apps
             }

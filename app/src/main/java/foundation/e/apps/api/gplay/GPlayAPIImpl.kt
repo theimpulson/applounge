@@ -1,6 +1,5 @@
 package foundation.e.apps.api.gplay
 
-import androidx.lifecycle.MutableLiveData
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.helpers.SearchHelper

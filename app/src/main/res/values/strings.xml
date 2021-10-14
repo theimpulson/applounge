@@ -40,5 +40,6 @@
     <!-- Application List -->
     <string name="install">Install</string>
     <string name="app_icon">App icon</string>
+    <string name="not_available">N/A</string>
 
 </resources>
