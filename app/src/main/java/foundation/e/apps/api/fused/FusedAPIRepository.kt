@@ -1,10 +1,13 @@
 package foundation.e.apps.api.fused
 
+import com.aurora.gplayapi.SearchSuggestEntry
+import com.aurora.gplayapi.data.models.AuthData
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
-import foundation.e.apps.api.cleanapk.data.app.App
+import foundation.e.apps.api.cleanapk.data.app.Application
 import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.download.Download
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
+import foundation.e.apps.api.cleanapk.data.search.CleanAPKSearchApp
 import foundation.e.apps.api.cleanapk.data.search.Search
 import retrofit2.Response
 import javax.inject.Inject
@@ -23,7 +26,7 @@ class FusedAPIRepository @Inject constructor(
         id: String,
         architectures: List<String>? = null,
         type: String? = null
-    ): Response<App> {
+    ): Response<Application> {
         return fusedAPIImpl.getAppOrPWADetailsByID(id, architectures, type)
     }
 
@@ -52,5 +55,17 @@ class FusedAPIRepository @Inject constructor(
         source: String = CleanAPKInterface.APP_SOURCE_ANY
     ): Response<Categories> {
         return fusedAPIImpl.getCategoriesList(type, source)
+    }
+
+    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry>? {
+        return fusedAPIImpl.getSearchSuggestions(query, authData)
+    }
+
+    suspend fun fetchAuthData(): Unit? {
+        return fusedAPIImpl.fetchAuthData()
+    }
+
+    suspend fun getSearchResults(query: String, authData: AuthData): List<CleanAPKSearchApp>? {
+        return fusedAPIImpl.getSearchResults(query, authData)
     }
 }

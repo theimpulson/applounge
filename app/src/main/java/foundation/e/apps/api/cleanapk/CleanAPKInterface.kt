@@ -1,6 +1,6 @@
 package foundation.e.apps.api.cleanapk
 
-import foundation.e.apps.api.cleanapk.data.app.App
+import foundation.e.apps.api.cleanapk.data.app.Application
 import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.download.Download
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
@@ -43,7 +43,7 @@ interface CleanAPKInterface {
         @Query("id") id: String,
         @Query("architectures") architectures: List<String>? = null,
         @Query("type") type: String? = null
-    ): Response<App>
+    ): Response<Application>
 
     // TODO: Reminder that action can be either "search", "list_apps" or "list_games"
     @GET("/apps")

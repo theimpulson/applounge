@@ -1,6 +1,6 @@
 package foundation.e.apps.api.cleanapk.data.app
 
-data class AppX(
+data class CleanAPKApp(
     val _id: String,
     val add_min_sdk: Boolean,
     val author: String,

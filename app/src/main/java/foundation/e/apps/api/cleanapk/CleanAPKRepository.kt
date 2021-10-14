@@ -1,6 +1,6 @@
 package foundation.e.apps.api.cleanapk
 
-import foundation.e.apps.api.cleanapk.data.app.App
+import foundation.e.apps.api.cleanapk.data.app.Application
 import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.download.Download
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
@@ -24,7 +24,7 @@ class CleanAPKRepository @Inject constructor(
         id: String,
         architectures: List<String>? = null,
         type: String? = null
-    ): Response<App> {
+    ): Response<Application> {
         return cleanAPKInterface.getAppOrPWADetailsByID(id, architectures, type)
     }
 

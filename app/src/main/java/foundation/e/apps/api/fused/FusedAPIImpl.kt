@@ -1,19 +1,27 @@
 package foundation.e.apps.api.fused
 
+import com.aurora.gplayapi.SearchSuggestEntry
+import com.aurora.gplayapi.data.models.App
+import com.aurora.gplayapi.data.models.AuthData
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
-import foundation.e.apps.api.cleanapk.data.app.App
+import foundation.e.apps.api.cleanapk.data.app.Application
 import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.download.Download
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
+import foundation.e.apps.api.cleanapk.data.search.CleanAPKSearchApp
+import foundation.e.apps.api.cleanapk.data.search.Ratings
 import foundation.e.apps.api.cleanapk.data.search.Search
+import foundation.e.apps.api.data.Origin
+import foundation.e.apps.api.gplay.GPlayAPIRepository
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class FusedAPIImpl @Inject constructor(
-    private val cleanAPKRepository: CleanAPKRepository
+    private val cleanAPKRepository: CleanAPKRepository,
+    private val gPlayAPIRepository: GPlayAPIRepository
 ) {
     suspend fun getHomeScreenData(
         type: String = CleanAPKInterface.APP_TYPE_ANY,
@@ -26,7 +34,7 @@ class FusedAPIImpl @Inject constructor(
         id: String,
         architectures: List<String>? = null,
         type: String? = null
-    ): Response<App> {
+    ): Response<Application> {
         return cleanAPKRepository.getAppOrPWADetailsByID(id, architectures, type)
     }
 
@@ -55,5 +63,33 @@ class FusedAPIImpl @Inject constructor(
         source: String = CleanAPKInterface.APP_SOURCE_ANY
     ): Response<Categories> {
         return cleanAPKRepository.getCategoriesList(type, source)
+    }
+
+    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry>? {
+        return gPlayAPIRepository.getSearchSuggestions(query, authData)
+    }
+
+    suspend fun fetchAuthData(): Unit? {
+        return gPlayAPIRepository.fetchAuthData()
+    }
+
+    suspend fun getSearchResults(query: String, authData: AuthData): List<CleanAPKSearchApp>? {
+        return gPlayAPIRepository.getSearchResults(query, authData)?.map { app ->
+            app.transform()
+        }
+    }
+
+    private fun App.transform(): CleanAPKSearchApp {
+        return CleanAPKSearchApp(
+            _id = this.id.toString(),
+            author = this.developerName,
+            category = this.categoryName,
+            exodus_score = 0,
+            icon_image_path = this.iconArtwork.url,
+            name = this.displayName,
+            package_name = this.packageName,
+            ratings = Ratings(privacyScore = 0, usageQualityScore = 0),
+            origin = Origin.GPLAY
+        )
     }
 }

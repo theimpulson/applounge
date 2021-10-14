@@ -2,18 +2,12 @@ package foundation.e.apps.search
 
 import androidx.lifecycle.*
 import com.aurora.gplayapi.SearchSuggestEntry
-import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
-import com.aurora.gplayapi.helpers.SearchHelper
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.data.search.CleanAPKSearchApp
-import foundation.e.apps.api.cleanapk.data.search.Ratings
-import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.fused.FusedAPIRepository
-import foundation.e.apps.api.gplay.GPlayAPIRepository
-import foundation.e.apps.api.gplay.utils.OkHttpClient
 import foundation.e.apps.utils.DataStoreModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +15,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val gPlayAPIRepository: GPlayAPIRepository,
     private val fusedAPIRepository: FusedAPIRepository,
     private val gson: Gson,
     dataStoreModule: DataStoreModule
@@ -35,81 +28,39 @@ class SearchViewModel @Inject constructor(
 
     fun getAuthData() {
         viewModelScope.launch {
-            gPlayAPIRepository.fetchAuthData()
+            fusedAPIRepository.fetchAuthData()
         }
     }
 
-    // TODO: Move below stuff to gplayimpl class and use FusedAPI
     fun getSearchSuggestions(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val data = authData.value?.let { gson.fromJson(it, AuthData::class.java) }
             data?.let {
-                val searchHelper = SearchHelper(it).using(OkHttpClient)
-                searchSuggest.postValue(searchHelper.searchSuggestions(query))
+                searchSuggest.postValue(fusedAPIRepository.getSearchSuggestions(query, it))
             }
-//            data?.let {
-//                gPlayAPIRepository.getSearchSuggestions(query, it)
-//                withContext(Dispatchers.Main) {
-//                    GPlayAPIImpl.searchResult?.let { string ->
-//                        Log.d(TAG, string[0].suggestedQuery)
-//                    }
-//                }
-//            }
         }
     }
 
+    // TODO: Move below stuff to gplayimpl class and use FusedAPI
     // TODO: FIX THE CRAP CODING | DON'T SHIP IN PRODUCTION
     fun getSearchResults(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             // GPLAY API WORK
             val data = authData.value?.let { gson.fromJson(it, AuthData::class.java) }
             data?.let { it ->
-                val searchHelper = SearchHelper(it).using(OkHttpClient)
                 val response = mutableListOf<CleanAPKSearchApp>()
-                val gplayResponse = searchHelper.searchResults(query).appList.map { app ->
-                    app.transform()
-                }
+                val gplayResponse = fusedAPIRepository.getSearchResults(query, it)
                 val cleanapkResponse =
                     fusedAPIRepository.searchOrListApps(
-                        keyword = query,
-                        action = CleanAPKInterface.ACTION_SEARCH,
-                        source = CleanAPKInterface.APP_SOURCE_FOSS
+                        query,
+                        CleanAPKInterface.ACTION_SEARCH,
+                        CleanAPKInterface.APP_SOURCE_FOSS
                     ).body()
 
-                cleanapkResponse?.let {
-                    response.addAll(it.apps)
-                    response.addAll(gplayResponse)
-                }
+                cleanapkResponse?.let { response.addAll(it.apps) }
+                gplayResponse?.let { response.addAll(it) }
                 searchResult.postValue(response)
             }
         }
     }
-
-    // THE REAL TRANSFORMATION MAGIC
-    private fun App.transform(): CleanAPKSearchApp {
-        return CleanAPKSearchApp(
-            _id = this.id.toString(),
-            author = this.developerName,
-            category = this.categoryName,
-            exodus_score = 0,
-            icon_image_path = this.iconArtwork.url,
-            name = this.displayName,
-            package_name = this.packageName,
-            ratings = Ratings(privacyScore = 0, usageQualityScore = 0),
-            origin = Origin.GPLAY
-        )
-    }
-
-    // Search CLEANAPK
-//    fun getSearchResults(query: String) {
-//        viewModelScope.launch {
-//            val response =
-//                fusedAPIRepository.searchOrListApps(query, CleanAPKInterface.ACTION_SEARCH)
-//            if (response.isSuccessful) {
-//                searchResult.value = response.body()?.apps
-//            }
-//        }
-//    }
-
-
 }
