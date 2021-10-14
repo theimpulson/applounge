@@ -68,11 +68,13 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
         })
 
         // Setup Search Results
+        val adapter = ApplicationListRVAdapter()
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.visibility = View.VISIBLE
+        binding.recyclerView.layoutManager = LinearLayoutManager(view.context)
+
         searchViewModel.searchResult.observe(viewLifecycleOwner, {
-            val adapter = ApplicationListRVAdapter(it)
-            binding.recyclerView.adapter = adapter
-            binding.recyclerView.visibility = View.VISIBLE
-            binding.recyclerView.layoutManager = LinearLayoutManager(view.context)
+            adapter.setData(it)
         })
     }
 
