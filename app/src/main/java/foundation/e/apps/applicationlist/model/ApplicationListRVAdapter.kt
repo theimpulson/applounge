@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
-import foundation.e.apps.api.cleanapk.data.search.App
+import foundation.e.apps.api.cleanapk.data.search.CleanAPKSearchApp
+import foundation.e.apps.api.data.Origin
 import foundation.e.apps.databinding.ApplicationListItemBinding
 import javax.inject.Singleton
 
@@ -14,7 +15,7 @@ import javax.inject.Singleton
 class ApplicationListRVAdapter :
     RecyclerView.Adapter<ApplicationListRVAdapter.ViewHolder>() {
 
-    private var oldList = emptyList<App>()
+    private var oldList = emptyList<CleanAPKSearchApp>()
 
     inner class ViewHolder(val binding: ApplicationListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -33,7 +34,11 @@ class ApplicationListRVAdapter :
         holder.binding.apply {
             appAuthor.text = oldList[position].author
             appTitle.text = oldList[position].name
-            appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path)
+            if (oldList[position].origin == Origin.CLEANAPK) {
+                appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path)
+            } else if (oldList[position].origin == Origin.GPLAY) {
+                appIcon.load(oldList[position].icon_image_path)
+            }
         }
     }
 
@@ -41,7 +46,7 @@ class ApplicationListRVAdapter :
         return oldList.size
     }
 
-    fun setData(newList: List<App>) {
+    fun setData(newList: List<CleanAPKSearchApp>) {
         val diffUtil = ApplicationListDiffUtil(oldList, newList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
         oldList = newList
