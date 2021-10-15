@@ -12,14 +12,19 @@ import androidx.appcompat.widget.SearchView
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aurora.gplayapi.SearchSuggestEntry
+import com.aurora.gplayapi.data.models.AuthData
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentSearchBinding
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment :
@@ -27,10 +32,14 @@ class SearchFragment :
     SearchView.OnQueryTextListener,
     SearchView.OnSuggestionListener {
 
+    @Inject
+    lateinit var gson: Gson
+
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
     private val searchViewModel: SearchViewModel by viewModels()
+    private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
     private val TAG = SearchFragment::class.java.simpleName
     private val SUGGESTION_KEY = "suggestion"
@@ -81,18 +90,32 @@ class SearchFragment :
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        query?.let {
+        query?.let { text ->
             hideKeyboard(activity as Activity)
             view?.requestFocus()
             progressBar.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
-            searchViewModel.getSearchResults(it)
+            val data = mainActivityViewModel.authData.value?.let {
+                gson.fromJson(
+                    it,
+                    AuthData::class.java
+                )
+            }
+            data?.let { searchViewModel.getSearchResults(text, it) }
         }
         return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        newText?.let { searchViewModel.getSearchSuggestions(it) }
+        newText?.let { text ->
+            val data = mainActivityViewModel.authData.value?.let {
+                gson.fromJson(
+                    it,
+                    AuthData::class.java
+                )
+            }
+            data?.let { searchViewModel.getSearchSuggestions(text, it) }
+        }
         return true
     }
 
