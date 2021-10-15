@@ -30,18 +30,6 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.getAppOrPWADetailsByID(id, architectures, type)
     }
 
-    suspend fun searchOrListApps(
-        keyword: String,
-        action: String,
-        source: String = CleanAPKInterface.APP_SOURCE_FOSS,
-        type: String = CleanAPKInterface.APP_TYPE_ANY,
-        nres: Int = 20,
-        page: Int = 1,
-        by: String? = null
-    ): List<SearchApp>? {
-        return fusedAPIImpl.searchOrListApps(keyword, action, source, type, nres, page, by)
-    }
-
     suspend fun getDownloadInfo(
         id: String,
         version: String? = null,
@@ -65,7 +53,7 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.fetchAuthData()
     }
 
-    suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp>? {
+    suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp> {
         return fusedAPIImpl.getSearchResults(query, authData)
     }
 }

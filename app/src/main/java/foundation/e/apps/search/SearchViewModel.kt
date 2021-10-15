@@ -42,23 +42,11 @@ class SearchViewModel @Inject constructor(
             }
         }
     }
-
-    // TODO: FIX THE CRAP CODING | DON'T SHIP IN PRODUCTION
     fun getSearchResults(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val data = authData.value?.let { gson.fromJson(it, AuthData::class.java) }
             data?.let { it ->
-                val response = mutableListOf<SearchApp>()
-                val gplayResponse = fusedAPIRepository.getSearchResults(query, it)
-                val cleanapkResponse =
-                    fusedAPIRepository.searchOrListApps(
-                        query,
-                        CleanAPKInterface.ACTION_SEARCH,
-                    )
-
-                cleanapkResponse?.let { response.addAll(it) }
-                gplayResponse?.let { response.addAll(it) }
-                searchResult.postValue(response)
+                searchResult.postValue(fusedAPIRepository.getSearchResults(query, it))
             }
         }
     }

@@ -9,10 +9,9 @@ import foundation.e.apps.api.cleanapk.data.app.Application
 import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.download.Download
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
-import foundation.e.apps.api.data.SearchApp
-import foundation.e.apps.api.data.Ratings
-import foundation.e.apps.api.cleanapk.data.search.Search
 import foundation.e.apps.api.data.Origin
+import foundation.e.apps.api.data.Ratings
+import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import retrofit2.Response
 import javax.inject.Inject
@@ -38,7 +37,17 @@ class FusedAPIImpl @Inject constructor(
         return cleanAPKRepository.getAppOrPWADetailsByID(id, architectures, type)
     }
 
-    suspend fun searchOrListApps(
+    /**
+     * Fetches results from CleanAPK servers
+     * @param keyword Query
+     * @param action Action to take: search, list_apps, list_games
+     * @param source Source of app: open, any
+     * @param type Type of application: pwa, native, any
+     * @param nres Number of results per page
+     * @param page Page number to query
+     * @param by Search by [DON'T USE]
+     */
+    private suspend fun getCleanAPKSearchResults(
         keyword: String,
         action: String,
         source: String = CleanAPKInterface.APP_SOURCE_FOSS,
@@ -47,7 +56,9 @@ class FusedAPIImpl @Inject constructor(
         page: Int = 1,
         by: String? = null
     ): List<SearchApp>? {
-        val response = cleanAPKRepository.searchOrListApps(keyword, action, source, type, nres, page, by).body()
+        val response =
+            cleanAPKRepository.searchOrListApps(keyword, action, source, type, nres, page, by)
+                .body()
 
         // Gson does a really bad job of handling non-nullable values with default params, fix it
         response?.apps?.forEach {
@@ -79,10 +90,33 @@ class FusedAPIImpl @Inject constructor(
         return gPlayAPIRepository.fetchAuthData()
     }
 
-    suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp>? {
+    /**
+     * Fetches search result from GPlay servers
+     * @param query Query
+     * @param authData [AuthData]
+     * @return A list of nullable [SearchApp]
+     */
+    private suspend fun getGplaySearchResults(query: String, authData: AuthData): List<SearchApp>? {
         return gPlayAPIRepository.getSearchResults(query, authData)?.map { app ->
             app.transform()
         }
+    }
+
+    /**
+     * Fetches search results from cleanAPK and GPlay servers and returns them
+     * @param query Query
+     * @param authData [AuthData]
+     * @return A list of nullable [SearchApp]
+     */
+    suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp> {
+        val fusedResponse = mutableListOf<SearchApp>()
+        val gplayResponse = getGplaySearchResults(query, authData)
+        val cleanResponse = getCleanAPKSearchResults(query, CleanAPKInterface.ACTION_SEARCH)
+
+        // Add all response together, filter-out duplicate packageName and return it
+        gplayResponse?.let { fusedResponse.addAll(it) }
+        cleanResponse?.let { fusedResponse.addAll(it) }
+        return fusedResponse.distinctBy { it.package_name }
     }
 
     private fun App.transform(): SearchApp {
@@ -94,7 +128,10 @@ class FusedAPIImpl @Inject constructor(
             icon_image_path = this.iconArtwork.url,
             name = this.displayName,
             package_name = this.packageName,
-            ratings = Ratings(privacyScore = 0.0, usageQualityScore = this.labeledRating.toDouble()),
+            ratings = Ratings(
+                privacyScore = 0.0,
+                usageQualityScore = this.labeledRating.toDouble()
+            ),
             origin = Origin.GPLAY
         )
     }
