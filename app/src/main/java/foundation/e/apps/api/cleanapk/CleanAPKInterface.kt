@@ -13,7 +13,7 @@ interface CleanAPKInterface {
 
     companion object {
         // API endpoints
-        const val BASE_URL = "https://api.cleanapk.org"
+        const val BASE_URL = "https://api.cleanapk.org/v2/"
         const val ASSET_URL = "https://api.cleanapk.org/v2/media/"
 
         // ACTIONS
@@ -38,7 +38,7 @@ interface CleanAPKInterface {
     ): Response<HomeScreen>
 
     // TODO: Reminder that this function is for search App and PWA both
-    @GET("/apps?action=app_detail")
+    @GET("apps?action=app_detail")
     suspend fun getAppOrPWADetailsByID(
         @Query("id") id: String,
         @Query("architectures") architectures: List<String>? = null,
@@ -46,7 +46,7 @@ interface CleanAPKInterface {
     ): Response<Application>
 
     // TODO: Reminder that action can be either "search", "list_apps" or "list_games"
-    @GET("/apps")
+    @GET("apps")
     suspend fun searchOrListApps(
         @Query("keyword") keyword: String,
         @Query("action") action: String,
@@ -57,14 +57,14 @@ interface CleanAPKInterface {
         @Query("by") by: String? = null,
     ): Response<Search>
 
-    @GET("/apps?action=download")
+    @GET("apps?action=download")
     suspend fun getDownloadInfo(
         @Query("app_id") id: String,
         @Query("version") version: String? = null,
         @Query("architecture") architecture: String? = null
     ): Response<Download>
 
-    @GET("/apps?action=list_cat")
+    @GET("apps?action=list_cat")
     suspend fun getCategoriesList(
         @Query("type") type: String = APP_TYPE_ANY,
         @Query("source") source: String = APP_SOURCE_ANY,
