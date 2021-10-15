@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
-import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.data.Origin
+import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.databinding.ApplicationListItemBinding
 import javax.inject.Singleton
 
@@ -39,11 +39,15 @@ class ApplicationListRVAdapter :
             when (oldList[position].origin) {
                 Origin.GPLAY -> {
                     appIcon.load(oldList[position].icon_image_path)
-                    source.text = Origin.GPLAY.name
+                    appRating.text = oldList[position].ratings.usageQualityScore.toString()
+                    appRatingBar.rating = oldList[position].ratings.usageQualityScore.toFloat()
                 }
                 Origin.CLEANAPK -> {
                     appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path)
-                    source.text = Origin.CLEANAPK.name
+                    if (oldList[position].ratings.usageQualityScore != -1.0) appRating.text =
+                        oldList[position].ratings.usageQualityScore.toString()
+                    if (oldList[position].ratings.privacyScore != -1.0) appPrivacyScore.text =
+                        oldList[position].ratings.privacyScore.toString()
                 }
                 else -> Log.wtf(TAG, "${oldList[position].package_name} is from an unknown origin")
             }

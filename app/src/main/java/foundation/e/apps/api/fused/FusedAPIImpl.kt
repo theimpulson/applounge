@@ -94,7 +94,7 @@ class FusedAPIImpl @Inject constructor(
             icon_image_path = this.iconArtwork.url,
             name = this.displayName,
             package_name = this.packageName,
-            ratings = Ratings(privacyScore = 0, usageQualityScore = 0),
+            ratings = Ratings(privacyScore = 0.0, usageQualityScore = this.labeledRating.toDouble()),
             origin = Origin.GPLAY
         )
     }
