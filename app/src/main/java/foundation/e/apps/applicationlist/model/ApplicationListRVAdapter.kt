@@ -34,15 +34,16 @@ class ApplicationListRVAdapter :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.apply {
-            appAuthor.text = oldList[position].author
             appTitle.text = oldList[position].name
             when (oldList[position].origin) {
                 Origin.GPLAY -> {
+                    appAuthor.text = oldList[position].author
                     appIcon.load(oldList[position].icon_image_path)
                     appRating.text = oldList[position].ratings.usageQualityScore.toString()
                     appRatingBar.rating = oldList[position].ratings.usageQualityScore.toFloat()
                 }
                 Origin.CLEANAPK -> {
+                    appAuthor.text = oldList[position].author.replaceFirstChar { it.uppercase() }
                     appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path)
                     if (oldList[position].ratings.usageQualityScore != -1.0) appRating.text =
                         oldList[position].ratings.usageQualityScore.toString()
