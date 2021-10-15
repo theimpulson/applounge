@@ -19,19 +19,9 @@ class SearchViewModel @Inject constructor(
     dataStoreModule: DataStoreModule
 ) : ViewModel() {
 
-    private val TAG = SearchViewModel::class.java.simpleName
-
-    val authData: LiveData<String?> = dataStoreModule.authData.asLiveData()
+    private val authData: LiveData<String?> = dataStoreModule.authData.asLiveData()
     val searchSuggest: MutableLiveData<List<SearchSuggestEntry>?> = MutableLiveData()
     val searchResult: MutableLiveData<List<SearchApp>> = MutableLiveData()
-
-    // TODO: GET RID OF AUTH DATA LOGIC COMPLETELY
-    // Search function shouldn't care about authentication check, that's backend's job
-    fun getAuthData() {
-        viewModelScope.launch {
-            fusedAPIRepository.fetchAuthData()
-        }
-    }
 
     fun getSearchSuggestions(query: String) {
         viewModelScope.launch(Dispatchers.IO) {

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.database.MatrixCursor
 import android.os.Bundle
 import android.provider.BaseColumns
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -32,6 +31,7 @@ class SearchFragment :
     private val binding get() = _binding!!
 
     private val searchViewModel: SearchViewModel by viewModels()
+
     private val TAG = SearchFragment::class.java.simpleName
     private val SUGGESTION_KEY = "suggestion"
 
@@ -43,22 +43,12 @@ class SearchFragment :
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchBinding.bind(view)
 
-        // AuthData
-        searchViewModel.authData.observe(viewLifecycleOwner, {
-            if (it.isNullOrEmpty()) {
-                Log.d(TAG, "Fetching new authentication data")
-                searchViewModel.getAuthData()
-            } else {
-                Log.d(TAG, "Authentication data is available!")
-            }
-        })
+        searchView = binding.searchView
+        progressBar = binding.progressBar
+        recyclerView = binding.recyclerView
 
         // Setup SearchView
         setHasOptionsMenu(true)
-
-        searchView = binding.searchView
-        progressBar = binding.progressBar
-
         searchView.setOnSuggestionListener(this)
         searchView.setOnQueryTextListener(this)
         configureCloseButton(searchView)
@@ -78,7 +68,6 @@ class SearchFragment :
 
         // Setup Search Results
         val listAdapter = ApplicationListRVAdapter()
-        recyclerView = binding.recyclerView
         recyclerView.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)
