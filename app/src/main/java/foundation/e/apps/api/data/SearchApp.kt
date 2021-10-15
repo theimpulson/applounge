@@ -9,5 +9,5 @@ data class SearchApp(
     val name: String,
     val package_name: String,
     val ratings: Ratings,
-    var origin: Origin = Origin.CLEANAPK
+    var origin: Origin?
 )
