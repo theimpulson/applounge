@@ -31,7 +31,7 @@ class CleanAPKRepository @Inject constructor(
     suspend fun searchOrListApps(
         keyword: String,
         action: String,
-        source: String = CleanAPKInterface.APP_SOURCE_ANY,
+        source: String = CleanAPKInterface.APP_SOURCE_FOSS,
         type: String = CleanAPKInterface.APP_TYPE_ANY,
         nres: Int = 20,
         page: Int = 1,

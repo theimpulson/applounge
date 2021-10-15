@@ -54,7 +54,6 @@ class SearchViewModel @Inject constructor(
                     fusedAPIRepository.searchOrListApps(
                         query,
                         CleanAPKInterface.ACTION_SEARCH,
-                        CleanAPKInterface.APP_SOURCE_FOSS
                     ).body()
 
                 cleanapkResponse?.let { response.addAll(it.apps) }

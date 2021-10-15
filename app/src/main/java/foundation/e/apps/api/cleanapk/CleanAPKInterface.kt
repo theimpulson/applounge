@@ -50,7 +50,7 @@ interface CleanAPKInterface {
     suspend fun searchOrListApps(
         @Query("keyword") keyword: String,
         @Query("action") action: String,
-        @Query("source") source: String = APP_SOURCE_ANY,
+        @Query("source") source: String = APP_SOURCE_FOSS,
         @Query("type") type: String = APP_TYPE_ANY,
         @Query("nres") nres: Int = 20,
         @Query("page") page: Int = 1,
