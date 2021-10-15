@@ -8,7 +8,6 @@ import foundation.e.apps.api.cleanapk.data.search.Search
 import retrofit2.Response
 import javax.inject.Inject
 
-
 class CleanAPKRepository @Inject constructor(
     private val cleanAPKInterface: CleanAPKInterface
 ) {

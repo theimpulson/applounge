@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import foundation.e.apps.R
 import foundation.e.apps.databinding.FragmentUpdatesBinding
 
-
 class UpdatesFragment : Fragment(R.layout.fragment_updates) {
     private lateinit var binding: FragmentUpdatesBinding
 

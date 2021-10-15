@@ -119,7 +119,6 @@ object NativeDeviceInfoProviderModule {
         return featureStringList
     }
 
-
     private fun getLocales(context: Context): List<String> {
         val localeList: MutableList<String> = ArrayList()
         localeList.addAll(listOf(*context.assets.locales))

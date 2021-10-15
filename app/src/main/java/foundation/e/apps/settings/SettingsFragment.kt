@@ -45,7 +45,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             backToMainActivity()
             true
         }
-
     }
 
     private fun backToMainActivity() {
@@ -56,5 +55,4 @@ class SettingsFragment : PreferenceFragmentCompat() {
             activity?.overridePendingTransition(0, 0)
         }
     }
-
 }

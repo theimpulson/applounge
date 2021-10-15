@@ -33,5 +33,4 @@ class DataStoreModule @Inject constructor(
             it[AUTHDATA] = gson.toJson(authData)
         }
     }
-
 }

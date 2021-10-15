@@ -8,7 +8,6 @@ import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.download.Download
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
 import foundation.e.apps.api.data.SearchApp
-import foundation.e.apps.api.cleanapk.data.search.Search
 import retrofit2.Response
 import javax.inject.Inject
 

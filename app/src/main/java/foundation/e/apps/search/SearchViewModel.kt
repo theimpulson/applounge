@@ -5,7 +5,6 @@ import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.utils.DataStoreModule

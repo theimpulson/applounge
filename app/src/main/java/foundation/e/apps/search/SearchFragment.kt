@@ -23,7 +23,9 @@ import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentSearchBinding
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTextListener,
+class SearchFragment :
+    Fragment(R.layout.fragment_search),
+    SearchView.OnQueryTextListener,
     SearchView.OnSuggestionListener {
 
     private var _binding: FragmentSearchBinding? = null
@@ -128,14 +130,12 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
         closeImage.setImageResource(R.drawable.ic_close)
     }
 
-
     private fun hideKeyboard(activity: Activity) {
         val inputMethodManager =
             activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         val view = activity.currentFocus
         inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
     }
-
 
     private fun populateSuggestionsAdapter(suggestions: List<SearchSuggestEntry>?) {
         val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SUGGESTION_KEY))
@@ -146,5 +146,4 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchView.OnQueryTex
         }
         searchView.suggestionsAdapter.changeCursor(cursor)
     }
-
 }

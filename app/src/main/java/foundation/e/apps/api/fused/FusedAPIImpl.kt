@@ -46,6 +46,7 @@ class FusedAPIImpl @Inject constructor(
      * @param nres Number of results per page
      * @param page Page number to query
      * @param by Search by [DON'T USE]
+     * @return A nullable list of [SearchApp]
      */
     private suspend fun getCleanAPKSearchResults(
         keyword: String,
@@ -67,6 +68,13 @@ class FusedAPIImpl @Inject constructor(
         return response?.apps
     }
 
+    /**
+     * Fetches download information form the CleanAPK servers
+     * @param id ID of the application
+     * @param version specific-version; optional
+     * @param architecture architecture requirements; optional
+     * @return [Download] info wrapped in [Response]
+     */
     suspend fun getDownloadInfo(
         id: String,
         version: String? = null,
@@ -82,10 +90,19 @@ class FusedAPIImpl @Inject constructor(
         return cleanAPKRepository.getCategoriesList(type, source)
     }
 
+    /**
+     * Fetches search suggestions from GPlay servers
+     * @param query Query
+     * @param authData [AuthData]
+     * @return A list of nullable [SearchSuggestEntry]
+     */
     suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry>? {
         return gPlayAPIRepository.getSearchSuggestions(query, authData)
     }
 
+    /**
+     * Fetches required authentication data and stores it in datastore
+     */
     suspend fun fetchAuthData(): Unit? {
         return gPlayAPIRepository.fetchAuthData()
     }
@@ -119,6 +136,9 @@ class FusedAPIImpl @Inject constructor(
         return fusedResponse.distinctBy { it.package_name }
     }
 
+    /**
+     * Extension function to convert [App] into [SearchApp]
+     */
     private fun App.transform(): SearchApp {
         return SearchApp(
             _id = this.id.toString(),

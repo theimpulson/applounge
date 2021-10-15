@@ -69,6 +69,4 @@ interface CleanAPKInterface {
         @Query("type") type: String = APP_TYPE_ANY,
         @Query("source") source: String = APP_SOURCE_ANY,
     ): Response<Categories>
-
-
 }
