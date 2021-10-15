@@ -9,8 +9,8 @@ import foundation.e.apps.api.cleanapk.data.app.Application
 import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.download.Download
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
-import foundation.e.apps.api.cleanapk.data.search.CleanAPKSearchApp
-import foundation.e.apps.api.cleanapk.data.search.Ratings
+import foundation.e.apps.api.data.SearchApp
+import foundation.e.apps.api.data.Ratings
 import foundation.e.apps.api.cleanapk.data.search.Search
 import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.gplay.GPlayAPIRepository
@@ -46,8 +46,14 @@ class FusedAPIImpl @Inject constructor(
         nres: Int = 20,
         page: Int = 1,
         by: String? = null
-    ): Response<Search> {
-        return cleanAPKRepository.searchOrListApps(keyword, action, source, type, nres, page, by)
+    ): List<SearchApp>? {
+        val response = cleanAPKRepository.searchOrListApps(keyword, action, source, type, nres, page, by).body()
+
+        // Gson does a really bad job of handling non-nullable values with default params, fix it
+        response?.apps?.forEach {
+            it.origin = Origin.CLEANAPK
+        }
+        return response?.apps
     }
 
     suspend fun getDownloadInfo(
@@ -73,14 +79,14 @@ class FusedAPIImpl @Inject constructor(
         return gPlayAPIRepository.fetchAuthData()
     }
 
-    suspend fun getSearchResults(query: String, authData: AuthData): List<CleanAPKSearchApp>? {
+    suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp>? {
         return gPlayAPIRepository.getSearchResults(query, authData)?.map { app ->
             app.transform()
         }
     }
 
-    private fun App.transform(): CleanAPKSearchApp {
-        return CleanAPKSearchApp(
+    private fun App.transform(): SearchApp {
+        return SearchApp(
             _id = this.id.toString(),
             author = this.developerName,
             category = this.categoryName,

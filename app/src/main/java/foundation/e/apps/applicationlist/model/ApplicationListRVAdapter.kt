@@ -1,12 +1,13 @@
 package foundation.e.apps.applicationlist.model
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
-import foundation.e.apps.api.cleanapk.data.search.CleanAPKSearchApp
+import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.data.Origin
 import foundation.e.apps.databinding.ApplicationListItemBinding
 import javax.inject.Singleton
@@ -15,7 +16,8 @@ import javax.inject.Singleton
 class ApplicationListRVAdapter :
     RecyclerView.Adapter<ApplicationListRVAdapter.ViewHolder>() {
 
-    private var oldList = emptyList<CleanAPKSearchApp>()
+    private var oldList = emptyList<SearchApp>()
+    private val TAG = ApplicationListRVAdapter::class.java.simpleName
 
     inner class ViewHolder(val binding: ApplicationListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -34,11 +36,16 @@ class ApplicationListRVAdapter :
         holder.binding.apply {
             appAuthor.text = oldList[position].author
             appTitle.text = oldList[position].name
-            appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path)
-            source.text = Origin.CLEANAPK.name
-            if (oldList[position].origin == Origin.GPLAY) {
-                appIcon.load(oldList[position].icon_image_path)
-                source.text = Origin.GPLAY.name
+            when (oldList[position].origin) {
+                Origin.GPLAY -> {
+                    appIcon.load(oldList[position].icon_image_path)
+                    source.text = Origin.GPLAY.name
+                }
+                Origin.CLEANAPK -> {
+                    appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path)
+                    source.text = Origin.CLEANAPK.name
+                }
+                else -> Log.wtf(TAG, "${oldList[position].package_name} is from an unknown origin")
             }
         }
     }
@@ -47,7 +54,7 @@ class ApplicationListRVAdapter :
         return oldList.size
     }
 
-    fun setData(newList: List<CleanAPKSearchApp>) {
+    fun setData(newList: List<SearchApp>) {
         val diffUtil = ApplicationListDiffUtil(oldList, newList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
         oldList = newList

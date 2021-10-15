@@ -6,7 +6,7 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
-import foundation.e.apps.api.cleanapk.data.search.CleanAPKSearchApp
+import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.utils.DataStoreModule
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +24,7 @@ class SearchViewModel @Inject constructor(
 
     val authData: LiveData<String?> = dataStoreModule.authData.asLiveData()
     val searchSuggest: MutableLiveData<List<SearchSuggestEntry>?> = MutableLiveData()
-    val searchResult: MutableLiveData<List<CleanAPKSearchApp>> = MutableLiveData()
+    val searchResult: MutableLiveData<List<SearchApp>> = MutableLiveData()
 
     // TODO: GET RID OF AUTH DATA LOGIC COMPLETELY
     // Search function shouldn't care about authentication check, that's backend's job
@@ -48,15 +48,15 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val data = authData.value?.let { gson.fromJson(it, AuthData::class.java) }
             data?.let { it ->
-                val response = mutableListOf<CleanAPKSearchApp>()
+                val response = mutableListOf<SearchApp>()
                 val gplayResponse = fusedAPIRepository.getSearchResults(query, it)
                 val cleanapkResponse =
                     fusedAPIRepository.searchOrListApps(
                         query,
                         CleanAPKInterface.ACTION_SEARCH,
-                    ).body()
+                    )
 
-                cleanapkResponse?.let { response.addAll(it.apps) }
+                cleanapkResponse?.let { response.addAll(it) }
                 gplayResponse?.let { response.addAll(it) }
                 searchResult.postValue(response)
             }

@@ -7,7 +7,7 @@ import foundation.e.apps.api.cleanapk.data.app.Application
 import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.download.Download
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
-import foundation.e.apps.api.cleanapk.data.search.CleanAPKSearchApp
+import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.cleanapk.data.search.Search
 import retrofit2.Response
 import javax.inject.Inject
@@ -38,7 +38,7 @@ class FusedAPIRepository @Inject constructor(
         nres: Int = 20,
         page: Int = 1,
         by: String? = null
-    ): Response<Search> {
+    ): List<SearchApp>? {
         return fusedAPIImpl.searchOrListApps(keyword, action, source, type, nres, page, by)
     }
 
@@ -65,7 +65,7 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.fetchAuthData()
     }
 
-    suspend fun getSearchResults(query: String, authData: AuthData): List<CleanAPKSearchApp>? {
+    suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp>? {
         return fusedAPIImpl.getSearchResults(query, authData)
     }
 }

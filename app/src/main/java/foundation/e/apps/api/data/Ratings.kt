@@ -1,4 +1,4 @@
-package foundation.e.apps.api.cleanapk.data.search
+package foundation.e.apps.api.data
 
 data class Ratings(
     val privacyScore: Int,

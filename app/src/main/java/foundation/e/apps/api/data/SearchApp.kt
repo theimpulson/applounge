@@ -1,8 +1,6 @@
-package foundation.e.apps.api.cleanapk.data.search
+package foundation.e.apps.api.data
 
-import foundation.e.apps.api.data.Origin
-
-data class CleanAPKSearchApp(
+data class SearchApp(
     val _id: String,
     val author: String,
     val category: String,
@@ -11,5 +9,5 @@ data class CleanAPKSearchApp(
     val name: String,
     val package_name: String,
     val ratings: Ratings,
-    val origin: Origin = Origin.CLEANAPK
+    var origin: Origin = Origin.CLEANAPK
 )

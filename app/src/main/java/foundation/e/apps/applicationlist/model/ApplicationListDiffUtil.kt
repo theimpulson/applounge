@@ -1,11 +1,11 @@
 package foundation.e.apps.applicationlist.model
 
 import androidx.recyclerview.widget.DiffUtil
-import foundation.e.apps.api.cleanapk.data.search.CleanAPKSearchApp
+import foundation.e.apps.api.data.SearchApp
 
 class ApplicationListDiffUtil(
-    private val oldList: List<CleanAPKSearchApp>,
-    private val newList: List<CleanAPKSearchApp>
+    private val oldList: List<SearchApp>,
+    private val newList: List<SearchApp>
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldList.size
