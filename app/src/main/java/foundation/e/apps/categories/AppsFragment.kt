@@ -1,21 +1,20 @@
-package foundation.e.apps.application
+package foundation.e.apps.categories
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
-import foundation.e.apps.databinding.FragmentApplicationBinding
+import foundation.e.apps.databinding.FragmentAppsBinding
 
 @AndroidEntryPoint
-class ApplicationFragment : Fragment(R.layout.fragment_application) {
-
-    private var _binding: FragmentApplicationBinding? = null
+class AppsFragment : Fragment(R.layout.fragment_apps) {
+    private var _binding: FragmentAppsBinding? = null
     private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentApplicationBinding.bind(view)
+        _binding = FragmentAppsBinding.bind(view)
     }
 
     override fun onDestroyView() {

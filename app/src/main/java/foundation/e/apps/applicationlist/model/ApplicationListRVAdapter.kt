@@ -35,20 +35,20 @@ class ApplicationListRVAdapter :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.apply {
             appTitle.text = oldList[position].name
+            appAuthor.text = oldList[position].author
+            if (oldList[position].ratings.usageQualityScore != -1.0) {
+                appRating.text = oldList[position].ratings.usageQualityScore.toString()
+                appRatingBar.rating = oldList[position].ratings.usageQualityScore.toFloat()
+            }
+            if (oldList[position].ratings.privacyScore != -1.0) {
+                appPrivacyScore.text = oldList[position].ratings.privacyScore.toString()
+            }
             when (oldList[position].origin) {
                 Origin.GPLAY -> {
-                    appAuthor.text = oldList[position].author
                     appIcon.load(oldList[position].icon_image_path)
-                    appRating.text = oldList[position].ratings.usageQualityScore.toString()
-                    appRatingBar.rating = oldList[position].ratings.usageQualityScore.toFloat()
                 }
                 Origin.CLEANAPK -> {
-                    appAuthor.text = oldList[position].author.replaceFirstChar { it.uppercase() }
                     appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path)
-                    if (oldList[position].ratings.usageQualityScore != -1.0) appRating.text =
-                        oldList[position].ratings.usageQualityScore.toString()
-                    if (oldList[position].ratings.privacyScore != -1.0) appPrivacyScore.text =
-                        oldList[position].ratings.privacyScore.toString()
                 }
                 else -> Log.wtf(TAG, "${oldList[position].package_name} is from an unknown origin")
             }

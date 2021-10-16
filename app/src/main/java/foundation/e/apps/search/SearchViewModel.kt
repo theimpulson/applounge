@@ -1,6 +1,8 @@
 package foundation.e.apps.search
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +25,7 @@ class SearchViewModel @Inject constructor(
             searchSuggest.postValue(fusedAPIRepository.getSearchSuggestions(query, authData))
         }
     }
+
     fun getSearchResults(query: String, authData: AuthData) {
         viewModelScope.launch(Dispatchers.IO) {
             searchResult.postValue(fusedAPIRepository.getSearchResults(query, authData))

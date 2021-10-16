@@ -10,6 +10,14 @@
     <string name="menu_updates">Updates</string>
     <string name="menu_settings">Settings</string>
 
+    <!-- Categories Fragment -->
+    <string name="apps">Apps</string>
+    <string name="games">Games</string>
+    <string name="category_icon">Category Icon</string>
+
+    <!-- Search Fragment -->
+    <string name="query_hint">Search for apps &amp; games</string>
+
     <!-- Settings Fragment -->
     <string name="preference_updates_title">Updates</string>
     <string name="misc">Miscellaneous</string>
@@ -41,5 +49,8 @@
     <string name="install">Install</string>
     <string name="app_icon">App icon</string>
     <string name="not_available">N/A</string>
+
+    <!-- Updates Fragment -->
+    <string name="update_all">Update All</string>
 
 </resources>

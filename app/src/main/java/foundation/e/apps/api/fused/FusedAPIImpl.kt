@@ -131,8 +131,8 @@ class FusedAPIImpl @Inject constructor(
         val cleanResponse = getCleanAPKSearchResults(query, CleanAPKInterface.ACTION_SEARCH)
 
         // Add all response together, filter-out duplicate packageName and return it
-        gplayResponse?.let { fusedResponse.addAll(it) }
         cleanResponse?.let { fusedResponse.addAll(it) }
+        gplayResponse?.let { fusedResponse.addAll(it) }
         return fusedResponse.distinctBy { it.package_name }
     }
 
@@ -149,8 +149,8 @@ class FusedAPIImpl @Inject constructor(
             name = this.displayName,
             package_name = this.packageName,
             ratings = Ratings(
-                privacyScore = 0.0,
-                usageQualityScore = this.labeledRating.toDouble()
+                privacyScore = -1.0,
+                usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDouble() else -1.0
             ),
             origin = Origin.GPLAY
         )

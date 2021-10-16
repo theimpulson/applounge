@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="?android:selectableItemBackground">
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/app_icon_card"
@@ -99,7 +101,6 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="120dp"
             android:layout_height="40dp"
-            android:backgroundTint="@android:color/transparent"
             android:text="@string/install"
             android:textAllCaps="false"
             android:textSize="18sp"

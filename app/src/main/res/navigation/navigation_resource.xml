@@ -18,17 +18,12 @@
         android:id="@+id/categoriesFragment"
         android:name="foundation.e.apps.categories.CategoriesFragment"
         android:label="Categories"
-        tools:layout="@layout/fragment_categories">
-        <action
-            android:id="@+id/action_categoriesFragment_to_applicationListFragment"
-            app:destination="@id/applicationListFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_categories"></fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="foundation.e.apps.search.SearchFragment"
         android:label="Search"
-        tools:layout="@layout/fragment_search">
-    </fragment>
+        tools:layout="@layout/fragment_search"></fragment>
     <fragment
         android:id="@+id/updatesFragment"
         android:name="foundation.e.apps.updates.UpdatesFragment"
@@ -76,10 +71,31 @@
         android:label="ApplicationList"
         tools:layout="@layout/fragment_application_list">
         <action
-            android:id="@+id/action_applicationListFragment_to_categoriesFragment"
-            app:destination="@id/categoriesFragment" />
-        <action
             android:id="@+id/action_applicationListFragment_to_applicationFragment"
             app:destination="@id/applicationFragment" />
+        <action
+            android:id="@+id/action_applicationListFragment_to_appsFragment"
+            app:destination="@id/appsFragment" />
+        <action
+            android:id="@+id/action_applicationListFragment_to_gamesFragment"
+            app:destination="@id/gamesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/appsFragment"
+        android:name="foundation.e.apps.categories.AppsFragment"
+        android:label="Apps"
+        tools:layout="@layout/fragment_apps">
+        <action
+            android:id="@+id/action_appsFragment_to_applicationListFragment"
+            app:destination="@id/applicationListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gamesFragment"
+        android:name="foundation.e.apps.categories.GamesFragment"
+        android:label="Games"
+        tools:layout="@layout/fragment_games">
+        <action
+            android:id="@+id/action_gamesFragment_to_applicationListFragment"
+            app:destination="@id/applicationListFragment" />
     </fragment>
 </navigation>

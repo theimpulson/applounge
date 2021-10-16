@@ -2,18 +2,8 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="Theme.Apps" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/colorAccent</item>
-        <item name="actionBarTheme">@style/AppTheme.ActionBarStyle</item>
-        <item name="android:statusBarColor">?android:colorBackground</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:navigationBarColor">?android:colorBackground</item>
+    <style name="Theme.Apps" parent="@style/BaseTheme">
         <item name="android:windowLightNavigationBar">false</item>
-    </style>
-
-    <style name="AppTheme.ActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Surface">
-        <item name="colorControlNormal">@android:color/white</item>
     </style>
 
 </resources>

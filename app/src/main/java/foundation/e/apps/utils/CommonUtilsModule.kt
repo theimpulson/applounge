@@ -1,9 +1,13 @@
 package foundation.e.apps.utils
 
 import android.content.Context
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -11,6 +15,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import foundation.e.apps.R
 import java.lang.reflect.Modifier
 import javax.inject.Named
 import javax.inject.Singleton

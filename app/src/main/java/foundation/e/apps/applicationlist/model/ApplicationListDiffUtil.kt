@@ -16,7 +16,8 @@ class ApplicationListDiffUtil(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition]._id == newList[newItemPosition]._id
+        // Check both id and package name as we are fetching data from multiple sources to avoid issues
+        return oldList[oldItemPosition]._id == newList[newItemPosition]._id && oldList[oldItemPosition].package_name == newList[newItemPosition].package_name
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -24,6 +25,8 @@ class ApplicationListDiffUtil(
             oldList[oldItemPosition]._id != newList[newItemPosition]._id -> false
             oldList[oldItemPosition].name != newList[newItemPosition].name -> false
             oldList[oldItemPosition].author != newList[newItemPosition].author -> false
+            oldList[oldItemPosition].ratings.privacyScore != newList[newItemPosition].ratings.privacyScore -> false
+            oldList[oldItemPosition].ratings.usageQualityScore != newList[newItemPosition].ratings.usageQualityScore -> false
             oldList[oldItemPosition].icon_image_path != newList[newItemPosition].icon_image_path -> false
             else -> true
         }
