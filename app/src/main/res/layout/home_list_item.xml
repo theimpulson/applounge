@@ -30,15 +30,12 @@
         android:textSize="12sp" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
         android:layout_width="96dp"
         android:layout_height="40dp"
         android:text="@string/install"
         android:textAllCaps="false"
         android:textSize="18sp"
-        app:autoSizeTextType="uniform"
-        app:cornerRadius="4dp"
-        app:strokeColor="@color/colorAccent"
-        app:strokeWidth="1dp" />
+        app:autoSizeTextType="uniform"/>
 
 </LinearLayout>
