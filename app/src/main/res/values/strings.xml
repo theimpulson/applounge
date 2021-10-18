@@ -53,4 +53,7 @@
     <!-- Updates Fragment -->
     <string name="update_all">Update All</string>
 
+    <!-- Home Fragment -->
+    <string name="featured">Featured</string>
+
 </resources>

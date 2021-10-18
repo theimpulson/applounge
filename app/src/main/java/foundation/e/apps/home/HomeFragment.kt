@@ -27,6 +27,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         // Setup featured items
         val featuredRV = binding.featuredRV
+        val featuredPB = binding.featuredPB
         val featuredListAdapter = HomeVPAdapter()
         val snapHelper = PagerSnapHelper()
 
@@ -40,6 +41,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         homeViewModel.getHomeScreenData()
         homeViewModel.homeScreenData.observe(viewLifecycleOwner, {
             featuredListAdapter.setData(it.home.banner_apps)
+            featuredPB.visibility = View.GONE
         })
     }
 

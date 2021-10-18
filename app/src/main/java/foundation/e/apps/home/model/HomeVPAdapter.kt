@@ -4,18 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
-import coil.size.Scale
-import com.google.android.material.progressindicator.CircularProgressIndicator
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.data.HomeApp
 import foundation.e.apps.databinding.HomeFeaturedListItemBinding
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class HomeVPAdapter: RecyclerView.Adapter<HomeVPAdapter.ViewHolder>() {
+class HomeVPAdapter : RecyclerView.Adapter<HomeVPAdapter.ViewHolder>() {
 
     private var oldList = emptyList<HomeApp>()
 
@@ -23,13 +19,11 @@ class HomeVPAdapter: RecyclerView.Adapter<HomeVPAdapter.ViewHolder>() {
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            HomeFeaturedListItemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+        val view = HomeFeaturedListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val params = view.root.layoutParams
+        params.width = (parent.width * 0.8).toInt()
+        view.root.layoutParams = params
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
