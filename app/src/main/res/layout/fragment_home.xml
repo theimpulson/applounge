@@ -64,7 +64,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/topUpdatedAppsRV"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="170dp" />
         </RelativeLayout>
 
         <TextView
@@ -92,7 +92,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/topUpdatedGamesRV"
                 android:layout_width="match_parent"
-                android:layout_height="160dp" />
+                android:layout_height="170dp" />
         </RelativeLayout>
 
         <TextView
@@ -120,7 +120,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/top24AppsRV"
                 android:layout_width="match_parent"
-                android:layout_height="160dp" />
+                android:layout_height="170dp" />
         </RelativeLayout>
 
         <TextView
@@ -147,7 +147,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/top24GamesRV"
                 android:layout_width="match_parent"
-                android:layout_height="160dp" />
+                android:layout_height="170dp" />
         </RelativeLayout>
 
         <TextView
@@ -173,7 +173,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/discoverRV"
                 android:layout_width="match_parent"
-                android:layout_height="160dp" />
+                android:layout_height="180dp" />
         </RelativeLayout>
     </LinearLayout>
 
