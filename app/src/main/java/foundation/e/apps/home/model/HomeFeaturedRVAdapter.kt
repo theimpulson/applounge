@@ -11,7 +11,7 @@ import foundation.e.apps.databinding.HomeFeaturedListItemBinding
 import javax.inject.Singleton
 
 @Singleton
-class HomeVPAdapter : RecyclerView.Adapter<HomeVPAdapter.ViewHolder>() {
+class HomeFeaturedRVAdapter : RecyclerView.Adapter<HomeFeaturedRVAdapter.ViewHolder>() {
 
     private var oldList = emptyList<HomeApp>()
 

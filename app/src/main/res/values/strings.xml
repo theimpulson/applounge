@@ -55,5 +55,10 @@
 
     <!-- Home Fragment -->
     <string name="featured">Featured</string>
+    <string name="discover">Discover</string>
+    <string name="top_updated_apps">Top Updated Apps</string>
+    <string name="top_updated_games">Top Updated Games</string>
+    <string name="popular_apps_in_last_24_hours">Popular Apps In Last 24 Hours</string>
+    <string name="popular_games_in_last_24_hours">Popular Games In Last 24 Hours</string>
 
 </resources>

@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
 import foundation.e.apps.databinding.FragmentHomeBinding
-import foundation.e.apps.home.model.HomeVPAdapter
-import javax.inject.Inject
+import foundation.e.apps.home.model.HomeFeaturedRVAdapter
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -27,8 +26,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         // Setup featured items
         val featuredRV = binding.featuredRV
-        val featuredPB = binding.featuredPB
-        val featuredListAdapter = HomeVPAdapter()
+        val featuredListAdapter = HomeFeaturedRVAdapter()
         val snapHelper = PagerSnapHelper()
 
         featuredRV.apply {
@@ -41,7 +39,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         homeViewModel.getHomeScreenData()
         homeViewModel.homeScreenData.observe(viewLifecycleOwner, {
             featuredListAdapter.setData(it.home.banner_apps)
-            featuredPB.visibility = View.GONE
+            binding.featuredPB.visibility = View.GONE
         })
     }
 
