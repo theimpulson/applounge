@@ -1,4 +1,4 @@
-package foundation.e.apps.managers.pkg
+package foundation.e.apps.utils
 
 import android.content.Context
 import android.content.Intent
