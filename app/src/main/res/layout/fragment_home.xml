@@ -17,6 +17,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="@string/featured"
+            android:textColor="?android:textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -44,6 +45,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="@string/top_updated_apps"
+            android:textColor="?android:textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -60,9 +62,9 @@
                 android:layout_centerInParent="true" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/topUpdatedRV"
+                android:id="@+id/topUpdatedAppsRV"
                 android:layout_width="match_parent"
-                android:layout_height="160dp" />
+                android:layout_height="200dp" />
         </RelativeLayout>
 
         <TextView
@@ -71,6 +73,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="@string/top_updated_games"
+            android:textColor="?android:textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -98,6 +101,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="@string/popular_apps_in_last_24_hours"
+            android:textColor="?android:textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 

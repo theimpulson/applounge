@@ -10,6 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
 import foundation.e.apps.databinding.FragmentHomeBinding
 import foundation.e.apps.home.model.HomeFeaturedRVAdapter
+import foundation.e.apps.home.model.HomeRVAdapter
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -24,22 +25,70 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
-        // Setup featured items
         val featuredRV = binding.featuredRV
-        val featuredListAdapter = HomeFeaturedRVAdapter()
-        val snapHelper = PagerSnapHelper()
-
-        featuredRV.apply {
-            adapter = featuredListAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        }
-        snapHelper.attachToRecyclerView(featuredRV)
 
         // Fetch data to display
         homeViewModel.getHomeScreenData()
+
+        // Setup adapters
+        val featuredAdapter = HomeFeaturedRVAdapter()
+        val topUpdatedAppsAdapter = HomeRVAdapter()
+        val topUpdatedGamesAdapter = HomeRVAdapter()
+        val top24AppsAdapter = HomeRVAdapter()
+        val top24GamesAdapter = HomeRVAdapter()
+        val discoverAdapter = HomeRVAdapter()
+
+        // Setup SnapHelper with FeaturedRV to limit scrolling to 1 item
+        val snapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(featuredRV)
+
+        // Setup recycler views
+        featuredRV.apply {
+            adapter = featuredAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        binding.topUpdatedAppsRV.apply {
+            adapter = topUpdatedAppsAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        binding.topUpdatedGamesRV.apply {
+            adapter = topUpdatedGamesAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        binding.top24AppsRV.apply {
+            adapter = top24AppsAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        binding.top24GamesRV.apply {
+            adapter = top24GamesAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        binding.discoverRV.apply {
+            adapter = discoverAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
+
         homeViewModel.homeScreenData.observe(viewLifecycleOwner, {
-            featuredListAdapter.setData(it.home.banner_apps)
+            // Pass data to respective adapters
+            featuredAdapter.setData(it.home.banner_apps)
+            topUpdatedAppsAdapter.setData(it.home.top_updated_apps)
+            topUpdatedGamesAdapter.setData(it.home.top_updated_games)
+            top24AppsAdapter.setData(it.home.popular_apps_in_last_24_hours)
+            top24GamesAdapter.setData(it.home.popular_games_in_last_24_hours)
+            discoverAdapter.setData(it.home.discover)
+
+            // Remove progress bars
             binding.featuredPB.visibility = View.GONE
+            binding.topUpdatedAppsPB.visibility = View.GONE
+            binding.topUpdatedGamesPB.visibility = View.GONE
+            binding.top24AppsPB.visibility = View.GONE
+            binding.top24GamesPB.visibility = View.GONE
+            binding.discoverPB.visibility = View.GONE
         })
     }
 
