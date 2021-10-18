@@ -35,8 +35,8 @@
     <string name="show_only_pwa_apps">Show only PWAs</string>
 
     <!-- AppRequest Fragment -->
-    <string name="preference_apps_request_app_title">Request app</string>
-    <string name="preference_apps_request_app_summary">Request an app that is currently unavailable</string>
+    <string name="request_app_title">Request app</string>
+    <string name="request_app_summary">Request an app that is currently unavailable</string>
     <string name="edit_text_hint">Package name</string>
     <string name="submit_button_text">Submit</string>
     <string name="app_request_successful_text">App request successfully placed!</string>

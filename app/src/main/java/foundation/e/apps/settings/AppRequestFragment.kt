@@ -20,11 +20,11 @@ class AppRequestFragment : Fragment(R.layout.fragment_app_request) {
 
         // Set title
         binding.toolbar.apply {
-            setTitle(R.string.preference_apps_request_app_title)
             setNavigationOnClickListener {
                 view.findNavController().navigate(R.id.settingsFragment)
             }
         }
+        binding.button.isEnabled = false
     }
 
     override fun onDestroyView() {
