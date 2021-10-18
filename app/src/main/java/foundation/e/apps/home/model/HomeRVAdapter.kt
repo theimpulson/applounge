@@ -26,7 +26,7 @@ class HomeRVAdapter : RecyclerView.Adapter<HomeRVAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.apply {
             appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path)
-            appName.text = oldList[position].name.split(":", "-")[0]
+            appName.text = oldList[position].name
         }
     }
 

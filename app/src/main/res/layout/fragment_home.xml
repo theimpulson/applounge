@@ -129,6 +129,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="@string/popular_games_in_last_24_hours"
+            android:textColor="?android:textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -156,6 +157,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="@string/discover"
+            android:textColor="?android:textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
