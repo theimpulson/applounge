@@ -25,11 +25,12 @@ class PkgManagerModule @Inject constructor(
         }
     }
 
-    fun isInstalled(packageName: String, versionCode: Int): Boolean {
+    fun isInstalled(packageName: String, versionCode: String): Boolean {
+        val version = versionCode.split(" ")[0].toLong()
         return try {
             val packageInfo = getPackageInfo(packageName)
             packageInfo?.let {
-                return PackageInfoCompat.getLongVersionCode(it).toInt() >= versionCode
+                return PackageInfoCompat.getLongVersionCode(it) >= version
             }
             true
         } catch (e: PackageManager.NameNotFoundException) {
@@ -37,11 +38,16 @@ class PkgManagerModule @Inject constructor(
         }
     }
 
-    fun isUpdatable(packageName: String, versionCode: Long): Boolean {
+    fun isUpdatable(packageName: String, versionCode: String): Boolean {
+        // Check and return early if version code is unavailable
+        if (versionCode.startsWith("-1") or versionCode.isBlank()) return false
+
+        val version = versionCode.split(" ")[0]
+        val longVersionCode = version.replace("[.]".toRegex(), "").toLong()
         return try {
             val packageInfo = getPackageInfo(packageName)
             packageInfo?.let {
-                return versionCode > PackageInfoCompat.getLongVersionCode(it).toInt()
+                return longVersionCode > PackageInfoCompat.getLongVersionCode(it)
             }
             true
         } catch (e: PackageManager.NameNotFoundException) {

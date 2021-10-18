@@ -49,6 +49,8 @@
     <string name="install">Install</string>
     <string name="app_icon">App icon</string>
     <string name="not_available">N/A</string>
+    <string name="open">Open</string>
+    <string name="update">Update</string>
 
     <!-- Updates Fragment -->
     <string name="update_all">Update All</string>
