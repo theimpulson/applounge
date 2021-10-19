@@ -1,18 +1,21 @@
 package foundation.e.apps.utils
 
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
+import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
 import androidx.core.content.pm.PackageInfoCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PkgManagerModule @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext private val context: Context
 ) {
     private val packageManager = context.packageManager
 
@@ -117,5 +120,37 @@ class PkgManagerModule @Inject constructor(
         } catch (exception: Exception) {
             false
         }
+    }
+
+    /**
+     * Installs the given package using system API
+     * @param packageName Name of the package
+     * @param packagePath Absolute path to the package
+     */
+    fun installApplication(packageName: String, packagePath: String) {
+        val packageInstaller = packageManager.packageInstaller
+        val params =
+            PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_INHERIT_EXISTING)
+        params.setAppPackageName(packageName)
+
+        // Open a new specific session
+        val sessionId = packageInstaller.createSession(params)
+        val session = packageInstaller.openSession(sessionId)
+
+        // Install the package using the provided stream
+        val outputStream = session.openWrite(packageName, 0, -1)
+        val inputStream = File(packagePath).inputStream()
+        inputStream.copyTo(outputStream)
+        session.fsync(outputStream)
+
+        // We are done, close everything
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            sessionId,
+            Intent(Intent.ACTION_PACKAGE_ADDED),
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        outputStream.close()
+        session.commit(pendingIntent.intentSender)
     }
 }
