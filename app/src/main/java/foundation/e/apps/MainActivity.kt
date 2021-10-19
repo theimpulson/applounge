@@ -1,6 +1,8 @@
 package foundation.e.apps
 
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -8,11 +10,18 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.databinding.ActivityMainBinding
+import foundation.e.apps.utils.PkgManagerModule
+import java.io.File
+import javax.inject.Inject
+import javax.inject.Named
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val TAG = MainActivity::class.java.simpleName
+
+    @Inject
+    lateinit var pkgManagerModule: PkgManagerModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,5 +45,14 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "Authentication data is available!")
             }
         })
+
+//        val url = "https://apk.cleanapk.org/any_721fbaf1be08d0a2e1927d28eadca70c_com.whatsapp.w4b.apk"
+//        val packageName = "com.whatsapp.w4b"
+//        val name = "WhatsApp Business"
+//        viewModel.downloadApp(name, packageName, url)
+//
+//        val packagePath = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "$packageName.apk")
+//        pkgManagerModule.installApplication(packageName, packagePath.absolutePath)
+
     }
 }

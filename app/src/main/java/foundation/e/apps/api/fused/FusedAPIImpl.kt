@@ -152,7 +152,7 @@ class FusedAPIImpl @Inject constructor(
         // Prepare a download request specific to this application
         val request = DownloadManager.Request(Uri.parse(url))
             .setTitle(name)
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$packageName.apk")
         downloadManager.enqueue(request)
     }
