@@ -1,9 +1,6 @@
 package foundation.e.apps
 
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -11,10 +8,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.databinding.ActivityMainBinding
-import foundation.e.apps.utils.PkgManagerModule
-import java.io.File
+import foundation.e.apps.utils.pkg.PkgManagerModule
 import javax.inject.Inject
-import javax.inject.Named
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -47,13 +42,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-//        val url = "https://apk.cleanapk.org/any_721fbaf1be08d0a2e1927d28eadca70c_com.whatsapp.w4b.apk"
-//        val packageName = "com.whatsapp.w4b"
-//        val name = "WhatsApp Business"
-//        viewModel.downloadApp(name, packageName, url)
-//
-//        val packagePath = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "$packageName.apk")
-//        pkgManagerModule.installApplication(packageName, packagePath.absolutePath)
+        val url = "https://apk.cleanapk.org/any_721fbaf1be08d0a2e1927d28eadca70c_com.whatsapp.w4b.apk"
+        val packageName = "com.whatsapp.w4b"
+        val name = "WhatsApp Business"
+        viewModel.downloadApp(name, packageName, url)
 
     }
 }

@@ -3,14 +3,11 @@ package foundation.e.apps.api.fused
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
-import android.webkit.URLUtil
-import androidx.core.content.FileProvider
+import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.qualifiers.ApplicationContext
-import foundation.e.apps.BuildConfig
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
 import foundation.e.apps.api.cleanapk.data.app.Application
@@ -21,6 +18,7 @@ import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.data.Ratings
 import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.gplay.GPlayAPIRepository
+import foundation.e.apps.utils.pkg.PkgManagerModule
 import retrofit2.Response
 import java.io.File
 import javax.inject.Inject
@@ -32,8 +30,12 @@ class FusedAPIImpl @Inject constructor(
     private val cleanAPKRepository: CleanAPKRepository,
     private val gPlayAPIRepository: GPlayAPIRepository,
     private val downloadManager: DownloadManager,
+    private val pkgManagerModule: PkgManagerModule,
+    @ApplicationContext private val context: Context,
     @Named("cacheDir") private val cacheDir: String
 ) {
+    private var TAG = FusedAPIImpl::class.java.simpleName
+
     suspend fun getHomeScreenData(
         type: String = CleanAPKInterface.APP_TYPE_ANY,
         source: String = CleanAPKInterface.APP_SOURCE_ANY
@@ -156,12 +158,21 @@ class FusedAPIImpl @Inject constructor(
      */
     fun downloadApp(name: String, packageName: String, url: String) {
         val packagePath = File(cacheDir, "$packageName.apk")
-        // Prepare a download request specific to this application
+        if (packagePath.exists()) packagePath.delete() // Delete old download if-exists
         val request = DownloadManager.Request(Uri.parse(url))
             .setTitle(name)
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationUri(Uri.fromFile(packagePath))
         downloadManager.enqueue(request)
+    }
+
+    fun installApp(fileUri: Uri) {
+        val inputStream = context.contentResolver.openInputStream(fileUri)
+        if (inputStream != null) {
+            pkgManagerModule.installApplication(inputStream)
+        } else {
+            Log.d(TAG, "Input stream was null, exiting!")
+        }
     }
 
     /**

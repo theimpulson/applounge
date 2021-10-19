@@ -1,4 +1,4 @@
-package foundation.e.apps.utils
+package foundation.e.apps.utils.download
 
 import android.app.DownloadManager
 import android.content.Context
@@ -17,5 +17,11 @@ object DownloadManagerModule {
     @Singleton
     fun provideDownloadManagerInstance(@ApplicationContext context: Context): DownloadManager {
         return context.getSystemService(DownloadManager::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDownloadManagerQueryInstance(): DownloadManager.Query {
+        return DownloadManager.Query()
     }
 }
