@@ -1,8 +1,16 @@
 package foundation.e.apps.api.fused
 
+import android.app.DownloadManager
+import android.content.Context
+import android.net.Uri
+import android.os.Environment
+import android.webkit.URLUtil
+import androidx.core.content.FileProvider
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
+import dagger.hilt.android.qualifiers.ApplicationContext
+import foundation.e.apps.BuildConfig
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
 import foundation.e.apps.api.cleanapk.data.app.Application
@@ -15,12 +23,16 @@ import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class FusedAPIImpl @Inject constructor(
     private val cleanAPKRepository: CleanAPKRepository,
-    private val gPlayAPIRepository: GPlayAPIRepository
+    private val gPlayAPIRepository: GPlayAPIRepository,
+    private val downloadManager: DownloadManager,
+    @Named("cacheDir") private val cacheDir: String,
+    @ApplicationContext private val context: Context
 ) {
     suspend fun getHomeScreenData(
         type: String = CleanAPKInterface.APP_TYPE_ANY,
@@ -134,6 +146,15 @@ class FusedAPIImpl @Inject constructor(
         cleanResponse?.let { fusedResponse.addAll(it) }
         gplayResponse?.let { fusedResponse.addAll(it) }
         return fusedResponse.distinctBy { it.package_name }
+    }
+
+    fun downloadApp(name: String, packageName: String, url: String) {
+        // Prepare a download request specific to this application
+        val request = DownloadManager.Request(Uri.parse(url))
+            .setTitle(name)
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$packageName.apk")
+        downloadManager.enqueue(request)
     }
 
     /**

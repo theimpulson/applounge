@@ -55,4 +55,8 @@ class FusedAPIRepository @Inject constructor(
     suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp> {
         return fusedAPIImpl.getSearchResults(query, authData)
     }
+
+    fun downloadApp(name: String, packageName: String, url: String) {
+        fusedAPIImpl.downloadApp(name, packageName, url)
+    }
 }

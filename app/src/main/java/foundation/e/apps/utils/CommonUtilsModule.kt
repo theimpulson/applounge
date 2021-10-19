@@ -46,7 +46,7 @@ object CommonUtilsModule {
     }
 
     /**
-     * Path to application's internal cache directory
+     * Path to application's external cache directory
      * @param context [Context]
      * @return absolute path to cache directory or empty string if not available
      */
@@ -54,7 +54,7 @@ object CommonUtilsModule {
     @Provides
     @Named("cacheDir")
     fun provideCacheDir(@ApplicationContext context: Context): String {
-        return context.cacheDir?.absolutePath.let {
+        return context.externalCacheDir?.absolutePath.let {
             if (it.isNullOrBlank()) "" else it
         }
     }
