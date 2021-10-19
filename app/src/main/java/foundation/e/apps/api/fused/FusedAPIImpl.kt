@@ -22,6 +22,7 @@ import foundation.e.apps.api.data.Ratings
 import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import retrofit2.Response
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -31,8 +32,7 @@ class FusedAPIImpl @Inject constructor(
     private val cleanAPKRepository: CleanAPKRepository,
     private val gPlayAPIRepository: GPlayAPIRepository,
     private val downloadManager: DownloadManager,
-    @Named("cacheDir") private val cacheDir: String,
-    @ApplicationContext private val context: Context
+    @Named("cacheDir") private val cacheDir: String
 ) {
     suspend fun getHomeScreenData(
         type: String = CleanAPKInterface.APP_TYPE_ANY,
@@ -148,12 +148,19 @@ class FusedAPIImpl @Inject constructor(
         return fusedResponse.distinctBy { it.package_name }
     }
 
+    /**
+     * Downloads the given package into the external cache directory
+     * @param name Name of the package
+     * @param packageName packageName of the package
+     * @param url direct download link for the package
+     */
     fun downloadApp(name: String, packageName: String, url: String) {
+        val packagePath = File(cacheDir, "$packageName.apk")
         // Prepare a download request specific to this application
         val request = DownloadManager.Request(Uri.parse(url))
             .setTitle(name)
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$packageName.apk")
+            .setDestinationUri(Uri.fromFile(packagePath))
         downloadManager.enqueue(request)
     }
 
