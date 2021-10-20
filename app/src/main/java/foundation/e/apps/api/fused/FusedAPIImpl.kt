@@ -18,6 +18,7 @@ import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.data.Ratings
 import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.gplay.GPlayAPIRepository
+import foundation.e.apps.utils.PreferenceManagerModule
 import foundation.e.apps.utils.pkg.PkgManagerModule
 import retrofit2.Response
 import java.io.File
@@ -31,16 +32,25 @@ class FusedAPIImpl @Inject constructor(
     private val gPlayAPIRepository: GPlayAPIRepository,
     private val downloadManager: DownloadManager,
     private val pkgManagerModule: PkgManagerModule,
+    private val preferenceManagerModule: PreferenceManagerModule,
     @ApplicationContext private val context: Context,
     @Named("cacheDir") private val cacheDir: String
 ) {
     private var TAG = FusedAPIImpl::class.java.simpleName
 
     suspend fun getHomeScreenData(
-        type: String = CleanAPKInterface.APP_TYPE_ANY,
-        source: String = CleanAPKInterface.APP_SOURCE_ANY
     ): Response<HomeScreen> {
-        return cleanAPKRepository.getHomeScreenData(type, source)
+        return when (preferenceManagerModule.preferredApplicationType()) {
+            "open" -> {
+                cleanAPKRepository.getHomeScreenData(CleanAPKInterface.APP_TYPE_ANY, CleanAPKInterface.APP_SOURCE_FOSS)
+            }
+            "pwa" -> {
+                cleanAPKRepository.getHomeScreenData(CleanAPKInterface.APP_TYPE_ANY, CleanAPKInterface.APP_SOURCE_ANY)
+            }
+            else -> {
+                cleanAPKRepository.getHomeScreenData(CleanAPKInterface.APP_TYPE_ANY, CleanAPKInterface.APP_SOURCE_ANY)
+            }
+        }
     }
 
     suspend fun getAppOrPWADetailsByID(
@@ -51,17 +61,6 @@ class FusedAPIImpl @Inject constructor(
         return cleanAPKRepository.getAppOrPWADetailsByID(id, architectures, type)
     }
 
-    /**
-     * Fetches results from CleanAPK servers
-     * @param keyword Query
-     * @param action Action to take: search, list_apps, list_games
-     * @param source Source of app: open, any
-     * @param type Type of application: pwa, native, any
-     * @param nres Number of results per page
-     * @param page Page number to query
-     * @param by Search by [DON'T USE]
-     * @return A nullable list of [SearchApp]
-     */
     private suspend fun getCleanAPKSearchResults(
         keyword: String,
         action: String,
@@ -82,13 +81,6 @@ class FusedAPIImpl @Inject constructor(
         return response?.apps
     }
 
-    /**
-     * Fetches download information form the CleanAPK servers
-     * @param id ID of the application
-     * @param version specific-version; optional
-     * @param architecture architecture requirements; optional
-     * @return [Download] info wrapped in [Response]
-     */
     suspend fun getDownloadInfo(
         id: String,
         version: String? = null,
@@ -104,29 +96,14 @@ class FusedAPIImpl @Inject constructor(
         return cleanAPKRepository.getCategoriesList(type, source)
     }
 
-    /**
-     * Fetches search suggestions from GPlay servers
-     * @param query Query
-     * @param authData [AuthData]
-     * @return A list of nullable [SearchSuggestEntry]
-     */
     suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry>? {
         return gPlayAPIRepository.getSearchSuggestions(query, authData)
     }
 
-    /**
-     * Fetches required authentication data and stores it in datastore
-     */
     suspend fun fetchAuthData(): Unit? {
         return gPlayAPIRepository.fetchAuthData()
     }
 
-    /**
-     * Fetches search result from GPlay servers
-     * @param query Query
-     * @param authData [AuthData]
-     * @return A list of nullable [SearchApp]
-     */
     private suspend fun getGplaySearchResults(query: String, authData: AuthData): List<SearchApp>? {
         return gPlayAPIRepository.getSearchResults(query, authData)?.map { app ->
             app.transform()
@@ -141,13 +118,31 @@ class FusedAPIImpl @Inject constructor(
      */
     suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp> {
         val fusedResponse = mutableListOf<SearchApp>()
-        val gplayResponse = getGplaySearchResults(query, authData)
-        val cleanResponse = getCleanAPKSearchResults(query, CleanAPKInterface.ACTION_SEARCH)
+        var gplayResponse: List<SearchApp>? = null
+        var cleanResponse: List<SearchApp>? = null
 
-        // Add all response together, filter-out duplicate packageName and return it
+        when (preferenceManagerModule.preferredApplicationType()) {
+            "any" -> {
+                cleanResponse = getCleanAPKSearchResults(query, CleanAPKInterface.ACTION_SEARCH)
+                gplayResponse = getGplaySearchResults(query, authData)
+            }
+            "open" -> {
+                cleanResponse = getCleanAPKSearchResults(query, CleanAPKInterface.ACTION_SEARCH)
+            }
+            "pwa" -> {
+                cleanResponse = getCleanAPKSearchResults(
+                    query,
+                    CleanAPKInterface.ACTION_SEARCH,
+                    CleanAPKInterface.APP_SOURCE_ANY,
+                    CleanAPKInterface.APP_TYPE_PWA
+                )
+            }
+        }
+
+        // Add all response together
         cleanResponse?.let { fusedResponse.addAll(it) }
         gplayResponse?.let { fusedResponse.addAll(it) }
-        return fusedResponse.distinctBy { it.package_name }
+        return fusedResponse
     }
 
     /**
@@ -161,11 +156,14 @@ class FusedAPIImpl @Inject constructor(
         if (packagePath.exists()) packagePath.delete() // Delete old download if-exists
         val request = DownloadManager.Request(Uri.parse(url))
             .setTitle(name)
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationUri(Uri.fromFile(packagePath))
         downloadManager.enqueue(request)
     }
 
+    /**
+     * Installs an application from the given [Uri]
+     * @param fileUri Uri of the file
+     */
     fun installApp(fileUri: Uri) {
         val inputStream = context.contentResolver.openInputStream(fileUri)
         if (inputStream != null) {

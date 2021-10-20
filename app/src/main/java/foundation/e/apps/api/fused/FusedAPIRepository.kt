@@ -15,10 +15,8 @@ class FusedAPIRepository @Inject constructor(
     private val fusedAPIImpl: FusedAPIImpl
 ) {
     suspend fun getHomeScreenData(
-        type: String = CleanAPKInterface.APP_TYPE_ANY,
-        source: String = CleanAPKInterface.APP_SOURCE_ANY
     ): Response<HomeScreen> {
-        return fusedAPIImpl.getHomeScreenData(type, source)
+        return fusedAPIImpl.getHomeScreenData()
     }
 
     suspend fun getAppOrPWADetailsByID(

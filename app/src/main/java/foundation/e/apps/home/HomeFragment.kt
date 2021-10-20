@@ -11,12 +11,17 @@ import foundation.e.apps.R
 import foundation.e.apps.databinding.FragmentHomeBinding
 import foundation.e.apps.home.model.HomeFeaturedRVAdapter
 import foundation.e.apps.home.model.HomeRVAdapter
+import foundation.e.apps.utils.PreferenceManagerModule
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var preferenceManagerModule: PreferenceManagerModule
 
     private val homeViewModel: HomeViewModel by viewModels()
     private val TAG = HomeFragment::class.java.simpleName
@@ -38,14 +43,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val top24GamesAdapter = HomeRVAdapter()
         val discoverAdapter = HomeRVAdapter()
 
-        // Setup SnapHelper with FeaturedRV to limit scrolling to 1 item
-        val snapHelper = PagerSnapHelper()
-        snapHelper.attachToRecyclerView(featuredRV)
+        if (preferenceManagerModule.preferredApplicationType() == "any") {
+            binding.featuredTV.visibility = View.VISIBLE
+            binding.featuredLayout.visibility = View.VISIBLE
 
-        // Setup recycler views
-        featuredRV.apply {
-            adapter = featuredAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            // Setup SnapHelper with FeaturedRV to limit scrolling to 1 item
+            val snapHelper = PagerSnapHelper()
+            snapHelper.attachToRecyclerView(featuredRV)
+
+            // Setup recycler views
+            featuredRV.apply {
+                adapter = featuredAdapter
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            }
         }
 
         binding.topUpdatedAppsRV.apply {
@@ -75,7 +85,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         homeViewModel.homeScreenData.observe(viewLifecycleOwner, {
             // Pass data to respective adapters
-            featuredAdapter.setData(it.home.banner_apps)
+            if (preferenceManagerModule.preferredApplicationType() == "any") {
+                featuredAdapter.setData(it.home.banner_apps)
+            }
             topUpdatedAppsAdapter.setData(it.home.top_updated_apps)
             topUpdatedGamesAdapter.setData(it.home.top_updated_games)
             top24AppsAdapter.setData(it.home.popular_apps_in_last_24_hours)
@@ -83,7 +95,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             discoverAdapter.setData(it.home.discover)
 
             // Remove progress bars
-            binding.featuredPB.visibility = View.GONE
+            if (preferenceManagerModule.preferredApplicationType() == "any") {
+                binding.featuredPB.visibility = View.GONE
+            }
             binding.topUpdatedAppsPB.visibility = View.GONE
             binding.topUpdatedGamesPB.visibility = View.GONE
             binding.top24AppsPB.visibility = View.GONE
