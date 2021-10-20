@@ -112,18 +112,25 @@ class FusedAPIImpl @Inject constructor(
         return if (response != null) response[0].url else null
     }
 
-    suspend fun getDownloadInfo(
+    suspend fun getApplication(
         id: String,
+        name: String,
         packageName: String,
         versionCode: Int,
         offerType: Int,
         authData: AuthData,
         origin: Origin
-    ): String? {
-        return if (origin == Origin.CLEANAPK) {
+    ) {
+        val downloadLink = if (origin == Origin.CLEANAPK) {
             getCleanAPKDownloadInfo(id)
         } else {
             getGplayDownloadInfo(packageName, versionCode, offerType, authData)
+        }
+        // Trigger the download
+        if (downloadLink != null) {
+            downloadApp(name, packageName, downloadLink)
+        } else {
+            Log.d(TAG, "Download link was null, exiting!")
         }
     }
 

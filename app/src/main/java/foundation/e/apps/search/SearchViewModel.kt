@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.fused.FusedAPIRepository
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +19,6 @@ class SearchViewModel @Inject constructor(
 
     val searchSuggest: MutableLiveData<List<SearchSuggestEntry>?> = MutableLiveData()
     val searchResult: MutableLiveData<List<SearchApp>> = MutableLiveData()
-    val downloadInfo: MutableLiveData<String?> = MutableLiveData()
 
     fun getSearchSuggestions(query: String, authData: AuthData) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -31,28 +29,6 @@ class SearchViewModel @Inject constructor(
     fun getSearchResults(query: String, authData: AuthData) {
         viewModelScope.launch(Dispatchers.IO) {
             searchResult.postValue(fusedAPIRepository.getSearchResults(query, authData))
-        }
-    }
-
-    fun getDownloadInfo(
-        id: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int,
-        authData: AuthData,
-        origin: Origin
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            downloadInfo.postValue(
-                fusedAPIRepository.getDownloadInfo(
-                    id,
-                    packageName,
-                    versionCode,
-                    offerType,
-                    authData,
-                    origin
-                )
-            )
         }
     }
 }

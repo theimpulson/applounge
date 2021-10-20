@@ -24,8 +24,4 @@ class MainActivityViewModel @Inject constructor(
             fusedAPIRepository.fetchAuthData()
         }
     }
-
-    fun downloadApp(name: String, packageName: String, url: String) {
-        fusedAPIRepository.downloadApp(name, packageName, url)
-    }
 }

@@ -41,11 +41,5 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "Authentication data is available!")
             }
         })
-
-//        val url = "https://apk.cleanapk.org/any_721fbaf1be08d0a2e1927d28eadca70c_com.whatsapp.w4b.apk"
-//        val packageName = "com.whatsapp.w4b"
-//        val name = "WhatsApp Business"
-//        viewModel.downloadApp(name, packageName, url)
-
     }
 }

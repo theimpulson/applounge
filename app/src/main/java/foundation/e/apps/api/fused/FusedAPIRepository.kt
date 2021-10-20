@@ -27,16 +27,18 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.getAppOrPWADetailsByID(id, architectures, type)
     }
 
-    suspend fun getDownloadInfo(
+    suspend fun getApplication(
         id: String,
+        name: String,
         packageName: String,
         versionCode: Int,
         offerType: Int,
         authData: AuthData,
         origin: Origin
-    ): String? {
-        return fusedAPIImpl.getDownloadInfo(
+    ) {
+        fusedAPIImpl.getApplication(
             id,
+            name,
             packageName,
             versionCode,
             offerType,
@@ -62,9 +64,5 @@ class FusedAPIRepository @Inject constructor(
 
     suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp> {
         return fusedAPIImpl.getSearchResults(query, authData)
-    }
-
-    fun downloadApp(name: String, packageName: String, url: String) {
-        fusedAPIImpl.downloadApp(name, packageName, url)
     }
 }
