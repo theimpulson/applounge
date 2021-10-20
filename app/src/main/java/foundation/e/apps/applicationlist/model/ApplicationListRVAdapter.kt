@@ -9,11 +9,12 @@ import coil.load
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.data.SearchApp
+import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.databinding.ApplicationListItemBinding
 import javax.inject.Singleton
 
 @Singleton
-class ApplicationListRVAdapter :
+class ApplicationListRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
     RecyclerView.Adapter<ApplicationListRVAdapter.ViewHolder>() {
 
     private var oldList = emptyList<SearchApp>()
@@ -51,6 +52,16 @@ class ApplicationListRVAdapter :
                     appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path)
                 }
                 else -> Log.wtf(TAG, "${oldList[position].package_name} is from an unknown origin")
+            }
+            installButton.setOnClickListener {
+                fusedAPIInterface.getApplication(
+                    oldList[position]._id,
+                    oldList[position].name,
+                    oldList[position].package_name,
+                    oldList[position].latest_version_code,
+                    oldList[position].offerType,
+                    oldList[position].origin
+                )
             }
         }
     }

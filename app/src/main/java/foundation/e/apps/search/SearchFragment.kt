@@ -22,6 +22,8 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
+import foundation.e.apps.api.data.Origin
+import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentSearchBinding
 import javax.inject.Inject
@@ -30,7 +32,8 @@ import javax.inject.Inject
 class SearchFragment :
     Fragment(R.layout.fragment_search),
     SearchView.OnQueryTextListener,
-    SearchView.OnSuggestionListener {
+    SearchView.OnSuggestionListener,
+    FusedAPIInterface {
 
     @Inject
     lateinit var gson: Gson
@@ -76,7 +79,7 @@ class SearchFragment :
         })
 
         // Setup Search Results
-        val listAdapter = ApplicationListRVAdapter()
+        val listAdapter = ApplicationListRVAdapter(this)
         recyclerView.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)
@@ -157,5 +160,24 @@ class SearchFragment :
             }
         }
         searchView.suggestionsAdapter.changeCursor(cursor)
+    }
+
+    override fun getApplication(
+        id: String,
+        name: String,
+        packageName: String,
+        versionCode: Int,
+        offerType: Int?,
+        origin: Origin?
+    ) {
+        val data = mainActivityViewModel.authData.value?.let {
+            gson.fromJson(
+                it,
+                AuthData::class.java
+            )
+        }
+        val offer = offerType ?: 0
+        val org = origin ?: Origin.CLEANAPK
+        data?.let { searchViewModel.getApplication(id, name, packageName, versionCode, offer, it, org) }
     }
 }
