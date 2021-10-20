@@ -44,6 +44,7 @@ class FusedAPIImpl @Inject constructor(
             "open" -> {
                 cleanAPKRepository.getHomeScreenData(CleanAPKInterface.APP_TYPE_ANY, CleanAPKInterface.APP_SOURCE_FOSS)
             }
+            // TODO: Handle PWA response for home screen
             "pwa" -> {
                 cleanAPKRepository.getHomeScreenData(CleanAPKInterface.APP_TYPE_ANY, CleanAPKInterface.APP_SOURCE_ANY)
             }

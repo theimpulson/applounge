@@ -43,6 +43,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val top24GamesAdapter = HomeRVAdapter()
         val discoverAdapter = HomeRVAdapter()
 
+        // Featured items are only available in default option
         if (preferenceManagerModule.preferredApplicationType() == "any") {
             binding.featuredTV.visibility = View.VISIBLE
             binding.featuredLayout.visibility = View.VISIBLE
