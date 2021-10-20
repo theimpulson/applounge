@@ -7,12 +7,12 @@ import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
+import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
 import foundation.e.apps.api.cleanapk.data.app.Application
 import foundation.e.apps.api.cleanapk.data.categories.Categories
-import foundation.e.apps.api.cleanapk.data.download.Download
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
 import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.data.Ratings
@@ -33,6 +33,7 @@ class FusedAPIImpl @Inject constructor(
     private val downloadManager: DownloadManager,
     private val pkgManagerModule: PkgManagerModule,
     private val preferenceManagerModule: PreferenceManagerModule,
+    private val gson: Gson,
     @ApplicationContext private val context: Context,
     @Named("cacheDir") private val cacheDir: String
 ) {
@@ -42,14 +43,23 @@ class FusedAPIImpl @Inject constructor(
     ): Response<HomeScreen> {
         return when (preferenceManagerModule.preferredApplicationType()) {
             "open" -> {
-                cleanAPKRepository.getHomeScreenData(CleanAPKInterface.APP_TYPE_ANY, CleanAPKInterface.APP_SOURCE_FOSS)
+                cleanAPKRepository.getHomeScreenData(
+                    CleanAPKInterface.APP_TYPE_ANY,
+                    CleanAPKInterface.APP_SOURCE_FOSS
+                )
             }
             // TODO: Handle PWA response for home screen
             "pwa" -> {
-                cleanAPKRepository.getHomeScreenData(CleanAPKInterface.APP_TYPE_ANY, CleanAPKInterface.APP_SOURCE_ANY)
+                cleanAPKRepository.getHomeScreenData(
+                    CleanAPKInterface.APP_TYPE_ANY,
+                    CleanAPKInterface.APP_SOURCE_ANY
+                )
             }
             else -> {
-                cleanAPKRepository.getHomeScreenData(CleanAPKInterface.APP_TYPE_ANY, CleanAPKInterface.APP_SOURCE_ANY)
+                cleanAPKRepository.getHomeScreenData(
+                    CleanAPKInterface.APP_TYPE_ANY,
+                    CleanAPKInterface.APP_SOURCE_ANY
+                )
             }
         }
     }
@@ -82,12 +92,39 @@ class FusedAPIImpl @Inject constructor(
         return response?.apps
     }
 
-    suspend fun getDownloadInfo(
+    private suspend fun getCleanAPKDownloadInfo(
         id: String,
         version: String? = null,
         architecture: String? = null
-    ): Response<Download> {
+    ): String? {
         return cleanAPKRepository.getDownloadInfo(id, version, architecture)
+            .body()?.download_data?.eelo_download_link
+    }
+
+    private suspend fun getGplayDownloadInfo(
+        packageName: String,
+        versionCode: Int,
+        offerType: Int,
+        authData: AuthData
+    ): String? {
+        val response =
+            gPlayAPIRepository.getDownloadInfo(packageName, versionCode, offerType, authData)
+        return if (response != null) response[0].url else null
+    }
+
+    suspend fun getDownloadInfo(
+        id: String,
+        packageName: String,
+        versionCode: Int,
+        offerType: Int,
+        authData: AuthData,
+        origin: Origin
+    ): String? {
+        return if (origin == Origin.CLEANAPK) {
+            getCleanAPKDownloadInfo(id)
+        } else {
+            getGplayDownloadInfo(packageName, versionCode, offerType, authData)
+        }
     }
 
     suspend fun getCategoriesList(
@@ -190,7 +227,9 @@ class FusedAPIImpl @Inject constructor(
                 privacyScore = -1.0,
                 usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDouble() else -1.0
             ),
-            origin = Origin.GPLAY
+            origin = Origin.GPLAY,
+            latest_version_code = this.versionCode,
+            offerType = this.offerType
         )
     }
 }

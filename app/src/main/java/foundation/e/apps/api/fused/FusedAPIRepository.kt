@@ -5,8 +5,8 @@ import com.aurora.gplayapi.data.models.AuthData
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.data.app.Application
 import foundation.e.apps.api.cleanapk.data.categories.Categories
-import foundation.e.apps.api.cleanapk.data.download.Download
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
+import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.data.SearchApp
 import retrofit2.Response
 import javax.inject.Inject
@@ -29,10 +29,20 @@ class FusedAPIRepository @Inject constructor(
 
     suspend fun getDownloadInfo(
         id: String,
-        version: String? = null,
-        architecture: String? = null
-    ): Response<Download> {
-        return fusedAPIImpl.getDownloadInfo(id, version, architecture)
+        packageName: String,
+        versionCode: Int,
+        offerType: Int,
+        authData: AuthData,
+        origin: Origin
+    ): String? {
+        return fusedAPIImpl.getDownloadInfo(
+            id,
+            packageName,
+            versionCode,
+            offerType,
+            authData,
+            origin
+        )
     }
 
     suspend fun getCategoriesList(

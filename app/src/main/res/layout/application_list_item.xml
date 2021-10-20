@@ -98,6 +98,7 @@
         android:orientation="vertical">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/installButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="120dp"
             android:layout_height="40dp"

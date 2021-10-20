@@ -3,6 +3,8 @@ package foundation.e.apps.api.gplay
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.data.models.File
+import com.aurora.gplayapi.helpers.PurchaseHelper
 import com.aurora.gplayapi.helpers.SearchHelper
 import foundation.e.apps.api.gplay.token.TokenRepository
 import foundation.e.apps.api.gplay.utils.OkHttpClient
@@ -38,5 +40,14 @@ class GPlayAPIImpl @Inject constructor(
             searchData = searchHelper.searchResults(query).appList
         }
         return searchData
+    }
+
+    suspend fun getDownloadInfo(packageName: String, versionCode: Int, offerType: Int, authData: AuthData): List<File>? {
+        var downloadData: List<File>?
+        withContext(Dispatchers.IO) {
+            val purchaseHelper = PurchaseHelper(authData).using(OkHttpClient)
+            downloadData = purchaseHelper.purchase(packageName, versionCode, offerType)
+        }
+        return downloadData
     }
 }

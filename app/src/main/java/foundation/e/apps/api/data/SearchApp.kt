@@ -9,5 +9,7 @@ data class SearchApp(
     val name: String,
     val package_name: String,
     val ratings: Ratings,
-    var origin: Origin?
+    var origin: Origin?,
+    val latest_version_code: Int,
+    val offerType: Int?
 )
