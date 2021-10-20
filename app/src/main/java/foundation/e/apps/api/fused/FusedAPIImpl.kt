@@ -98,7 +98,7 @@ class FusedAPIImpl @Inject constructor(
         architecture: String? = null
     ): String? {
         return cleanAPKRepository.getDownloadInfo(id, version, architecture)
-            .body()?.download_data?.eelo_download_link
+            .body()?.download_data?.download_link
     }
 
     private suspend fun getGplayDownloadInfo(
