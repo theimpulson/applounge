@@ -3,6 +3,7 @@ package foundation.e.apps.utils.pkg
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageInstaller
@@ -153,4 +154,13 @@ class PkgManagerModule @Inject constructor(
         outputStream.close()
         session.commit(pendingIntent.intentSender)
     }
+
+    fun getFilter(): IntentFilter {
+        val filter = IntentFilter()
+        filter.addDataScheme("package")
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED)
+        filter.addAction(Intent.ACTION_PACKAGE_REMOVED)
+        return filter
+    }
+
 }

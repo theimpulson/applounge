@@ -2,6 +2,9 @@ package foundation.e.apps.api.fused
 
 import foundation.e.apps.api.data.Origin
 
+/**
+ * FusedAPIInterface to allow adapter classes to install applications easily
+ */
 interface FusedAPIInterface {
 
     fun getApplication(
