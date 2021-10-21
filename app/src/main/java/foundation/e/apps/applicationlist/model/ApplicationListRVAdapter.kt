@@ -3,6 +3,7 @@ package foundation.e.apps.applicationlist.model
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -11,6 +12,7 @@ import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.databinding.ApplicationListItemBinding
+import foundation.e.apps.search.SearchFragmentDirections
 import javax.inject.Singleton
 
 @Singleton
@@ -35,6 +37,16 @@ class ApplicationListRVAdapter(private val fusedAPIInterface: FusedAPIInterface)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.apply {
+            applicationList.setOnClickListener {
+                val action = oldList[position].origin?.let { origin ->
+                    SearchFragmentDirections.actionSearchFragmentToApplicationFragment(
+                        oldList[position]._id,
+                        oldList[position].package_name,
+                        origin
+                    )
+                }
+                action?.let { direction -> holder.itemView.findNavController().navigate(direction) }
+            }
             appTitle.text = oldList[position].name
             appAuthor.text = oldList[position].author
             if (oldList[position].ratings.usageQualityScore != -1.0) {

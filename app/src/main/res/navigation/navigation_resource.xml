@@ -23,7 +23,11 @@
         android:id="@+id/searchFragment"
         android:name="foundation.e.apps.search.SearchFragment"
         android:label="Search"
-        tools:layout="@layout/fragment_search"></fragment>
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_applicationFragment"
+            app:destination="@id/applicationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/updatesFragment"
         android:name="foundation.e.apps.updates.UpdatesFragment"
@@ -64,6 +68,18 @@
         <action
             android:id="@+id/action_applicationFragment_to_applicationListFragment"
             app:destination="@id/applicationListFragment" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="packageName"
+            app:argType="string" />
+        <argument
+            android:name="origin"
+            app:argType="foundation.e.apps.api.data.Origin" />
+        <action
+            android:id="@+id/action_applicationFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/applicationListFragment"
