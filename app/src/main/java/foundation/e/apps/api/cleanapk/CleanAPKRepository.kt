@@ -27,16 +27,25 @@ class CleanAPKRepository @Inject constructor(
         return cleanAPKInterface.getAppOrPWADetailsByID(id, architectures, type)
     }
 
-    suspend fun searchOrListApps(
+    suspend fun searchApps(
         keyword: String,
-        action: String,
         source: String = CleanAPKInterface.APP_SOURCE_FOSS,
         type: String = CleanAPKInterface.APP_TYPE_ANY,
         nres: Int = 20,
         page: Int = 1,
         by: String? = null
     ): Response<Search> {
-        return cleanAPKInterface.searchOrListApps(keyword, action, source, type, nres, page, by)
+        return cleanAPKInterface.searchApps(keyword, source, type, nres, page, by)
+    }
+
+    suspend fun listApps(
+        category: String,
+        source: String = CleanAPKInterface.APP_SOURCE_FOSS,
+        type: String = CleanAPKInterface.APP_TYPE_ANY,
+        nres: Int = 20,
+        page: Int = 1,
+    ): Response<Search> {
+        return cleanAPKInterface.listApps(category, source, type, nres, page)
     }
 
     suspend fun getDownloadInfo(

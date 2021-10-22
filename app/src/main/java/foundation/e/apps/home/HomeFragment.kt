@@ -3,11 +3,17 @@ package foundation.e.apps.home
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
+import com.aurora.gplayapi.data.models.AuthData
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
+import foundation.e.apps.api.fused.FusedAPIInterface
+import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.databinding.FragmentHomeBinding
 import foundation.e.apps.home.model.HomeFeaturedRVAdapter
 import foundation.e.apps.home.model.HomeRVAdapter
@@ -15,7 +21,7 @@ import foundation.e.apps.utils.PreferenceManagerModule
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -23,7 +29,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     @Inject
     lateinit var preferenceManagerModule: PreferenceManagerModule
 
+    @Inject
+    lateinit var gson: Gson
+
     private val homeViewModel: HomeViewModel by viewModels()
+    private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
+
     private val TAG = HomeFragment::class.java.simpleName
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,11 +48,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         // Setup adapters
         val featuredAdapter = HomeFeaturedRVAdapter()
-        val topUpdatedAppsAdapter = HomeRVAdapter()
-        val topUpdatedGamesAdapter = HomeRVAdapter()
-        val top24AppsAdapter = HomeRVAdapter()
-        val top24GamesAdapter = HomeRVAdapter()
-        val discoverAdapter = HomeRVAdapter()
+        val topUpdatedAppsAdapter = HomeRVAdapter(this)
+        val topUpdatedGamesAdapter = HomeRVAdapter(this)
+        val top24AppsAdapter = HomeRVAdapter(this)
+        val top24GamesAdapter = HomeRVAdapter(this)
+        val discoverAdapter = HomeRVAdapter(this)
 
         // Featured items are only available in default option
         if (preferenceManagerModule.preferredApplicationType() == "any") {
@@ -110,5 +121,34 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun getApplication(
+        id: String,
+        name: String,
+        packageName: String,
+        versionCode: Int,
+        offerType: Int?,
+        origin: Origin?
+    ) {
+        val data = mainActivityViewModel.authData.value?.let {
+            gson.fromJson(
+                it,
+                AuthData::class.java
+            )
+        }
+        val offer = offerType ?: 0
+        val org = origin ?: Origin.CLEANAPK
+        data?.let {
+            homeViewModel.getApplication(
+                id,
+                name,
+                packageName,
+                versionCode,
+                offer,
+                it,
+                org
+            )
+        }
     }
 }

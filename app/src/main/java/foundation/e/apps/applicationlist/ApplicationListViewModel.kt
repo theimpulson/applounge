@@ -1,9 +1,8 @@
-package foundation.e.apps.search
+package foundation.e.apps.applicationlist
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
@@ -14,22 +13,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(
-    private val fusedAPIRepository: FusedAPIRepository,
+class ApplicationListViewModel @Inject constructor(
+    private val fusedAPIRepository: FusedAPIRepository
 ) : ViewModel() {
 
-    val searchSuggest: MutableLiveData<List<SearchSuggestEntry>?> = MutableLiveData()
-    val searchResult: MutableLiveData<List<SearchApp>> = MutableLiveData()
+    val list: MutableLiveData<List<SearchApp>> = MutableLiveData()
 
-    fun getSearchSuggestions(query: String, authData: AuthData) {
+    fun getList(category: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            searchSuggest.postValue(fusedAPIRepository.getSearchSuggestions(query, authData))
-        }
-    }
-
-    fun getSearchResults(query: String, authData: AuthData) {
-        viewModelScope.launch(Dispatchers.IO) {
-            searchResult.postValue(fusedAPIRepository.getSearchResults(query, authData))
+            list.postValue(fusedAPIRepository.listApps(category))
         }
     }
 

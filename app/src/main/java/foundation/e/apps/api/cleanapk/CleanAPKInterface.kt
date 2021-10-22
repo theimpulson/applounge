@@ -16,11 +16,6 @@ interface CleanAPKInterface {
         const val BASE_URL = "https://api.cleanapk.org/v2/"
         const val ASSET_URL = "https://api.cleanapk.org/v2/media/"
 
-        // ACTIONS
-        const val ACTION_SEARCH = "search"
-        const val ACTION_LIST_APPS = "list_apps"
-        const val ACTION_LIST_GAMES = "list_games"
-
         // Application sources
         const val APP_SOURCE_FOSS = "open"
         const val APP_SOURCE_ANY = "any"
@@ -45,16 +40,23 @@ interface CleanAPKInterface {
         @Query("type") type: String? = null
     ): Response<Application>
 
-    // TODO: Reminder that action can be either "search", "list_apps" or "list_games"
-    @GET("apps")
-    suspend fun searchOrListApps(
+    @GET("apps?action=search")
+    suspend fun searchApps(
         @Query("keyword") keyword: String,
-        @Query("action") action: String,
         @Query("source") source: String = APP_SOURCE_FOSS,
         @Query("type") type: String = APP_TYPE_ANY,
         @Query("nres") nres: Int = 20,
         @Query("page") page: Int = 1,
         @Query("by") by: String? = null,
+    ): Response<Search>
+
+    @GET("apps?action=list_apps")
+    suspend fun listApps(
+        @Query("category") category: String,
+        @Query("source") source: String = APP_SOURCE_FOSS,
+        @Query("type") type: String = APP_TYPE_ANY,
+        @Query("nres") nres: Int = 20,
+        @Query("page") page: Int = 1,
     ): Response<Search>
 
     @GET("apps?action=download")

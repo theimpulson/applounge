@@ -14,11 +14,11 @@ class GPlayAPIRepository @Inject constructor(
         return gPlayAPIImpl.fetchAuthData()
     }
 
-    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry>? {
+    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
         return gPlayAPIImpl.getSearchSuggestions(query, authData)
     }
 
-    suspend fun getSearchResults(query: String, authData: AuthData): List<App>? {
+    suspend fun getSearchResults(query: String, authData: AuthData): List<App> {
         return gPlayAPIImpl.getSearchResults(query, authData)
     }
 
@@ -27,7 +27,7 @@ class GPlayAPIRepository @Inject constructor(
         versionCode: Int,
         offerType: Int,
         authData: AuthData
-    ): List<File>? {
+    ): List<File> {
         return gPlayAPIImpl.getDownloadInfo(packageName, versionCode, offerType, authData)
     }
 

@@ -2,6 +2,7 @@ package foundation.e.apps
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -41,5 +42,22 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "Authentication data is available!")
             }
         })
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            when (destination.id) {
+                R.id.applicationFragment -> {
+                    bottomNavigationView.visibility = View.GONE
+                    window.navigationBarColor = this.getColor(R.color.colorWhite)
+                }
+                R.id.categoriesFragment -> {
+                    window.statusBarColor = this.getColor(R.color.colorAccent95)
+                }
+                else -> {
+                    bottomNavigationView.visibility = View.VISIBLE
+                    window.statusBarColor = this.getColor(R.color.colorWhite)
+                    window.navigationBarColor = this.getColor(R.color.colorAccent95)
+                }
+            }
+        }
     }
 }

@@ -5,7 +5,6 @@ plugins {
     id 'org.jlleitschuh.gradle.ktlint' version '10.2.0'
     id 'androidx.navigation.safeargs.kotlin'
     id 'dagger.hilt.android.plugin'
-    id 'org.jetbrains.dokka'
 }
 
 android {
@@ -32,6 +31,7 @@ android {
 
     buildTypes {
         debug {
+            versionNameSuffix ".debug"
             signingConfig signingConfigs.debugConfig
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -55,20 +55,8 @@ android {
     }
 }
 
-ktlint {
-    disabledRules = ["no-wildcard-imports"]
-}
-
 kapt {
     correctErrorTypes true
-}
-
-dokkaGfm.configure {
-    dokkaSourceSets {
-        named("main") {
-            noAndroidSdkLink.set(false)
-        }
-    }
 }
 
 dependencies {

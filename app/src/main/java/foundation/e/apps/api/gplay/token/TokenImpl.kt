@@ -3,7 +3,7 @@ package foundation.e.apps.api.gplay.token
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import foundation.e.apps.api.gplay.utils.OkHttpClient
-import java.util.*
+import java.util.Properties
 import javax.inject.Inject
 
 class TokenImpl @Inject constructor(

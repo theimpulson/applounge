@@ -1,6 +1,6 @@
 package foundation.e.apps.api.cleanapk.data.home
 
-import foundation.e.apps.api.data.HomeApp
+import foundation.e.apps.api.fused.data.HomeApp
 
 data class Home(
     val top_updated_apps: List<HomeApp>,

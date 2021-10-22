@@ -3,6 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="?android:attr/selectableItemBackground"
     android:id="@+id/applicationList"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,7 +17,7 @@
         android:layout_height="64dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        app:cardCornerRadius="12dp">
+        app:cardCornerRadius="20dp">
 
         <ImageView
             android:id="@+id/app_icon"
@@ -102,15 +103,16 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/installButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="120dp"
-            android:layout_height="40dp"
+            android:layout_height="43dp"
+            android:backgroundTint="@color/colorAccent95"
             android:text="@string/install"
             android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
             android:textSize="18sp"
             app:autoSizeTextType="uniform"
-            app:cornerRadius="4dp"
-            app:strokeColor="@color/colorAccent"
+            app:cornerRadius="50dp"
+            app:strokeColor="@color/colorAccent95"
             app:strokeWidth="1dp" />
 
         <LinearLayout

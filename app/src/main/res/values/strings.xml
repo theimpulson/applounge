@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Apps</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -21,6 +21,11 @@
     <!-- Settings Fragment -->
     <string name="preference_updates_title">Updates</string>
     <string name="misc">Miscellaneous</string>
+    <string name="version">Apps version</string>
+    <string name="version_summary">Version: <xliff:g id="build_name">%1$s</xliff:g> [<xliff:g id="build_version">%2$d</xliff:g>] [<xliff:g id="cpu_abi">%3$s</xliff:g>]</string>
+    <string name="refresh_session">Refresh Session</string>
+    <string name="refresh_session_summary">Generates new anonymous authentication data for GPlay servers</string>
+    <string name="session_refreshed">Session Refreshed! &#128077;</string>
     <string name="preference_update_interval_default">24</string>
     <string name="preference_update_interval_title">Update check interval</string>
     <string name="preference_update_wifi_only_title">Only on un-metered networks</string>
@@ -33,6 +38,7 @@
     <string name="Show_all_apps">Show all apps</string>
     <string name="show_only_open_source_apps">Show only open-source apps</string>
     <string name="show_only_pwa_apps">Show only PWAs</string>
+    <string name="made_at_e">Made with &#128150; at /e/</string>
 
     <!-- AppRequest Fragment -->
     <string name="request_app_title">Request app</string>

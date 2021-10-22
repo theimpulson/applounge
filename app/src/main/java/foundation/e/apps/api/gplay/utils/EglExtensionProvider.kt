@@ -2,11 +2,13 @@ package foundation.e.apps.api.gplay.utils
 
 import android.opengl.GLES10
 import android.text.TextUtils
-import java.util.*
+import java.util.Collections
 import javax.microedition.khronos.egl.EGL10
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.egl.EGLContext
 import javax.microedition.khronos.egl.EGLDisplay
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 object EglExtensionProvider {
     @JvmStatic

@@ -2,12 +2,11 @@ package foundation.e.apps.api.fused
 
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.AuthData
-import foundation.e.apps.api.cleanapk.CleanAPKInterface
-import foundation.e.apps.api.cleanapk.data.app.Application
-import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
-import foundation.e.apps.api.data.Origin
-import foundation.e.apps.api.data.SearchApp
+import foundation.e.apps.api.fused.data.CategoryApp
+import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.SearchApp
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -18,12 +17,13 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.getHomeScreenData()
     }
 
-    suspend fun getAppOrPWADetailsByID(
+    suspend fun getApplicationDetails(
         id: String,
-        architectures: List<String>? = null,
-        type: String? = null
-    ): Response<Application> {
-        return fusedAPIImpl.getAppOrPWADetailsByID(id, architectures, type)
+        packageName: String,
+        authData: AuthData,
+        origin: Origin
+    ): FusedApp? {
+        return fusedAPIImpl.getApplicationDetails(id, packageName, authData, origin)
     }
 
     suspend fun getApplication(
@@ -46,11 +46,11 @@ class FusedAPIRepository @Inject constructor(
         )
     }
 
-    suspend fun getCategoriesList(listType: String): Map<String, Int> {
+    suspend fun getCategoriesList(listType: String): List<CategoryApp> {
         return fusedAPIImpl.getCategoriesList(listType)
     }
 
-    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry>? {
+    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
         return fusedAPIImpl.getSearchSuggestions(query, authData)
     }
 
@@ -60,5 +60,9 @@ class FusedAPIRepository @Inject constructor(
 
     suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp> {
         return fusedAPIImpl.getSearchResults(query, authData)
+    }
+
+    suspend fun listApps(category: String): List<SearchApp>? {
+        return fusedAPIImpl.listApps(category)
     }
 }

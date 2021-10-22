@@ -1,6 +1,6 @@
 package foundation.e.apps.api.cleanapk.data.search
 
-import foundation.e.apps.api.data.SearchApp
+import foundation.e.apps.api.fused.data.SearchApp
 
 data class Search(
     val apps: List<SearchApp>,

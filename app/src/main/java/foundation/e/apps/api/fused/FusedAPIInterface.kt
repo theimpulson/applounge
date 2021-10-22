@@ -1,6 +1,6 @@
 package foundation.e.apps.api.fused
 
-import foundation.e.apps.api.data.Origin
+import foundation.e.apps.api.fused.data.Origin
 
 /**
  * FusedAPIInterface to allow adapter classes to install applications easily

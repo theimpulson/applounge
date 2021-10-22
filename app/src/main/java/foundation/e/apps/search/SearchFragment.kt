@@ -22,8 +22,8 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
-import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.fused.FusedAPIInterface
+import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentSearchBinding
 import javax.inject.Inject
@@ -47,9 +47,9 @@ class SearchFragment :
     private val TAG = SearchFragment::class.java.simpleName
     private val SUGGESTION_KEY = "suggestion"
 
-    private lateinit var searchView: SearchView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var recyclerView: RecyclerView
+    private var searchView: SearchView? = null
+    private var progressBar: ProgressBar? = null
+    private var recyclerView: RecyclerView? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,14 +61,14 @@ class SearchFragment :
 
         // Setup SearchView
         setHasOptionsMenu(true)
-        searchView.setOnSuggestionListener(this)
-        searchView.setOnQueryTextListener(this)
-        configureCloseButton(searchView)
+        searchView?.setOnSuggestionListener(this)
+        searchView?.setOnQueryTextListener(this)
+        searchView?.let { configureCloseButton(it) }
 
         // Setup SearchView Suggestions
         val from = arrayOf(SUGGESTION_KEY)
         val to = intArrayOf(android.R.id.text1)
-        searchView.suggestionsAdapter = SimpleCursorAdapter(
+        searchView?.suggestionsAdapter = SimpleCursorAdapter(
             context,
             R.layout.custom_simple_list_item, null, from, to,
             CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER
@@ -80,15 +80,15 @@ class SearchFragment :
 
         // Setup Search Results
         val listAdapter = ApplicationListRVAdapter(this)
-        recyclerView.apply {
+        recyclerView?.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)
         }
 
         searchViewModel.searchResult.observe(viewLifecycleOwner, {
             listAdapter.setData(it)
-            progressBar.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
+            progressBar?.visibility = View.GONE
+            recyclerView?.visibility = View.VISIBLE
         })
     }
 
@@ -96,8 +96,8 @@ class SearchFragment :
         query?.let { text ->
             hideKeyboard(activity as Activity)
             view?.requestFocus()
-            progressBar.visibility = View.VISIBLE
-            recyclerView.visibility = View.GONE
+            progressBar?.visibility = View.VISIBLE
+            recyclerView?.visibility = View.GONE
             val data = mainActivityViewModel.authData.value?.let {
                 gson.fromJson(
                     it,
@@ -128,7 +128,7 @@ class SearchFragment :
 
     override fun onSuggestionClick(position: Int): Boolean {
         searchViewModel.searchSuggest.value?.let {
-            searchView.setQuery(it[position].suggestedQuery, true)
+            searchView?.setQuery(it[position].suggestedQuery, true)
         }
         return true
     }
@@ -136,6 +136,9 @@ class SearchFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        searchView = null
+        progressBar = null
+        recyclerView = null
     }
 
     private fun configureCloseButton(searchView: SearchView) {
@@ -159,7 +162,7 @@ class SearchFragment :
                 cursor.addRow(arrayOf(i, it[i].suggestedQuery))
             }
         }
-        searchView.suggestionsAdapter.changeCursor(cursor)
+        searchView?.suggestionsAdapter?.changeCursor(cursor)
     }
 
     override fun getApplication(
@@ -178,6 +181,16 @@ class SearchFragment :
         }
         val offer = offerType ?: 0
         val org = origin ?: Origin.CLEANAPK
-        data?.let { searchViewModel.getApplication(id, name, packageName, versionCode, offer, it, org) }
+        data?.let {
+            searchViewModel.getApplication(
+                id,
+                name,
+                packageName,
+                versionCode,
+                offer,
+                it,
+                org
+            )
+        }
     }
 }

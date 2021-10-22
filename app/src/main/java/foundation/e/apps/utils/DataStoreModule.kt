@@ -33,4 +33,10 @@ class DataStoreModule @Inject constructor(
             it[AUTHDATA] = gson.toJson(authData)
         }
     }
+
+    suspend fun destroyCredentials() {
+        context.dataStore.edit {
+            it[AUTHDATA] = ""
+        }
+    }
 }

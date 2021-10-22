@@ -1,7 +1,7 @@
 package foundation.e.apps.home.model
 
 import androidx.recyclerview.widget.DiffUtil
-import foundation.e.apps.api.data.HomeApp
+import foundation.e.apps.api.fused.data.HomeApp
 
 class HomeDiffUtil(
     private val oldList: List<HomeApp>,

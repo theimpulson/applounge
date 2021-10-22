@@ -1,4 +1,4 @@
-package foundation.e.apps.api.data
+package foundation.e.apps.api.fused.data
 
 data class SearchApp(
     val _id: String,

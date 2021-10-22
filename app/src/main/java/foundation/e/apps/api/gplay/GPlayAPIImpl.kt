@@ -25,20 +25,27 @@ class GPlayAPIImpl @Inject constructor(
         data.await()?.let { dataStoreModule.saveCredentials(it) }
     }
 
-    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry>? {
-        var searchData: List<SearchSuggestEntry>?
+    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
+        val searchData = mutableListOf<SearchSuggestEntry>()
         withContext(Dispatchers.IO) {
             val searchHelper = SearchHelper(authData).using(OkHttpClient)
-            searchData = searchHelper.searchSuggestions(query)
+            searchData.addAll(searchHelper.searchSuggestions(query))
         }
-        return searchData
+        return searchData.filter { it.suggestedQuery.isNotBlank() }
     }
 
-    suspend fun getSearchResults(query: String, authData: AuthData): List<App>? {
-        var searchData: List<App>?
+    suspend fun getSearchResults(query: String, authData: AuthData): List<App> {
+        val searchData = mutableListOf<App>()
         withContext(Dispatchers.IO) {
             val searchHelper = SearchHelper(authData).using(OkHttpClient)
-            searchData = searchHelper.searchResults(query).appList
+            val searchResult = searchHelper.searchResults(query)
+            searchData.addAll(searchResult.appList)
+
+            // Fetch more results in case the given result is a promoted app
+            if (searchData.size == 1) {
+                val searchBundle = searchHelper.next(searchResult.subBundles)
+                searchData.addAll(searchBundle.appList)
+            }
         }
         return searchData
     }
@@ -48,11 +55,11 @@ class GPlayAPIImpl @Inject constructor(
         versionCode: Int,
         offerType: Int,
         authData: AuthData
-    ): List<File>? {
-        var downloadData: List<File>?
+    ): List<File> {
+        val downloadData = mutableListOf<File>()
         withContext(Dispatchers.IO) {
             val purchaseHelper = PurchaseHelper(authData).using(OkHttpClient)
-            downloadData = purchaseHelper.purchase(packageName, versionCode, offerType)
+            downloadData.addAll(purchaseHelper.purchase(packageName, versionCode, offerType))
         }
         return downloadData
     }

@@ -1,7 +1,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <PreferenceCategory android:title="@string/preference_updates_title">
+    <PreferenceCategory
+        android:icon="@drawable/ic_update"
+        android:title="@string/preference_updates_title">
         <ListPreference
             android:defaultValue="@string/preference_update_interval_default"
             android:dialogTitle="@string/preference_update_interval_title"
@@ -30,7 +33,9 @@
             android:title="@string/preference_update_wifi_only_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/Show_applications">
+    <PreferenceCategory
+        android:icon="@drawable/ic_apps"
+        android:title="@string/Show_applications">
         <foundation.e.apps.settings.RadioButtonPreference
             android:defaultValue="true"
             android:key="showAllApplications"
@@ -45,11 +50,22 @@
             android:title="@string/show_only_pwa_apps" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/misc">
+    <PreferenceCategory
+        android:icon="@drawable/ic_misc"
+        android:title="@string/misc">
         <Preference
             android:key="requestApplication"
             android:summary="@string/request_app_summary"
-            android:title="@string/request_app_title" />
+            android:title="@string/request_app_title"
+            app:enabled="false" />
+        <Preference
+            android:key="refreshSession"
+            android:summary="@string/refresh_session_summary"
+            app:title="@string/refresh_session" />
+        <Preference
+            android:key="version"
+            android:summary="@string/version_summary"
+            app:title="@string/version" />
     </PreferenceCategory>
 
 </PreferenceScreen>

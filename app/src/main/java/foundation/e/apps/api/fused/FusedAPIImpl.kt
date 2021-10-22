@@ -12,9 +12,11 @@ import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
 import foundation.e.apps.api.cleanapk.data.app.Application
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
-import foundation.e.apps.api.data.Origin
-import foundation.e.apps.api.data.Ratings
-import foundation.e.apps.api.data.SearchApp
+import foundation.e.apps.api.fused.data.CategoryApp
+import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.Ratings
+import foundation.e.apps.api.fused.data.SearchApp
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.utils.PreferenceManagerModule
@@ -61,78 +63,8 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
-    suspend fun getAppOrPWADetailsByID(
-        id: String,
-        architectures: List<String>? = null,
-        type: String? = null
-    ): Response<Application> {
-        return cleanAPKRepository.getAppOrPWADetailsByID(id, architectures, type)
-    }
-
-    private suspend fun getCleanAPKSearchResults(
-        keyword: String,
-        action: String,
-        source: String = CleanAPKInterface.APP_SOURCE_FOSS,
-        type: String = CleanAPKInterface.APP_TYPE_ANY,
-        nres: Int = 20,
-        page: Int = 1,
-        by: String? = null
-    ): List<SearchApp>? {
-        val response =
-            cleanAPKRepository.searchOrListApps(keyword, action, source, type, nres, page, by)
-                .body()
-
-        // Gson does a really bad job of handling non-nullable values with default params, fix it
-        response?.apps?.forEach {
-            it.origin = Origin.CLEANAPK
-        }
-        return response?.apps
-    }
-
-    private suspend fun getCleanAPKDownloadInfo(
-        id: String,
-        version: String? = null,
-        architecture: String? = null
-    ): String? {
-        return cleanAPKRepository.getDownloadInfo(id, version, architecture)
-            .body()?.download_data?.download_link
-    }
-
-    private suspend fun getGplayDownloadInfo(
-        packageName: String,
-        versionCode: Int,
-        offerType: Int,
-        authData: AuthData
-    ): String? {
-        val response =
-            gPlayAPIRepository.getDownloadInfo(packageName, versionCode, offerType, authData)
-        return if (response != null) response[0].url else null
-    }
-
-    suspend fun getApplication(
-        id: String,
-        name: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int,
-        authData: AuthData,
-        origin: Origin
-    ) {
-        val downloadLink = if (origin == Origin.CLEANAPK) {
-            getCleanAPKDownloadInfo(id)
-        } else {
-            getGplayDownloadInfo(packageName, versionCode, offerType, authData)
-        }
-        // Trigger the download
-        if (downloadLink != null) {
-            downloadApp(name, packageName, downloadLink)
-        } else {
-            Log.d(TAG, "Download link was null, exiting!")
-        }
-    }
-
-    suspend fun getCategoriesList(listType: String): Map<String, Int> {
-        val categoriesList = mutableMapOf<String, Int>()
+    suspend fun getCategoriesList(listType: String): List<CategoryApp> {
+        val categoriesList = mutableListOf<CategoryApp>()
         val data = when (preferenceManagerModule.preferredApplicationType()) {
             "open" -> {
                 cleanAPKRepository.getCategoriesList(
@@ -157,34 +89,27 @@ class FusedAPIImpl @Inject constructor(
             when (listType) {
                 "apps" -> {
                     for (cat in category.apps) {
-                        categoriesList[category.translations.getOrDefault(cat, "")] =
+                        val categoryApp = CategoryApp(
+                            cat,
+                            category.translations.getOrDefault(cat, ""),
                             Category.provideCategoryIconResource(cat)
+                        )
+                        categoriesList.add(categoryApp)
                     }
                 }
                 "games" -> {
                     for (cat in category.games) {
-                        categoriesList[category.translations.getOrDefault(cat, "")] =
+                        val categoryApp = CategoryApp(
+                            cat,
+                            category.translations.getOrDefault(cat, ""),
                             Category.provideCategoryIconResource(cat)
+                        )
+                        categoriesList.add(categoryApp)
                     }
                 }
             }
         }
-        Log.d(TAG, categoriesList.toString())
         return categoriesList
-    }
-
-    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry>? {
-        return gPlayAPIRepository.getSearchSuggestions(query, authData)
-    }
-
-    suspend fun fetchAuthData(): Unit? {
-        return gPlayAPIRepository.fetchAuthData()
-    }
-
-    private suspend fun getGplaySearchResults(query: String, authData: AuthData): List<SearchApp>? {
-        return gPlayAPIRepository.getSearchResults(query, authData)?.map { app ->
-            app.transform()
-        }
     }
 
     /**
@@ -200,16 +125,15 @@ class FusedAPIImpl @Inject constructor(
 
         when (preferenceManagerModule.preferredApplicationType()) {
             "any" -> {
-                cleanResponse = getCleanAPKSearchResults(query, CleanAPKInterface.ACTION_SEARCH)
+                cleanResponse = getCleanAPKSearchResults(query)
                 gplayResponse = getGplaySearchResults(query, authData)
             }
             "open" -> {
-                cleanResponse = getCleanAPKSearchResults(query, CleanAPKInterface.ACTION_SEARCH)
+                cleanResponse = getCleanAPKSearchResults(query)
             }
             "pwa" -> {
                 cleanResponse = getCleanAPKSearchResults(
                     query,
-                    CleanAPKInterface.ACTION_SEARCH,
                     CleanAPKInterface.APP_SOURCE_ANY,
                     CleanAPKInterface.APP_TYPE_PWA
                 )
@@ -222,19 +146,78 @@ class FusedAPIImpl @Inject constructor(
         return fusedResponse
     }
 
-    /**
-     * Downloads the given package into the external cache directory
-     * @param name Name of the package
-     * @param packageName packageName of the package
-     * @param url direct download link for the package
-     */
-    fun downloadApp(name: String, packageName: String, url: String) {
-        val packagePath = File(cacheDir, "$packageName.apk")
-        if (packagePath.exists()) packagePath.delete() // Delete old download if-exists
-        val request = DownloadManager.Request(Uri.parse(url))
-            .setTitle(name)
-            .setDestinationUri(Uri.fromFile(packagePath))
-        downloadManager.enqueue(request)
+    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
+        return gPlayAPIRepository.getSearchSuggestions(query, authData)
+    }
+
+    suspend fun fetchAuthData(): Unit? {
+        return gPlayAPIRepository.fetchAuthData()
+    }
+
+    suspend fun getApplication(
+        id: String,
+        name: String,
+        packageName: String,
+        versionCode: Int,
+        offerType: Int,
+        authData: AuthData,
+        origin: Origin
+    ) {
+        val downloadLink = if (origin == Origin.CLEANAPK) {
+            getCleanAPKDownloadInfo(id)
+        } else {
+            getGplayDownloadInfo(packageName, versionCode, offerType, authData)
+        }
+        // Trigger the download
+        if (downloadLink != null) {
+            downloadApp(name, packageName, downloadLink)
+        } else {
+            Log.d(TAG, "Download link was null, exiting!")
+        }
+    }
+
+    suspend fun listApps(category: String): List<SearchApp>? {
+        val response = when (preferenceManagerModule.preferredApplicationType()) {
+            "open" -> {
+                cleanAPKRepository.listApps(
+                    category,
+                    CleanAPKInterface.APP_SOURCE_FOSS,
+                    CleanAPKInterface.APP_TYPE_ANY
+                )
+            }
+            "pwa" -> {
+                cleanAPKRepository.listApps(
+                    category,
+                    CleanAPKInterface.APP_SOURCE_ANY,
+                    CleanAPKInterface.APP_TYPE_PWA
+                )
+            }
+            else -> {
+                cleanAPKRepository.listApps(
+                    category,
+                    CleanAPKInterface.APP_SOURCE_ANY,
+                    CleanAPKInterface.APP_TYPE_ANY
+                )
+            }
+        }.body()
+        // Gson does a really bad job of handling non-nullable values with default params, fix it
+        response?.apps?.forEach {
+            it.origin = Origin.CLEANAPK
+        }
+        return response?.apps
+    }
+
+    suspend fun getApplicationDetails(
+        id: String,
+        packageName: String,
+        authData: AuthData,
+        origin: Origin
+    ): FusedApp? {
+        return if (origin == Origin.CLEANAPK) {
+            getCleanAPKAppDetails(id)?.app
+        } else {
+            getGPlayAppDetails(packageName, authData)
+        }
     }
 
     /**
@@ -250,10 +233,79 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
+    private suspend fun getCleanAPKAppDetails(
+        id: String,
+        architectures: List<String>? = null,
+        type: String? = null
+    ): Application? {
+        return cleanAPKRepository.getAppOrPWADetailsByID(id, architectures, type).body()
+    }
+
+    private suspend fun getGPlayAppDetails(packageName: String, authData: AuthData): FusedApp? {
+        return gPlayAPIRepository.getAppDetails(packageName, authData)?.transformToFusedApp()
+    }
+
+    private suspend fun getCleanAPKSearchResults(
+        keyword: String,
+        source: String = CleanAPKInterface.APP_SOURCE_FOSS,
+        type: String = CleanAPKInterface.APP_TYPE_ANY,
+        nres: Int = 20,
+        page: Int = 1,
+        by: String? = null
+    ): List<SearchApp>? {
+        val response =
+            cleanAPKRepository.searchApps(keyword, source, type, nres, page, by)
+                .body()
+
+        // Gson does a really bad job of handling non-nullable values with default params, fix it
+        response?.apps?.forEach {
+            it.origin = Origin.CLEANAPK
+        }
+        return response?.apps
+    }
+
+    private suspend fun getCleanAPKDownloadInfo(
+        id: String,
+        version: String? = null,
+        architecture: String? = null
+    ): String? {
+        return cleanAPKRepository.getDownloadInfo(id, version, architecture)
+            .body()?.download_data?.download_link
+    }
+
+    private suspend fun getGplayDownloadInfo(
+        packageName: String,
+        versionCode: Int,
+        offerType: Int,
+        authData: AuthData
+    ): String {
+        val response =
+            gPlayAPIRepository.getDownloadInfo(packageName, versionCode, offerType, authData)
+        return response[0].url
+    }
+
+    private suspend fun getGplaySearchResults(query: String, authData: AuthData): List<SearchApp> {
+        return gPlayAPIRepository.getSearchResults(query, authData).map { app ->
+            app.transformToSearchApp()
+        }
+    }
+
     /**
-     * Extension function to convert [App] into [SearchApp]
+     * Downloads the given package into the external cache directory
+     * @param name Name of the package
+     * @param packageName packageName of the package
+     * @param url direct download link for the package
      */
-    private fun App.transform(): SearchApp {
+    private fun downloadApp(name: String, packageName: String, url: String) {
+        val packagePath = File(cacheDir, "$packageName.apk")
+        if (packagePath.exists()) packagePath.delete() // Delete old download if-exists
+        val request = DownloadManager.Request(Uri.parse(url))
+            .setTitle(name)
+            .setDestinationUri(Uri.fromFile(packagePath))
+        downloadManager.enqueue(request)
+    }
+
+    private fun App.transformToSearchApp(): SearchApp {
         return SearchApp(
             _id = this.id.toString(),
             author = this.developerName,
@@ -269,6 +321,29 @@ class FusedAPIImpl @Inject constructor(
             origin = Origin.GPLAY,
             latest_version_code = this.versionCode,
             offerType = this.offerType
+        )
+    }
+
+    private fun App.transformToFusedApp(): FusedApp {
+        return FusedApp(
+            _id = this.id.toString(),
+            author = this.developerName,
+            category = this.categoryName,
+            description = this.description,
+            exodus_perms = emptyList(),
+            exodus_tracker = emptyList(),
+            icon_image_path = this.iconArtwork.url,
+            last_modified = this.updatedOn,
+            latest_version_code = this.versionCode,
+            latest_version_number = this.versionName,
+            licence = "",
+            name = this.displayName,
+            other_images_path = emptyList(),
+            package_name = this.packageName,
+            ratings = Ratings(
+                privacyScore = -1.0,
+                usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDouble() else -1.0
+            )
         )
     }
 }

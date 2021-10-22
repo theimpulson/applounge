@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val fusedAPIRepository: FusedAPIRepository,
-    dataStoreModule: DataStoreModule
+    private val dataStoreModule: DataStoreModule
 ) : ViewModel() {
 
     // Authentication Data for GPlay servers
@@ -22,6 +22,12 @@ class MainActivityViewModel @Inject constructor(
     fun getAuthData() {
         viewModelScope.launch {
             fusedAPIRepository.fetchAuthData()
+        }
+    }
+
+    fun destroyCredentials() {
+        viewModelScope.launch {
+            dataStoreModule.destroyCredentials()
         }
     }
 }

@@ -154,5 +154,4 @@ object Category {
                 R.drawable.ic_cat_default
         }
     }
-
 }
