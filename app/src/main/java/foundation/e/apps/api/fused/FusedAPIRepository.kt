@@ -49,7 +49,7 @@ class FusedAPIRepository @Inject constructor(
     suspend fun getCategoriesList(
         type: String = CleanAPKInterface.APP_TYPE_ANY,
         source: String = CleanAPKInterface.APP_SOURCE_ANY
-    ): Response<Categories> {
+    ): Map<String, Int> {
         return fusedAPIImpl.getCategoriesList(type, source)
     }
 

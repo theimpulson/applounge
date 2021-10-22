@@ -1,0 +1,47 @@
+<!--
+  ~ Copyright (C) 2019-2021  E FOUNDATION
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="33dp"
+    android:height="32dp"
+    android:viewportWidth="33"
+    android:viewportHeight="32">
+  <group>
+    <clip-path android:pathData="M3.8615,0.8857h25.4857v30.2286h-25.4857z M 0,0"/>
+    <path
+        android:pathData="M28.3758,25.8571H4.8615C4.3186,25.8571 3.8615,25.4 3.8615,24.8571V22.2C3.8615,21.8857 4.0329,21.5714 4.2901,21.3714L10.3758,17.1429L13.3758,1.6857C13.4901,1.2286 13.8901,0.8857 14.3758,0.8857H18.8615C19.3472,0.8857 19.7472,1.2286 19.8329,1.6857L22.8329,17.1429L28.9187,21.3714C29.1758,21.5714 29.3472,21.8571 29.3472,22.2V24.8571C29.3472,25.4 28.9187,25.8571 28.3758,25.8571ZM5.8615,23.8571H27.3472V22.7143L21.3472,18.5429C21.1472,18.4 20.9758,18.1714 20.9472,17.9143L18.0329,2.8857H15.2044L12.2615,17.9143C12.2044,18.1714 12.0615,18.4 11.8615,18.5429L5.8615,22.7143V23.8571Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M18.1186,19.3714C17.8615,19.3714 17.6044,19.2857 17.4044,19.0857L16.6329,18.2857L15.8615,19.0857C15.4615,19.4857 14.8329,19.4857 14.4615,19.0857C14.0615,18.6857 14.0615,18.0571 14.4615,17.6857L15.9472,16.1714C16.1472,15.9714 16.4044,15.8857 16.6615,15.8857C16.9186,15.8857 17.1758,16 17.3758,16.1714L18.8615,17.6857C19.2615,18.0857 19.2329,18.7143 18.8615,19.0857C18.6044,19.2571 18.3472,19.3714 18.1186,19.3714Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M7.3473,21.3429C6.8044,21.3429 6.3473,20.8857 6.3473,20.3429V15.7143C6.3473,15.1714 6.8044,14.7143 7.3473,14.7143C7.8902,14.7143 8.3473,15.1714 8.3473,15.7143V20.3714C8.3473,20.9143 7.8902,21.3429 7.3473,21.3429Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M16.6044,31.1143C16.0615,31.1143 15.6044,30.6571 15.6044,30.1143V24.8571C15.6044,24.3143 16.0615,23.8571 16.6044,23.8571C17.1472,23.8571 17.6044,24.3143 17.6044,24.8571V30.1143C17.6044,30.6571 17.1758,31.1143 16.6044,31.1143Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M13.3473,28.4857C12.8044,28.4857 12.3473,28.0286 12.3473,27.4857V24.8571C12.3473,24.3143 12.8044,23.8571 13.3473,23.8571C13.8901,23.8571 14.3473,24.3143 14.3473,24.8571V27.4857C14.3473,28.0286 13.8901,28.4857 13.3473,28.4857Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M19.8901,28.4857C19.3472,28.4857 18.8901,28.0286 18.8901,27.4857V24.8571C18.8901,24.3143 19.3472,23.8571 19.8901,23.8571C20.4329,23.8571 20.8901,24.3143 20.8901,24.8571V27.4857C20.8901,28.0286 20.4329,28.4857 19.8901,28.4857Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M25.8901,21.3429C25.3472,21.3429 24.8901,20.8857 24.8901,20.3429V15.7143C24.8901,15.1714 25.3472,14.7143 25.8901,14.7143C26.4329,14.7143 26.8901,15.1714 26.8901,15.7143V20.3714C26.8901,20.9143 26.4329,21.3429 25.8901,21.3429Z"
+        android:fillColor="@color/colorAccent"/>
+  </group>
+</vector>

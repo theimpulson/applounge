@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright (C) 2019-2021  E FOUNDATION
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp"
+    android:height="32dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+  <group>
+    <clip-path android:pathData="M4.8857,2.1429h22.2286v27.7143h-22.2286z M 0,0"/>
+    <path
+        android:pathData="M22.6857,26.4571H5.8857C5.3429,26.4571 4.8857,26 4.8857,25.4571V3.1429C4.8857,2.6 5.3429,2.1429 5.8857,2.1429H22.6857C23.2286,2.1429 23.6857,2.6 23.6857,3.1429V25.4571C23.6857,26 23.2286,26.4571 22.6857,26.4571ZM6.8857,24.4571H21.6857V4.1429H6.8857V24.4571Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M26.1144,29.8571H9.3144C9.0573,29.8571 8.8001,29.7429 8.6002,29.5714L5.1716,26.1714C4.7716,25.7714 4.7716,25.1429 5.1716,24.7714C5.5716,24.3714 6.2002,24.3714 6.5716,24.7714L9.743,27.8571H25.1144V7.5429H22.6859C22.143,7.5429 21.6859,7.0857 21.6859,6.5429C21.6859,6 22.143,5.5429 22.6859,5.5429H26.1144C26.6573,5.5429 27.1144,6 27.1144,6.5429V28.8571C27.1144,29.4 26.6573,29.8571 26.1144,29.8571Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M16.8002,10.6286H11.7716C11.2287,10.6286 10.7716,10.1714 10.7716,9.6286C10.7716,9.0857 11.2287,8.6286 11.7716,8.6286H16.8002C17.343,8.6286 17.8002,9.0857 17.8002,9.6286C17.8002,10.1714 17.343,10.6286 16.8002,10.6286Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M16.8002,14.2H11.7716C11.2287,14.2 10.7716,13.7429 10.7716,13.2C10.7716,12.6571 11.2287,12.2 11.7716,12.2H16.8002C17.343,12.2 17.8002,12.6571 17.8002,13.2C17.8002,13.7429 17.343,14.2 16.8002,14.2Z"
+        android:fillColor="@color/colorAccent"/>
+  </group>
+</vector>

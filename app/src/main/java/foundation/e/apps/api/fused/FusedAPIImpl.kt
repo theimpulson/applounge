@@ -8,6 +8,7 @@ import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.qualifiers.ApplicationContext
+import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
 import foundation.e.apps.api.cleanapk.data.app.Application
@@ -17,6 +18,7 @@ import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.data.Ratings
 import foundation.e.apps.api.data.SearchApp
 import foundation.e.apps.api.gplay.GPlayAPIRepository
+import foundation.e.apps.categories.model.Category
 import foundation.e.apps.utils.PreferenceManagerModule
 import foundation.e.apps.utils.pkg.PkgManagerModule
 import retrofit2.Response
@@ -134,8 +136,15 @@ class FusedAPIImpl @Inject constructor(
     suspend fun getCategoriesList(
         type: String = CleanAPKInterface.APP_TYPE_ANY,
         source: String = CleanAPKInterface.APP_SOURCE_ANY
-    ): Response<Categories> {
-        return cleanAPKRepository.getCategoriesList(type, source)
+    ): Map<String, Int> {
+        val categoriesList = mutableMapOf<String, Int>()
+        val data = cleanAPKRepository.getCategoriesList(type, source).body()
+        data?.let { category ->
+            for (cat in category.translations) {
+                categoriesList[cat.value] = Category.provideCategoryIconResource(cat.key)
+            }
+        }
+        return categoriesList
     }
 
     suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry>? {

@@ -1,0 +1,71 @@
+<!--
+  ~ Copyright (C) 2019-2021  E FOUNDATION
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp"
+    android:height="32dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+  <group>
+    <clip-path android:pathData="M1.8572,2.6857h28.2857v26.6286h-28.2857z M 0,0"/>
+    <path
+        android:pathData="M29.1428,29.3143H6.1714C5.6285,29.3143 5.1714,28.8572 5.1714,28.3143V15.7429C5.1714,15.2 5.6285,14.7429 6.1714,14.7429C6.7142,14.7429 7.1714,15.2 7.1714,15.7429V27.3143H28.1428V8.4572H15.1142C14.5714,8.4572 14.1142,8 14.1142,7.4571C14.1142,6.9143 14.5714,6.4571 15.1142,6.4571H29.1714C29.7142,6.4571 30.1714,6.9143 30.1714,7.4571V28.3143C30.1428,28.8857 29.7142,29.3143 29.1428,29.3143Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M9.3143,4.6857C12.3429,4.6857 14.7715,7.1429 14.7715,10.1429C14.7715,13.1714 12.3143,15.6 9.3143,15.6C6.3143,15.6 3.8572,13.1714 3.8572,10.1429C3.8572,7.1429 6.3143,4.6857 9.3143,4.6857ZM9.3143,2.6857C5.2,2.6857 1.8572,6.0286 1.8572,10.1429C1.8572,14.2572 5.2,17.6 9.3143,17.6C13.4286,17.6 16.7715,14.2572 16.7715,10.1429C16.7715,6.0286 13.4286,2.6857 9.3143,2.6857Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M12.2856,11.1429H9.3142C8.7713,11.1429 8.3142,10.6857 8.3142,10.1429V7.2C8.3142,6.6571 8.7713,6.2 9.3142,6.2C9.8571,6.2 10.3142,6.6571 10.3142,7.2V9.1429H12.2571C12.7999,9.1429 13.2571,9.6 13.2571,10.1429C13.2571,10.6857 12.8285,11.1429 12.2856,11.1429Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M19.6,10.4286C19.0571,10.4286 18.6,9.9714 18.6,9.4286V5.5429C18.6,5 19.0571,4.5429 19.6,4.5429C20.1428,4.5429 20.6,4.9714 20.6,5.5429V9.4286C20.6,9.9714 20.1714,10.4286 19.6,10.4286Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M24.6,10.4286C24.0571,10.4286 23.6,9.9714 23.6,9.4286V5.5429C23.6,5 24.0571,4.5429 24.6,4.5429C25.1428,4.5429 25.6,4.9714 25.6,5.5429V9.4286C25.6,9.9714 25.1428,10.4286 24.6,10.4286Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M19.9716,22.9714C20.543,22.9714 21.0001,23.4286 21.0001,24C21.0001,24.5714 20.543,25.0286 19.9716,25.0286C19.4001,25.0286 18.943,24.5714 18.943,24C18.943,23.4286 19.4001,22.9714 19.9716,22.9714Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M15.343,22.9714C15.9145,22.9714 16.3716,23.4286 16.3716,24C16.3716,24.5714 15.9145,25.0286 15.343,25.0286C14.7716,25.0286 14.3145,24.5714 14.3145,24C14.3145,23.4286 14.7716,22.9714 15.343,22.9714Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M10.7144,22.9714C11.2858,22.9714 11.7429,23.4286 11.7429,24C11.7429,24.5714 11.2858,25.0286 10.7144,25.0286C10.1429,25.0286 9.6858,24.5714 9.6858,24C9.6858,23.4286 10.1429,22.9714 10.7144,22.9714Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M24.6,22.9714C25.1714,22.9714 25.6286,23.4286 25.6286,24C25.6286,24.5714 25.1714,25.0286 24.6,25.0286C24.0286,25.0286 23.5714,24.5714 23.5714,24C23.5714,23.4286 24.0286,22.9714 24.6,22.9714Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M19.9716,18.3429C20.543,18.3429 21.0001,18.8 21.0001,19.3715C21.0001,19.9429 20.543,20.4 19.9716,20.4C19.4001,20.4 18.943,19.9429 18.943,19.3715C18.943,18.8 19.4001,18.3429 19.9716,18.3429Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M15.343,18.3429C15.9145,18.3429 16.3716,18.8 16.3716,19.3715C16.3716,19.9429 15.9145,20.4 15.343,20.4C14.7716,20.4 14.3145,19.9429 14.3145,19.3715C14.3145,18.8 14.7716,18.3429 15.343,18.3429Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M10.7144,18.3429C11.2858,18.3429 11.7429,18.8 11.7429,19.3715C11.7429,19.9429 11.2858,20.4 10.7144,20.4C10.1429,20.4 9.6858,19.9429 9.6858,19.3715C9.6858,18.8 10.1429,18.3429 10.7144,18.3429Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M24.6,18.3429C25.1714,18.3429 25.6286,18.8 25.6286,19.3715C25.6286,19.9429 25.1714,20.4 24.6,20.4C24.0286,20.4 23.5714,19.9429 23.5714,19.3715C23.5714,18.8 24.0286,18.3429 24.6,18.3429Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M19.9714,13.7143C20.5429,13.7143 21,14.1714 21,14.7429C21,15.3143 20.5429,15.7714 19.9714,15.7714C19.4,15.7714 18.9429,15.3143 18.9429,14.7429C18.9429,14.1714 19.4,13.7143 19.9714,13.7143Z"
+        android:fillColor="@color/colorAccent"/>
+    <path
+        android:pathData="M24.6001,13.7143C25.1715,13.7143 25.6287,14.1714 25.6287,14.7429C25.6287,15.3143 25.1715,15.7714 24.6001,15.7714C24.0287,15.7714 23.5715,15.3143 23.5715,14.7429C23.5715,14.1714 24.0287,13.7143 24.6001,13.7143Z"
+        android:fillColor="@color/colorAccent"/>
+  </group>
+</vector>
