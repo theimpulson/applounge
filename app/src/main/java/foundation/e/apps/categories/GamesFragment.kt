@@ -31,7 +31,7 @@ class GamesFragment : Fragment(R.layout.fragment_games) {
             visibility = View.GONE
         }
 
-        categoriesViewModel.getCategoriesList()
+        categoriesViewModel.getCategoriesList("games")
         categoriesViewModel.categoriesList.observe(viewLifecycleOwner, {
             categoriesRVAdapter.setData(it)
             binding.progressBar.visibility = View.GONE

@@ -46,11 +46,8 @@ class FusedAPIRepository @Inject constructor(
         )
     }
 
-    suspend fun getCategoriesList(
-        type: String = CleanAPKInterface.APP_TYPE_ANY,
-        source: String = CleanAPKInterface.APP_SOURCE_ANY
-    ): Map<String, Int> {
-        return fusedAPIImpl.getCategoriesList(type, source)
+    suspend fun getCategoriesList(listType: String): Map<String, Int> {
+        return fusedAPIImpl.getCategoriesList(listType)
     }
 
     suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry>? {

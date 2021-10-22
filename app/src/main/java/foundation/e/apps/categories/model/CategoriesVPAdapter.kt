@@ -9,10 +9,10 @@ class CategoriesVPAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
-        when (position) {
+        return when (position) {
             0 -> AppsFragment()
             1 -> GamesFragment()
+            else -> AppsFragment()
         }
-        return AppsFragment()
     }
 }

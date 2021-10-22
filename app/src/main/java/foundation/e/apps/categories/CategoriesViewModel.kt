@@ -15,9 +15,9 @@ class CategoriesViewModel @Inject constructor(
 
     val categoriesList: MutableLiveData<Map<String, Int>> = MutableLiveData()
 
-    fun getCategoriesList() {
+    fun getCategoriesList(listType: String) {
         viewModelScope.launch {
-            categoriesList.postValue(fusedAPIRepository.getCategoriesList())
+            categoriesList.postValue(fusedAPIRepository.getCategoriesList(listType))
         }
     }
 }

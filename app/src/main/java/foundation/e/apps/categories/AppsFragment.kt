@@ -30,7 +30,7 @@ class AppsFragment : Fragment(R.layout.fragment_apps) {
             visibility = View.GONE
         }
 
-        categoriesViewModel.getCategoriesList()
+        categoriesViewModel.getCategoriesList("apps")
         categoriesViewModel.categoriesList.observe(viewLifecycleOwner, {
             categoriesRVAdapter.setData(it)
             binding.progressBar.visibility = View.GONE

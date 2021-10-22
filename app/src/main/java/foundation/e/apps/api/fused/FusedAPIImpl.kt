@@ -8,11 +8,9 @@ import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.qualifiers.ApplicationContext
-import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
 import foundation.e.apps.api.cleanapk.data.app.Application
-import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
 import foundation.e.apps.api.data.Origin
 import foundation.e.apps.api.data.Ratings
@@ -133,17 +131,45 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
-    suspend fun getCategoriesList(
-        type: String = CleanAPKInterface.APP_TYPE_ANY,
-        source: String = CleanAPKInterface.APP_SOURCE_ANY
-    ): Map<String, Int> {
+    suspend fun getCategoriesList(listType: String): Map<String, Int> {
         val categoriesList = mutableMapOf<String, Int>()
-        val data = cleanAPKRepository.getCategoriesList(type, source).body()
-        data?.let { category ->
-            for (cat in category.translations) {
-                categoriesList[cat.value] = Category.provideCategoryIconResource(cat.key)
+        val data = when (preferenceManagerModule.preferredApplicationType()) {
+            "open" -> {
+                cleanAPKRepository.getCategoriesList(
+                    CleanAPKInterface.APP_TYPE_ANY,
+                    CleanAPKInterface.APP_SOURCE_FOSS
+                ).body()
+            }
+            "pwa" -> {
+                cleanAPKRepository.getCategoriesList(
+                    CleanAPKInterface.APP_TYPE_PWA,
+                    CleanAPKInterface.APP_SOURCE_ANY
+                ).body()
+            }
+            else -> {
+                cleanAPKRepository.getCategoriesList(
+                    CleanAPKInterface.APP_TYPE_ANY,
+                    CleanAPKInterface.APP_SOURCE_ANY
+                ).body()
             }
         }
+        data?.let { category ->
+            when (listType) {
+                "apps" -> {
+                    for (cat in category.apps) {
+                        categoriesList[category.translations.getOrDefault(cat, "")] =
+                            Category.provideCategoryIconResource(cat)
+                    }
+                }
+                "games" -> {
+                    for (cat in category.games) {
+                        categoriesList[category.translations.getOrDefault(cat, "")] =
+                            Category.provideCategoryIconResource(cat)
+                    }
+                }
+            }
+        }
+        Log.d(TAG, categoriesList.toString())
         return categoriesList
     }
 

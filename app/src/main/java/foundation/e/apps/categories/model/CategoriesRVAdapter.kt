@@ -8,7 +8,6 @@ import coil.load
 import foundation.e.apps.databinding.CategoriesListItemBinding
 import javax.inject.Singleton
 
-@Singleton
 class CategoriesRVAdapter : RecyclerView.Adapter<CategoriesRVAdapter.ViewHolder>() {
 
     private var oldList = mapOf<String, Int>()
