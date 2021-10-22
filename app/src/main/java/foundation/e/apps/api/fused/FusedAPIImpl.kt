@@ -33,7 +33,6 @@ class FusedAPIImpl @Inject constructor(
     private val downloadManager: DownloadManager,
     private val pkgManagerModule: PkgManagerModule,
     private val preferenceManagerModule: PreferenceManagerModule,
-    private val gson: Gson,
     @ApplicationContext private val context: Context,
     @Named("cacheDir") private val cacheDir: String
 ) {

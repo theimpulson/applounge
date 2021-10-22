@@ -22,7 +22,16 @@ class GPlayAPIRepository @Inject constructor(
         return gPlayAPIImpl.getSearchResults(query, authData)
     }
 
-    suspend fun getDownloadInfo(packageName: String, versionCode: Int, offerType: Int, authData: AuthData): List<File>? {
+    suspend fun getDownloadInfo(
+        packageName: String,
+        versionCode: Int,
+        offerType: Int,
+        authData: AuthData
+    ): List<File>? {
         return gPlayAPIImpl.getDownloadInfo(packageName, versionCode, offerType, authData)
+    }
+
+    suspend fun getAppDetails(packageName: String, authData: AuthData): App? {
+        return gPlayAPIImpl.getAppDetails(packageName, authData)
     }
 }
