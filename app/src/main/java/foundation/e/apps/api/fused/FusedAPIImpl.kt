@@ -7,7 +7,6 @@ import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
-import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
@@ -38,8 +37,7 @@ class FusedAPIImpl @Inject constructor(
 ) {
     private var TAG = FusedAPIImpl::class.java.simpleName
 
-    suspend fun getHomeScreenData(
-    ): Response<HomeScreen> {
+    suspend fun getHomeScreenData(): Response<HomeScreen> {
         return when (preferenceManagerModule.preferredApplicationType()) {
             "open" -> {
                 cleanAPKRepository.getHomeScreenData(

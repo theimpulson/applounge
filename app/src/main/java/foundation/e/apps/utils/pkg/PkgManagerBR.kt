@@ -7,7 +7,7 @@ import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-open class PkgManagerBR: BroadcastReceiver() {
+open class PkgManagerBR : BroadcastReceiver() {
 
     private val TAG = PkgManagerBR::class.java.simpleName
     private val EXTRA_FAILED_UID = 0

@@ -8,10 +8,8 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.content.pm.PackageInfoCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.File
 import java.io.InputStream
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -66,9 +64,9 @@ class PkgManagerModule @Inject constructor(
             val packageInfo = getPackageInfo(packageName)
             packageInfo?.let {
                 return "${it.versionName} (${
-                    PackageInfoCompat.getLongVersionCode(
-                        it
-                    ).toInt()
+                PackageInfoCompat.getLongVersionCode(
+                    it
+                ).toInt()
                 })"
             }
             ""
@@ -100,12 +98,12 @@ class PkgManagerModule @Inject constructor(
 
     private fun getAllFlags(): Int {
         var flags = (
-                PackageManager.GET_META_DATA
-                        or PackageManager.GET_ACTIVITIES
-                        or PackageManager.GET_SERVICES
-                        or PackageManager.GET_PROVIDERS
-                        or PackageManager.GET_RECEIVERS
-                )
+            PackageManager.GET_META_DATA
+                or PackageManager.GET_ACTIVITIES
+                or PackageManager.GET_SERVICES
+                or PackageManager.GET_PROVIDERS
+                or PackageManager.GET_RECEIVERS
+            )
         flags = flags or PackageManager.MATCH_DISABLED_COMPONENTS
         flags = flags or PackageManager.MATCH_UNINSTALLED_PACKAGES
         return flags
@@ -162,5 +160,4 @@ class PkgManagerModule @Inject constructor(
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED)
         return filter
     }
-
 }
