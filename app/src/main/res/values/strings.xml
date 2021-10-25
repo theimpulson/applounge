@@ -51,7 +51,7 @@
     <string name="package_name_find_title">How to find the package name of an app?</string>
     <string name="package_name_find_text">To find the package name of an app that is installed on your device, go to System Settings > Apps > [your app]. The package name should be listed at the bottom of the page.\n*This process may vary on some devices.</string>
 
-    <!-- Application List -->
+    <!-- Application -->
     <string name="install">Install</string>
     <string name="app_icon">App icon</string>
     <string name="not_available">N/A</string>
@@ -60,7 +60,9 @@
     <string name="update">Update</string>
     <string name="ratings">Ratings</string>
     <string name="rating">Rating</string>
+    <string name="rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/5.0</string>
     <string name="privacy">Privacy</string>
+    <string name="privacy_rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/10.0</string>
     <string name="privacy_analyses">Privacy analyses</string>
     <string name="permissions">Permissions</string>
     <string name="trackers">Trackers</string>
