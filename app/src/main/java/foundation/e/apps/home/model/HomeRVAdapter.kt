@@ -4,6 +4,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -14,6 +15,7 @@ import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.HomeApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.databinding.HomeListItemBinding
+import foundation.e.apps.home.HomeFragmentDirections
 
 class HomeRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
     RecyclerView.Adapter<HomeRVAdapter.ViewHolder>() {
@@ -57,6 +59,14 @@ class HomeRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
                     0,
                     Origin.CLEANAPK
                 )
+            }
+            homeLayout.setOnClickListener {
+                val action = HomeFragmentDirections.actionHomeFragmentToApplicationFragment(
+                    oldList[position]._id,
+                    oldList[position].package_name,
+                    Origin.CLEANAPK
+                )
+                holder.itemView.findNavController().navigate(action)
             }
         }
     }

@@ -4,6 +4,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -11,7 +12,10 @@ import coil.load
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.data.HomeApp
+import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.applicationlist.ApplicationListFragmentDirections
 import foundation.e.apps.databinding.HomeFeaturedListItemBinding
+import foundation.e.apps.home.HomeFragmentDirections
 import javax.inject.Singleton
 
 @Singleton
@@ -46,6 +50,14 @@ class HomeFeaturedRVAdapter : RecyclerView.Adapter<HomeFeaturedRVAdapter.ViewHol
         holder.binding.apply {
             imageView.load(CleanAPKInterface.ASSET_URL + oldList[position].other_images_path[0]) {
                 placeholder(circularProgressDrawable)
+            }
+            featuredLayout.setOnClickListener {
+                val action = HomeFragmentDirections.actionHomeFragmentToApplicationFragment(
+                    oldList[position]._id,
+                    oldList[position].package_name,
+                    Origin.CLEANAPK
+                )
+                holder.itemView.findNavController().navigate(action)
             }
         }
     }

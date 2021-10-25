@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/homeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
@@ -35,10 +36,10 @@
         android:textSize="11sp" />
 
     <com.google.android.material.button.MaterialButton
-        android:layout_marginStart="1dp"
         android:id="@+id/installButton"
         android:layout_width="96dp"
         android:layout_height="43dp"
+        android:layout_marginStart="1dp"
         android:backgroundTint="@color/colorAccent95"
         android:text="@string/install"
         android:textAllCaps="false"

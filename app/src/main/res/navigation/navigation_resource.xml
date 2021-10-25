@@ -84,6 +84,9 @@
         <action
             android:id="@+id/action_applicationFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_applicationFragment_to_homeFragment2"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/applicationListFragment"
