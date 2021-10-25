@@ -143,7 +143,7 @@ class FusedAPIImpl @Inject constructor(
         // Add all response together
         cleanResponse?.let { fusedResponse.addAll(it) }
         gplayResponse?.let { fusedResponse.addAll(it) }
-        return fusedResponse
+        return fusedResponse.distinctBy { it.package_name }
     }
 
     suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
