@@ -73,6 +73,12 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInt
                 binding.appName.text = it.name
                 binding.appAuthor.text = it.author
                 binding.categoryTitle.text = it.category
+                if (it.ratings.usageQualityScore != -1.0) {
+                    binding.appRating.text = it.ratings.usageQualityScore.toString()
+                }
+                if (it.ratings.privacyScore != -1.0) {
+                    binding.appPrivacyScore.text = it.ratings.privacyScore.toString()
+                }
                 if (args.origin == Origin.CLEANAPK) {
                     binding.appIcon.load(CleanAPKInterface.ASSET_URL + it.icon_image_path) {
                         placeholder(circularProgressDrawable)
