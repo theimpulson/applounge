@@ -51,7 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="25sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/appAuthor"
@@ -93,7 +93,7 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp"
                 app:autoSizeTextType="uniform"
-                app:cornerRadius="50dp"
+                app:cornerRadius="8dp"
                 app:strokeColor="@color/colorAccent95"
                 app:strokeWidth="1dp" />
         </LinearLayout>
