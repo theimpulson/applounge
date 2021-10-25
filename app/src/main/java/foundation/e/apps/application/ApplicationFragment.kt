@@ -3,6 +3,7 @@ package foundation.e.apps.application
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.text.Html
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -43,6 +44,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInt
         val data = mainActivityViewModel.authData.value?.let {
             gson.fromJson(it, AuthData::class.java)
         }
+        val notAvailable = getString(R.string.not_available)
 
         val circularProgressDrawable = CircularProgressDrawable(view.context)
         circularProgressDrawable.strokeWidth = 10f
@@ -80,6 +82,12 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInt
                         placeholder(circularProgressDrawable)
                     }
                 }
+                binding.appDescription.text = Html.fromHtml(it.description, Html.FROM_HTML_MODE_COMPACT)
+                binding.appUpdatedOn.text = getString(R.string.updated_on, it.last_modified.split(" ")[0])
+                binding.appRequires.text = getString(R.string.min_android_version, notAvailable)
+                binding.appVersion.text = getString(R.string.version, it.latest_version_number)
+                binding.appLicense.text = getString(R.string.license, if (it.licence.isBlank()) notAvailable else it.licence)
+                binding.appPackageName.text = getString(R.string.package_name, it.package_name)
             }
         })
     }

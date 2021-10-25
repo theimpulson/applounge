@@ -63,8 +63,8 @@
             android:summary="@string/refresh_session_summary"
             app:title="@string/refresh_session" />
         <Preference
-            android:key="version"
-            android:summary="@string/version_summary"
+            android:key="@string/apps_version"
+            android:summary="@string/apps_version_summary"
             app:title="@string/version" />
     </PreferenceCategory>
 

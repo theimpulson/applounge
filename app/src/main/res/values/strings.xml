@@ -21,8 +21,8 @@
     <!-- Settings Fragment -->
     <string name="preference_updates_title">Updates</string>
     <string name="misc">Miscellaneous</string>
-    <string name="version">Apps version</string>
-    <string name="version_summary">Version: <xliff:g id="build_name">%1$s</xliff:g> [<xliff:g id="build_version">%2$d</xliff:g>] [<xliff:g id="cpu_abi">%3$s</xliff:g>]</string>
+    <string name="apps_version">Apps version</string>
+    <string name="apps_version_summary">Version: <xliff:g id="build_name">%1$s</xliff:g> [<xliff:g id="build_version">%2$d</xliff:g>] [<xliff:g id="cpu_abi">%3$s</xliff:g>]</string>
     <string name="refresh_session">Refresh Session</string>
     <string name="refresh_session_summary">Generates new anonymous authentication data for GPlay servers</string>
     <string name="session_refreshed">Session Refreshed! &#128077;</string>
@@ -56,7 +56,20 @@
     <string name="app_icon">App icon</string>
     <string name="not_available">N/A</string>
     <string name="open">Open</string>
+    <string name="more">More Details</string>
     <string name="update">Update</string>
+    <string name="ratings">Ratings</string>
+    <string name="rating">Rating</string>
+    <string name="privacy">Privacy</string>
+    <string name="privacy_analyses">Privacy analyses</string>
+    <string name="permissions">Permissions</string>
+    <string name="trackers">Trackers</string>
+    <string name="information">Information</string>
+    <string name="version">Version: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="updated_on">Updated on: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="min_android_version">Requires: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="license">License: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="package_name">Package name: <xliff:g id="version_code">%1$s</xliff:g></string>
 
     <!-- Updates Fragment -->
     <string name="update_all">Update All</string>

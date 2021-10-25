@@ -15,17 +15,21 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/colorAccent95"
         android:text="@string/update_all"
         android:textAllCaps="false"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
         app:autoSizeTextType="uniform"
-        app:cornerRadius="4dp"
+        app:cornerRadius="8dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/colorAccent95"
+        app:strokeWidth="1dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
