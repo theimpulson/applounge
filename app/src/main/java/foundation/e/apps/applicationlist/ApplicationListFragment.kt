@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aurora.gplayapi.data.models.AuthData
@@ -47,7 +48,8 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         }
 
         val recyclerView = binding.recyclerView
-        val listAdapter = ApplicationListRVAdapter(this)
+        val listAdapter =
+            findNavController().currentDestination?.id?.let { ApplicationListRVAdapter(this, it) }
         recyclerView.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)
@@ -55,7 +57,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
 
         applicationListViewModel.getList(args.category)
         applicationListViewModel.list.observe(viewLifecycleOwner, {
-            listAdapter.setData(it)
+            listAdapter?.setData(it)
             binding.progressBar.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         })

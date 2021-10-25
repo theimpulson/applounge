@@ -89,10 +89,10 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInt
                     if (args.origin == Origin.CLEANAPK) it.last_modified.split(" ")[0] else it.last_modified
                 )
                 binding.appRequires.text = getString(R.string.min_android_version, notAvailable)
-                binding.appVersion.text = getString(R.string.version, it.latest_version_number)
+                binding.appVersion.text = getString(R.string.version, if (it.latest_version_number == "-1") notAvailable else it.latest_version_number)
                 binding.appLicense.text = getString(
                     R.string.license,
-                    if (it.licence.isBlank()) notAvailable else it.licence
+                    if (it.licence.isBlank() or (it.licence == "unknown")) notAvailable else it.licence
                 )
                 binding.appPackageName.text = getString(R.string.package_name, it.package_name)
             }

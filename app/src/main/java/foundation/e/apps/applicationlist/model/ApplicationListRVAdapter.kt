@@ -15,12 +15,16 @@ import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.SearchApp
+import foundation.e.apps.applicationlist.ApplicationListFragmentDirections
 import foundation.e.apps.databinding.ApplicationListItemBinding
 import foundation.e.apps.search.SearchFragmentDirections
 import javax.inject.Singleton
 
 @Singleton
-class ApplicationListRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
+class ApplicationListRVAdapter(
+    private val fusedAPIInterface: FusedAPIInterface,
+    private val currentDestinationId: Int
+) :
     RecyclerView.Adapter<ApplicationListRVAdapter.ViewHolder>() {
 
     private var oldList = emptyList<SearchApp>()
@@ -53,12 +57,26 @@ class ApplicationListRVAdapter(private val fusedAPIInterface: FusedAPIInterface)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.apply {
             applicationList.setOnClickListener {
-                val action = oldList[position].origin?.let { origin ->
-                    SearchFragmentDirections.actionSearchFragmentToApplicationFragment(
-                        oldList[position]._id,
-                        oldList[position].package_name,
-                        origin
-                    )
+                val action = when (currentDestinationId) {
+                    R.id.applicationListFragment -> {
+                        oldList[position].origin?.let { origin ->
+                            ApplicationListFragmentDirections.actionApplicationListFragmentToApplicationFragment(
+                                oldList[position]._id,
+                                oldList[position].package_name,
+                                origin
+                            )
+                        }
+                    }
+                    R.id.searchFragment -> {
+                        oldList[position].origin?.let { origin ->
+                            SearchFragmentDirections.actionSearchFragmentToApplicationFragment(
+                                oldList[position]._id,
+                                oldList[position].package_name,
+                                origin
+                            )
+                        }
+                    }
+                    else -> null
                 }
                 action?.let { direction -> holder.itemView.findNavController().navigate(direction) }
             }

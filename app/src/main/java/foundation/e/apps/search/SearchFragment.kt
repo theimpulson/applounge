@@ -14,6 +14,7 @@ import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aurora.gplayapi.SearchSuggestEntry
@@ -79,14 +80,15 @@ class SearchFragment :
         })
 
         // Setup Search Results
-        val listAdapter = ApplicationListRVAdapter(this)
+        val listAdapter =
+            findNavController().currentDestination?.id?.let { ApplicationListRVAdapter(this, it) }
         recyclerView?.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)
         }
 
         searchViewModel.searchResult.observe(viewLifecycleOwner, {
-            listAdapter.setData(it)
+            listAdapter?.setData(it)
             progressBar?.visibility = View.GONE
             recyclerView?.visibility = View.VISIBLE
         })
