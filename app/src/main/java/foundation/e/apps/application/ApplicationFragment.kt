@@ -82,11 +82,18 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInt
                         placeholder(circularProgressDrawable)
                     }
                 }
-                binding.appDescription.text = Html.fromHtml(it.description, Html.FROM_HTML_MODE_COMPACT)
-                binding.appUpdatedOn.text = getString(R.string.updated_on, it.last_modified.split(" ")[0])
+                binding.appDescription.text =
+                    Html.fromHtml(it.description, Html.FROM_HTML_MODE_COMPACT)
+                binding.appUpdatedOn.text = getString(
+                    R.string.updated_on,
+                    if (args.origin == Origin.CLEANAPK) it.last_modified.split(" ")[0] else it.last_modified
+                )
                 binding.appRequires.text = getString(R.string.min_android_version, notAvailable)
                 binding.appVersion.text = getString(R.string.version, it.latest_version_number)
-                binding.appLicense.text = getString(R.string.license, if (it.licence.isBlank()) notAvailable else it.licence)
+                binding.appLicense.text = getString(
+                    R.string.license,
+                    if (it.licence.isBlank()) notAvailable else it.licence
+                )
                 binding.appPackageName.text = getString(R.string.package_name, it.package_name)
             }
         })
