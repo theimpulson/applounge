@@ -36,13 +36,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
-import foundation.e.apps.api.fused.FusedAPIInterface
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.databinding.FragmentApplicationBinding
+import foundation.e.apps.utils.pkg.PkgManagerModule
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInterface {
+class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
     private val args: ApplicationFragmentArgs by navArgs()
 
@@ -51,6 +53,9 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInt
 
     @Inject
     lateinit var gson: Gson
+
+    @Inject
+    lateinit var pkgManagerModule: PkgManagerModule
 
     private val applicationViewModel: ApplicationViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
@@ -94,10 +99,14 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInt
                 binding.appAuthor.text = it.author
                 binding.categoryTitle.text = it.category
                 if (it.ratings.usageQualityScore != -1.0) {
-                    binding.appRating.text = getString(R.string.rating_out_of, it.ratings.usageQualityScore.toString())
+                    binding.appRating.text =
+                        getString(R.string.rating_out_of, it.ratings.usageQualityScore.toString())
                 }
                 if (it.ratings.privacyScore != -1.0) {
-                    binding.appPrivacyScore.text = getString(R.string.privacy_rating_out_of, it.ratings.privacyScore.toString())
+                    binding.appPrivacyScore.text = getString(
+                        R.string.privacy_rating_out_of,
+                        it.ratings.privacyScore.toString()
+                    )
                 }
                 if (args.origin == Origin.CLEANAPK) {
                     binding.appIcon.load(CleanAPKInterface.ASSET_URL + it.icon_image_path) {
@@ -115,12 +124,43 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInt
                     if (args.origin == Origin.CLEANAPK) it.last_modified.split(" ")[0] else it.last_modified
                 )
                 binding.appRequires.text = getString(R.string.min_android_version, notAvailable)
-                binding.appVersion.text = getString(R.string.version, if (it.latest_version_number == "-1") notAvailable else it.latest_version_number)
+                binding.appVersion.text = getString(
+                    R.string.version,
+                    if (it.latest_version_number == "-1") notAvailable else it.latest_version_number
+                )
                 binding.appLicense.text = getString(
                     R.string.license,
                     if (it.licence.isBlank() or (it.licence == "unknown")) notAvailable else it.licence
                 )
                 binding.appPackageName.text = getString(R.string.package_name, it.package_name)
+                when (it.status) {
+                    Status.INSTALLED -> {
+                        binding.installButton.text = getString(R.string.open)
+                        binding.installButton.setOnClickListener { _ ->
+                            startActivity(pkgManagerModule.getLaunchIntent(it.package_name))
+                        }
+                    }
+                    Status.UPDATABLE -> {
+                        binding.installButton.text = getString(R.string.update)
+                        binding.installButton.setOnClickListener { _ ->
+                            data?.let { data ->
+                                installApplication(data, it)
+                            }
+                        }
+                    }
+                    Status.UNAVAILABLE -> {
+                        data?.let { data ->
+                            installApplication(data, it)
+                        }
+                    }
+                    Status.DOWNLOADING -> {
+                        binding.installButton.text = getString(R.string.cancel)
+                    }
+                    Status.INSTALLING, Status.UNINSTALLING -> {
+                        binding.installButton.text = getString(R.string.cancel)
+                        binding.installButton.isEnabled = false
+                    }
+                }
                 binding.applicationLayout.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
             }
@@ -132,29 +172,15 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInt
         _binding = null
     }
 
-    override fun getApplication(
-        id: String,
-        name: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int?,
-        origin: Origin?
-    ) {
-        val data = mainActivityViewModel.authData.value?.let {
-            gson.fromJson(it, AuthData::class.java)
-        }
-        val offer = offerType ?: 0
-        val org = origin ?: Origin.CLEANAPK
-        data?.let {
-            applicationViewModel.getApplication(
-                id,
-                name,
-                packageName,
-                versionCode,
-                offer,
-                it,
-                org
-            )
-        }
+    private fun installApplication(authData: AuthData, fusedApp: FusedApp) {
+        applicationViewModel.getApplication(
+            fusedApp._id,
+            fusedApp.name,
+            fusedApp.package_name,
+            fusedApp.latest_version_code,
+            fusedApp.offer_type ?: 0,
+            authData,
+            args.origin
+        )
     }
 }

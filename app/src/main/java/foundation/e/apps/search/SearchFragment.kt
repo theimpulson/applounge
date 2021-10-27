@@ -45,6 +45,7 @@ import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentSearchBinding
+import foundation.e.apps.utils.pkg.PkgManagerModule
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -56,6 +57,9 @@ class SearchFragment :
 
     @Inject
     lateinit var gson: Gson
+
+    @Inject
+    lateinit var pkgManagerModule: PkgManagerModule
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -99,7 +103,7 @@ class SearchFragment :
 
         // Setup Search Results
         val listAdapter =
-            findNavController().currentDestination?.id?.let { ApplicationListRVAdapter(this, it) }
+            findNavController().currentDestination?.id?.let { ApplicationListRVAdapter(this, it, pkgManagerModule) }
         recyclerView?.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)

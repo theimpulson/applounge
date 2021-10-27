@@ -47,15 +47,15 @@ class PkgManagerModule @Inject constructor(
         }
     }
 
-    fun isUpdatable(packageName: String, versionCode: String): Boolean {
+    fun isUpdatable(packageName: String, versionCode: Int): Boolean {
         // Check and return early if version code is unavailable
-        if (versionCode.startsWith("-1") or versionCode.isBlank()) return false
-
-        val longVersionCode = getLongVersionCode(versionCode)
+//        if (versionCode.startsWith("-1") or versionCode.isBlank()) return false
+//
+//        val longVersionCode = getLongVersionCode(versionCode)
         return try {
             val packageInfo = getPackageInfo(packageName)
             packageInfo?.let {
-                return longVersionCode > PackageInfoCompat.getLongVersionCode(it)
+                return versionCode.toLong() > PackageInfoCompat.getLongVersionCode(it)
             }
             true
         } catch (e: PackageManager.NameNotFoundException) {

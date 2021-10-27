@@ -25,6 +25,7 @@ import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
+import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
@@ -35,6 +36,7 @@ import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.data.SearchApp
+import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.categories.model.Category
 import foundation.e.apps.utils.PreferenceManagerModule
@@ -57,8 +59,8 @@ class FusedAPIImpl @Inject constructor(
 ) {
     private var TAG = FusedAPIImpl::class.java.simpleName
 
-    suspend fun getHomeScreenData(): Response<HomeScreen> {
-        return when (preferenceManagerModule.preferredApplicationType()) {
+    suspend fun getHomeScreenData(): HomeScreen? {
+        val response = when (preferenceManagerModule.preferredApplicationType()) {
             "open" -> {
                 cleanAPKRepository.getHomeScreenData(
                     CleanAPKInterface.APP_TYPE_ANY,
@@ -78,7 +80,8 @@ class FusedAPIImpl @Inject constructor(
                     CleanAPKInterface.APP_SOURCE_ANY
                 )
             }
-        }
+        }.body()
+        return response
     }
 
     suspend fun getCategoriesList(listType: String): List<CategoryApp> {
@@ -217,12 +220,21 @@ class FusedAPIImpl @Inject constructor(
                     CleanAPKInterface.APP_TYPE_ANY
                 )
             }
-        }.body()
-        // Gson does a really bad job of handling non-nullable values with default params, fix it
-        response?.apps?.forEach {
+        }.body()?.apps
+
+        response?.forEach {
+            if (pkgManagerModule.isInstalled(it.package_name)) {
+                if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
+                    it.status = Status.UPDATABLE
+                } else {
+                    it.status = Status.INSTALLED
+                }
+            } else {
+                it.status = Status.UNAVAILABLE
+            }
             it.origin = Origin.CLEANAPK
         }
-        return response?.apps
+        return response
     }
 
     suspend fun getApplicationDetails(
@@ -256,11 +268,33 @@ class FusedAPIImpl @Inject constructor(
         architectures: List<String>? = null,
         type: String? = null
     ): Application? {
-        return cleanAPKRepository.getAppOrPWADetailsByID(id, architectures, type).body()
+        val response = cleanAPKRepository.getAppOrPWADetailsByID(id, architectures, type).body()
+        response?.let {
+            if (pkgManagerModule.isInstalled(it.app.package_name)) {
+                if (pkgManagerModule.isUpdatable(it.app.package_name, it.app.latest_version_code)) {
+                    it.app.status = Status.UPDATABLE
+                } else {
+                    it.app.status = Status.INSTALLED
+                }
+            } else {
+                it.app.status = Status.UNAVAILABLE
+            }
+        }
+        return response
     }
 
     private suspend fun getGPlayAppDetails(packageName: String, authData: AuthData): FusedApp? {
-        return gPlayAPIRepository.getAppDetails(packageName, authData)?.transformToFusedApp()
+        val response = gPlayAPIRepository.getAppDetails(packageName, authData)?.transformToFusedApp()
+        response?.let {
+            if (pkgManagerModule.isInstalled(it.package_name)) {
+                if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
+                    it.status = Status.UPDATABLE
+                } else {
+                    it.status = Status.INSTALLED
+                }
+            }
+        }
+        return response
     }
 
     private suspend fun getCleanAPKSearchResults(
@@ -272,14 +306,21 @@ class FusedAPIImpl @Inject constructor(
         by: String? = null
     ): List<SearchApp>? {
         val response =
-            cleanAPKRepository.searchApps(keyword, source, type, nres, page, by)
-                .body()
+            cleanAPKRepository.searchApps(keyword, source, type, nres, page, by).body()?.apps
 
-        // Gson does a really bad job of handling non-nullable values with default params, fix it
-        response?.apps?.forEach {
+        response?.forEach {
+            if (pkgManagerModule.isInstalled(it.package_name)) {
+                if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
+                    it.status = Status.UPDATABLE
+                } else {
+                    it.status = Status.INSTALLED
+                }
+            } else {
+                it.status = Status.UNAVAILABLE
+            }
             it.origin = Origin.CLEANAPK
         }
-        return response?.apps
+        return response
     }
 
     private suspend fun getCleanAPKDownloadInfo(
@@ -303,9 +344,19 @@ class FusedAPIImpl @Inject constructor(
     }
 
     private suspend fun getGplaySearchResults(query: String, authData: AuthData): List<SearchApp> {
-        return gPlayAPIRepository.getSearchResults(query, authData).map { app ->
+        val response = gPlayAPIRepository.getSearchResults(query, authData).map { app ->
             app.transformToSearchApp()
         }
+        response.forEach {
+            if (pkgManagerModule.isInstalled(it.package_name)) {
+                if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
+                    it.status = Status.UPDATABLE
+                } else {
+                    it.status = Status.INSTALLED
+                }
+            }
+        }
+        return response
     }
 
     /**
@@ -338,7 +389,8 @@ class FusedAPIImpl @Inject constructor(
             ),
             origin = Origin.GPLAY,
             latest_version_code = this.versionCode,
-            offerType = this.offerType
+            offerType = this.offerType,
+            status = Status.UNAVAILABLE
         )
     }
 
@@ -361,7 +413,9 @@ class FusedAPIImpl @Inject constructor(
             ratings = Ratings(
                 privacyScore = -1.0,
                 usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDouble() else -1.0
-            )
+            ),
+            offer_type = this.offerType,
+            status = Status.UNAVAILABLE
         )
     }
 }

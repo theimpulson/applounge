@@ -41,10 +41,7 @@ class HomeViewModel @Inject constructor(
 
     fun getHomeScreenData() {
         viewModelScope.launch {
-            val data = fusedAPIRepository.getHomeScreenData()
-            if (data.isSuccessful) {
-                homeScreenData.postValue(data.body())
-            }
+            homeScreenData.postValue(fusedAPIRepository.getHomeScreenData())
         }
     }
 

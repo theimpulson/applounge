@@ -36,6 +36,7 @@ import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentApplicationListBinding
+import foundation.e.apps.utils.pkg.PkgManagerModule
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -46,6 +47,9 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
 
     @Inject
     lateinit var gson: Gson
+
+    @Inject
+    lateinit var pkgManagerModule: PkgManagerModule
 
     private val applicationListViewModel: ApplicationListViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
@@ -67,7 +71,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
 
         val recyclerView = binding.recyclerView
         val listAdapter =
-            findNavController().currentDestination?.id?.let { ApplicationListRVAdapter(this, it) }
+            findNavController().currentDestination?.id?.let { ApplicationListRVAdapter(this, it, pkgManagerModule) }
         recyclerView.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)

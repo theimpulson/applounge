@@ -62,16 +62,17 @@ class HomeRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val homeApp = oldList[position]
         holder.binding.apply {
-            appIcon.load(CleanAPKInterface.ASSET_URL + oldList[position].icon_image_path) {
+            appIcon.load(CleanAPKInterface.ASSET_URL + homeApp.icon_image_path) {
                 placeholder(circularProgressDrawable)
             }
-            appName.text = oldList[position].name
+            appName.text = homeApp.name
             installButton.setOnClickListener {
                 // Send dummy values as we are fetching home screen data from cleanAPK
                 fusedAPIInterface.getApplication(
-                    oldList[position]._id,
-                    oldList[position].name,
+                    homeApp._id,
+                    homeApp.name,
                     "",
                     0,
                     0,
@@ -80,8 +81,8 @@ class HomeRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
             }
             homeLayout.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToApplicationFragment(
-                    oldList[position]._id,
-                    oldList[position].package_name,
+                    homeApp._id,
+                    homeApp.package_name,
                     Origin.CLEANAPK
                 )
                 holder.itemView.findNavController().navigate(action)

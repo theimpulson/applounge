@@ -31,7 +31,7 @@ import javax.inject.Inject
 class FusedAPIRepository @Inject constructor(
     private val fusedAPIImpl: FusedAPIImpl
 ) {
-    suspend fun getHomeScreenData(): Response<HomeScreen> {
+    suspend fun getHomeScreenData(): HomeScreen? {
         return fusedAPIImpl.getHomeScreenData()
     }
 

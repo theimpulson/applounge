@@ -71,6 +71,8 @@
 
     <!-- Application -->
     <string name="install">Install</string>
+    <string name="cancel">Cancel</string>
+    <string name="installing">Installing</string>
     <string name="app_icon">App icon</string>
     <string name="not_available">N/A</string>
     <string name="open">Open</string>

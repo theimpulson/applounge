@@ -34,4 +34,6 @@ data class FusedApp(
     val other_images_path: List<String>,
     val package_name: String,
     val ratings: Ratings,
+    val offer_type: Int?,
+    var status: Status?
 )
