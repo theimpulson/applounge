@@ -78,6 +78,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInt
             }
         }
 
+        binding.applicationLayout.visibility = View.INVISIBLE
+
         data?.let {
             applicationViewModel.getApplicationDetails(
                 args.id,
@@ -119,6 +121,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), FusedAPIInt
                     if (it.licence.isBlank() or (it.licence == "unknown")) notAvailable else it.licence
                 )
                 binding.appPackageName.text = getString(R.string.package_name, it.package_name)
+                binding.applicationLayout.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
             }
         })
     }
