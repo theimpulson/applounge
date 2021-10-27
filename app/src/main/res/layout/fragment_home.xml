@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Apps  Quickly and easily install Android apps onto your device!
   ~ Copyright (C) 2021  E FOUNDATION
   ~
@@ -26,20 +25,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/featuredTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/featured"
             android:textColor="?android:textColorPrimary"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -60,25 +59,28 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/featuredRV"
                 android:layout_width="match_parent"
-                android:layout_height="160dp" />
+                android:layout_height="160dp"
+                android:clipToPadding="false"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp" />
         </RelativeLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/top_updated_apps"
             android:textColor="?android:textColorPrimary"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:paddingStart="8dp">
+            android:layout_marginBottom="10dp">
 
             <ProgressBar
                 android:id="@+id/topUpdatedAppsPB"
@@ -89,25 +91,28 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/topUpdatedAppsRV"
                 android:layout_width="match_parent"
-                android:layout_height="175dp" />
+                android:layout_height="190dp"
+                android:clipToPadding="false"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp" />
         </RelativeLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/top_updated_games"
             android:textColor="?android:textColorPrimary"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:paddingStart="8dp">
+            android:layout_marginBottom="10dp">
 
             <ProgressBar
                 android:id="@+id/topUpdatedGamesPB"
@@ -118,25 +123,28 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/topUpdatedGamesRV"
                 android:layout_width="match_parent"
-                android:layout_height="175dp" />
+                android:layout_height="190dp"
+                android:clipToPadding="false"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp" />
         </RelativeLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/popular_apps_in_last_24_hours"
             android:textColor="?android:textColorPrimary"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:paddingStart="8dp">
+            android:layout_marginBottom="10dp">
 
             <ProgressBar
                 android:id="@+id/top24AppsPB"
@@ -147,25 +155,28 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/top24AppsRV"
                 android:layout_width="match_parent"
-                android:layout_height="175dp" />
+                android:layout_height="190dp"
+                android:clipToPadding="false"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp" />
         </RelativeLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/popular_games_in_last_24_hours"
             android:textColor="?android:textColorPrimary"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:paddingStart="8dp">
+            android:layout_marginBottom="10dp">
 
             <ProgressBar
                 android:id="@+id/top24GamesPB"
@@ -176,24 +187,27 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/top24GamesRV"
                 android:layout_width="match_parent"
-                android:layout_height="175dp" />
+                android:layout_height="190dp"
+                android:clipToPadding="false"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp" />
         </RelativeLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/discover"
             android:textColor="?android:textColorPrimary"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:paddingStart="8dp">
+            android:layout_marginTop="10dp">
 
             <ProgressBar
                 android:id="@+id/discoverPB"
@@ -204,7 +218,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/discoverRV"
                 android:layout_width="match_parent"
-                android:layout_height="180dp" />
+                android:layout_height="200dp"
+                android:clipToPadding="false"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp" />
         </RelativeLayout>
     </LinearLayout>
 

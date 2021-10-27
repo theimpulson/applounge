@@ -20,5 +20,4 @@
 <resources>
     <color name="colorAccent">#007FFF</color>
     <color name="colorAccent95">#e6f2ff</color>
-    <color name="colorWhite">@android:color/white</color>
 </resources>

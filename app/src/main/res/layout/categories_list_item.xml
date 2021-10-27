@@ -33,7 +33,7 @@
         android:layout_height="36dp"
         android:contentDescription="@string/category_icon" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/category_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

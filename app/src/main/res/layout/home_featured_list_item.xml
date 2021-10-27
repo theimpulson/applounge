@@ -22,7 +22,6 @@
     android:id="@+id/featuredLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp"
     android:clickable="true"
     android:focusable="true">
 
@@ -31,6 +30,8 @@
         android:layout_height="match_parent"
         android:elevation="2dp"
         app:cardCornerRadius="20dp"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

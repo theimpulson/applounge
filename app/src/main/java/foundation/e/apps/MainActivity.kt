@@ -63,24 +63,11 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.applicationFragment -> {
+                R.id.applicationFragment,R.id.applicationListFragment -> {
                     bottomNavigationView.visibility = View.GONE
-                    window.navigationBarColor = this.getColor(R.color.colorWhite)
-                }
-                R.id.categoriesFragment -> {
-                    bottomNavigationView.visibility = View.VISIBLE
-                    window.statusBarColor = this.getColor(R.color.colorAccent95)
-                    window.navigationBarColor = this.getColor(R.color.colorAccent95)
-                }
-                R.id.applicationListFragment -> {
-                    bottomNavigationView.visibility = View.GONE
-                    window.statusBarColor = this.getColor(R.color.colorWhite)
-                    window.navigationBarColor = this.getColor(R.color.colorWhite)
                 }
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
-                    window.statusBarColor = this.getColor(R.color.colorWhite)
-                    window.navigationBarColor = this.getColor(R.color.colorAccent95)
                 }
             }
         }
