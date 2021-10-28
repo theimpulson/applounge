@@ -144,13 +144,15 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         binding.installButton.text = getString(R.string.update)
                         binding.installButton.setOnClickListener { _ ->
                             data?.let { data ->
-                                installApplication(data, it)
+                                applicationViewModel.getApplication(data, it, args.origin)
                             }
                         }
                     }
                     Status.UNAVAILABLE -> {
-                        data?.let { data ->
-                            installApplication(data, it)
+                        binding.installButton.setOnClickListener { _ ->
+                            data?.let { data ->
+                                applicationViewModel.getApplication(data, it, args.origin)
+                            }
                         }
                     }
                     Status.DOWNLOADING -> {
@@ -170,17 +172,5 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun installApplication(authData: AuthData, fusedApp: FusedApp) {
-        applicationViewModel.getApplication(
-            fusedApp._id,
-            fusedApp.name,
-            fusedApp.package_name,
-            fusedApp.latest_version_code,
-            fusedApp.offer_type ?: 0,
-            authData,
-            args.origin
-        )
     }
 }

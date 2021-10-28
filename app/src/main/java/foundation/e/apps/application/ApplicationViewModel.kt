@@ -26,6 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -50,22 +51,14 @@ class ApplicationViewModel @Inject constructor(
         }
     }
 
-    fun getApplication(
-        id: String,
-        name: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int,
-        authData: AuthData,
-        origin: Origin
-    ) {
+    fun getApplication(authData: AuthData, app: FusedApp, origin: Origin) {
         viewModelScope.launch(Dispatchers.IO) {
             fusedAPIRepository.getApplication(
-                id,
-                name,
-                packageName,
-                versionCode,
-                offerType,
+                app._id,
+                app.name,
+                app.package_name,
+                app.latest_version_code,
+                app.offer_type ?: 0,
                 authData,
                 origin
             )
