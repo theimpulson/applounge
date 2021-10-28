@@ -105,7 +105,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
     // Hilt
-    def hilt_version = '2.39.1'
+    def hilt_version = '2.40'
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation "com.google.dagger:hilt-android:$hilt_version"
 
