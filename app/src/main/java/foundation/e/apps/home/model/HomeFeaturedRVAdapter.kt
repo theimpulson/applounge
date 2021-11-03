@@ -31,7 +31,6 @@ import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.data.HomeApp
 import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.applicationlist.ApplicationListFragmentDirections
 import foundation.e.apps.databinding.HomeFeaturedListItemBinding
 import foundation.e.apps.home.HomeFragmentDirections
 import javax.inject.Singleton

@@ -25,7 +25,6 @@ import foundation.e.apps.api.fused.data.CategoryApp
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.SearchApp
-import retrofit2.Response
 import javax.inject.Inject
 
 class FusedAPIRepository @Inject constructor(
