@@ -123,6 +123,7 @@
         android:orientation="vertical">
 
         <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:id="@+id/installButton"
             android:layout_width="120dp"
             android:layout_height="43dp"

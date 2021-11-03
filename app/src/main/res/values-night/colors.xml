@@ -18,6 +18,8 @@
   -->
 
 <resources>
-    <color name="colorAccent">#66b3ff</color>
+    <color name="colorAccent">#5DB2FF</color>
     <color name="colorAccent95">#262626</color>
+    <color name="colorNavBar">#272727</color>
+    <color name="colorBackground">#121212</color>
 </resources>
