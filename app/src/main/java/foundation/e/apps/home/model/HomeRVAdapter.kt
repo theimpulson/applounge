@@ -30,7 +30,7 @@ import coil.load
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
-import foundation.e.apps.api.fused.data.HomeApp
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.databinding.HomeListItemBinding
 import foundation.e.apps.home.HomeFragmentDirections
@@ -38,7 +38,7 @@ import foundation.e.apps.home.HomeFragmentDirections
 class HomeRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
     RecyclerView.Adapter<HomeRVAdapter.ViewHolder>() {
 
-    private var oldList = emptyList<HomeApp>()
+    private var oldList = emptyList<FusedApp>()
 
     lateinit var circularProgressDrawable: CircularProgressDrawable
 
@@ -76,14 +76,14 @@ class HomeRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
                     "",
                     0,
                     0,
-                    Origin.CLEANAPK
+                    oldList[position].origin ?: Origin.CLEANAPK
                 )
             }
             homeLayout.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToApplicationFragment(
                     homeApp._id,
                     homeApp.package_name,
-                    Origin.CLEANAPK
+                    oldList[position].origin ?: Origin.CLEANAPK
                 )
                 holder.itemView.findNavController().navigate(action)
             }
@@ -94,7 +94,7 @@ class HomeRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
         return oldList.size
     }
 
-    fun setData(newList: List<HomeApp>) {
+    fun setData(newList: List<FusedApp>) {
         val diffUtil = HomeDiffUtil(oldList, newList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
         oldList = newList

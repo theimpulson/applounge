@@ -31,8 +31,8 @@ import coil.load
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.api.fused.data.SearchApp
 import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.applicationlist.ApplicationListFragmentDirections
 import foundation.e.apps.databinding.ApplicationListItemBinding
@@ -48,10 +48,10 @@ class ApplicationListRVAdapter(
 ) :
     RecyclerView.Adapter<ApplicationListRVAdapter.ViewHolder>() {
 
-    private var oldList = emptyList<SearchApp>()
+    private var oldList = emptyList<FusedApp>()
     private val TAG = ApplicationListRVAdapter::class.java.simpleName
 
-    lateinit var circularProgressDrawable: CircularProgressDrawable
+    private lateinit var circularProgressDrawable: CircularProgressDrawable
 
     inner class ViewHolder(val binding: ApplicationListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -158,20 +158,20 @@ class ApplicationListRVAdapter(
         return oldList.size
     }
 
-    fun setData(newList: List<SearchApp>) {
+    fun setData(newList: List<FusedApp>) {
         val diffUtil = ApplicationListDiffUtil(oldList, newList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
         oldList = newList
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun installApplication(searchApp: SearchApp) {
+    private fun installApplication(searchApp: FusedApp) {
         fusedAPIInterface.getApplication(
             searchApp._id,
             searchApp.name,
             searchApp.package_name,
             searchApp.latest_version_code,
-            searchApp.offerType ?: 0,
+            searchApp.offer_type ?: 0,
             searchApp.origin
         )
     }

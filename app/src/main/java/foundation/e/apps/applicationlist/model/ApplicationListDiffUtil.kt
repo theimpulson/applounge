@@ -19,11 +19,11 @@
 package foundation.e.apps.applicationlist.model
 
 import androidx.recyclerview.widget.DiffUtil
-import foundation.e.apps.api.fused.data.SearchApp
+import foundation.e.apps.api.fused.data.FusedApp
 
 class ApplicationListDiffUtil(
-    private val oldList: List<SearchApp>,
-    private val newList: List<SearchApp>
+    private val oldList: List<FusedApp>,
+    private val newList: List<FusedApp>
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldList.size

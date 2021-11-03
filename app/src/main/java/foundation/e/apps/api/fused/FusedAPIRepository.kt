@@ -24,7 +24,6 @@ import foundation.e.apps.api.cleanapk.data.home.HomeScreen
 import foundation.e.apps.api.fused.data.CategoryApp
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.api.fused.data.SearchApp
 import javax.inject.Inject
 
 class FusedAPIRepository @Inject constructor(
@@ -75,11 +74,11 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.fetchAuthData()
     }
 
-    suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp> {
+    suspend fun getSearchResults(query: String, authData: AuthData): List<FusedApp> {
         return fusedAPIImpl.getSearchResults(query, authData)
     }
 
-    suspend fun listApps(category: String): List<SearchApp>? {
+    suspend fun listApps(category: String): List<FusedApp>? {
         return fusedAPIImpl.listApps(category)
     }
 }

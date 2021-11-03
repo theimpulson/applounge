@@ -34,7 +34,6 @@ import foundation.e.apps.api.fused.data.CategoryApp
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Ratings
-import foundation.e.apps.api.fused.data.SearchApp
 import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.categories.model.Category
@@ -135,12 +134,12 @@ class FusedAPIImpl @Inject constructor(
      * Fetches search results from cleanAPK and GPlay servers and returns them
      * @param query Query
      * @param authData [AuthData]
-     * @return A list of nullable [SearchApp]
+     * @return A list of nullable [FusedApp]
      */
-    suspend fun getSearchResults(query: String, authData: AuthData): List<SearchApp> {
-        val fusedResponse = mutableListOf<SearchApp>()
-        var gplayResponse: List<SearchApp>? = null
-        var cleanResponse: List<SearchApp>? = null
+    suspend fun getSearchResults(query: String, authData: AuthData): List<FusedApp> {
+        val fusedResponse = mutableListOf<FusedApp>()
+        var gplayResponse: List<FusedApp>? = null
+        var cleanResponse: List<FusedApp>? = null
 
         when (preferenceManagerModule.preferredApplicationType()) {
             "any" -> {
@@ -195,7 +194,7 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
-    suspend fun listApps(category: String): List<SearchApp>? {
+    suspend fun listApps(category: String): List<FusedApp>? {
         val response = when (preferenceManagerModule.preferredApplicationType()) {
             "open" -> {
                 cleanAPKRepository.listApps(
@@ -282,7 +281,8 @@ class FusedAPIImpl @Inject constructor(
     }
 
     private suspend fun getGPlayAppDetails(packageName: String, authData: AuthData): FusedApp? {
-        val response = gPlayAPIRepository.getAppDetails(packageName, authData)?.transformToFusedApp()
+        val response = gPlayAPIRepository.getAppDetails(packageName, authData)
+            ?.transformToFusedApp()
         response?.let {
             if (pkgManagerModule.isInstalled(it.package_name)) {
                 if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
@@ -302,7 +302,7 @@ class FusedAPIImpl @Inject constructor(
         nres: Int = 20,
         page: Int = 1,
         by: String? = null
-    ): List<SearchApp>? {
+    ): List<FusedApp>? {
         val response =
             cleanAPKRepository.searchApps(keyword, source, type, nres, page, by).body()?.apps
 
@@ -341,9 +341,9 @@ class FusedAPIImpl @Inject constructor(
         return response[0].url
     }
 
-    private suspend fun getGplaySearchResults(query: String, authData: AuthData): List<SearchApp> {
+    private suspend fun getGplaySearchResults(query: String, authData: AuthData): List<FusedApp> {
         val response = gPlayAPIRepository.getSearchResults(query, authData).map { app ->
-            app.transformToSearchApp()
+            app.transformToFusedApp()
         }
         response.forEach {
             if (pkgManagerModule.isInstalled(it.package_name)) {
@@ -372,26 +372,6 @@ class FusedAPIImpl @Inject constructor(
         downloadManager.enqueue(request)
     }
 
-    private fun App.transformToSearchApp(): SearchApp {
-        return SearchApp(
-            _id = this.id.toString(),
-            author = this.developerName,
-            category = this.categoryName,
-            exodus_score = 0,
-            icon_image_path = this.iconArtwork.url,
-            name = this.displayName,
-            package_name = this.packageName,
-            ratings = Ratings(
-                privacyScore = -1.0,
-                usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDouble() else -1.0
-            ),
-            origin = Origin.GPLAY,
-            latest_version_code = this.versionCode,
-            offerType = this.offerType,
-            status = Status.UNAVAILABLE
-        )
-    }
-
     private fun App.transformToFusedApp(): FusedApp {
         return FusedApp(
             _id = this.id.toString(),
@@ -413,7 +393,8 @@ class FusedAPIImpl @Inject constructor(
                 usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDouble() else -1.0
             ),
             offer_type = this.offerType,
-            status = Status.UNAVAILABLE
+            status = Status.UNAVAILABLE,
+            origin = Origin.GPLAY
         )
     }
 }

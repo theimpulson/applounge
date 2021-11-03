@@ -19,11 +19,11 @@
 package foundation.e.apps.home.model
 
 import androidx.recyclerview.widget.DiffUtil
-import foundation.e.apps.api.fused.data.HomeApp
+import foundation.e.apps.api.fused.data.FusedApp
 
 class HomeDiffUtil(
-    private val oldList: List<HomeApp>,
-    private val newList: List<HomeApp>
+    private val oldList: List<FusedApp>,
+    private val newList: List<FusedApp>
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldList.size

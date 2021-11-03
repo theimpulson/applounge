@@ -25,8 +25,8 @@ import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.api.fused.data.SearchApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     val searchSuggest: MutableLiveData<List<SearchSuggestEntry>?> = MutableLiveData()
-    val searchResult: MutableLiveData<List<SearchApp>> = MutableLiveData()
+    val searchResult: MutableLiveData<List<FusedApp>> = MutableLiveData()
 
     fun getSearchSuggestions(query: String, authData: AuthData) {
         viewModelScope.launch(Dispatchers.IO) {

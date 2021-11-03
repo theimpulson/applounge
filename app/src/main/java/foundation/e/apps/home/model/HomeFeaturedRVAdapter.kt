@@ -29,7 +29,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
-import foundation.e.apps.api.fused.data.HomeApp
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.databinding.HomeFeaturedListItemBinding
 import foundation.e.apps.home.HomeFragmentDirections
@@ -38,7 +38,7 @@ import javax.inject.Singleton
 @Singleton
 class HomeFeaturedRVAdapter : RecyclerView.Adapter<HomeFeaturedRVAdapter.ViewHolder>() {
 
-    private var oldList = emptyList<HomeApp>()
+    private var oldList = emptyList<FusedApp>()
 
     lateinit var circularProgressDrawable: CircularProgressDrawable
 
@@ -72,7 +72,7 @@ class HomeFeaturedRVAdapter : RecyclerView.Adapter<HomeFeaturedRVAdapter.ViewHol
                 val action = HomeFragmentDirections.actionHomeFragmentToApplicationFragment(
                     oldList[position]._id,
                     oldList[position].package_name,
-                    Origin.CLEANAPK
+                    oldList[position].origin ?: Origin.CLEANAPK
                 )
                 holder.itemView.findNavController().navigate(action)
             }
@@ -83,7 +83,7 @@ class HomeFeaturedRVAdapter : RecyclerView.Adapter<HomeFeaturedRVAdapter.ViewHol
         return oldList.size
     }
 
-    fun setData(newList: List<HomeApp>) {
+    fun setData(newList: List<FusedApp>) {
         val diffUtil = HomeDiffUtil(oldList, newList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
         oldList = newList

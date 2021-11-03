@@ -35,5 +35,6 @@ data class FusedApp(
     val package_name: String,
     val ratings: Ratings,
     val offer_type: Int?,
-    var status: Status?
+    var status: Status?,
+    var origin: Origin?
 )
