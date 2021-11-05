@@ -22,4 +22,5 @@
     <color name="colorAccent95">#262626</color>
     <color name="colorNavBar">#272727</color>
     <color name="colorBackground">#121212</color>
+    <color name="colorSearchBar">#262626</color>
 </resources>
