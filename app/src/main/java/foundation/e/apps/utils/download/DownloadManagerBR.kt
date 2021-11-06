@@ -25,6 +25,8 @@ import android.content.Intent
 import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.api.fused.FusedAPIImpl
+import foundation.e.apps.utils.pkg.PkgManagerModule
+import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -37,7 +39,7 @@ class DownloadManagerBR : BroadcastReceiver() {
     lateinit var downloadManagerQuery: DownloadManager.Query
 
     @Inject
-    lateinit var fusedAPIImpl: FusedAPIImpl
+    lateinit var pkgManagerModule: PkgManagerModule
 
     private var TAG = DownloadManagerBR::class.java.simpleName
     private var EXTRA_DOWNLOAD_FAILED_ID: Long = 0
@@ -48,8 +50,12 @@ class DownloadManagerBR : BroadcastReceiver() {
                 val id =
                     intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, EXTRA_DOWNLOAD_FAILED_ID)
                 if (downloadSuccessful(id)) {
-                    val fileUri = downloadManager.getUriForDownloadedFile(id)
-                    fusedAPIImpl.installApp(fileUri)
+                    val file = File(downloadedFile(id))
+                    if (file.exists()) {
+                        pkgManagerModule.installApplication(file)
+                    } else {
+                        Log.d(TAG, "Given file doesn't exists, exiting!")
+                    }
                 } else {
                     Log.d(TAG, "Unable to get download id, exiting!")
                 }
@@ -67,5 +73,15 @@ class DownloadManagerBR : BroadcastReceiver() {
             return if (statusIndex >= 0) cursor.getInt(statusIndex) == DownloadManager.STATUS_SUCCESSFUL else false
         }
         return false
+    }
+
+    private fun downloadedFile(id: Long): String {
+        val cursor = downloadManager.query(downloadManagerQuery.setFilterById(id))
+        var fileUri = ""
+        if (cursor.moveToFirst()) {
+            val index = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
+            fileUri = cursor.getString(index)
+        }
+        return fileUri.removePrefix("file://")
     }
 }

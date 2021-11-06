@@ -19,16 +19,13 @@
 package foundation.e.apps.api.fused
 
 import android.app.DownloadManager
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
-import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
-import foundation.e.apps.api.cleanapk.data.app.Application
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
 import foundation.e.apps.api.fused.data.CategoryApp
 import foundation.e.apps.api.fused.data.FusedApp
@@ -51,7 +48,6 @@ class FusedAPIImpl @Inject constructor(
     private val downloadManager: DownloadManager,
     private val pkgManagerModule: PkgManagerModule,
     private val preferenceManagerModule: PreferenceManagerModule,
-    @ApplicationContext private val context: Context,
     @Named("cacheDir") private val cacheDir: String
 ) {
     private var TAG = FusedAPIImpl::class.java.simpleName
@@ -241,22 +237,9 @@ class FusedAPIImpl @Inject constructor(
         origin: Origin
     ): FusedApp? {
         return if (origin == Origin.CLEANAPK) {
-            getCleanAPKAppDetails(id)?.app
+            getCleanAPKAppDetails(id)
         } else {
             getGPlayAppDetails(packageName, authData)
-        }
-    }
-
-    /**
-     * Installs an application from the given [Uri]
-     * @param fileUri Uri of the file
-     */
-    fun installApp(fileUri: Uri) {
-        val inputStream = context.contentResolver.openInputStream(fileUri)
-        if (inputStream != null) {
-            pkgManagerModule.installApplication(inputStream)
-        } else {
-            Log.d(TAG, "Input stream was null, exiting!")
         }
     }
 
@@ -264,7 +247,7 @@ class FusedAPIImpl @Inject constructor(
         id: String,
         architectures: List<String>? = null,
         type: String? = null
-    ): Application? {
+    ): FusedApp? {
         val response = cleanAPKRepository.getAppOrPWADetailsByID(id, architectures, type).body()
         response?.let {
             if (pkgManagerModule.isInstalled(it.app.package_name)) {
@@ -277,7 +260,7 @@ class FusedAPIImpl @Inject constructor(
                 it.app.status = Status.UNAVAILABLE
             }
         }
-        return response
+        return response?.app
     }
 
     private suspend fun getGPlayAppDetails(packageName: String, authData: AuthData): FusedApp? {

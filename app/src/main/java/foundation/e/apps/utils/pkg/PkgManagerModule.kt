@@ -26,9 +26,10 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.core.content.pm.PackageInfoCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.InputStream
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -87,18 +88,19 @@ class PkgManagerModule @Inject constructor(
 
     /**
      * Installs the given package using system API
-     * @param inputStream InputStream of the package
+     * @param file An instance of [File]
      */
-    fun installApplication(inputStream: InputStream) {
+    fun installApplication(file: File) {
         val packageInstaller = packageManager.packageInstaller
-        val params =
-            PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
+        val params = PackageInstaller
+            .SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
 
         // Open a new specific session
         val sessionId = packageInstaller.createSession(params)
         val session = packageInstaller.openSession(sessionId)
 
         // Install the package using the provided stream
+        val inputStream = file.inputStream()
         val outputStream = session.openWrite("app", 0, -1)
         inputStream.copyTo(outputStream)
         session.fsync(outputStream)
