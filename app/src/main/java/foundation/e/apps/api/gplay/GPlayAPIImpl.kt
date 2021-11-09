@@ -118,6 +118,7 @@ class GPlayAPIImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             val categoryHelper = CategoryHelper(authData).using(OkHttpClient)
             val streamClusters = categoryHelper.getSubCategoryBundle(browseUrl).streamClusters
+            // TODO: DEAL WITH DUPLICATE AND LESS ITEMS
             streamClusters.values.forEach {
                 list.addAll(it.clusterAppList)
             }
