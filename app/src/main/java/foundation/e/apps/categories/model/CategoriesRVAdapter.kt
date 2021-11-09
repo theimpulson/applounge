@@ -56,8 +56,11 @@ class CategoriesRVAdapter :
                     )
                 holder.itemView.findNavController().navigate(direction)
             }
-            oldList[position].drawable?.let { categoryIcon.load(it) }
-            oldList[position].imageUrl?.let { categoryIcon.load(it) }
+            if (oldList[position].drawable != -1) {
+                categoryIcon.load(oldList[position].drawable)
+            } else {
+                categoryIcon.load(oldList[position].imageUrl)
+            }
             categoryTitle.text = oldList[position].title
         }
     }

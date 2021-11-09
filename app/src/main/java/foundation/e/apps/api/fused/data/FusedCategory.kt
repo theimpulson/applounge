@@ -18,12 +18,11 @@
 
 package foundation.e.apps.api.fused.data
 
-import androidx.annotation.DrawableRes
 
 data class FusedCategory(
     val id: String,
     val title: String,
     val browseUrl: String,
-    val imageUrl: String?,
-    @DrawableRes val drawable: Int?,
+    val imageUrl: String,
+    val drawable: Int,
 )

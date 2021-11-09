@@ -42,6 +42,8 @@ class CategoriesDiffUtil(
             oldList[oldItemPosition].id != newList[newItemPosition].id -> false
             oldList[oldItemPosition].title != newList[newItemPosition].title -> false
             oldList[oldItemPosition].drawable != newList[newItemPosition].drawable -> false
+            oldList[oldItemPosition].browseUrl != newList[newItemPosition].browseUrl -> false
+            oldList[oldItemPosition].imageUrl != newList[newItemPosition].imageUrl -> false
             else -> true
         }
     }

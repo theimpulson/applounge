@@ -371,7 +371,7 @@ class FusedAPIImpl @Inject constructor(
             title = this.title,
             browseUrl = this.browseUrl,
             imageUrl = this.imageUrl,
-            drawable = null
+            drawable = -1
         )
     }
 }
