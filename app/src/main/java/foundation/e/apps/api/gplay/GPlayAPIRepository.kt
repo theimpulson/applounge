@@ -62,4 +62,8 @@ class GPlayAPIRepository @Inject constructor(
     suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<Category> {
         return gPlayAPIImpl.getCategoriesList(type, authData)
     }
+
+    suspend fun listApps(browseUrl: String, authData: AuthData): List<App> {
+        return gPlayAPIImpl.listApps(browseUrl, authData)
+    }
 }

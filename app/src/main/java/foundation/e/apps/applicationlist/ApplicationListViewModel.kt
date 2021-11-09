@@ -37,9 +37,9 @@ class ApplicationListViewModel @Inject constructor(
 
     val list: MutableLiveData<List<FusedApp>> = MutableLiveData()
 
-    fun getList(category: String) {
+    fun getList(category: String, browseUrl: String, authData: AuthData) {
         viewModelScope.launch(Dispatchers.IO) {
-            list.postValue(fusedAPIRepository.listApps(category))
+            list.postValue(fusedAPIRepository.listApps(category, browseUrl, authData))
         }
     }
 

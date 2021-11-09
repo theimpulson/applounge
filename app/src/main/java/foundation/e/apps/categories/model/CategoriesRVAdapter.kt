@@ -18,6 +18,7 @@
 
 package foundation.e.apps.categories.model
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
@@ -52,7 +53,8 @@ class CategoriesRVAdapter :
                 val direction =
                     CategoriesFragmentDirections.actionCategoriesFragmentToApplicationListFragment(
                         oldList[position].id,
-                        oldList[position].title
+                        oldList[position].title,
+                        oldList[position].browseUrl
                     )
                 holder.itemView.findNavController().navigate(direction)
             }

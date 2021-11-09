@@ -81,10 +81,10 @@ class FusedAPIImpl @Inject constructor(
 
     suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<FusedCategory> {
         val categoriesList = mutableListOf<FusedCategory>()
-        val preference = preferenceManagerModule.preferredApplicationType()
+        val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
 
-        if (preference != "any") {
-            val data = if (preference == "open") {
+        if (preferredApplicationType != "any") {
+            val data = if (preferredApplicationType == "open") {
                 cleanAPKRepository.getCategoriesList(
                     CleanAPKInterface.APP_TYPE_ANY,
                     CleanAPKInterface.APP_SOURCE_FOSS
@@ -208,44 +208,41 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
-    suspend fun listApps(category: String): List<FusedApp>? {
-        val response = when (preferenceManagerModule.preferredApplicationType()) {
-            "open" -> {
+    suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {
+        val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
+
+        if (preferredApplicationType != "any") {
+            val response = if (preferredApplicationType == "open") {
                 cleanAPKRepository.listApps(
                     category,
                     CleanAPKInterface.APP_SOURCE_FOSS,
                     CleanAPKInterface.APP_TYPE_ANY
-                )
-            }
-            "pwa" -> {
+                ).body()
+            } else {
                 cleanAPKRepository.listApps(
                     category,
                     CleanAPKInterface.APP_SOURCE_ANY,
                     CleanAPKInterface.APP_TYPE_PWA
-                )
+                ).body()
             }
-            else -> {
-                cleanAPKRepository.listApps(
-                    category,
-                    CleanAPKInterface.APP_SOURCE_ANY,
-                    CleanAPKInterface.APP_TYPE_ANY
-                )
-            }
-        }.body()?.apps
-
-        response?.forEach {
-            if (pkgManagerModule.isInstalled(it.package_name)) {
-                if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
-                    it.status = Status.UPDATABLE
+            response?.apps?.forEach {
+                if (pkgManagerModule.isInstalled(it.package_name)) {
+                    if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
+                        it.status = Status.UPDATABLE
+                    } else {
+                        it.status = Status.INSTALLED
+                    }
                 } else {
-                    it.status = Status.INSTALLED
+                    it.status = Status.UNAVAILABLE
                 }
-            } else {
-                it.status = Status.UNAVAILABLE
+                it.origin = Origin.CLEANAPK
             }
-            it.origin = Origin.CLEANAPK
+            return response?.apps
+        } else {
+            return gPlayAPIRepository.listApps(browseUrl, authData).map { app ->
+                app.transformToFusedApp()
+            }
         }
-        return response
     }
 
     suspend fun getApplicationDetails(

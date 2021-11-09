@@ -112,4 +112,16 @@ class GPlayAPIImpl @Inject constructor(
         }
         return categoryList
     }
+
+    suspend fun listApps(browseUrl: String, authData: AuthData): List<App> {
+        val list = mutableListOf<App>()
+        withContext(Dispatchers.IO) {
+            val categoryHelper = CategoryHelper(authData).using(OkHttpClient)
+            val streamClusters = categoryHelper.getSubCategoryBundle(browseUrl).streamClusters
+            streamClusters.values.forEach {
+                list.addAll(it.clusterAppList)
+            }
+        }
+        return list
+    }
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Apps  Quickly and easily install Android apps onto your device!
   ~ Copyright (C) 2021  E FOUNDATION
   ~
@@ -36,7 +35,7 @@
         android:id="@+id/categoriesFragment"
         android:name="foundation.e.apps.categories.CategoriesFragment"
         android:label="Categories"
-        tools:layout="@layout/fragment_categories" >
+        tools:layout="@layout/fragment_categories">
         <action
             android:id="@+id/action_categoriesFragment_to_applicationListFragment"
             app:destination="@id/applicationListFragment" />
@@ -116,12 +115,18 @@
             app:destination="@id/applicationFragment" />
         <argument
             android:name="category"
+            android:defaultValue=""
             app:argType="string" />
         <action
             android:id="@+id/action_applicationListFragment_to_categoriesFragment"
             app:destination="@id/categoriesFragment" />
         <argument
             android:name="translation"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="browseUrl"
+            android:defaultValue=""
             app:argType="string" />
     </fragment>
 </navigation>

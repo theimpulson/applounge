@@ -79,7 +79,7 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.getSearchResults(query, authData)
     }
 
-    suspend fun listApps(category: String): List<FusedApp>? {
-        return fusedAPIImpl.listApps(category)
+    suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {
+        return fusedAPIImpl.listApps(category, browseUrl, authData)
     }
 }

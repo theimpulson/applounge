@@ -77,7 +77,13 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             layoutManager = LinearLayoutManager(view.context)
         }
 
-        applicationListViewModel.getList(args.category)
+        val data = mainActivityViewModel.authData.value?.let {
+            gson.fromJson(
+                it,
+                AuthData::class.java
+            )
+        }
+        data?.let { applicationListViewModel.getList(args.category, args.browseUrl, data) }
         applicationListViewModel.list.observe(viewLifecycleOwner, {
             listAdapter?.setData(it)
             binding.progressBar.visibility = View.GONE
