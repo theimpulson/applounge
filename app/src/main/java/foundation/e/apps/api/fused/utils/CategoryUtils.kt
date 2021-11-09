@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.categories.model
+package foundation.e.apps.api.fused.utils
 
 import foundation.e.apps.R
 
-object Category {
+object CategoryUtils {
 
     fun provideCategoryIconResource(categoryId: String): Int {
         return when (categoryId) {

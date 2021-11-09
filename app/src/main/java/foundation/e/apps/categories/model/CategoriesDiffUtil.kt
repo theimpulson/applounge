@@ -19,11 +19,11 @@
 package foundation.e.apps.categories.model
 
 import androidx.recyclerview.widget.DiffUtil
-import foundation.e.apps.api.fused.data.CategoryApp
+import foundation.e.apps.api.fused.data.FusedCategory
 
 class CategoriesDiffUtil(
-    private val oldList: List<CategoryApp>,
-    private val newList: List<CategoryApp>
+    private val oldList: List<FusedCategory>,
+    private val newList: List<FusedCategory>
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldList.size
@@ -40,7 +40,7 @@ class CategoriesDiffUtil(
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return when {
             oldList[oldItemPosition].id != newList[newItemPosition].id -> false
-            oldList[oldItemPosition].name != newList[newItemPosition].name -> false
+            oldList[oldItemPosition].title != newList[newItemPosition].title -> false
             oldList[oldItemPosition].drawable != newList[newItemPosition].drawable -> false
             else -> true
         }

@@ -21,10 +21,13 @@ package foundation.e.apps.api.gplay
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.data.models.Category
 import com.aurora.gplayapi.data.models.File
 import com.aurora.gplayapi.helpers.AppDetailsHelper
+import com.aurora.gplayapi.helpers.CategoryHelper
 import com.aurora.gplayapi.helpers.PurchaseHelper
 import com.aurora.gplayapi.helpers.SearchHelper
+import com.aurora.gplayapi.helpers.TopChartsHelper
 import foundation.e.apps.api.gplay.token.TokenRepository
 import foundation.e.apps.api.gplay.utils.OkHttpClient
 import foundation.e.apps.utils.DataStoreModule
@@ -38,6 +41,7 @@ class GPlayAPIImpl @Inject constructor(
     private val dataStoreModule: DataStoreModule
 ) {
 
+    // TODO: DON'T HARDCODE DISPATCHERS IN ANY METHODS
     suspend fun fetchAuthData() = withContext(Dispatchers.IO) {
         val data = async { tokenRepository.getAuthData() }
         data.await()?.let { dataStoreModule.saveCredentials(it) }
@@ -89,5 +93,23 @@ class GPlayAPIImpl @Inject constructor(
             appDetails = appDetailsHelper.getAppByPackageName(packageName)
         }
         return appDetails
+    }
+
+    suspend fun getTopApps(type: TopChartsHelper.Type, chart: TopChartsHelper.Chart, authData: AuthData): List<App> {
+        val topApps = mutableListOf<App>()
+        withContext(Dispatchers.IO) {
+            val topChartsHelper = TopChartsHelper(authData).using(OkHttpClient)
+            topApps.addAll(topChartsHelper.getCluster(type, chart).clusterAppList)
+        }
+        return topApps
+    }
+
+    suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<Category> {
+        val categoryList = mutableListOf<Category>()
+        withContext(Dispatchers.IO) {
+            val categoryHelper = CategoryHelper(authData).using(OkHttpClient)
+            categoryList.addAll(categoryHelper.getAllCategoriesList(type))
+        }
+        return categoryList
     }
 }

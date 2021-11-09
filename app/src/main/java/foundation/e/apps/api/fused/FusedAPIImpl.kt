@@ -24,19 +24,21 @@ import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.data.models.Category
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
-import foundation.e.apps.api.fused.data.CategoryApp
 import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.api.fused.data.FusedCategory
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.data.Status
+import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
-import foundation.e.apps.categories.model.Category
 import foundation.e.apps.utils.PreferenceManagerModule
 import foundation.e.apps.utils.pkg.PkgManagerModule
 import java.io.File
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -77,51 +79,55 @@ class FusedAPIImpl @Inject constructor(
         return response
     }
 
-    suspend fun getCategoriesList(listType: String): List<CategoryApp> {
-        val categoriesList = mutableListOf<CategoryApp>()
-        val data = when (preferenceManagerModule.preferredApplicationType()) {
-            "open" -> {
+    suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<FusedCategory> {
+        val categoriesList = mutableListOf<FusedCategory>()
+        val preference = preferenceManagerModule.preferredApplicationType()
+
+        if (preference != "any") {
+            val data = if (preference == "open") {
                 cleanAPKRepository.getCategoriesList(
                     CleanAPKInterface.APP_TYPE_ANY,
                     CleanAPKInterface.APP_SOURCE_FOSS
                 ).body()
-            }
-            "pwa" -> {
+            } else {
                 cleanAPKRepository.getCategoriesList(
                     CleanAPKInterface.APP_TYPE_PWA,
                     CleanAPKInterface.APP_SOURCE_ANY
                 ).body()
             }
-            else -> {
-                cleanAPKRepository.getCategoriesList(
-                    CleanAPKInterface.APP_TYPE_ANY,
-                    CleanAPKInterface.APP_SOURCE_ANY
-                ).body()
-            }
-        }
-        data?.let { category ->
-            when (listType) {
-                "apps" -> {
-                    for (cat in category.apps) {
-                        val categoryApp = CategoryApp(
-                            cat,
-                            category.translations.getOrDefault(cat, ""),
-                            Category.provideCategoryIconResource(cat)
-                        )
-                        categoriesList.add(categoryApp)
+            data?.let { category ->
+                when (type) {
+                    Category.Type.APPLICATION -> {
+                        for (cat in category.apps) {
+                            val categoryApp = FusedCategory(
+                                cat,
+                                category.translations.getOrDefault(cat, ""),
+                                "",
+                                "",
+                                CategoryUtils.provideCategoryIconResource(cat)
+                            )
+                            categoriesList.add(categoryApp)
+                        }
                     }
-                }
-                "games" -> {
-                    for (cat in category.games) {
-                        val categoryApp = CategoryApp(
-                            cat,
-                            category.translations.getOrDefault(cat, ""),
-                            Category.provideCategoryIconResource(cat)
-                        )
-                        categoriesList.add(categoryApp)
+                    Category.Type.GAME -> {
+                        for (cat in category.games) {
+                            val categoryApp = FusedCategory(
+                                cat,
+                                category.translations.getOrDefault(cat, ""),
+                                "",
+                                "",
+                                CategoryUtils.provideCategoryIconResource(cat)
+                            )
+                            categoriesList.add(categoryApp)
+                        }
                     }
                 }
             }
+        } else {
+            val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
+                app.transformToFusedCategory()
+            }
+            categoriesList.addAll(playResponse)
         }
         return categoriesList
     }
@@ -177,16 +183,28 @@ class FusedAPIImpl @Inject constructor(
         authData: AuthData,
         origin: Origin
     ) {
-        val downloadLink = if (origin == Origin.CLEANAPK) {
-            getCleanAPKDownloadInfo(id)
-        } else {
-            getGplayDownloadInfo(packageName, versionCode, offerType, authData)
-        }
-        // Trigger the download
-        if (downloadLink != null) {
-            downloadApp(name, packageName, downloadLink)
-        } else {
-            Log.d(TAG, "Download link was null, exiting!")
+        when (origin) {
+            Origin.CLEANAPK -> {
+                val downloadInfo = cleanAPKRepository.getDownloadInfo(id).body()
+                val downloadLink = downloadInfo?.download_data?.download_link
+                if (downloadLink != null) {
+                    downloadApp(name, packageName, downloadLink)
+                } else {
+                    Log.d(TAG, "Download link was null, exiting!")
+                }
+            }
+            Origin.GPLAY -> {
+                val downloadList = gPlayAPIRepository.getDownloadInfo(
+                    packageName,
+                    versionCode,
+                    offerType,
+                    authData
+                )
+                // TODO: DEAL WITH MULTIPLE PACKAGES
+                downloadApp(name, packageName, downloadList[0].url)
+            }
+            Origin.GITLAB -> {
+            }
         }
     }
 
@@ -237,45 +255,37 @@ class FusedAPIImpl @Inject constructor(
         origin: Origin
     ): FusedApp? {
         return if (origin == Origin.CLEANAPK) {
-            getCleanAPKAppDetails(id)
+            val response = cleanAPKRepository.getAppOrPWADetailsByID(id).body()
+            response?.let {
+                if (pkgManagerModule.isInstalled(it.app.package_name)) {
+                    if (pkgManagerModule.isUpdatable(
+                            it.app.package_name,
+                            it.app.latest_version_code
+                        )
+                    ) {
+                        it.app.status = Status.UPDATABLE
+                    } else {
+                        it.app.status = Status.INSTALLED
+                    }
+                } else {
+                    it.app.status = Status.UNAVAILABLE
+                }
+            }
+            response?.app
         } else {
-            getGPlayAppDetails(packageName, authData)
-        }
-    }
-
-    private suspend fun getCleanAPKAppDetails(
-        id: String,
-        architectures: List<String>? = null,
-        type: String? = null
-    ): FusedApp? {
-        val response = cleanAPKRepository.getAppOrPWADetailsByID(id, architectures, type).body()
-        response?.let {
-            if (pkgManagerModule.isInstalled(it.app.package_name)) {
-                if (pkgManagerModule.isUpdatable(it.app.package_name, it.app.latest_version_code)) {
-                    it.app.status = Status.UPDATABLE
-                } else {
-                    it.app.status = Status.INSTALLED
-                }
-            } else {
-                it.app.status = Status.UNAVAILABLE
-            }
-        }
-        return response?.app
-    }
-
-    private suspend fun getGPlayAppDetails(packageName: String, authData: AuthData): FusedApp? {
-        val response = gPlayAPIRepository.getAppDetails(packageName, authData)
-            ?.transformToFusedApp()
-        response?.let {
-            if (pkgManagerModule.isInstalled(it.package_name)) {
-                if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
-                    it.status = Status.UPDATABLE
-                } else {
-                    it.status = Status.INSTALLED
+            val response = gPlayAPIRepository.getAppDetails(packageName, authData)
+                ?.transformToFusedApp()
+            response?.let {
+                if (pkgManagerModule.isInstalled(it.package_name)) {
+                    if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
+                        it.status = Status.UPDATABLE
+                    } else {
+                        it.status = Status.INSTALLED
+                    }
                 }
             }
+            response
         }
-        return response
     }
 
     private suspend fun getCleanAPKSearchResults(
@@ -304,26 +314,6 @@ class FusedAPIImpl @Inject constructor(
         return response
     }
 
-    private suspend fun getCleanAPKDownloadInfo(
-        id: String,
-        version: String? = null,
-        architecture: String? = null
-    ): String? {
-        return cleanAPKRepository.getDownloadInfo(id, version, architecture)
-            .body()?.download_data?.download_link
-    }
-
-    private suspend fun getGplayDownloadInfo(
-        packageName: String,
-        versionCode: Int,
-        offerType: Int,
-        authData: AuthData
-    ): String {
-        val response =
-            gPlayAPIRepository.getDownloadInfo(packageName, versionCode, offerType, authData)
-        return response[0].url
-    }
-
     private suspend fun getGplaySearchResults(query: String, authData: AuthData): List<FusedApp> {
         val response = gPlayAPIRepository.getSearchResults(query, authData).map { app ->
             app.transformToFusedApp()
@@ -340,12 +330,6 @@ class FusedAPIImpl @Inject constructor(
         return response
     }
 
-    /**
-     * Downloads the given package into the external cache directory
-     * @param name Name of the package
-     * @param packageName packageName of the package
-     * @param url direct download link for the package
-     */
     private fun downloadApp(name: String, packageName: String, url: String) {
         val packagePath = File(cacheDir, "$packageName.apk")
         if (packagePath.exists()) packagePath.delete() // Delete old download if-exists
@@ -378,6 +362,16 @@ class FusedAPIImpl @Inject constructor(
             offer_type = this.offerType,
             status = Status.UNAVAILABLE,
             origin = Origin.GPLAY
+        )
+    }
+
+    private fun Category.transformToFusedCategory(): FusedCategory {
+        return FusedCategory(
+            id = UUID.randomUUID().toString(),
+            title = this.title,
+            browseUrl = this.browseUrl,
+            imageUrl = this.imageUrl,
+            drawable = null
         )
     }
 }

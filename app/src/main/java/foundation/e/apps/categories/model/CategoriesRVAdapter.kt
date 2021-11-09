@@ -24,14 +24,14 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import foundation.e.apps.api.fused.data.CategoryApp
+import foundation.e.apps.api.fused.data.FusedCategory
 import foundation.e.apps.categories.CategoriesFragmentDirections
 import foundation.e.apps.databinding.CategoriesListItemBinding
 
 class CategoriesRVAdapter :
     RecyclerView.Adapter<CategoriesRVAdapter.ViewHolder>() {
 
-    private var oldList = listOf<CategoryApp>()
+    private var oldList = listOf<FusedCategory>()
 
     inner class ViewHolder(val binding: CategoriesListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -52,12 +52,13 @@ class CategoriesRVAdapter :
                 val direction =
                     CategoriesFragmentDirections.actionCategoriesFragmentToApplicationListFragment(
                         oldList[position].id,
-                        oldList[position].name
+                        oldList[position].title
                     )
                 holder.itemView.findNavController().navigate(direction)
             }
-            categoryIcon.load(oldList[position].drawable)
-            categoryTitle.text = oldList[position].name
+            oldList[position].drawable?.let { categoryIcon.load(it) }
+            oldList[position].imageUrl?.let { categoryIcon.load(it) }
+            categoryTitle.text = oldList[position].title
         }
     }
 
@@ -65,7 +66,7 @@ class CategoriesRVAdapter :
         return oldList.size
     }
 
-    fun setData(newList: List<CategoryApp>) {
+    fun setData(newList: List<FusedCategory>) {
         val diffUtil = CategoriesDiffUtil(oldList, newList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
         oldList = newList

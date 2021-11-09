@@ -21,9 +21,11 @@ package foundation.e.apps.categories
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.data.models.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
-import foundation.e.apps.api.fused.data.CategoryApp
+import foundation.e.apps.api.fused.data.FusedCategory
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,11 +34,11 @@ class CategoriesViewModel @Inject constructor(
     private val fusedAPIRepository: FusedAPIRepository
 ) : ViewModel() {
 
-    val categoriesList: MutableLiveData<List<CategoryApp>> = MutableLiveData()
+    val categoriesList: MutableLiveData<List<FusedCategory>> = MutableLiveData()
 
-    fun getCategoriesList(listType: String) {
+    fun getCategoriesList(type: Category.Type, authData: AuthData) {
         viewModelScope.launch {
-            categoriesList.postValue(fusedAPIRepository.getCategoriesList(listType))
+            categoriesList.postValue(fusedAPIRepository.getCategoriesList(type, authData))
         }
     }
 }

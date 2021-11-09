@@ -41,7 +41,7 @@ class DataStoreModule @Inject constructor(
 
     private val AUTHDATA = stringPreferencesKey("authData")
 
-    val authData = context.dataStore.data.map { it[AUTHDATA] }
+    val authData = context.dataStore.data.map { it[AUTHDATA] ?: "" }
 
     /**
      * Allows to save gplay API token data into datastore

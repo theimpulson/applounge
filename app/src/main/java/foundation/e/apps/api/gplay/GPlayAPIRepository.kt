@@ -21,7 +21,9 @@ package foundation.e.apps.api.gplay
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.data.models.Category
 import com.aurora.gplayapi.data.models.File
+import com.aurora.gplayapi.helpers.TopChartsHelper
 import javax.inject.Inject
 
 class GPlayAPIRepository @Inject constructor(
@@ -51,5 +53,13 @@ class GPlayAPIRepository @Inject constructor(
 
     suspend fun getAppDetails(packageName: String, authData: AuthData): App? {
         return gPlayAPIImpl.getAppDetails(packageName, authData)
+    }
+
+    suspend fun getTopApps(type: TopChartsHelper.Type, chart: TopChartsHelper.Chart, authData: AuthData): List<App> {
+        return gPlayAPIImpl.getTopApps(type, chart, authData)
+    }
+
+    suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<Category> {
+        return gPlayAPIImpl.getCategoriesList(type, authData)
     }
 }
