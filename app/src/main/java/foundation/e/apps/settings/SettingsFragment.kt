@@ -56,7 +56,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         // About Apps
-        val aboutApps = findPreference<Preference>("version")
+        val aboutApps = findPreference<Preference>("appsVersion")
         val cpuAbi = Build.SUPPORTED_ABIS[0]
         aboutApps?.summary = getString(
             R.string.apps_version_summary,
