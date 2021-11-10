@@ -28,6 +28,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
 import com.aurora.gplayapi.data.models.AuthData
@@ -38,6 +39,7 @@ import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
+import foundation.e.apps.application.model.ApplicationScreenshotsRVAdapter
 import foundation.e.apps.databinding.FragmentApplicationBinding
 import foundation.e.apps.utils.pkg.PkgManagerModule
 import javax.inject.Inject
@@ -46,6 +48,7 @@ import javax.inject.Inject
 class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
     private val args: ApplicationFragmentArgs by navArgs()
+    private val TAG = ApplicationFragment::class.java.simpleName
 
     private var _binding: FragmentApplicationBinding? = null
     private val binding get() = _binding!!
@@ -76,6 +79,12 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             PorterDuff.Mode.SRC_IN
         )
 
+        val screenshotsRVAdapter = ApplicationScreenshotsRVAdapter(circularProgressDrawable, args.origin)
+        binding.recyclerView.apply {
+            adapter = screenshotsRVAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
+
         binding.toolbar.apply {
             setNavigationOnClickListener {
                 view.findNavController().navigateUp()
@@ -94,12 +103,20 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         }
         applicationViewModel.fusedApp.observe(viewLifecycleOwner, { fusedApp ->
             fusedApp?.let {
+                screenshotsRVAdapter.setData(it.other_images_path)
                 binding.appName.text = it.name
                 binding.appAuthor.text = it.author
                 binding.categoryTitle.text = it.category
                 if (it.ratings.usageQualityScore != -1.0) {
                     binding.appRating.text =
                         getString(R.string.rating_out_of, it.ratings.usageQualityScore.toString())
+                }
+                binding.appRatingLayout.setOnClickListener {
+                    ApplicationDialogFragment(
+                        R.drawable.ic_star,
+                        R.string.rating,
+                        R.string.rating_description
+                    ).show(childFragmentManager, TAG)
                 }
                 if (it.ratings.privacyScore != -1.0) {
                     binding.appPrivacyScore.text = getString(

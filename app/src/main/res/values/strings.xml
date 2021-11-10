@@ -67,17 +67,21 @@
     <string name="package_name_find_text">To find the package name of an app that is installed on your device, go to System Settings > Apps > [your app]. The package name should be listed at the bottom of the page.\n*This process may vary on some devices.</string>
 
     <!-- Application -->
+    <string name="ok">OK</string>
     <string name="install">Install</string>
     <string name="cancel">Cancel</string>
     <string name="app_icon">App icon</string>
     <string name="not_available">N/A</string>
     <string name="open">Open</string>
-    <string name="more">More Details</string>
+    <string name="more">More</string>
     <string name="update">Update</string>
     <string name="ratings">Ratings</string>
     <string name="rating">Rating</string>
+    <string name="rating_description">Score out of 5. Computed using users\' ratings of the app.</string>
     <string name="rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/5.0</string>
     <string name="privacy">Privacy</string>
+    <string name="privacy_description">Score out of 10. Computed using <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>, based on permissions and trackers used in the app.</string>
+    <string name="energy">Energy</string>
     <string name="privacy_rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/10.0</string>
     <string name="privacy_analyses">Privacy analyses</string>
     <string name="permissions">Permissions</string>

@@ -50,7 +50,6 @@ class ApplicationListRVAdapter(
 
     private var oldList = emptyList<FusedApp>()
     private val TAG = ApplicationListRVAdapter::class.java.simpleName
-
     private lateinit var circularProgressDrawable: CircularProgressDrawable
 
     inner class ViewHolder(val binding: ApplicationListItemBinding) :

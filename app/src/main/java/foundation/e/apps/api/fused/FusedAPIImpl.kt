@@ -23,6 +23,7 @@ import android.net.Uri
 import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
+import com.aurora.gplayapi.data.models.Artwork
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
@@ -350,7 +351,7 @@ class FusedAPIImpl @Inject constructor(
             latest_version_number = this.versionName,
             licence = "",
             name = this.displayName,
-            other_images_path = emptyList(),
+            other_images_path = this.screenshots.transformToList(),
             package_name = this.packageName,
             ratings = Ratings(
                 privacyScore = -1.0,
@@ -360,6 +361,14 @@ class FusedAPIImpl @Inject constructor(
             status = Status.UNAVAILABLE,
             origin = Origin.GPLAY
         )
+    }
+
+    private fun MutableList<Artwork>.transformToList(): List<String> {
+        val list = mutableListOf<String>()
+        this.forEach {
+            list.add(it.url)
+        }
+        return list
     }
 
     private fun Category.transformToFusedCategory(): FusedCategory {
