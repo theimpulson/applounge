@@ -91,10 +91,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/topUpdatedAppsRV"
                 android:layout_width="match_parent"
-                android:layout_height="190dp"
+                android:layout_height="180dp"
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp" />
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp" />
         </RelativeLayout>
 
         <com.google.android.material.textview.MaterialTextView
@@ -123,10 +124,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/topUpdatedGamesRV"
                 android:layout_width="match_parent"
-                android:layout_height="190dp"
+                android:layout_height="180dp"
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp" />
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp" />
         </RelativeLayout>
 
         <com.google.android.material.textview.MaterialTextView
@@ -155,10 +157,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/top24AppsRV"
                 android:layout_width="match_parent"
-                android:layout_height="190dp"
+                android:layout_height="180dp"
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp" />
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp" />
         </RelativeLayout>
 
         <com.google.android.material.textview.MaterialTextView
@@ -187,10 +190,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/top24GamesRV"
                 android:layout_width="match_parent"
-                android:layout_height="190dp"
+                android:layout_height="180dp"
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp" />
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp" />
         </RelativeLayout>
 
         <com.google.android.material.textview.MaterialTextView
@@ -218,10 +222,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/discoverRV"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="190dp"
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp" />
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp" />
         </RelativeLayout>
     </LinearLayout>
 
