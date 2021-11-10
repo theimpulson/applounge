@@ -95,7 +95,7 @@
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:paddingBottom="10dp" />
+                android:paddingBottom="5dp" />
         </RelativeLayout>
 
         <com.google.android.material.textview.MaterialTextView
@@ -128,7 +128,7 @@
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:paddingBottom="10dp" />
+                android:paddingBottom="5dp" />
         </RelativeLayout>
 
         <com.google.android.material.textview.MaterialTextView
@@ -161,7 +161,7 @@
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:paddingBottom="10dp" />
+                android:paddingBottom="5dp" />
         </RelativeLayout>
 
         <com.google.android.material.textview.MaterialTextView
@@ -194,7 +194,7 @@
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:paddingBottom="10dp" />
+                android:paddingBottom="5dp" />
         </RelativeLayout>
 
         <com.google.android.material.textview.MaterialTextView
@@ -226,7 +226,7 @@
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:paddingBottom="10dp" />
+                android:paddingBottom="5dp" />
         </RelativeLayout>
     </LinearLayout>
 
