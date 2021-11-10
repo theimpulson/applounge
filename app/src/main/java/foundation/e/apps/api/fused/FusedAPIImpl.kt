@@ -355,7 +355,7 @@ class FusedAPIImpl @Inject constructor(
             package_name = this.packageName,
             ratings = Ratings(
                 privacyScore = -1.0,
-                usageQualityScore = this.labeledRating.toDouble() ?: -1.0
+                usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDouble() else -1.0
             ),
             offer_type = this.offerType,
             status = Status.UNAVAILABLE,

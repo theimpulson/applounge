@@ -104,6 +104,9 @@
         <action
             android:id="@+id/action_applicationFragment_to_homeFragment2"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_applicationFragment_to_screenshotFragment"
+            app:destination="@id/screenshotFragment" />
     </fragment>
     <fragment
         android:id="@+id/applicationListFragment"
@@ -128,5 +131,23 @@
             android:name="browseUrl"
             android:defaultValue=""
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/screenshotFragment"
+        android:name="foundation.e.apps.application.ScreenshotFragment"
+        android:label="Screenshot"
+        tools:layout="@layout/fragment_screenshot" >
+        <action
+            android:id="@+id/action_screenshotFragment_to_applicationFragment"
+            app:destination="@id/applicationFragment" />
+        <argument
+            android:name="list"
+            app:argType="string[]" />
+        <argument
+            android:name="position"
+            app:argType="integer" />
+        <argument
+            android:name="origin"
+            app:argType="foundation.e.apps.api.fused.data.Origin" />
     </fragment>
 </navigation>

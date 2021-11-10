@@ -18,51 +18,51 @@
 
 package foundation.e.apps.application.model
 
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.findNavController
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
+import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.application.ApplicationFragmentDirections
-import foundation.e.apps.databinding.ApplicationScreenshotsListItemBinding
+import foundation.e.apps.databinding.ScreenshotListItemBinding
 
-class ApplicationScreenshotsRVAdapter(
-    private val circularProgressDrawable: CircularProgressDrawable,
-    private val origin: Origin
-) :
-    RecyclerView.Adapter<ApplicationScreenshotsRVAdapter.ViewHolder>() {
+class ScreenshotRVAdapter(private val list: List<String>, private val origin: Origin) :
+    RecyclerView.Adapter<ScreenshotRVAdapter.ViewHolder>() {
 
-    private var oldList = emptyList<String>()
+    private lateinit var circularProgressDrawable: CircularProgressDrawable
 
-    inner class ViewHolder(val binding: ApplicationScreenshotsListItemBinding) :
+    inner class ViewHolder(val binding: ScreenshotListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = ApplicationScreenshotsListItemBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+        // Setup progress drawable for coil placeholder
+        circularProgressDrawable = CircularProgressDrawable(parent.context)
+        circularProgressDrawable.strokeWidth = 10f
+        circularProgressDrawable.centerRadius = 50f
+        circularProgressDrawable.colorFilter = PorterDuffColorFilter(
+            parent.context.getColor(R.color.colorAccent),
+            PorterDuff.Mode.SRC_IN
         )
-        val params = view.root.layoutParams
-        params.width = (parent.width * 0.4).toInt()
-        view.root.layoutParams = params
-        return ViewHolder(view)
+
+        return ViewHolder(
+            ScreenshotListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val imageView = holder.binding.imageView
         when (origin) {
             Origin.CLEANAPK -> {
-                imageView.load(CleanAPKInterface.ASSET_URL + oldList[position]) {
+                imageView.load(CleanAPKInterface.ASSET_URL + list[position]) {
                     placeholder(circularProgressDrawable)
                 }
             }
             Origin.GPLAY -> {
-                imageView.load(oldList[position]) {
+                imageView.load(list[position]) {
                     placeholder(circularProgressDrawable)
                 }
             }
@@ -70,25 +70,9 @@ class ApplicationScreenshotsRVAdapter(
                 TODO("YET TO BE IMPLEMENTED")
             }
         }
-        imageView.setOnClickListener {
-            val action =
-                ApplicationFragmentDirections.actionApplicationFragmentToScreenshotFragment(
-                    oldList.toTypedArray(),
-                    position,
-                    origin
-                )
-            it.findNavController().navigate(action)
-        }
     }
 
     override fun getItemCount(): Int {
-        return oldList.size
-    }
-
-    fun setData(newList: List<String>) {
-        val diffUtil = ApplicationScreenshotsDiffUtil(oldList, newList)
-        val diffResult = DiffUtil.calculateDiff(diffUtil)
-        oldList = newList
-        diffResult.dispatchUpdatesTo(this)
+        return list.size
     }
 }
