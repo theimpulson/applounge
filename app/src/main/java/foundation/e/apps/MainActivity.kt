@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         bottomNavigationView.setupWithNavController(navController)
 
-        val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        val viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
 
         // Watch and refresh authentication data
         viewModel.authDataJson.observe(this, {

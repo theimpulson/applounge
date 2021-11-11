@@ -97,6 +97,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         }
         applicationViewModel.fusedApp.observe(viewLifecycleOwner, { fusedApp ->
             fusedApp?.let {
+                // TODO: MAKE PERMISSIONS BETTER
+                val permissions = fusedApp.perms.toString()
                 screenshotsRVAdapter.setData(it.other_images_path)
                 binding.appName.text = it.name
                 binding.appAuthor.text = it.author
@@ -108,8 +110,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 binding.appRatingLayout.setOnClickListener {
                     ApplicationDialogFragment(
                         R.drawable.ic_star,
-                        R.string.rating,
-                        R.string.rating_description
+                        getString(R.string.rating),
+                        getString(R.string.rating_description)
                     ).show(childFragmentManager, TAG)
                 }
                 if (it.ratings.privacyScore != -1.0) {
@@ -117,6 +119,20 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         R.string.privacy_rating_out_of,
                         it.ratings.privacyScore.toString()
                     )
+                }
+                binding.appPrivacyScoreLayout.setOnClickListener {
+                    ApplicationDialogFragment(
+                        R.drawable.ic_lock,
+                        getString(R.string.privacy),
+                        getString(R.string.privacy_description)
+                    ).show(childFragmentManager, TAG)
+                }
+                binding.appEnergyRatingLayout.setOnClickListener {
+                    ApplicationDialogFragment(
+                        R.drawable.ic_energy,
+                        getString(R.string.energy),
+                        getString(R.string.energy_description)
+                    ).show(childFragmentManager, TAG)
                 }
                 if (args.origin == Origin.CLEANAPK) {
                     binding.appIcon.load(CleanAPKInterface.ASSET_URL + it.icon_image_path) {
@@ -143,6 +159,20 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     if (it.licence.isBlank() or (it.licence == "unknown")) notAvailable else it.licence
                 )
                 binding.appPackageName.text = getString(R.string.package_name, it.package_name)
+                binding.appPermissions.setOnClickListener {
+                    ApplicationDialogFragment(
+                        R.drawable.ic_perm,
+                        getString(R.string.permissions),
+                        permissions
+                    ).show(childFragmentManager, TAG)
+                }
+                binding.appTrackers.setOnClickListener {
+                    ApplicationDialogFragment(
+                        R.drawable.ic_tracker,
+                        getString(R.string.trackers),
+                        getString(R.string.trackers_description, "")
+                    ).show(childFragmentManager, TAG)
+                }
                 when (it.status) {
                     Status.INSTALLED -> {
                         binding.installButton.text = getString(R.string.open)

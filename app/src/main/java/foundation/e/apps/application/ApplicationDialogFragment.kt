@@ -28,8 +28,8 @@ import foundation.e.apps.R
 @AndroidEntryPoint
 class ApplicationDialogFragment(
     private val drawable: Int,
-    private val title: Int,
-    private val message: Int
+    private val title: String,
+    private val message: String
 ) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

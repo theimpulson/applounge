@@ -16,25 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.api.fused.data
+package foundation.e.apps.utils
 
-data class FusedApp(
-    val _id: String,
-    val author: String,
-    val category: String,
-    val description: String,
-    val perms: List<String>,
-    val trackers: List<String>,
-    val icon_image_path: String,
-    val last_modified: String,
-    val latest_version_code: Int,
-    val latest_version_number: String,
-    val licence: String,
-    val name: String,
-    val other_images_path: List<String>,
-    val package_name: String,
-    val ratings: Ratings,
-    val offer_type: Int?,
-    var status: Status?,
-    var origin: Origin?
-)
+enum class Error {
+    NO_ERROR,
+    NO_INTERNET,
+    UNKNOWN,
+    NO_RESULTS
+}

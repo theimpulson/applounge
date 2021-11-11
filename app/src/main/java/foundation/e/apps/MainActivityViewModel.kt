@@ -28,6 +28,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.utils.DataStoreModule
+import foundation.e.apps.utils.Error
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,6 +38,8 @@ class MainActivityViewModel @Inject constructor(
     private val dataStoreModule: DataStoreModule,
     private val gson: Gson
 ) : ViewModel() {
+
+    val error: MutableLiveData<Error> = MutableLiveData(Error.NO_ERROR)
 
     // Authentication Data for GPlay servers
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
