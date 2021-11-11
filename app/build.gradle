@@ -74,8 +74,9 @@ dependencies {
     // gplay
     api "com.gitlab.AuroraOSS:gplayapi:0e224071f3"
 
-    // Coil
+    // Coil and PhotoView
     implementation "io.coil-kt:coil:1.4.0"
+    implementation 'com.github.Baseflow:PhotoView:2.3.0'
 
     //Protobuf
     implementation "com.google.protobuf:protobuf-java:3.14.0"

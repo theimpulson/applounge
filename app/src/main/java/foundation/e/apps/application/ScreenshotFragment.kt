@@ -24,6 +24,7 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
@@ -42,13 +43,8 @@ class ScreenshotFragment : Fragment(R.layout.fragment_screenshot) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentScreenshotBinding.bind(view)
 
-        val window = activity?.window
-
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= 30) {
-            window?.insetsController?.hide(WindowInsets.Type.systemBars())
-        } else {
-            window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        binding.toolbar.setNavigationOnClickListener {
+            view.findNavController().navigateUp()
         }
 
         val screenshotRVAdapter = ScreenshotRVAdapter(args.list.toList(), args.origin)
@@ -61,18 +57,6 @@ class ScreenshotFragment : Fragment(R.layout.fragment_screenshot) {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
-    }
-
-    override fun onDetach() {
-        val window = activity?.window
-
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= 30) {
-            window?.insetsController?.show(WindowInsets.Type.systemBars())
-        } else {
-            window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        }
-        super.onDetach()
     }
 
 }
