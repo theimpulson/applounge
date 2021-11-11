@@ -19,12 +19,15 @@
 package foundation.e.apps.api.cleanapk
 
 import android.content.Context
+import android.os.Build
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import foundation.e.apps.BuildConfig
 import okhttp3.Cache
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -51,6 +54,19 @@ object RetrofitModule {
 
     @Singleton
     @Provides
+    fun provideInterceptor(): Interceptor {
+        return Interceptor { chain ->
+            val builder = chain.request().newBuilder()
+            builder.header(
+                "User-Agent",
+                "Dalvik/2.1.0 (Linux; U; Android ${Build.VERSION.RELEASE}; ${Build.FINGERPRINT})"
+            )
+            return@Interceptor chain.proceed(builder.build())
+        }
+    }
+
+    @Singleton
+    @Provides
     fun provideCache(@ApplicationContext context: Context): Cache {
         val cacheSize = (10 * 1024 * 1024).toLong() // 10 MB
         return Cache(context.cacheDir, cacheSize)
@@ -58,8 +74,9 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(cache: Cache): OkHttpClient {
+    fun provideOkHttpClient(cache: Cache, interceptor: Interceptor): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(interceptor)
             .cache(cache)
             .build()
     }
