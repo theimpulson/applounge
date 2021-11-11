@@ -19,9 +19,12 @@
 package foundation.e.apps
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.aurora.gplayapi.data.models.AuthData
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.utils.DataStoreModule
@@ -31,11 +34,15 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val fusedAPIRepository: FusedAPIRepository,
-    private val dataStoreModule: DataStoreModule
+    private val dataStoreModule: DataStoreModule,
+    private val gson: Gson
 ) : ViewModel() {
 
     // Authentication Data for GPlay servers
-    val authData: LiveData<String?> = dataStoreModule.authData.asLiveData()
+    val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
+
+    private var _authData: MutableLiveData<AuthData> = MutableLiveData()
+    val authData: LiveData<AuthData> = _authData
 
     fun getAuthData() {
         viewModelScope.launch {
@@ -47,5 +54,9 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             dataStoreModule.destroyCredentials()
         }
+    }
+
+    fun generateAuthData() {
+        _authData.value = gson.fromJson(authDataJson.value, AuthData::class.java)
     }
 }

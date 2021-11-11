@@ -36,8 +36,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aurora.gplayapi.SearchSuggestEntry
-import com.aurora.gplayapi.data.models.AuthData
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
@@ -56,9 +54,6 @@ class SearchFragment :
     FusedAPIInterface {
 
     @Inject
-    lateinit var gson: Gson
-
-    @Inject
     lateinit var pkgManagerModule: PkgManagerModule
 
     private var _binding: FragmentSearchBinding? = null
@@ -67,7 +62,6 @@ class SearchFragment :
     private val searchViewModel: SearchViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
-    private val TAG = SearchFragment::class.java.simpleName
     private val SUGGESTION_KEY = "suggestion"
 
     private var searchView: SearchView? = null
@@ -103,7 +97,13 @@ class SearchFragment :
 
         // Setup Search Results
         val listAdapter =
-            findNavController().currentDestination?.id?.let { ApplicationListRVAdapter(this, it, pkgManagerModule) }
+            findNavController().currentDestination?.id?.let {
+                ApplicationListRVAdapter(
+                    this,
+                    it,
+                    pkgManagerModule
+                )
+            }
         recyclerView?.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)
@@ -122,26 +122,19 @@ class SearchFragment :
             view?.requestFocus()
             progressBar?.visibility = View.VISIBLE
             recyclerView?.visibility = View.GONE
-            val data = mainActivityViewModel.authData.value?.let {
-                gson.fromJson(
-                    it,
-                    AuthData::class.java
-                )
-            }
-            data?.let { searchViewModel.getSearchResults(text, it) }
+            mainActivityViewModel.authData.value?.let { searchViewModel.getSearchResults(text, it) }
         }
         return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
         newText?.let { text ->
-            val data = mainActivityViewModel.authData.value?.let {
-                gson.fromJson(
-                    it,
-                    AuthData::class.java
+            mainActivityViewModel.authData.value?.let {
+                searchViewModel.getSearchSuggestions(
+                    text,
+                    it
                 )
             }
-            data?.let { searchViewModel.getSearchSuggestions(text, it) }
         }
         return true
     }
@@ -197,15 +190,9 @@ class SearchFragment :
         offerType: Int?,
         origin: Origin?
     ) {
-        val data = mainActivityViewModel.authData.value?.let {
-            gson.fromJson(
-                it,
-                AuthData::class.java
-            )
-        }
         val offer = offerType ?: 0
         val org = origin ?: Origin.CLEANAPK
-        data?.let {
+        mainActivityViewModel.authData.value?.let {
             searchViewModel.getApplication(
                 id,
                 name,

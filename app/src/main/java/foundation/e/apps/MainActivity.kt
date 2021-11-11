@@ -52,11 +52,12 @@ class MainActivity : AppCompatActivity() {
         val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
         // Watch and refresh authentication data
-        viewModel.authData.observe(this, {
+        viewModel.authDataJson.observe(this, {
             if (it.isNullOrEmpty()) {
                 Log.d(TAG, "Fetching new authentication data")
                 viewModel.getAuthData()
             } else {
+                viewModel.generateAuthData()
                 Log.d(TAG, "Authentication data is available!")
             }
         })

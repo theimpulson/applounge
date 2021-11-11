@@ -43,10 +43,6 @@ import javax.inject.Inject
 class ApplicationListFragment : Fragment(R.layout.fragment_application_list), FusedAPIInterface {
 
     private val args: ApplicationListFragmentArgs by navArgs()
-    private val TAG = ApplicationListFragment::class.java.simpleName
-
-    @Inject
-    lateinit var gson: Gson
 
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
@@ -77,13 +73,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             layoutManager = LinearLayoutManager(view.context)
         }
 
-        val data = mainActivityViewModel.authData.value?.let {
-            gson.fromJson(
-                it,
-                AuthData::class.java
-            )
-        }
-        data?.let { applicationListViewModel.getList(args.category, args.browseUrl, data) }
+        mainActivityViewModel.authData.value?.let { applicationListViewModel.getList(args.category, args.browseUrl, it) }
         applicationListViewModel.list.observe(viewLifecycleOwner, {
             listAdapter?.setData(it)
             binding.progressBar.visibility = View.GONE
@@ -104,15 +94,9 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         offerType: Int?,
         origin: Origin?
     ) {
-        val data = mainActivityViewModel.authData.value?.let {
-            gson.fromJson(
-                it,
-                AuthData::class.java
-            )
-        }
         val offer = offerType ?: 0
         val org = origin ?: Origin.CLEANAPK
-        data?.let {
+        mainActivityViewModel.authData.value?.let {
             applicationListViewModel.getApplication(
                 id,
                 name,

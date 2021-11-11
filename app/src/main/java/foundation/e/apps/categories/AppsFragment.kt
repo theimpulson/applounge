@@ -24,23 +24,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.categories.model.CategoriesRVAdapter
 import foundation.e.apps.databinding.FragmentAppsBinding
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AppsFragment : Fragment(R.layout.fragment_apps) {
     private var _binding: FragmentAppsBinding? = null
     private val binding get() = _binding!!
-
-    @Inject
-    lateinit var gson: Gson
 
     private val categoriesViewModel: CategoriesViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
@@ -58,13 +52,12 @@ class AppsFragment : Fragment(R.layout.fragment_apps) {
             visibility = View.GONE
         }
 
-        val data = mainActivityViewModel.authData.value?.let {
-            gson.fromJson(
-                it,
-                AuthData::class.java
+        mainActivityViewModel.authData.value?.let {
+            categoriesViewModel.getCategoriesList(
+                Category.Type.APPLICATION,
+                it
             )
         }
-        data?.let { categoriesViewModel.getCategoriesList(Category.Type.APPLICATION, it) }
         categoriesViewModel.categoriesList.observe(viewLifecycleOwner, {
             categoriesRVAdapter.setData(it)
             binding.progressBar.visibility = View.GONE

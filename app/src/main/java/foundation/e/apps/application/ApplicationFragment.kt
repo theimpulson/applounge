@@ -54,9 +54,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var gson: Gson
-
-    @Inject
     lateinit var pkgManagerModule: PkgManagerModule
 
     private val applicationViewModel: ApplicationViewModel by viewModels()
@@ -66,9 +63,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentApplicationBinding.bind(view)
 
-        val data = mainActivityViewModel.authData.value?.let {
-            gson.fromJson(it, AuthData::class.java)
-        }
         val notAvailable = getString(R.string.not_available)
 
         val circularProgressDrawable = CircularProgressDrawable(view.context)
@@ -93,7 +87,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
         binding.applicationLayout.visibility = View.INVISIBLE
 
-        data?.let {
+        mainActivityViewModel.authData.value?.let {
             applicationViewModel.getApplicationDetails(
                 args.id,
                 args.packageName,
@@ -159,14 +153,14 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     Status.UPDATABLE -> {
                         binding.installButton.text = getString(R.string.update)
                         binding.installButton.setOnClickListener { _ ->
-                            data?.let { data ->
+                            mainActivityViewModel.authData.value?.let { data ->
                                 applicationViewModel.getApplication(data, it, args.origin)
                             }
                         }
                     }
                     Status.UNAVAILABLE -> {
                         binding.installButton.setOnClickListener { _ ->
-                            data?.let { data ->
+                            mainActivityViewModel.authData.value?.let { data ->
                                 applicationViewModel.getApplication(data, it, args.origin)
                             }
                         }

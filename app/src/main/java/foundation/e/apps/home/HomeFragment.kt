@@ -149,15 +149,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
         offerType: Int?,
         origin: Origin?
     ) {
-        val data = mainActivityViewModel.authData.value?.let {
-            gson.fromJson(
-                it,
-                AuthData::class.java
-            )
-        }
         val offer = offerType ?: 0
         val org = origin ?: Origin.CLEANAPK
-        data?.let {
+        mainActivityViewModel.authData.value?.let {
             homeViewModel.getApplication(
                 id,
                 name,
