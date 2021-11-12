@@ -24,7 +24,6 @@ import foundation.e.apps.api.fused.data.Origin
 data class Home(
     val top_updated_apps: List<FusedApp>, // Top Free Apps
     val top_updated_games: List<FusedApp>, // Top Free Games
-    val banner_apps: List<FusedApp>,
     val popular_apps_in_last_24_hours: List<FusedApp>, // Top Grossing Apps
     val popular_games_in_last_24_hours: List<FusedApp>, // Top Grossing Games
     val discover: List<FusedApp>, // Trending Apps

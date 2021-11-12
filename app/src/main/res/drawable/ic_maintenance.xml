@@ -1,0 +1,28 @@
+<!--
+  ~ Apps  Quickly and easily install Android apps onto your device!
+  ~ Copyright (C) 2021  E FOUNDATION
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="39dp"
+    android:height="36dp"
+    android:tint="?android:attr/colorControlNormal"
+    android:viewportWidth="39"
+    android:viewportHeight="36">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M22.8695,24.1452L34.3695,35.6452L38.4136,31.5052L26.9136,20.0052L22.8695,24.1452ZM29.9995,14.1785C29.252,14.1785 28.447,14.0827 27.8145,13.8144L5.9836,35.5494L1.9395,31.5052L16.142,17.3219L12.7495,13.9102L11.3695,15.2519L8.5903,12.5494V18.031L7.2486,19.3727L0.502,12.5494L1.8436,11.2077H7.2295L4.5461,8.5052L11.3695,1.6819C13.612,-0.5606 17.2153,-0.5606 19.4578,1.6819L15.4136,5.8219L18.1161,8.5052L16.7553,9.866L20.1861,13.2777L23.6745,9.6744C23.4061,9.0419 23.2911,8.2369 23.2911,7.5277C23.2911,3.7519 26.2811,0.781 29.9995,0.781C31.1303,0.781 32.127,1.0494 33.0278,1.586L27.9103,6.7035L30.7853,9.5785L35.9028,4.461C36.4395,5.3619 36.7078,6.3202 36.7078,7.5277C36.7078,11.2077 33.737,14.1785 29.9995,14.1785Z" />
+</vector>

@@ -21,7 +21,7 @@ package foundation.e.apps.home.model
 import androidx.recyclerview.widget.DiffUtil
 import foundation.e.apps.api.fused.data.FusedApp
 
-class HomeDiffUtil(
+class HomeChildDiffUtil(
     private val oldList: List<FusedApp>,
     private val newList: List<FusedApp>
 ) : DiffUtil.Callback() {

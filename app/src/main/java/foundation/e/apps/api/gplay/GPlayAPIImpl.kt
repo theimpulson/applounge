@@ -95,7 +95,11 @@ class GPlayAPIImpl @Inject constructor(
         return appDetails
     }
 
-    suspend fun getTopApps(type: TopChartsHelper.Type, chart: TopChartsHelper.Chart, authData: AuthData): List<App> {
+    suspend fun getTopApps(
+        type: TopChartsHelper.Type,
+        chart: TopChartsHelper.Chart,
+        authData: AuthData
+    ): List<App> {
         val topApps = mutableListOf<App>()
         withContext(Dispatchers.IO) {
             val topChartsHelper = TopChartsHelper(authData).using(OkHttpClient)

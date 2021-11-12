@@ -25,6 +25,7 @@ import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.cleanapk.data.home.HomeScreen
 import foundation.e.apps.api.fused.FusedAPIRepository
+import foundation.e.apps.api.fused.data.FusedHome
 import foundation.e.apps.api.fused.data.Origin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,11 +38,11 @@ class HomeViewModel @Inject constructor(
 
     private val TAG = HomeViewModel::class.java.simpleName
 
-    var homeScreenData: MutableLiveData<HomeScreen> = MutableLiveData()
+    var homeScreenData: MutableLiveData<List<FusedHome>> = MutableLiveData()
 
-    fun getHomeScreenData() {
+    fun getHomeScreenData(authData: AuthData) {
         viewModelScope.launch {
-            homeScreenData.postValue(fusedAPIRepository.getHomeScreenData())
+            homeScreenData.postValue(fusedAPIRepository.getHomeScreenData(authData))
         }
     }
 

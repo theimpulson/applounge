@@ -1,0 +1,28 @@
+<!--
+  ~ Apps  Quickly and easily install Android apps onto your device!
+  ~ Copyright (C) 2021  E FOUNDATION
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="46dp"
+    android:height="46dp"
+    android:tint="?android:attr/colorControlNormal"
+    android:viewportWidth="46"
+    android:viewportHeight="46">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M0,6.0062L3.0599,2.9702L43.0298,42.9401L39.9938,46L28.4474,34.4537L22.2081,40.693C17.5466,45.3546 9.9686,45.3546 5.307,40.693C0.6454,36.0314 0.6454,28.4534 5.307,23.7919L8.8689,20.23C8.845,22.1902 9.1558,24.1504 9.8251,26.039L8.7016,27.1625C5.8807,29.9595 5.8807,34.5015 8.7016,37.2984C11.4985,40.1193 16.0405,40.1193 18.8375,37.2984L25.1007,31.083L21.228,27.2342C21.2041,27.808 20.9651,28.4056 20.5348,28.8598C19.6024,29.7921 18.0725,29.7921 17.1402,28.8598C14.6301,26.3258 13.4587,22.9791 13.6739,19.704L0,6.0062ZM25.6027,3.4962C30.2643,-1.1654 37.8423,-1.1654 42.5038,3.4962C47.1654,8.1577 47.1654,15.7357 42.5038,20.3973L38.9419,23.9592C38.9658,21.999 38.6551,20.0387 37.9857,18.1741L39.1093,17.0266C41.9301,14.2297 41.9301,9.6877 39.1093,6.8907C36.3123,4.0699 31.7703,4.0699 28.9734,6.8907L21.0129,14.8512L17.6422,11.4567L25.6027,3.4962ZM27.2761,15.3294C28.2084,14.397 29.7383,14.397 30.6707,15.3294C33.9457,18.6044 34.9258,23.2899 33.611,27.4255L29.3559,23.1942C29.2363,21.5687 28.5431,19.967 27.2761,18.7239C26.296,17.7916 26.296,16.2617 27.2761,15.3294Z" />
+</vector>

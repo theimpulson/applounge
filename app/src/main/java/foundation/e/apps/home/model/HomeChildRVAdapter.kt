@@ -18,60 +18,61 @@
 
 package foundation.e.apps.home.model
 
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
-import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
+import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.databinding.HomeFeaturedListItemBinding
+import foundation.e.apps.databinding.HomeChildListItemBinding
 import foundation.e.apps.home.HomeFragmentDirections
-import javax.inject.Singleton
 
-@Singleton
-class HomeFeaturedRVAdapter : RecyclerView.Adapter<HomeFeaturedRVAdapter.ViewHolder>() {
+class HomeChildRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
+    RecyclerView.Adapter<HomeChildRVAdapter.ViewHolder>() {
 
     private var oldList = emptyList<FusedApp>()
 
-    lateinit var circularProgressDrawable: CircularProgressDrawable
-
-    inner class ViewHolder(val binding: HomeFeaturedListItemBinding) :
+    inner class ViewHolder(val binding: HomeChildListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // Setup progress drawable for coil placeholder
-        circularProgressDrawable = CircularProgressDrawable(parent.context)
-        circularProgressDrawable.strokeWidth = 10f
-        circularProgressDrawable.centerRadius = 50f
-        circularProgressDrawable.colorFilter = PorterDuffColorFilter(
-            parent.context.getColor(R.color.colorAccent),
-            PorterDuff.Mode.SRC_IN
+        return ViewHolder(
+            HomeChildListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
-
-        val view =
-            HomeFeaturedListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        val params = view.root.layoutParams
-        params.width = (parent.width * 0.8).toInt()
-        view.root.layoutParams = params
-        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val homeApp = oldList[position]
         holder.binding.apply {
-            imageView.load(CleanAPKInterface.ASSET_URL + oldList[position].other_images_path[0]) {
-                placeholder(circularProgressDrawable)
+            if (homeApp.origin == Origin.CLEANAPK) {
+                appIcon.load(CleanAPKInterface.ASSET_URL + homeApp.icon_image_path)
+            } else {
+                appIcon.load(homeApp.icon_image_path)
             }
-            featuredLayout.setOnClickListener {
+            appName.text = homeApp.name
+            installButton.setOnClickListener {
+                // Send dummy values as we are fetching home screen data from cleanAPK
+                fusedAPIInterface.getApplication(
+                    homeApp._id,
+                    homeApp.name,
+                    "",
+                    0,
+                    0,
+                    oldList[position].origin ?: Origin.CLEANAPK
+                )
+            }
+            homeLayout.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToApplicationFragment(
-                    oldList[position]._id,
-                    oldList[position].package_name,
+                    homeApp._id,
+                    homeApp.package_name,
                     oldList[position].origin ?: Origin.CLEANAPK
                 )
                 holder.itemView.findNavController().navigate(action)
@@ -84,7 +85,7 @@ class HomeFeaturedRVAdapter : RecyclerView.Adapter<HomeFeaturedRVAdapter.ViewHol
     }
 
     fun setData(newList: List<FusedApp>) {
-        val diffUtil = HomeDiffUtil(oldList, newList)
+        val diffUtil = HomeChildDiffUtil(oldList, newList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
         oldList = newList
         diffResult.dispatchUpdatesTo(this)

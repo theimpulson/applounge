@@ -26,11 +26,12 @@ import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
+import com.aurora.gplayapi.helpers.TopChartsHelper
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
-import foundation.e.apps.api.cleanapk.data.home.HomeScreen
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.FusedCategory
+import foundation.e.apps.api.fused.data.FusedHome
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.data.Status
@@ -55,29 +56,35 @@ class FusedAPIImpl @Inject constructor(
 ) {
     private var TAG = FusedAPIImpl::class.java.simpleName
 
-    suspend fun getHomeScreenData(): HomeScreen? {
-        val response = when (preferenceManagerModule.preferredApplicationType()) {
-            "open" -> {
+    suspend fun getHomeScreenData(authData: AuthData): List<FusedHome> {
+        val list = mutableListOf<FusedHome>()
+        val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
+        val playList = listOf(
+            TopChartsHelper.Chart.TOP_SELLING_FREE,
+            TopChartsHelper.Chart.TOP_GROSSING,
+            TopChartsHelper.Chart.MOVERS_SHAKERS,
+        )
+
+        if (preferredApplicationType != "any") {
+            val response = if (preferredApplicationType == "open") {
                 cleanAPKRepository.getHomeScreenData(
                     CleanAPKInterface.APP_TYPE_ANY,
                     CleanAPKInterface.APP_SOURCE_FOSS
-                )
-            }
-            // TODO: Handle PWA response for home screen
-            "pwa" -> {
+                ).body()
+            } else {
                 cleanAPKRepository.getHomeScreenData(
                     CleanAPKInterface.APP_TYPE_ANY,
                     CleanAPKInterface.APP_SOURCE_ANY
-                )
+                ).body()
             }
-            else -> {
-                cleanAPKRepository.getHomeScreenData(
-                    CleanAPKInterface.APP_TYPE_ANY,
-                    CleanAPKInterface.APP_SOURCE_ANY
-                )
+            return list
+        } else {
+            playList.forEach {
+                val result = fetchTopAppsAndGames(it, authData)
+                list.addAll(result)
             }
-        }.body()
-        return response
+            return list
+        }
     }
 
     suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<FusedCategory> {
@@ -141,30 +148,26 @@ class FusedAPIImpl @Inject constructor(
      */
     suspend fun getSearchResults(query: String, authData: AuthData): List<FusedApp> {
         val fusedResponse = mutableListOf<FusedApp>()
-        var gplayResponse: List<FusedApp>? = null
-        var cleanResponse: List<FusedApp>? = null
 
         when (preferenceManagerModule.preferredApplicationType()) {
             "any" -> {
-                cleanResponse = getCleanAPKSearchResults(query)
-                gplayResponse = getGplaySearchResults(query, authData)
+                fusedResponse.addAll(getCleanAPKSearchResults(query))
+                fusedResponse.addAll(getGplaySearchResults(query, authData))
             }
             "open" -> {
-                cleanResponse = getCleanAPKSearchResults(query)
+                fusedResponse.addAll(getCleanAPKSearchResults(query))
             }
             "pwa" -> {
-                cleanResponse = getCleanAPKSearchResults(
-                    query,
-                    CleanAPKInterface.APP_SOURCE_ANY,
-                    CleanAPKInterface.APP_TYPE_PWA
+                fusedResponse.addAll(
+                    getCleanAPKSearchResults(
+                        query,
+                        CleanAPKInterface.APP_SOURCE_ANY,
+                        CleanAPKInterface.APP_TYPE_PWA
+                    )
                 )
             }
         }
-
-        // Add all response together
-        cleanResponse?.let { fusedResponse.addAll(it) }
-        gplayResponse?.let { fusedResponse.addAll(it) }
-        return fusedResponse.distinctBy { it.package_name }
+        return fusedResponse
     }
 
     suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
@@ -255,6 +258,8 @@ class FusedAPIImpl @Inject constructor(
         return if (origin == Origin.CLEANAPK) {
             val response = cleanAPKRepository.getAppOrPWADetailsByID(id).body()
             response?.let {
+                it.app.perms = emptyList()
+                it.app.trackers = emptyList()
                 if (pkgManagerModule.isInstalled(it.app.package_name)) {
                     if (pkgManagerModule.isUpdatable(
                             it.app.package_name,
@@ -293,7 +298,8 @@ class FusedAPIImpl @Inject constructor(
         nres: Int = 20,
         page: Int = 1,
         by: String? = null
-    ): List<FusedApp>? {
+    ): List<FusedApp> {
+        val list = mutableListOf<FusedApp>()
         val response =
             cleanAPKRepository.searchApps(keyword, source, type, nres, page, by).body()?.apps
 
@@ -308,8 +314,9 @@ class FusedAPIImpl @Inject constructor(
                 it.status = Status.UNAVAILABLE
             }
             it.origin = Origin.CLEANAPK
+            list.add(it)
         }
-        return response
+        return list
     }
 
     private suspend fun getGplaySearchResults(query: String, authData: AuthData): List<FusedApp> {
@@ -335,6 +342,21 @@ class FusedAPIImpl @Inject constructor(
             .setTitle(name)
             .setDestinationUri(Uri.fromFile(packagePath))
         downloadManager.enqueue(request)
+    }
+
+    private suspend fun fetchTopAppsAndGames(chart: TopChartsHelper.Chart, authData: AuthData): List<FusedHome> {
+        val list = mutableListOf<FusedHome>()
+        val type = listOf(
+            TopChartsHelper.Type.APPLICATION,
+            TopChartsHelper.Type.GAME
+        )
+        type.forEach {
+            val result = gPlayAPIRepository.getTopApps(it, chart, authData).map { app ->
+                app.transformToFusedApp()
+            }
+            list.add(FusedHome("", result))
+        }
+        return list
     }
 
     private fun App.transformToFusedApp(): FusedApp {
