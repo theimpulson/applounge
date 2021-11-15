@@ -31,6 +31,7 @@ class HomeParentRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
     RecyclerView.Adapter<HomeParentRVAdapter.ViewHolder>() {
 
     private var oldList = emptyList<FusedHome>()
+    private val viewPool = RecyclerView.RecycledViewPool()
 
     inner class ViewHolder(val binding: HomeParentListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -54,6 +55,7 @@ class HomeParentRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
                     LinearLayoutManager.HORIZONTAL,
                     false
                 )
+            setRecycledViewPool(viewPool)
         }
     }
 

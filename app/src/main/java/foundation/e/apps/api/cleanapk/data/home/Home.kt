@@ -22,10 +22,10 @@ import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 
 data class Home(
-    val top_updated_apps: List<FusedApp>, // Top Free Apps
-    val top_updated_games: List<FusedApp>, // Top Free Games
-    val popular_apps_in_last_24_hours: List<FusedApp>, // Top Grossing Apps
-    val popular_games_in_last_24_hours: List<FusedApp>, // Top Grossing Games
-    val discover: List<FusedApp>, // Trending Apps
-    var origin: Origin? // Origin
+    val top_updated_apps: List<FusedApp> = emptyList(), // Top Free Apps
+    val top_updated_games: List<FusedApp> = emptyList(), // Top Free Games
+    val popular_apps_in_last_24_hours: List<FusedApp> = emptyList(), // Top Grossing Apps
+    val popular_games_in_last_24_hours: List<FusedApp> = emptyList(), // Top Grossing Games
+    val discover: List<FusedApp> = emptyList(), // Trending Apps
+    var origin: Origin = Origin.CLEANAPK // Origin
 )

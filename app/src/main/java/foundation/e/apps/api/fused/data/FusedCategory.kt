@@ -18,11 +18,13 @@
 
 package foundation.e.apps.api.fused.data
 
+import java.util.UUID
+
 
 data class FusedCategory(
-    val id: String,
-    val title: String,
-    val browseUrl: String,
-    val imageUrl: String,
-    val drawable: Int,
+    val id: String = UUID.randomUUID().toString(),
+    val title: String = String(),
+    val browseUrl: String = String(),
+    val imageUrl: String = String(),
+    val drawable: Int = -1,
 )

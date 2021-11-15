@@ -78,7 +78,8 @@ dependencies {
     implementation "io.coil-kt:coil:1.4.0"
     implementation 'com.github.Baseflow:PhotoView:2.3.0'
 
-    //Protobuf
+    //Protobuf and Gson
+    implementation 'com.google.code.gson:gson:2.8.9'
     implementation "com.google.protobuf:protobuf-java:3.14.0"
 
     // DataStore
@@ -102,7 +103,7 @@ dependencies {
     // Retrofit
     def retrofit_version = "2.9.0"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
     implementation "com.squareup.okhttp3:okhttp:4.9.2"
 
     // Navigation Components

@@ -19,8 +19,8 @@
 package foundation.e.apps.api.cleanapk.data.categories
 
 data class Categories(
-    val apps: List<String>,
-    val games: List<String>,
-    val success: Boolean,
-    val translations: Map<String, String>
+    val apps: List<String> = emptyList(),
+    val games: List<String> = emptyList(),
+    val success: Boolean = false,
+    val translations: Map<String, String> = emptyMap()
 )

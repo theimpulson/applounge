@@ -19,6 +19,6 @@
 package foundation.e.apps.api.cleanapk.data.home
 
 data class HomeScreen(
-    val home: Home,
-    val success: Boolean
+    val home: Home = Home(),
+    val success: Boolean = false
 )

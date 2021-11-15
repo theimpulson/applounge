@@ -26,9 +26,9 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.content.pm.PackageInfoCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import foundation.e.apps.api.fused.data.Status
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,7 +39,7 @@ class PkgManagerModule @Inject constructor(
 ) {
     private val packageManager = context.packageManager
 
-    fun isInstalled(packageName: String): Boolean {
+    private fun isInstalled(packageName: String): Boolean {
         return try {
             packageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA)
             true
@@ -48,11 +48,7 @@ class PkgManagerModule @Inject constructor(
         }
     }
 
-    fun isUpdatable(packageName: String, versionCode: Int): Boolean {
-        // Check and return early if version code is unavailable
-//        if (versionCode.startsWith("-1") or versionCode.isBlank()) return false
-//
-//        val longVersionCode = getLongVersionCode(versionCode)
+    private fun isUpdatable(packageName: String, versionCode: Int): Boolean {
         return try {
             val packageInfo = getPackageInfo(packageName)
             packageInfo?.let {
@@ -70,6 +66,18 @@ class PkgManagerModule @Inject constructor(
 
     private fun getPackageInfo(packageName: String): PackageInfo? {
         return packageManager.getPackageInfo(packageName, 0)
+    }
+
+    fun getPackageStatus(packageName: String, versionCode: Int): Status {
+        return if (isInstalled(packageName)) {
+            if (isUpdatable(packageName, versionCode)) {
+                Status.UPDATABLE
+            } else {
+                Status.INSTALLED
+            }
+        } else {
+            Status.UNAVAILABLE
+        }
     }
 
     /**

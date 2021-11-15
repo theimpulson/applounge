@@ -19,6 +19,6 @@
 package foundation.e.apps.api.fused.data
 
 data class Ratings(
-    val privacyScore: Double,
-    val usageQualityScore: Double
+    val privacyScore: Double = -1.0,
+    val usageQualityScore: Double = -1.0
 )

@@ -34,13 +34,11 @@ import foundation.e.apps.api.fused.data.FusedCategory
 import foundation.e.apps.api.fused.data.FusedHome
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Ratings
-import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.utils.PreferenceManagerModule
 import foundation.e.apps.utils.pkg.PkgManagerModule
 import java.io.File
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -77,14 +75,13 @@ class FusedAPIImpl @Inject constructor(
                     CleanAPKInterface.APP_SOURCE_ANY
                 ).body()
             }
-            return list
         } else {
             playList.forEach {
                 val result = fetchTopAppsAndGames(it, authData)
                 list.addAll(result)
             }
-            return list
         }
+        return list
     }
 
     suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<FusedCategory> {
@@ -108,11 +105,9 @@ class FusedAPIImpl @Inject constructor(
                     Category.Type.APPLICATION -> {
                         for (cat in category.apps) {
                             val categoryApp = FusedCategory(
-                                cat,
-                                category.translations.getOrDefault(cat, ""),
-                                "",
-                                "",
-                                CategoryUtils.provideCategoryIconResource(cat)
+                                id = cat,
+                                title = category.translations.getOrDefault(cat, ""),
+                                drawable = CategoryUtils.provideCategoryIconResource(cat)
                             )
                             categoriesList.add(categoryApp)
                         }
@@ -120,11 +115,9 @@ class FusedAPIImpl @Inject constructor(
                     Category.Type.GAME -> {
                         for (cat in category.games) {
                             val categoryApp = FusedCategory(
-                                cat,
-                                category.translations.getOrDefault(cat, ""),
-                                "",
-                                "",
-                                CategoryUtils.provideCategoryIconResource(cat)
+                                id = cat,
+                                title = category.translations.getOrDefault(cat, ""),
+                                drawable = CategoryUtils.provideCategoryIconResource(cat)
                             )
                             categoriesList.add(categoryApp)
                         }
@@ -230,16 +223,8 @@ class FusedAPIImpl @Inject constructor(
                 ).body()
             }
             response?.apps?.forEach {
-                if (pkgManagerModule.isInstalled(it.package_name)) {
-                    if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
-                        it.status = Status.UPDATABLE
-                    } else {
-                        it.status = Status.INSTALLED
-                    }
-                } else {
-                    it.status = Status.UNAVAILABLE
-                }
-                it.origin = Origin.CLEANAPK
+                it.status =
+                    pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
             }
             return response?.apps
         } else {
@@ -255,40 +240,15 @@ class FusedAPIImpl @Inject constructor(
         authData: AuthData,
         origin: Origin
     ): FusedApp? {
-        return if (origin == Origin.CLEANAPK) {
-            val response = cleanAPKRepository.getAppOrPWADetailsByID(id).body()
-            response?.let {
-                it.app.perms = emptyList()
-                it.app.trackers = emptyList()
-                if (pkgManagerModule.isInstalled(it.app.package_name)) {
-                    if (pkgManagerModule.isUpdatable(
-                            it.app.package_name,
-                            it.app.latest_version_code
-                        )
-                    ) {
-                        it.app.status = Status.UPDATABLE
-                    } else {
-                        it.app.status = Status.INSTALLED
-                    }
-                } else {
-                    it.app.status = Status.UNAVAILABLE
-                }
-            }
-            response?.app
+        val response = if (origin == Origin.CLEANAPK) {
+            cleanAPKRepository.getAppOrPWADetailsByID(id).body()?.app
         } else {
-            val response = gPlayAPIRepository.getAppDetails(packageName, authData)
-                ?.transformToFusedApp()
-            response?.let {
-                if (pkgManagerModule.isInstalled(it.package_name)) {
-                    if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
-                        it.status = Status.UPDATABLE
-                    } else {
-                        it.status = Status.INSTALLED
-                    }
-                }
-            }
-            response
+            gPlayAPIRepository.getAppDetails(packageName, authData)?.transformToFusedApp()
         }
+        response?.let {
+            it.status = pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+        }
+        return response
     }
 
     private suspend fun getCleanAPKSearchResults(
@@ -304,35 +264,16 @@ class FusedAPIImpl @Inject constructor(
             cleanAPKRepository.searchApps(keyword, source, type, nres, page, by).body()?.apps
 
         response?.forEach {
-            if (pkgManagerModule.isInstalled(it.package_name)) {
-                if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
-                    it.status = Status.UPDATABLE
-                } else {
-                    it.status = Status.INSTALLED
-                }
-            } else {
-                it.status = Status.UNAVAILABLE
-            }
-            it.origin = Origin.CLEANAPK
+            it.status = pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
             list.add(it)
         }
         return list
     }
 
     private suspend fun getGplaySearchResults(query: String, authData: AuthData): List<FusedApp> {
-        val response = gPlayAPIRepository.getSearchResults(query, authData).map { app ->
+        return gPlayAPIRepository.getSearchResults(query, authData).map { app ->
             app.transformToFusedApp()
         }
-        response.forEach {
-            if (pkgManagerModule.isInstalled(it.package_name)) {
-                if (pkgManagerModule.isUpdatable(it.package_name, it.latest_version_code)) {
-                    it.status = Status.UPDATABLE
-                } else {
-                    it.status = Status.INSTALLED
-                }
-            }
-        }
-        return response
     }
 
     private fun downloadApp(name: String, packageName: String, url: String) {
@@ -344,7 +285,10 @@ class FusedAPIImpl @Inject constructor(
         downloadManager.enqueue(request)
     }
 
-    private suspend fun fetchTopAppsAndGames(chart: TopChartsHelper.Chart, authData: AuthData): List<FusedHome> {
+    private suspend fun fetchTopAppsAndGames(
+        chart: TopChartsHelper.Chart,
+        authData: AuthData
+    ): List<FusedHome> {
         val list = mutableListOf<FusedHome>()
         val type = listOf(
             TopChartsHelper.Type.APPLICATION,
@@ -366,7 +310,6 @@ class FusedAPIImpl @Inject constructor(
             category = this.categoryName,
             description = this.description,
             perms = this.permissions,
-            trackers = emptyList(),
             icon_image_path = this.iconArtwork.url,
             last_modified = this.updatedOn,
             latest_version_code = this.versionCode,
@@ -376,11 +319,10 @@ class FusedAPIImpl @Inject constructor(
             other_images_path = this.screenshots.transformToList(),
             package_name = this.packageName,
             ratings = Ratings(
-                privacyScore = -1.0,
                 usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDouble() else -1.0
             ),
             offer_type = this.offerType,
-            status = Status.UNAVAILABLE,
+            status = pkgManagerModule.getPackageStatus(this.packageName, this.versionCode),
             origin = Origin.GPLAY
         )
     }
@@ -395,11 +337,9 @@ class FusedAPIImpl @Inject constructor(
 
     private fun Category.transformToFusedCategory(): FusedCategory {
         return FusedCategory(
-            id = UUID.randomUUID().toString(),
             title = this.title,
             browseUrl = this.browseUrl,
             imageUrl = this.imageUrl,
-            drawable = -1
         )
     }
 }
