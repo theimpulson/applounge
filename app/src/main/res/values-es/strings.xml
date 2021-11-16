@@ -46,4 +46,12 @@
     <string name="application_description_activity_title">Descripción</string>
     <string name="menu_settings">Configuración</string>
     <string name="updates_splash_title">Todas las apps están actualizadas</string>
+    <string name="show_only_pwa_apps">Mostrar sólo aplicaciones web</string>
+    <string name="show_only_open_source_apps">Mostrar sólo aplicaciones de código abierto</string>
+    <string name="preference_update_interval_default">24</string>
+    <string name="preference_updates_title">Actualizaciones</string>
+    <plurals name="updates_notification_title">
+        <item quantity="one">%1$d actualización disponible</item>
+        <item quantity="other">%1$d actualizaciones disponibles</item>
+    </plurals>
 </resources>
