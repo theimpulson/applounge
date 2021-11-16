@@ -63,17 +63,17 @@ class HomeChildRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
                 fusedAPIInterface.getApplication(
                     homeApp._id,
                     homeApp.name,
-                    "",
-                    0,
-                    0,
-                    oldList[position].origin ?: Origin.CLEANAPK
+                    homeApp.package_name,
+                    homeApp.latest_version_code,
+                    homeApp.offer_type,
+                    homeApp.origin
                 )
             }
             homeLayout.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToApplicationFragment(
                     homeApp._id,
                     homeApp.package_name,
-                    oldList[position].origin ?: Origin.CLEANAPK
+                    homeApp.origin
                 )
                 holder.itemView.findNavController().navigate(action)
             }
