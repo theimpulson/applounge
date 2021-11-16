@@ -18,16 +18,14 @@
 
 package foundation.e.apps.application
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
+import foundation.e.apps.application.model.DepthPageTransformer
 import foundation.e.apps.application.model.ScreenshotRVAdapter
 import foundation.e.apps.databinding.FragmentScreenshotBinding
 
@@ -51,6 +49,7 @@ class ScreenshotFragment : Fragment(R.layout.fragment_screenshot) {
         binding.viewPager.apply {
             adapter = screenshotRVAdapter
             currentItem = args.position
+            setPageTransformer(DepthPageTransformer())
         }
     }
 
