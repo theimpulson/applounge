@@ -91,5 +91,20 @@
     <string name="error_no_internet">No se puede conectar! Por favor, compruebe su conexión a Internet e inténtelo de nuevo.</string>
     <string name="error_storage_permission_denied">Se requiere acceso al almacenamiento para descargar aplicaciones.</string>
     <string name="error_apk_corrupt">Descarga interrumpida! Inténtelo de nuevo más tarde.</string>
-    <string name="error_install_failed">No se ha podido instalar. Inténtelo de nuevo más tarde.</string>
+    <string name="error_install_failed">La aplicación no se pudo instalar! Inténtelo de nuevo más tarde.</string>
+    <string name="misc">Varios</string>
+    <string name="not_able_install">No se pudo instalar esta aplicación. Falla de verificación</string>
+    <string name="divider">Divisor</string>
+    <string name="image_carousel">Carrusel de imágenes</string>
+    <string name="error_incident">Ha ocurrido un error</string>
+    <string name="package_name_help_example">Ejemplo de scr que muestra un paquete y su nombre</string>
+    <string name="trackers_expand">Mostrar lista de rastreadores</string>
+    <string name="permissions_expand">Mostrar lista de permisos</string>
+    <string name="Signature_verification_failed">La verificación de la firma falló, cancelando la instalación</string>
+    <string name="pwa_icon">Aplicaciones web progresivas</string>
+    <string name="error_apk_incompatible">Esta aplicación no es compatible con su dispositivo.</string>
+    <string name="error_no_error">No hay error.</string>
+    <string name="error_package_already_exists">Esta aplicación ya está disponible o ya ha sido solicitada.</string>
+    <string name="error_invalid_package_name">No se pudo enviar la solicitud. Por favor, introduzca un nombre de paquete válido.</string>
+    <string name="error_no_screenshots_available">No hay capturas de pantalla disponible</string>
 </resources>
