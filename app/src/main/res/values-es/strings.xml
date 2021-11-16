@@ -91,4 +91,5 @@
     <string name="error_no_internet">No se puede conectar! Por favor, compruebe su conexión a Internet e inténtelo de nuevo.</string>
     <string name="error_storage_permission_denied">Se requiere acceso al almacenamiento para descargar aplicaciones.</string>
     <string name="error_apk_corrupt">Descarga interrumpida. Inténtelo de nuevo más tarde.</string>
+    <string name="error_install_failed">No se ha podido instalar. Inténtelo de nuevo más tarde.</string>
 </resources>
