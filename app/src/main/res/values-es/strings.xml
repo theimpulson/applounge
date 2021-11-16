@@ -35,7 +35,7 @@
     <string name="app_privacy_title">Análisis de privacidad</string>
     <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
     <string name="app_package_name">Nombre del paquete</string>
-    <string name="search_splash_title">Buscar una app</string>
+    <string name="search_splash_title">Buscar una aplicación</string>
     <string name="games_categories_title">Juegos</string>
     <string name="applications_categories_title">Aplicaciones</string>
     <string name="menu_updates">Actualizaciones</string>
