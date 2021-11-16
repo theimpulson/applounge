@@ -4,7 +4,7 @@
     <string name="not_available_full">No disponible</string>
     <string name="not_available">N/D</string>
     <string name="app_name">Aplicaciones</string>
-    <string name="app_privacy_description">Puntuación sobre 10. Calculado con los <a href="https://exodus-privacy.eu.org">análisis de Exodus Privacy</a>, basado en los permisos y rastreadores usados en la app.</string>
+    <string name="app_privacy_description">Puntuación sobre escala de 10. Calculado con los <a href="https://exodus-privacy.eu.org">análisis de Exodus Privacy</a>, basado en los permisos y rastreadores usados en la aplicación.</string>
     <string name="app_privacy_score">Privacidad</string>
     <string name="app_ratings_title">Valoraciones</string>
     <string name="state_installing">Instalando</string>
@@ -20,4 +20,5 @@
     <string name="app_privacy_score_content_description">Puntuación de privacidad de la aplicación</string>
     <string name="app_rating_description">Puntuación sobre 5. Calculado con valoraciones de los usuarios.</string>
     <string name="app_privacy_description_short">Calculado con los <a href="https://exodus-privacy.eu.org">análisis de Exodus Privacy</a>.</string>
+    <string name="app_rating">Calificaciones</string>
 </resources>
