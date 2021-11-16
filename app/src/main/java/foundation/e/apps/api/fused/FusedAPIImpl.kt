@@ -309,12 +309,11 @@ class FusedAPIImpl @Inject constructor(
             author = this.developerName,
             category = this.categoryName,
             description = this.description,
-            perms = this.permissions,
+            perms = this.permissions.transformPermsToString(),
             icon_image_path = this.iconArtwork.url,
             last_modified = this.updatedOn,
             latest_version_code = this.versionCode,
             latest_version_number = this.versionName,
-            licence = "",
             name = this.displayName,
             other_images_path = this.screenshots.transformToList(),
             package_name = this.packageName,
@@ -325,6 +324,11 @@ class FusedAPIImpl @Inject constructor(
             status = pkgManagerModule.getPackageStatus(this.packageName, this.versionCode),
             origin = Origin.GPLAY
         )
+    }
+
+    private fun MutableList<String>.transformPermsToString(): String {
+        val list = this.toString().replace(", ", "\n")
+        return list.substring(1, list.length - 1)
     }
 
     private fun MutableList<Artwork>.transformToList(): List<String> {

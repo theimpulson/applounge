@@ -97,8 +97,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         }
         applicationViewModel.fusedApp.observe(viewLifecycleOwner, { fusedApp ->
             fusedApp?.let {
-                // TODO: MAKE PERMISSIONS BETTER
-                val permissions = fusedApp.perms.toString()
                 screenshotsRVAdapter.setData(it.other_images_path)
                 binding.appName.text = it.name
                 binding.appAuthor.text = it.author
@@ -163,7 +161,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     ApplicationDialogFragment(
                         R.drawable.ic_perm,
                         getString(R.string.permissions),
-                        permissions
+                        fusedApp.perms
                     ).show(childFragmentManager, TAG)
                 }
                 binding.appTrackers.setOnClickListener {
