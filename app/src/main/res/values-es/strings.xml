@@ -83,7 +83,7 @@
     <string name="updates_notification_unmetered_network_warning">Esperando a la red sin medidor</string>
     <string name="MANUALLY_INSTALL_updates_notification_text">Actualizaciones no se instalarán automáticamente</string>
     <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Actualizaciones se instalarán automáticamente</string>
-    <string name="error_apk_unavailable">App no disponible. Inténtelo de nuevo más tarde.</string>
+    <string name="error_apk_unavailable">App no disponible! Inténtelo de nuevo más tarde.</string>
     <string name="error_no_results">No se encontraron aplicaciones.</string>
     <string name="error_unknown">Algo ha ido mal! Vuelva a intentarlo más tarde.</string>
     <string name="error_request_timeout">El servidor tardó mucho en responder! Por favor, inténtelo de nuevo más tarde.</string>
