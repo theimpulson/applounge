@@ -27,12 +27,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
-import com.aurora.gplayapi.data.models.AuthData
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
@@ -63,6 +62,18 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentApplicationBinding.bind(view)
 
+        val startDestination = findNavController().graph.startDestination
+        if (startDestination == R.id.applicationFragment) {
+            binding.toolbar.setNavigationOnClickListener {
+                val action = ApplicationFragmentDirections.actionApplicationFragmentToHomeFragment()
+                view.findNavController().navigate(action)
+            }
+        } else {
+            binding.toolbar.setNavigationOnClickListener {
+                view.findNavController().navigateUp()
+            }
+        }
+
         val notAvailable = getString(R.string.not_available)
 
         val circularProgressDrawable = CircularProgressDrawable(view.context)
@@ -73,28 +84,24 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             PorterDuff.Mode.SRC_IN
         )
 
-        val screenshotsRVAdapter = ApplicationScreenshotsRVAdapter(circularProgressDrawable, args.origin)
+        val screenshotsRVAdapter =
+            ApplicationScreenshotsRVAdapter(circularProgressDrawable, args.origin)
         binding.recyclerView.apply {
             adapter = screenshotsRVAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
 
-        binding.toolbar.apply {
-            setNavigationOnClickListener {
-                view.findNavController().navigateUp()
-            }
-        }
-
         binding.applicationLayout.visibility = View.INVISIBLE
 
-        mainActivityViewModel.authData.value?.let {
+        mainActivityViewModel.authData.observe(viewLifecycleOwner, {
             applicationViewModel.getApplicationDetails(
                 args.id,
                 args.packageName,
                 it,
                 args.origin
             )
-        }
+        })
+
         applicationViewModel.fusedApp.observe(viewLifecycleOwner, { fusedApp ->
             fusedApp?.let {
                 screenshotsRVAdapter.setData(it.other_images_path)

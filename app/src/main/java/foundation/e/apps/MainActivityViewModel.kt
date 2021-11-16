@@ -39,8 +39,6 @@ class MainActivityViewModel @Inject constructor(
     private val gson: Gson
 ) : ViewModel() {
 
-    val error: MutableLiveData<Error> = MutableLiveData(Error.NO_ERROR)
-
     // Authentication Data for GPlay servers
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
 
