@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="service_description">Este servicio es usado por Apps para gestionar, descargar and instalar las aplicaciones. Cerrarlo puede causar un error de descarga</string>
+    <string name="not_available_full">No disponible</string>
+    <string name="not_available">N/D</string>
 </resources>
