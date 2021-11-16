@@ -18,4 +18,6 @@
     <string name="action_install">Instalar</string>
     <string name="app_rating_content_description">Valoración de la aplicación</string>
     <string name="app_privacy_score_content_description">Puntuación de privacidad de la aplicación</string>
+    <string name="app_rating_description">Puntuación sobre 5. Calculado con valoraciones de los usuarios.</string>
+    <string name="app_privacy_description_short">Calculado con los <a href="https://exodus-privacy.eu.org">análisis de Exodus Privacy</a>.</string>
 </resources>
