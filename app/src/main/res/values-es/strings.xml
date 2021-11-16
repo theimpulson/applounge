@@ -46,7 +46,7 @@
     <string name="application_description_activity_title">Descripción</string>
     <string name="menu_settings">Configuración</string>
     <string name="updates_splash_title">Todas las aplicaciones están actualizadas</string>
-    <string name="show_only_pwa_apps">Mostrar sólo aplicaciones web</string>
+    <string name="show_only_pwa_apps">Mostrar sólo aplicaciones web progresivas</string>
     <string name="show_only_open_source_apps">Mostrar sólo aplicaciones de código abierto</string>
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Actualizaciones</string>
@@ -84,4 +84,10 @@
     <string name="MANUALLY_INSTALL_updates_notification_text">Actualizaciones no se instalarán automáticamente</string>
     <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Actualizaciones se instalarán automáticamente</string>
     <string name="error_apk_unavailable">App no disponible. Inténtelo de nuevo más tarde.</string>
+    <string name="error_no_results">No se encontraron aplicaciones.</string>
+    <string name="error_unknown">Algo ha ido mal! Vuelva a intentarlo más tarde.</string>
+    <string name="error_request_timeout">El servidor tardó mucho en responder! Por favor, inténtelo de nuevo más tarde.</string>
+    <string name="error_server_unavailable">El servidor no está disponible! Por favor, inténtelo más tarde.</string>
+    <string name="error_no_internet">No se puede conectar! Por favor, compruebe su conexión a Internet e inténtelo de nuevo.</string>
+    <string name="error_storage_permission_denied">Se requiere acceso al almacenamiento para descargar aplicaciones.</string>
 </resources>
