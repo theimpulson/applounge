@@ -18,7 +18,7 @@
     <string name="action_install">Instalar</string>
     <string name="app_rating_content_description">Valoración de la aplicación</string>
     <string name="app_privacy_score_content_description">Puntuación de privacidad de la aplicación</string>
-    <string name="app_rating_description">Puntuación sobre 5. Calculado con valoraciones de los usuarios.</string>
+    <string name="app_rating_description">Puntuación sobre escala de 5. Calculado con valoraciones de los usuarios.</string>
     <string name="app_privacy_description_short">Calculado con los <a href="https://exodus-privacy.eu.org">análisis de Exodus Privacy</a>.</string>
     <string name="app_rating">Calificaciones</string>
     <string name="exit">Vuelva a pulsar ATRÁS para salir</string>
@@ -33,4 +33,6 @@
     <string name="app_trackers_title">Rastreadores</string>
     <string name="app_permissions_title">Permisos</string>
     <string name="app_privacy_title">Análisis de privacidad</string>
+    <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
+    <string name="app_package_name">Nombre del paquete</string>
 </resources>
