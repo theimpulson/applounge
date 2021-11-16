@@ -11,4 +11,9 @@
     <string name="featured">Destacadas</string>
     <string name="action_installing">Instalando</string>
     <string name="app_icon_content_description">Icono</string>
+    <string name="action_launch">Abrir</string>
+    <string name="action_update_all">Actualizar todo</string>
+    <string name="action_update">Actualizar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_install">Instalar</string>
 </resources>
