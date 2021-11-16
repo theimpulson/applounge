@@ -83,4 +83,5 @@
     <string name="updates_notification_unmetered_network_warning">Esperando a la red sin medidor</string>
     <string name="MANUALLY_INSTALL_updates_notification_text">Actualizaciones no se instalarán automáticamente</string>
     <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Actualizaciones se instalarán automáticamente</string>
+    <string name="error_apk_unavailable">App no disponible. Inténtelo de nuevo más tarde.</string>
 </resources>
