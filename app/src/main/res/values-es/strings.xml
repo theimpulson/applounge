@@ -107,4 +107,5 @@
     <string name="error_package_already_exists">Esta aplicación ya está disponible o ya ha sido solicitada.</string>
     <string name="error_invalid_package_name">No se pudo enviar la solicitud. Por favor, introduzca un nombre de paquete válido.</string>
     <string name="error_no_screenshots_available">No hay capturas de pantalla disponible</string>
+    <string name="error_resolve">Reintentar</string>
 </resources>
