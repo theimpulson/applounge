@@ -63,7 +63,19 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
 
         homeViewModel.homeScreenData.observe(viewLifecycleOwner, {
             homeParentRVAdapter.setData(it)
+            binding.shimmerLayout.visibility = View.GONE
+            binding.parentRV.visibility = View.VISIBLE
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.shimmerLayout.startShimmer()
+    }
+
+    override fun onPause() {
+        binding.shimmerLayout.stopShimmer()
+        super.onPause()
     }
 
     override fun onDestroyView() {

@@ -76,7 +76,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         mainActivityViewModel.authData.value?.let { applicationListViewModel.getList(args.category, args.browseUrl, it) }
         applicationListViewModel.list.observe(viewLifecycleOwner, {
             listAdapter?.setData(it)
-            binding.progressBar.visibility = View.GONE
+            binding.shimmerLayout.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         })
     }
@@ -84,6 +84,16 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.shimmerLayout.startShimmer()
+    }
+
+    override fun onPause() {
+        binding.shimmerLayout.stopShimmer()
+        super.onPause()
     }
 
     override fun getApplication(

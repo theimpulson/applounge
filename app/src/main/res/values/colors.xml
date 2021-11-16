@@ -23,4 +23,7 @@
     <color name="colorNavBar">#FFFFFF</color>
     <color name="colorBackground">#FBFBFB</color>
     <color name="colorSearchBar">#f2f2f2</color>
+
+    <!-- Shimmer Animation -->
+    <color name="colorGrey">#dddddd</color>
 </resources>

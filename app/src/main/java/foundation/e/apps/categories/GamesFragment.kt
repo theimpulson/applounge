@@ -60,11 +60,22 @@ class GamesFragment : Fragment(R.layout.fragment_games) {
                 it
             )
         }
+
         categoriesViewModel.categoriesList.observe(viewLifecycleOwner, {
             categoriesRVAdapter.setData(it)
-            binding.progressBar.visibility = View.GONE
+            binding.shimmerLayout.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.shimmerLayout.startShimmer()
+    }
+
+    override fun onPause() {
+        binding.shimmerLayout.stopShimmer()
+        super.onPause()
     }
 
     override fun onDestroyView() {

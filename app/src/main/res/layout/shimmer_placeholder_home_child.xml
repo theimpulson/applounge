@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Apps  Quickly and easily install Android apps onto your device!
+  ~ Copyright (C) 2021  E FOUNDATION
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:elevation="1dp"
+    android:background="@drawable/home_list_item_background"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true">
+
+        <ImageView
+            android:id="@+id/appIcon"
+            android:background="@color/colorGrey"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_icon"
+            android:scaleType="fitXY" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/appName"
+        android:layout_width="96dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:ellipsize="end"
+        android:background="@color/colorGrey"
+        android:maxLines="2"
+        android:textAlignment="center"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="12sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/installButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="96dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="1dp"
+        android:backgroundTint="@color/colorGrey"
+        android:text="@string/install"
+        android:textAllCaps="false"
+        android:textColor="@color/colorGrey"
+        android:textSize="18sp"
+        app:autoSizeTextType="uniform"
+        app:cornerRadius="8dp"
+        app:strokeColor="@color/colorAccent95"
+        app:strokeWidth="1dp" />
+
+</LinearLayout>

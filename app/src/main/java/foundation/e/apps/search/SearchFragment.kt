@@ -25,7 +25,6 @@ import android.provider.BaseColumns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
-import android.widget.ProgressBar
 import androidx.appcompat.widget.SearchView
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
@@ -36,6 +35,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aurora.gplayapi.SearchSuggestEntry
+import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
@@ -65,7 +65,7 @@ class SearchFragment :
     private val SUGGESTION_KEY = "suggestion"
 
     private var searchView: SearchView? = null
-    private var progressBar: ProgressBar? = null
+    private var shimmerLayout: ShimmerFrameLayout? = null
     private var recyclerView: RecyclerView? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,7 +73,7 @@ class SearchFragment :
         _binding = FragmentSearchBinding.bind(view)
 
         searchView = binding.searchView
-        progressBar = binding.progressBar
+        shimmerLayout = binding.shimmerLayout
         recyclerView = binding.recyclerView
 
         // Setup SearchView
@@ -111,16 +111,26 @@ class SearchFragment :
 
         searchViewModel.searchResult.observe(viewLifecycleOwner, {
             listAdapter?.setData(it)
-            progressBar?.visibility = View.GONE
+            shimmerLayout?.visibility = View.GONE
             recyclerView?.visibility = View.VISIBLE
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.shimmerLayout.startShimmer()
+    }
+
+    override fun onPause() {
+        binding.shimmerLayout.stopShimmer()
+        super.onPause()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         query?.let { text ->
             hideKeyboard(activity as Activity)
             view?.requestFocus()
-            progressBar?.visibility = View.VISIBLE
+            shimmerLayout?.visibility = View.VISIBLE
             recyclerView?.visibility = View.GONE
             mainActivityViewModel.authData.value?.let { searchViewModel.getSearchResults(text, it) }
         }
@@ -154,7 +164,7 @@ class SearchFragment :
         super.onDestroyView()
         _binding = null
         searchView = null
-        progressBar = null
+        shimmerLayout = null
         recyclerView = null
     }
 
