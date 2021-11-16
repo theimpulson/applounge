@@ -45,7 +45,7 @@
     <string name="more">más</string>
     <string name="application_description_activity_title">Descripción</string>
     <string name="menu_settings">Configuración</string>
-    <string name="updates_splash_title">Todas las apps están actualizadas</string>
+    <string name="updates_splash_title">Todas las aplicaciones están actualizadas</string>
     <string name="show_only_pwa_apps">Mostrar sólo aplicaciones web</string>
     <string name="show_only_open_source_apps">Mostrar sólo aplicaciones de código abierto</string>
     <string name="preference_update_interval_default">24</string>
@@ -54,4 +54,33 @@
         <item quantity="one">%1$d actualización disponible</item>
         <item quantity="other">%1$d actualizaciones disponibles</item>
     </plurals>
+    <string name="show_only_pwa_apps_key">show_only_pwa_apps</string>
+    <string name="show_only_open_source_apps_key">show_only_open-source_apps</string>
+    <string name="Show_all_apps">Mostrar todas las aplicaciones</string>
+    <string name="Show_applications">Mostrar aplicaciones:</string>
+    <string name="package_name_find_text">Para encontrar el nombre del paquete de una aplicación instalada en tu dispositivo, ve a Ajustes del sistema &gt; Aplicaciones &gt; [tu aplicación]. El nombre del paquete debería aparecer en la parte inferior de la página.
+\n*Este proceso puede variar en algunos dispositivos.</string>
+    <string name="package_name_find_title">¿Cómo encontrar el nombre del paquete de una aplicación\?</string>
+    <string name="package_name_help_text">Un nombre de paquete es un identificador único para una aplicación Android. Los nombres de los paquetes suelen estar en minúsculas y se escriben con el siguiente formato \"dominio.empresa.aplicación\"</string>
+    <string name="package_name_help_title">¿Qué es un nombre de paquete\?</string>
+    <string name="app_request_successful_text">Solicitud de aplicación realizada con éxito!</string>
+    <string name="submit_button_text">Enviar</string>
+    <string name="edit_text_hint">Nombre del paquete</string>
+    <string name="preference_apps_request_app_summary">Solicitar una aplicación que no está disponible actualmente</string>
+    <string name="preference_apps_request_app_title">Solicitar aplicación</string>
+    <string name="pref_apps_request_app_key">pref_apps_request_app</string>
+    <string name="pref_update_notify_key">pref_update_notify</string>
+    <string name="pref_update_install_automatically_key">pref_update_install_automatically</string>
+    <string name="pref_update_wifi_only_key">pref_update_wifi_only</string>
+    <string name="pref_update_interval_key">pref_update_interval</string>
+    <string name="preference_update_notify_available_description">Mostrar una notificación cuando hayan actualizaciones disponibles</string>
+    <string name="preference_update_notify_available_title">Mostrar actulizaciones disponibles</string>
+    <string name="preference_update_install_automatically_description">Descargar e instalar actualizaciones en segundo plano</string>
+    <string name="preference_update_install_automatically_title">Instalar actualizaciones automaticamente</string>
+    <string name="preference_update_wifi_only_description">Actualizar aplicaciones automáticamente sólo en redes no medibles como el Wi-Fi</string>
+    <string name="preference_update_wifi_only_title">Sólo en redes sin medidor</string>
+    <string name="preference_update_interval_title">Intervalo de chequéo de actualización</string>
+    <string name="updates_notification_unmetered_network_warning">Esperando a la red sin medidor</string>
+    <string name="MANUALLY_INSTALL_updates_notification_text">Actualizaciones no se instalarán automáticamente</string>
+    <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Actualizaciones se instalarán automáticamente</string>
 </resources>
