@@ -42,15 +42,13 @@ class ApplicationScreenshotsRVAdapter(
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = ApplicationScreenshotsListItemBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+        return ViewHolder(
+            ApplicationScreenshotsListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
-        val params = view.root.layoutParams
-        params.width = (parent.width * 0.4).toInt()
-        view.root.layoutParams = params
-        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
