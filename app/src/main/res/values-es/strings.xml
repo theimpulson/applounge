@@ -45,4 +45,5 @@
     <string name="more">más</string>
     <string name="application_description_activity_title">Descripción</string>
     <string name="menu_settings">Configuración</string>
+    <string name="updates_splash_title">Todas las apps están actualizadas</string>
 </resources>
