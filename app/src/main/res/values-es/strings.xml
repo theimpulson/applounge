@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="service_description">Este servicio es usado por Apps para gestionar, descargar and instalar las aplicaciones. Cerrarlo puede causar un error de descarga</string>
+    <string name="service_description">Este servicio es usado por el administrador para descargar, instalar y organizar aplicaciones. Cerrarlo puede causar un error de descarga.</string>
     <string name="not_available_full">No disponible</string>
     <string name="not_available">N/D</string>
     <string name="app_name">Aplicaciones</string>
@@ -16,4 +16,6 @@
     <string name="action_update">Actualizar</string>
     <string name="action_cancel">Cancelar</string>
     <string name="action_install">Instalar</string>
+    <string name="app_rating_content_description">Valoración de la aplicación</string>
+    <string name="app_privacy_score_content_description">Puntuación de privacidad de la aplicación</string>
 </resources>
