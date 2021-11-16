@@ -20,34 +20,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".home.HomeFragment">
 
     <com.facebook.shimmer.ShimmerFrameLayout
-        android:orientation="vertical"
         android:id="@+id/shimmerLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:scrollbars="none">
 
-            <include layout="@layout/shimmer_placeholder_home" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <include layout="@layout/shimmer_placeholder_home" />
+                <include layout="@layout/shimmer_placeholder_home" />
 
-            <include layout="@layout/shimmer_placeholder_home" />
+                <include layout="@layout/shimmer_placeholder_home" />
 
-            <include layout="@layout/shimmer_placeholder_home" />
+                <include layout="@layout/shimmer_placeholder_home" />
 
-            <include layout="@layout/shimmer_placeholder_home" />
+                <include layout="@layout/shimmer_placeholder_home" />
 
-            <include layout="@layout/shimmer_placeholder_home" />
+                <include layout="@layout/shimmer_placeholder_home" />
 
-        </LinearLayout>
+                <include layout="@layout/shimmer_placeholder_home" />
+
+            </LinearLayout>
+        </ScrollView>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 

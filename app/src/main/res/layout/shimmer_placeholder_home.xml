@@ -32,25 +32,31 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <LinearLayout
+    <HorizontalScrollView
+        android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/shimmer_placeholder_home_child" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
-        <include layout="@layout/shimmer_placeholder_home_child" />
+            <include layout="@layout/shimmer_placeholder_home_child" />
 
-        <include layout="@layout/shimmer_placeholder_home_child" />
+            <include layout="@layout/shimmer_placeholder_home_child" />
 
-        <include layout="@layout/shimmer_placeholder_home_child" />
+            <include layout="@layout/shimmer_placeholder_home_child" />
 
-        <include layout="@layout/shimmer_placeholder_home_child" />
+            <include layout="@layout/shimmer_placeholder_home_child" />
 
-        <include layout="@layout/shimmer_placeholder_home_child" />
+            <include layout="@layout/shimmer_placeholder_home_child" />
 
-    </LinearLayout>
+            <include layout="@layout/shimmer_placeholder_home_child" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
 </LinearLayout>
