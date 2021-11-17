@@ -36,5 +36,6 @@ data class FusedApp(
     val ratings: Ratings = Ratings(),
     val offer_type: Int = -1,
     var status: Status = Status.UNAVAILABLE,
-    var origin: Origin = Origin.CLEANAPK
+    var origin: Origin = Origin.CLEANAPK,
+    val shareUrl: String = String()
 )

@@ -35,7 +35,7 @@ class ApplicationViewModel @Inject constructor(
     private val fusedAPIRepository: FusedAPIRepository
 ) : ViewModel() {
 
-    val fusedApp: MutableLiveData<FusedApp?> = MutableLiveData()
+    val fusedApp: MutableLiveData<FusedApp> = MutableLiveData()
 
     fun getApplicationDetails(id: String, packageName: String, authData: AuthData, origin: Origin) {
         viewModelScope.launch(Dispatchers.IO) {

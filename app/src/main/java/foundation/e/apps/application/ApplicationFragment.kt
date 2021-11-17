@@ -18,6 +18,7 @@
 
 package foundation.e.apps.application
 
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
@@ -62,6 +63,10 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentApplicationBinding.bind(view)
 
+        if (args.origin == Origin.GPLAY) {
+            binding.toolbar.inflateMenu(R.menu.application_menu)
+        }
+
         val startDestination = findNavController().graph.startDestination
         if (startDestination == R.id.applicationFragment) {
             binding.toolbar.setNavigationOnClickListener {
@@ -102,120 +107,148 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             )
         })
 
-        applicationViewModel.fusedApp.observe(viewLifecycleOwner, { fusedApp ->
-            fusedApp?.let {
-                screenshotsRVAdapter.setData(it.other_images_path)
-                binding.appName.text = it.name
-                binding.appAuthor.text = it.author
-                binding.categoryTitle.text = it.category
-                if (it.ratings.usageQualityScore != -1.0) {
-                    binding.appRating.text =
-                        getString(R.string.rating_out_of, it.ratings.usageQualityScore.toString())
-                }
-                binding.appRatingLayout.setOnClickListener {
-                    ApplicationDialogFragment(
-                        R.drawable.ic_star,
-                        getString(R.string.rating),
-                        getString(R.string.rating_description)
-                    ).show(childFragmentManager, TAG)
-                }
-                if (it.ratings.privacyScore != -1.0) {
-                    binding.appPrivacyScore.text = getString(
-                        R.string.privacy_rating_out_of,
-                        it.ratings.privacyScore.toString()
-                    )
-                }
-                binding.appPrivacyScoreLayout.setOnClickListener {
-                    ApplicationDialogFragment(
-                        R.drawable.ic_lock,
-                        getString(R.string.privacy),
-                        getString(R.string.privacy_description)
-                    ).show(childFragmentManager, TAG)
-                }
-                binding.appEnergyRatingLayout.setOnClickListener {
-                    ApplicationDialogFragment(
-                        R.drawable.ic_energy,
-                        getString(R.string.energy),
-                        getString(R.string.energy_description)
-                    ).show(childFragmentManager, TAG)
-                }
-                if (args.origin == Origin.CLEANAPK) {
-                    binding.appIcon.load(CleanAPKInterface.ASSET_URL + it.icon_image_path) {
-                        placeholder(circularProgressDrawable)
+        applicationViewModel.fusedApp.observe(viewLifecycleOwner, {
+            screenshotsRVAdapter.setData(it.other_images_path)
+
+            binding.toolbar.setOnMenuItemClickListener { menu ->
+                when (menu.itemId) {
+                    R.id.share -> {
+                        val intent = Intent.createChooser(shareApp(it.name, it.shareUrl), null)
+                        startActivity(intent)
+                        true
                     }
-                } else {
-                    binding.appIcon.load(it.icon_image_path) {
-                        placeholder(circularProgressDrawable)
-                    }
+                    else -> false
                 }
-                binding.appDescription.text =
-                    Html.fromHtml(it.description, Html.FROM_HTML_MODE_COMPACT)
-                binding.appUpdatedOn.text = getString(
-                    R.string.updated_on,
-                    if (args.origin == Origin.CLEANAPK) it.last_modified.split(" ")[0] else it.last_modified
-                )
-                binding.appRequires.text = getString(R.string.min_android_version, notAvailable)
-                binding.appVersion.text = getString(
-                    R.string.version,
-                    if (it.latest_version_number == "-1") notAvailable else it.latest_version_number
-                )
-                binding.appLicense.text = getString(
-                    R.string.license,
-                    if (it.licence.isBlank() or (it.licence == "unknown")) notAvailable else it.licence
-                )
-                binding.appPackageName.text = getString(R.string.package_name, it.package_name)
-                binding.appPermissions.setOnClickListener {
-                    ApplicationDialogFragment(
-                        R.drawable.ic_perm,
-                        getString(R.string.permissions),
-                        fusedApp.perms
-                    ).show(childFragmentManager, TAG)
-                }
-                binding.appTrackers.setOnClickListener {
-                    ApplicationDialogFragment(
-                        R.drawable.ic_tracker,
-                        getString(R.string.trackers),
-                        getString(R.string.trackers_description, "")
-                    ).show(childFragmentManager, TAG)
-                }
-                when (it.status) {
-                    Status.INSTALLED -> {
-                        binding.installButton.text = getString(R.string.open)
-                        binding.installButton.setOnClickListener { _ ->
-                            startActivity(pkgManagerModule.getLaunchIntent(it.package_name))
-                        }
-                    }
-                    Status.UPDATABLE -> {
-                        binding.installButton.text = getString(R.string.update)
-                        binding.installButton.setOnClickListener { _ ->
-                            mainActivityViewModel.authData.value?.let { data ->
-                                applicationViewModel.getApplication(data, it, args.origin)
-                            }
-                        }
-                    }
-                    Status.UNAVAILABLE -> {
-                        binding.installButton.setOnClickListener { _ ->
-                            mainActivityViewModel.authData.value?.let { data ->
-                                applicationViewModel.getApplication(data, it, args.origin)
-                            }
-                        }
-                    }
-                    Status.DOWNLOADING -> {
-                        binding.installButton.text = getString(R.string.cancel)
-                    }
-                    Status.INSTALLING, Status.UNINSTALLING -> {
-                        binding.installButton.text = getString(R.string.cancel)
-                        binding.installButton.isEnabled = false
-                    }
-                }
-                binding.applicationLayout.visibility = View.VISIBLE
-                binding.progressBar.visibility = View.GONE
             }
+
+            binding.appName.text = it.name
+            binding.appAuthor.text = it.author
+            binding.categoryTitle.text = it.category
+
+            if (it.ratings.usageQualityScore != -1.0) {
+                binding.appRating.text =
+                    getString(R.string.rating_out_of, it.ratings.usageQualityScore.toString())
+            }
+            binding.appRatingLayout.setOnClickListener {
+                ApplicationDialogFragment(
+                    R.drawable.ic_star,
+                    getString(R.string.rating),
+                    getString(R.string.rating_description)
+                ).show(childFragmentManager, TAG)
+            }
+
+            if (it.ratings.privacyScore != -1.0) {
+                binding.appPrivacyScore.text = getString(
+                    R.string.privacy_rating_out_of,
+                    it.ratings.privacyScore.toString()
+                )
+            }
+            binding.appPrivacyScoreLayout.setOnClickListener {
+                ApplicationDialogFragment(
+                    R.drawable.ic_lock,
+                    getString(R.string.privacy),
+                    getString(R.string.privacy_description)
+                ).show(childFragmentManager, TAG)
+            }
+
+            binding.appEnergyRatingLayout.setOnClickListener {
+                ApplicationDialogFragment(
+                    R.drawable.ic_energy,
+                    getString(R.string.energy),
+                    getString(R.string.energy_description)
+                ).show(childFragmentManager, TAG)
+            }
+
+            if (args.origin == Origin.CLEANAPK) {
+                binding.appIcon.load(CleanAPKInterface.ASSET_URL + it.icon_image_path) {
+                    placeholder(circularProgressDrawable)
+                }
+            } else {
+                binding.appIcon.load(it.icon_image_path) {
+                    placeholder(circularProgressDrawable)
+                }
+            }
+
+            binding.appDescription.text =
+                Html.fromHtml(it.description, Html.FROM_HTML_MODE_COMPACT)
+
+            binding.appUpdatedOn.text = getString(
+                R.string.updated_on,
+                if (args.origin == Origin.CLEANAPK) it.last_modified.split(" ")[0] else it.last_modified
+            )
+            binding.appRequires.text = getString(R.string.min_android_version, notAvailable)
+            binding.appVersion.text = getString(
+                R.string.version,
+                if (it.latest_version_number == "-1") notAvailable else it.latest_version_number
+            )
+            binding.appLicense.text = getString(
+                R.string.license,
+                if (it.licence.isBlank() or (it.licence == "unknown")) notAvailable else it.licence
+            )
+            binding.appPackageName.text = getString(R.string.package_name, it.package_name)
+
+            binding.appPermissions.setOnClickListener { _ ->
+                ApplicationDialogFragment(
+                    R.drawable.ic_perm,
+                    getString(R.string.permissions),
+                    it.perms
+                ).show(childFragmentManager, TAG)
+            }
+            binding.appTrackers.setOnClickListener {
+                ApplicationDialogFragment(
+                    R.drawable.ic_tracker,
+                    getString(R.string.trackers),
+                    getString(R.string.trackers_description, "")
+                ).show(childFragmentManager, TAG)
+            }
+
+            when (it.status) {
+                Status.INSTALLED -> {
+                    binding.installButton.text = getString(R.string.open)
+                    binding.installButton.setOnClickListener { _ ->
+                        startActivity(pkgManagerModule.getLaunchIntent(it.package_name))
+                    }
+                }
+                Status.UPDATABLE -> {
+                    binding.installButton.text = getString(R.string.update)
+                    binding.installButton.setOnClickListener { _ ->
+                        mainActivityViewModel.authData.value?.let { data ->
+                            applicationViewModel.getApplication(data, it, args.origin)
+                        }
+                    }
+                }
+                Status.UNAVAILABLE -> {
+                    binding.installButton.setOnClickListener { _ ->
+                        mainActivityViewModel.authData.value?.let { data ->
+                            applicationViewModel.getApplication(data, it, args.origin)
+                        }
+                    }
+                }
+                Status.DOWNLOADING -> {
+                    binding.installButton.text = getString(R.string.cancel)
+                }
+                Status.INSTALLING, Status.UNINSTALLING -> {
+                    binding.installButton.text = getString(R.string.cancel)
+                    binding.installButton.isEnabled = false
+                }
+            }
+
+            binding.applicationLayout.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
         })
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun shareApp(name: String, shareUrl: String): Intent {
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, getString(R.string.share_intent, name, shareUrl))
+            type = "text/plain"
+        }
+        return shareIntent
     }
 }

@@ -39,7 +39,7 @@ class FusedAPIRepository @Inject constructor(
         packageName: String,
         authData: AuthData,
         origin: Origin
-    ): FusedApp? {
+    ): FusedApp {
         return fusedAPIImpl.getApplicationDetails(id, packageName, authData, origin)
     }
 

@@ -29,11 +29,7 @@ import com.aurora.gplayapi.data.models.Category
 import com.aurora.gplayapi.helpers.TopChartsHelper
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
-import foundation.e.apps.api.fused.data.FusedApp
-import foundation.e.apps.api.fused.data.FusedCategory
-import foundation.e.apps.api.fused.data.FusedHome
-import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.api.fused.data.Ratings
+import foundation.e.apps.api.fused.data.*
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.utils.PreferenceManagerModule
@@ -239,16 +235,18 @@ class FusedAPIImpl @Inject constructor(
         packageName: String,
         authData: AuthData,
         origin: Origin
-    ): FusedApp? {
+    ): FusedApp {
         val response = if (origin == Origin.CLEANAPK) {
             cleanAPKRepository.getAppOrPWADetailsByID(id).body()?.app
         } else {
-            gPlayAPIRepository.getAppDetails(packageName, authData)?.transformToFusedApp()
+            val app = gPlayAPIRepository.getAppDetails(packageName, authData)
+            app?.videoArtwork?.let { Log.d(TAG, it.url) }
+            app?.transformToFusedApp()
         }
         response?.let {
             it.status = pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
         }
-        return response
+        return response ?: FusedApp()
     }
 
     private suspend fun getCleanAPKSearchResults(
@@ -322,8 +320,16 @@ class FusedAPIImpl @Inject constructor(
             ),
             offer_type = this.offerType,
             status = pkgManagerModule.getPackageStatus(this.packageName, this.versionCode),
-            origin = Origin.GPLAY
+            origin = Origin.GPLAY,
+            shareUrl = this.shareUrl
         )
+    }
+
+    fun getYouTubeUrl(youTubeImg: String): String {
+        val ytURL = "https://www.youtube.com/watch?v="
+        val splitID = youTubeImg.split("https://i.ytimg.com/vi/")[1]
+        val id = splitID.split("/")[0]
+        return ytURL + id
     }
 
     private fun MutableList<String>.transformPermsToString(): String {

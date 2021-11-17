@@ -67,11 +67,14 @@
     <string name="package_name_find_text">To find the package name of an app that is installed on your device, go to System Settings > Apps > [your app]. The package name should be listed at the bottom of the page.\n*This process may vary on some devices.</string>
 
     <!-- Application -->
+    <string name="share">Share</string>
+    <string name="menu" translatable="false">Menu</string>
+    <string name="share_intent">Check out \"<xliff:g id="rating">%1$s</xliff:g>\"\n<xliff:g id="rating">%2$s</xliff:g></string>
     <string name="ok">OK</string>
     <string name="install">Install</string>
     <string name="cancel">Cancel</string>
     <string name="app_icon">App icon</string>
-    <string name="not_available">N/A</string>
+    <string name="not_available" translatable="false">N/A</string>
     <string name="open">Open</string>
     <string name="more">More</string>
     <string name="update">Update</string>
