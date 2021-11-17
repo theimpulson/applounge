@@ -98,6 +98,17 @@
     <!-- Updates Fragment -->
     <string name="update_all">Update All</string>
 
+    <!-- Error -->
+    <string name="retry">Retry</string>
+    <string name="network_error_title">No connection</string>
+    <string name="network_error_desc">Please check your internet\n connection and try again</string>
+    <string name="no_results_title">Error 404!</string>
+    <string name="no_results_desc">Page or resource not found</string>
+    <string name="unimplemented_error_title">Under construction</string>
+    <string name="unimplemented_error_desc">This page or resource is unavailable due to maintenance</string>
+    <string name="internal_error_title">Internal error</string>
+    <string name="internal_error_desc">An internal error happened</string>
+
     <!-- Home Fragment -->
     <string name="featured">Featured</string>
     <string name="discover">Discover</string>

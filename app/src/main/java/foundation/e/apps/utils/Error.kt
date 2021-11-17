@@ -18,9 +18,32 @@
 
 package foundation.e.apps.utils
 
-enum class Error {
-    NO_ERROR,
-    NO_INTERNET,
-    UNKNOWN,
-    NO_RESULTS
+import foundation.e.apps.R
+
+sealed class Error {
+    object NoError : Error()
+
+    data class NetworkError(
+        val drawable: Int = R.drawable.ic_network_unavailable,
+        val title: Int = R.string.network_error_title,
+        val desc: Int = R.string.network_error_desc
+    ) : Error()
+
+    data class InternalError(
+        val drawable: Int = R.drawable.ic_broken_link,
+        val title: Int = R.string.internal_error_title,
+        val desc: Int = R.string.internal_error_desc
+    ) : Error()
+
+    data class NoResults(
+        val drawable: Int = R.drawable.ic_404,
+        val title: Int = R.string.no_results_title,
+        val desc: Int = R.string.no_results_desc
+    ) : Error()
+
+    data class UnImplemented(
+        val drawable: Int = R.drawable.ic_maintenance,
+        val title: Int = R.string.unimplemented_error_title,
+        val desc: Int = R.string.unimplemented_error_title
+    ) : Error()
 }
