@@ -55,7 +55,11 @@ class GPlayAPIRepository @Inject constructor(
         return gPlayAPIImpl.getAppDetails(packageName, authData)
     }
 
-    suspend fun getTopApps(type: TopChartsHelper.Type, chart: TopChartsHelper.Chart, authData: AuthData): List<App> {
+    suspend fun getTopApps(
+        type: TopChartsHelper.Type,
+        chart: TopChartsHelper.Chart,
+        authData: AuthData
+    ): List<App> {
         return gPlayAPIImpl.getTopApps(type, chart, authData)
     }
 

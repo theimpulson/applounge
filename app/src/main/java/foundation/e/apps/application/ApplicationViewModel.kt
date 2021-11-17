@@ -57,7 +57,7 @@ class ApplicationViewModel @Inject constructor(
                 app.name,
                 app.package_name,
                 app.latest_version_code,
-                app.offer_type ?: 0,
+                app.offer_type,
                 authData,
                 origin
             )

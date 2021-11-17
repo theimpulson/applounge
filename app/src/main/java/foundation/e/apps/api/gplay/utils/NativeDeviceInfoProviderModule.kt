@@ -32,7 +32,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import java.util.Properties
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 @Module
 @InstallIn(SingletonComponent::class)
