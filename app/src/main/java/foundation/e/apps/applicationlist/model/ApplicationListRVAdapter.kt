@@ -25,6 +25,9 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.Shimmer.Direction.LEFT_TO_RIGHT
+import com.facebook.shimmer.ShimmerDrawable
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
@@ -48,6 +51,14 @@ class ApplicationListRVAdapter(
     private var oldList = emptyList<FusedApp>()
     private val TAG = ApplicationListRVAdapter::class.java.simpleName
 
+    private val shimmer = Shimmer.ColorHighlightBuilder()
+            .setDuration(500)
+            .setBaseAlpha(0.7f)
+            .setDirection(LEFT_TO_RIGHT)
+            .setHighlightAlpha(0.6f)
+            .setAutoStart(true)
+            .build()
+
     inner class ViewHolder(val binding: ApplicationListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -64,6 +75,8 @@ class ApplicationListRVAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val view = holder.itemView
         val searchApp = oldList[position]
+        val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
+
         holder.binding.apply {
             applicationList.setOnClickListener {
                 val action = when (currentDestinationId) {
@@ -96,10 +109,14 @@ class ApplicationListRVAdapter(
             }
             when (searchApp.origin) {
                 Origin.GPLAY -> {
-                    appIcon.load(searchApp.icon_image_path)
+                    appIcon.load(searchApp.icon_image_path) {
+                        placeholder(shimmerDrawable)
+                    }
                 }
                 Origin.CLEANAPK -> {
-                    appIcon.load(CleanAPKInterface.ASSET_URL + searchApp.icon_image_path)
+                    appIcon.load(CleanAPKInterface.ASSET_URL + searchApp.icon_image_path) {
+                        placeholder(shimmerDrawable)
+                    }
                 }
                 else -> Log.wtf(TAG, "${searchApp.package_name} is from an unknown origin")
             }

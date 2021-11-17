@@ -24,6 +24,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerDrawable
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
@@ -35,6 +37,14 @@ class HomeChildRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
     RecyclerView.Adapter<HomeChildRVAdapter.ViewHolder>() {
 
     private var oldList = emptyList<FusedApp>()
+
+    private val shimmer = Shimmer.ColorHighlightBuilder()
+            .setDuration(500)
+            .setBaseAlpha(0.7f)
+            .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
+            .setHighlightAlpha(0.6f)
+            .setAutoStart(true)
+            .build()
 
     inner class ViewHolder(val binding: HomeChildListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -51,15 +61,20 @@ class HomeChildRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val homeApp = oldList[position]
+        val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
+
         holder.binding.apply {
             if (homeApp.origin == Origin.CLEANAPK) {
-                appIcon.load(CleanAPKInterface.ASSET_URL + homeApp.icon_image_path)
+                appIcon.load(CleanAPKInterface.ASSET_URL + homeApp.icon_image_path) {
+                    placeholder(shimmerDrawable)
+                }
             } else {
-                appIcon.load(homeApp.icon_image_path)
+                appIcon.load(homeApp.icon_image_path) {
+                    placeholder(shimmerDrawable)
+                }
             }
             appName.text = homeApp.name
             installButton.setOnClickListener {
-                // Send dummy values as we are fetching home screen data from cleanAPK
                 fusedAPIInterface.getApplication(
                     homeApp._id,
                     homeApp.name,
