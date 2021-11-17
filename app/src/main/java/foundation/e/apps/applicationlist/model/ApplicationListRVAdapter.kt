@@ -18,15 +18,12 @@
 
 package foundation.e.apps.applicationlist.model
 
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
@@ -50,21 +47,11 @@ class ApplicationListRVAdapter(
 
     private var oldList = emptyList<FusedApp>()
     private val TAG = ApplicationListRVAdapter::class.java.simpleName
-    private lateinit var circularProgressDrawable: CircularProgressDrawable
 
     inner class ViewHolder(val binding: ApplicationListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // Setup progress drawable for coil placeholder
-        circularProgressDrawable = CircularProgressDrawable(parent.context)
-        circularProgressDrawable.strokeWidth = 10f
-        circularProgressDrawable.centerRadius = 50f
-        circularProgressDrawable.colorFilter = PorterDuffColorFilter(
-            parent.context.getColor(R.color.colorAccent),
-            PorterDuff.Mode.SRC_IN
-        )
-
         return ViewHolder(
             ApplicationListItemBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -81,22 +68,18 @@ class ApplicationListRVAdapter(
             applicationList.setOnClickListener {
                 val action = when (currentDestinationId) {
                     R.id.applicationListFragment -> {
-                        searchApp.origin?.let { origin ->
-                            ApplicationListFragmentDirections.actionApplicationListFragmentToApplicationFragment(
-                                searchApp._id,
-                                searchApp.package_name,
-                                origin
-                            )
-                        }
+                        ApplicationListFragmentDirections.actionApplicationListFragmentToApplicationFragment(
+                            searchApp._id,
+                            searchApp.package_name,
+                            searchApp.origin
+                        )
                     }
                     R.id.searchFragment -> {
-                        searchApp.origin?.let { origin ->
-                            SearchFragmentDirections.actionSearchFragmentToApplicationFragment(
-                                searchApp._id,
-                                searchApp.package_name,
-                                origin
-                            )
-                        }
+                        SearchFragmentDirections.actionSearchFragmentToApplicationFragment(
+                            searchApp._id,
+                            searchApp.package_name,
+                            searchApp.origin
+                        )
                     }
                     else -> null
                 }
@@ -113,14 +96,10 @@ class ApplicationListRVAdapter(
             }
             when (searchApp.origin) {
                 Origin.GPLAY -> {
-                    appIcon.load(searchApp.icon_image_path) {
-                        placeholder(circularProgressDrawable)
-                    }
+                    appIcon.load(searchApp.icon_image_path)
                 }
                 Origin.CLEANAPK -> {
-                    appIcon.load(CleanAPKInterface.ASSET_URL + searchApp.icon_image_path) {
-                        placeholder(circularProgressDrawable)
-                    }
+                    appIcon.load(CleanAPKInterface.ASSET_URL + searchApp.icon_image_path)
                 }
                 else -> Log.wtf(TAG, "${searchApp.package_name} is from an unknown origin")
             }
@@ -170,7 +149,7 @@ class ApplicationListRVAdapter(
             searchApp.name,
             searchApp.package_name,
             searchApp.latest_version_code,
-            searchApp.offer_type ?: 0,
+            searchApp.offer_type,
             searchApp.origin
         )
     }

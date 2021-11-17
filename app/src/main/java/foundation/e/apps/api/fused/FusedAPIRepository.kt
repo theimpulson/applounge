@@ -21,9 +21,8 @@ package foundation.e.apps.api.fused
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
-import foundation.e.apps.api.cleanapk.data.home.HomeScreen
-import foundation.e.apps.api.fused.data.FusedCategory
 import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.api.fused.data.FusedCategory
 import foundation.e.apps.api.fused.data.FusedHome
 import foundation.e.apps.api.fused.data.Origin
 import javax.inject.Inject

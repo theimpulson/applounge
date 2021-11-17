@@ -58,4 +58,3 @@ class DepthPageTransformer : ViewPager2.PageTransformer {
         }
     }
 }
-

@@ -28,7 +28,6 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.utils.DataStoreModule
-import foundation.e.apps.utils.Error
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

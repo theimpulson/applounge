@@ -25,13 +25,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aurora.gplayapi.data.models.Category
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.categories.model.CategoriesRVAdapter
 import foundation.e.apps.databinding.FragmentGamesBinding
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class GamesFragment : Fragment(R.layout.fragment_games) {

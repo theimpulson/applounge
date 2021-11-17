@@ -19,23 +19,18 @@
 package foundation.e.apps.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.databinding.FragmentHomeBinding
-import foundation.e.apps.home.model.HomeChildRVAdapter
 import foundation.e.apps.home.model.HomeParentRVAdapter
-import foundation.e.apps.utils.PreferenceManagerModule
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {

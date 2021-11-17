@@ -18,7 +18,6 @@
 
 package foundation.e.apps.categories.model
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController

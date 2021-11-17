@@ -20,7 +20,6 @@ package foundation.e.apps.api.fused.data
 
 import java.util.UUID
 
-
 data class FusedCategory(
     val id: String = UUID.randomUUID().toString(),
     val title: String = String(),

@@ -57,5 +57,4 @@ class ScreenshotFragment : Fragment(R.layout.fragment_screenshot) {
         _binding = null
         super.onDestroyView()
     }
-
 }

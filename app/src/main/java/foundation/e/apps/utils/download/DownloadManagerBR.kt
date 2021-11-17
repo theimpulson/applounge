@@ -24,7 +24,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.api.fused.FusedAPIImpl
 import foundation.e.apps.utils.pkg.PkgManagerModule
 import java.io.File
 import javax.inject.Inject

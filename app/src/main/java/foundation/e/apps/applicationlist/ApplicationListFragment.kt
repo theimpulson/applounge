@@ -27,8 +27,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.aurora.gplayapi.data.models.AuthData
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
@@ -67,13 +65,25 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
 
         val recyclerView = binding.recyclerView
         val listAdapter =
-            findNavController().currentDestination?.id?.let { ApplicationListRVAdapter(this, it, pkgManagerModule) }
+            findNavController().currentDestination?.id?.let {
+                ApplicationListRVAdapter(
+                    this,
+                    it,
+                    pkgManagerModule
+                )
+            }
         recyclerView.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)
         }
 
-        mainActivityViewModel.authData.value?.let { applicationListViewModel.getList(args.category, args.browseUrl, it) }
+        mainActivityViewModel.authData.value?.let {
+            applicationListViewModel.getList(
+                args.category,
+                args.browseUrl,
+                it
+            )
+        }
         applicationListViewModel.list.observe(viewLifecycleOwner, {
             listAdapter?.setData(it)
             binding.shimmerLayout.visibility = View.GONE
