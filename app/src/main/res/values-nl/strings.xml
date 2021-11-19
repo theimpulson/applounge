@@ -20,7 +20,7 @@
     <string name="error_request_timeout">De server deed er te lang over om te reageren! Probeer het later opnieuw.</string>
     <string name="package_name_help_title">Wat is een pakket naam\?</string>
     <string name="edit_text_hint">Pakket naam</string>
-    <string name="package_name_find_text">Om de pakket naam van een app die geïnstalleerd is op je apparaat te vinden, ga je naar Systeem Instellingen &gt; Applicaties &gt; [Je app]. De pakket naam zou onderaan de lijst moeten staan. 
+    <string name="package_name_find_text">Om de pakket naam van een geïnstalleerde app op je apparaat terug te vinden, ga je naar Systeem Instellingen &gt; Apps &gt; [Je app]. De pakket naam zou onderaan de lijst moeten staan.
 \n*Dit proces kan variëren op sommige apparaten.</string>
     <string name="AUTOMATICALLY_INSTALL_updates_notification_text">App updates zullen automatisch geïnstalleerd worden</string>
     <string name="MANUALLY_INSTALL_updates_notification_text">App updates zullen niet automatisch geïnstalleerd worden</string>
