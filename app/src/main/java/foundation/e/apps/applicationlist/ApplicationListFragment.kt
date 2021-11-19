@@ -55,7 +55,14 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentApplicationListBinding.bind(view)
 
-        // Set title
+        mainActivityViewModel.authData.value?.let {
+            applicationListViewModel.getList(
+                args.category,
+                args.browseUrl,
+                it
+            )
+        }
+
         binding.toolbar.apply {
             title = args.translation
             setNavigationOnClickListener {
@@ -77,13 +84,6 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             layoutManager = LinearLayoutManager(view.context)
         }
 
-        mainActivityViewModel.authData.value?.let {
-            applicationListViewModel.getList(
-                args.category,
-                args.browseUrl,
-                it
-            )
-        }
         applicationListViewModel.list.observe(viewLifecycleOwner, {
             listAdapter?.setData(it)
             binding.shimmerLayout.visibility = View.GONE

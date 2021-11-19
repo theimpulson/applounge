@@ -43,6 +43,13 @@ class GamesFragment : Fragment(R.layout.fragment_games) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGamesBinding.bind(view)
 
+        mainActivityViewModel.authData.value?.let {
+            categoriesViewModel.getCategoriesList(
+                Category.Type.GAME,
+                it
+            )
+        }
+
         val categoriesRVAdapter = CategoriesRVAdapter()
         val recyclerView = binding.recyclerView
 
@@ -50,13 +57,6 @@ class GamesFragment : Fragment(R.layout.fragment_games) {
             adapter = categoriesRVAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             visibility = View.GONE
-        }
-
-        mainActivityViewModel.authData.value?.let {
-            categoriesViewModel.getCategoriesList(
-                Category.Type.GAME,
-                it
-            )
         }
 
         categoriesViewModel.categoriesList.observe(viewLifecycleOwner, {

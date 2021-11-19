@@ -80,6 +80,23 @@
         android:name="foundation.e.apps.application.ApplicationFragment"
         android:label="Application"
         tools:layout="@layout/fragment_application">
+        <argument
+            android:name="id"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="packageName"
+            app:argType="string" />
+        <argument
+            android:name="origin"
+            android:defaultValue="GPLAY"
+            app:argType="foundation.e.apps.api.fused.data.Origin" />
+        <deepLink
+            app:action="android.intent.action.VIEW"
+            app:uri="play.google.com/store/apps/details?id={packageName}" />
+        <deepLink
+            app:action="android.intent.action.VIEW"
+            app:uri="play.app.goo.gl/?link={playStore_url}?id={packageName}&amp;ddl={pc1}&amp;pcampaignid={pc2}" />
         <action
             android:id="@+id/action_applicationFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -89,15 +106,6 @@
         <action
             android:id="@+id/action_applicationFragment_to_applicationListFragment"
             app:destination="@id/applicationListFragment" />
-        <argument
-            android:name="id"
-            app:argType="string" />
-        <argument
-            android:name="packageName"
-            app:argType="string" />
-        <argument
-            android:name="origin"
-            app:argType="foundation.e.apps.api.fused.data.Origin" />
         <action
             android:id="@+id/action_applicationFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
@@ -110,16 +118,10 @@
         android:name="foundation.e.apps.applicationlist.ApplicationListFragment"
         android:label="ApplicationList"
         tools:layout="@layout/fragment_application_list">
-        <action
-            android:id="@+id/action_applicationListFragment_to_applicationFragment"
-            app:destination="@id/applicationFragment" />
         <argument
             android:name="category"
             android:defaultValue=""
             app:argType="string" />
-        <action
-            android:id="@+id/action_applicationListFragment_to_categoriesFragment"
-            app:destination="@id/categoriesFragment" />
         <argument
             android:name="translation"
             android:defaultValue=""
@@ -128,15 +130,18 @@
             android:name="browseUrl"
             android:defaultValue=""
             app:argType="string" />
+        <action
+            android:id="@+id/action_applicationListFragment_to_applicationFragment"
+            app:destination="@id/applicationFragment" />
+        <action
+            android:id="@+id/action_applicationListFragment_to_categoriesFragment"
+            app:destination="@id/categoriesFragment" />
     </fragment>
     <fragment
         android:id="@+id/screenshotFragment"
         android:name="foundation.e.apps.application.ScreenshotFragment"
         android:label="Screenshot"
-        tools:layout="@layout/fragment_screenshot" >
-        <action
-            android:id="@+id/action_screenshotFragment_to_applicationFragment"
-            app:destination="@id/applicationFragment" />
+        tools:layout="@layout/fragment_screenshot">
         <argument
             android:name="list"
             app:argType="string[]" />
@@ -146,5 +151,8 @@
         <argument
             android:name="origin"
             app:argType="foundation.e.apps.api.fused.data.Origin" />
+        <action
+            android:id="@+id/action_screenshotFragment_to_applicationFragment"
+            app:destination="@id/applicationFragment" />
     </fragment>
 </navigation>

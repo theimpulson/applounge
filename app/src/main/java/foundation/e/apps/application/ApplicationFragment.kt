@@ -63,6 +63,15 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentApplicationBinding.bind(view)
 
+        mainActivityViewModel.authData.observe(viewLifecycleOwner, {
+            applicationViewModel.getApplicationDetails(
+                args.id,
+                args.packageName,
+                it,
+                args.origin
+            )
+        })
+
         if (args.origin == Origin.GPLAY) {
             binding.toolbar.inflateMenu(R.menu.application_menu)
         }
@@ -81,16 +90,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
         val notAvailable = getString(R.string.not_available)
 
-        val circularProgressDrawable = CircularProgressDrawable(view.context)
-        circularProgressDrawable.strokeWidth = 10f
-        circularProgressDrawable.centerRadius = 50f
-        circularProgressDrawable.colorFilter = PorterDuffColorFilter(
-            view.context.getColor(R.color.colorAccent),
-            PorterDuff.Mode.SRC_IN
-        )
-
-        val screenshotsRVAdapter =
-            ApplicationScreenshotsRVAdapter(circularProgressDrawable, args.origin)
+        val screenshotsRVAdapter = ApplicationScreenshotsRVAdapter(args.origin)
         binding.recyclerView.apply {
             adapter = screenshotsRVAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -98,26 +98,19 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
         binding.applicationLayout.visibility = View.INVISIBLE
 
-        mainActivityViewModel.authData.observe(viewLifecycleOwner, {
-            applicationViewModel.getApplicationDetails(
-                args.id,
-                args.packageName,
-                it,
-                args.origin
-            )
-        })
-
         applicationViewModel.fusedApp.observe(viewLifecycleOwner, {
             screenshotsRVAdapter.setData(it.other_images_path)
 
-            binding.toolbar.setOnMenuItemClickListener { menu ->
-                when (menu.itemId) {
-                    R.id.share -> {
-                        val intent = Intent.createChooser(shareApp(it.name, it.shareUrl), null)
-                        startActivity(intent)
-                        true
+            if (it.shareUrl.isNotBlank()) {
+                binding.toolbar.setOnMenuItemClickListener { menu ->
+                    when (menu.itemId) {
+                        R.id.share -> {
+                            val intent = Intent.createChooser(shareApp(it.name, it.shareUrl), null)
+                            startActivity(intent)
+                            true
+                        }
+                        else -> false
                     }
-                    else -> false
                 }
             }
 
@@ -160,13 +153,9 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             }
 
             if (args.origin == Origin.CLEANAPK) {
-                binding.appIcon.load(CleanAPKInterface.ASSET_URL + it.icon_image_path) {
-                    placeholder(circularProgressDrawable)
-                }
+                binding.appIcon.load(CleanAPKInterface.ASSET_URL + it.icon_image_path)
             } else {
-                binding.appIcon.load(it.icon_image_path) {
-                    placeholder(circularProgressDrawable)
-                }
+                binding.appIcon.load(it.icon_image_path)
             }
 
             binding.appDescription.text =

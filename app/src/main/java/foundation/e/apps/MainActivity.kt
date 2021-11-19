@@ -36,36 +36,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val TAG = MainActivity::class.java.simpleName
 
-    @Inject
-    lateinit var pkgManagerModule: PkgManagerModule
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val data = intent?.data
-
         val bottomNavigationView = binding.bottomNavigationView
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment) as NavHostFragment
         val navController = navHostFragment.navController
-
-        if (data != null && data.path == "/store/apps/details") {
-            val pkgName = data.toString().split("?id=")[1]
-
-            val bundle = Bundle()
-            bundle.putString("id", "")
-            bundle.putString("packageName", pkgName)
-            bundle.putSerializable("origin", Origin.GPLAY)
-
-            val navGraph = navController.navInflater.inflate(R.navigation.navigation_resource)
-            navGraph.startDestination = R.id.applicationFragment
-            navController.setGraph(navGraph, bundle)
-        } else {
-            navController.setGraph(R.navigation.navigation_resource)
-        }
-
         bottomNavigationView.setupWithNavController(navController)
 
         val viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]

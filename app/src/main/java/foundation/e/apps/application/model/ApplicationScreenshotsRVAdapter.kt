@@ -31,7 +31,6 @@ import foundation.e.apps.application.ApplicationFragmentDirections
 import foundation.e.apps.databinding.ApplicationScreenshotsListItemBinding
 
 class ApplicationScreenshotsRVAdapter(
-    private val circularProgressDrawable: CircularProgressDrawable,
     private val origin: Origin
 ) :
     RecyclerView.Adapter<ApplicationScreenshotsRVAdapter.ViewHolder>() {
@@ -55,14 +54,10 @@ class ApplicationScreenshotsRVAdapter(
         val imageView = holder.binding.imageView
         when (origin) {
             Origin.CLEANAPK -> {
-                imageView.load(CleanAPKInterface.ASSET_URL + oldList[position]) {
-                    placeholder(circularProgressDrawable)
-                }
+                imageView.load(CleanAPKInterface.ASSET_URL + oldList[position])
             }
             Origin.GPLAY -> {
-                imageView.load(oldList[position]) {
-                    placeholder(circularProgressDrawable)
-                }
+                imageView.load(oldList[position])
             }
             Origin.GITLAB -> {
                 TODO("YET TO BE IMPLEMENTED")

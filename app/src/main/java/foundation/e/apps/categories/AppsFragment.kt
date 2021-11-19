@@ -43,6 +43,13 @@ class AppsFragment : Fragment(R.layout.fragment_apps) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAppsBinding.bind(view)
 
+        mainActivityViewModel.authData.value?.let {
+            categoriesViewModel.getCategoriesList(
+                Category.Type.APPLICATION,
+                it
+            )
+        }
+
         val categoriesRVAdapter = CategoriesRVAdapter()
         val recyclerView = binding.recyclerView
 
@@ -52,12 +59,6 @@ class AppsFragment : Fragment(R.layout.fragment_apps) {
             visibility = View.GONE
         }
 
-        mainActivityViewModel.authData.value?.let {
-            categoriesViewModel.getCategoriesList(
-                Category.Type.APPLICATION,
-                it
-            )
-        }
         categoriesViewModel.categoriesList.observe(viewLifecycleOwner, {
             categoriesRVAdapter.setData(it)
             binding.shimmerLayout.visibility = View.GONE

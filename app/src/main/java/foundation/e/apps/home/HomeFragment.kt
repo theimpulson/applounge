@@ -45,7 +45,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
-        // Fetch data to display
         mainActivityViewModel.authData.observe(viewLifecycleOwner, {
             homeViewModel.getHomeScreenData(it)
         })
