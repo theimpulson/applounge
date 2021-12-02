@@ -34,6 +34,7 @@
     <style name="Theme.Apps" parent="@style/BaseTheme" />
 
     <style name="AppTheme.ActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Surface">
+        <item name="colorPrimary">@color/colorBackground</item>
         <item name="colorControlNormal">@android:color/white</item>
     </style>
 

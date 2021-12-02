@@ -26,10 +26,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.databinding.ActivityMainBinding
-import foundation.e.apps.utils.pkg.PkgManagerModule
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

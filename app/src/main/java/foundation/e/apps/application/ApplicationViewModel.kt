@@ -26,6 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,6 +37,7 @@ class ApplicationViewModel @Inject constructor(
 ) : ViewModel() {
 
     val fusedApp: MutableLiveData<FusedApp> = MutableLiveData()
+    val appStatus: MutableLiveData<Status?> = MutableLiveData(Status.UNAVAILABLE)
 
     fun getApplicationDetails(id: String, packageName: String, authData: AuthData, origin: Origin) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -51,6 +53,7 @@ class ApplicationViewModel @Inject constructor(
     }
 
     fun getApplication(authData: AuthData, app: FusedApp, origin: Origin) {
+        appStatus.value = Status.DOWNLOADING
         viewModelScope.launch(Dispatchers.IO) {
             fusedAPIRepository.getApplication(
                 app._id,

@@ -68,6 +68,7 @@
 
     <!-- Application -->
     <string name="share">Share</string>
+    <string name="home">Home</string>
     <string name="menu" translatable="false">Menu</string>
     <string name="share_intent">Check out \"<xliff:g id="rating">%1$s</xliff:g>\"\n<xliff:g id="rating">%2$s</xliff:g></string>
     <string name="ok">OK</string>
