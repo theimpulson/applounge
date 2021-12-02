@@ -20,13 +20,14 @@ package foundation.e.apps.api.gplay.token
 
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
-import foundation.e.apps.api.gplay.utils.OkHttpClient
+import foundation.e.apps.api.gplay.utils.GPlayHttpClient
 import java.util.Properties
 import javax.inject.Inject
 
 class TokenImpl @Inject constructor(
     private val nativeDeviceProperty: Properties,
     private val gson: Gson,
+    private val gPlayHttpClient: GPlayHttpClient
 ) {
 
     companion object {
@@ -35,7 +36,7 @@ class TokenImpl @Inject constructor(
 
     fun getAuthData(): AuthData? {
         val playResponse =
-            OkHttpClient.postAuth(BASE_URL, gson.toJson(nativeDeviceProperty).toByteArray())
+            gPlayHttpClient.postAuth(BASE_URL, gson.toJson(nativeDeviceProperty).toByteArray())
         return gson.fromJson(String(playResponse.responseBytes), AuthData::class.java)
     }
 }

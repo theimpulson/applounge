@@ -29,7 +29,7 @@ import com.aurora.gplayapi.helpers.PurchaseHelper
 import com.aurora.gplayapi.helpers.SearchHelper
 import com.aurora.gplayapi.helpers.TopChartsHelper
 import foundation.e.apps.api.gplay.token.TokenRepository
-import foundation.e.apps.api.gplay.utils.OkHttpClient
+import foundation.e.apps.api.gplay.utils.GPlayHttpClient
 import foundation.e.apps.utils.DataStoreModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -38,7 +38,8 @@ import javax.inject.Inject
 
 class GPlayAPIImpl @Inject constructor(
     private val tokenRepository: TokenRepository,
-    private val dataStoreModule: DataStoreModule
+    private val dataStoreModule: DataStoreModule,
+    private val gPlayHttpClient: GPlayHttpClient
 ) {
 
     // TODO: DON'T HARDCODE DISPATCHERS IN ANY METHODS
@@ -50,7 +51,7 @@ class GPlayAPIImpl @Inject constructor(
     suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
         val searchData = mutableListOf<SearchSuggestEntry>()
         withContext(Dispatchers.IO) {
-            val searchHelper = SearchHelper(authData).using(OkHttpClient)
+            val searchHelper = SearchHelper(authData).using(gPlayHttpClient)
             searchData.addAll(searchHelper.searchSuggestions(query))
         }
         return searchData.filter { it.suggestedQuery.isNotBlank() }
@@ -59,7 +60,7 @@ class GPlayAPIImpl @Inject constructor(
     suspend fun getSearchResults(query: String, authData: AuthData): List<App> {
         val searchData = mutableListOf<App>()
         withContext(Dispatchers.IO) {
-            val searchHelper = SearchHelper(authData).using(OkHttpClient)
+            val searchHelper = SearchHelper(authData).using(gPlayHttpClient)
             val searchResult = searchHelper.searchResults(query)
             searchData.addAll(searchResult.appList)
 
@@ -80,7 +81,7 @@ class GPlayAPIImpl @Inject constructor(
     ): List<File> {
         val downloadData = mutableListOf<File>()
         withContext(Dispatchers.IO) {
-            val purchaseHelper = PurchaseHelper(authData).using(OkHttpClient)
+            val purchaseHelper = PurchaseHelper(authData).using(gPlayHttpClient)
             downloadData.addAll(purchaseHelper.purchase(packageName, versionCode, offerType))
         }
         return downloadData
@@ -89,7 +90,7 @@ class GPlayAPIImpl @Inject constructor(
     suspend fun getAppDetails(packageName: String, authData: AuthData): App? {
         var appDetails: App?
         withContext(Dispatchers.IO) {
-            val appDetailsHelper = AppDetailsHelper(authData).using(OkHttpClient)
+            val appDetailsHelper = AppDetailsHelper(authData).using(gPlayHttpClient)
             appDetails = appDetailsHelper.getAppByPackageName(packageName)
         }
         return appDetails
@@ -102,7 +103,7 @@ class GPlayAPIImpl @Inject constructor(
     ): List<App> {
         val topApps = mutableListOf<App>()
         withContext(Dispatchers.IO) {
-            val topChartsHelper = TopChartsHelper(authData).using(OkHttpClient)
+            val topChartsHelper = TopChartsHelper(authData).using(gPlayHttpClient)
             topApps.addAll(topChartsHelper.getCluster(type, chart).clusterAppList)
         }
         return topApps
@@ -111,7 +112,7 @@ class GPlayAPIImpl @Inject constructor(
     suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<Category> {
         val categoryList = mutableListOf<Category>()
         withContext(Dispatchers.IO) {
-            val categoryHelper = CategoryHelper(authData).using(OkHttpClient)
+            val categoryHelper = CategoryHelper(authData).using(gPlayHttpClient)
             categoryList.addAll(categoryHelper.getAllCategoriesList(type))
         }
         return categoryList
@@ -120,7 +121,7 @@ class GPlayAPIImpl @Inject constructor(
     suspend fun listApps(browseUrl: String, authData: AuthData): List<App> {
         val list = mutableListOf<App>()
         withContext(Dispatchers.IO) {
-            val categoryHelper = CategoryHelper(authData).using(OkHttpClient)
+            val categoryHelper = CategoryHelper(authData).using(gPlayHttpClient)
             val streamClusters = categoryHelper.getSubCategoryBundle(browseUrl).streamClusters
             // TODO: DEAL WITH DUPLICATE AND LESS ITEMS
             streamClusters.values.forEach {

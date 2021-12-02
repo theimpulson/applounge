@@ -25,7 +25,7 @@ class TokenRepository @Inject constructor(
     private val tokenImpl: TokenImpl
 ) {
 
-    suspend fun getAuthData(): AuthData? {
+    fun getAuthData(): AuthData? {
         return tokenImpl.getAuthData()
     }
 }

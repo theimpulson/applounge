@@ -23,22 +23,21 @@ import android.util.Log
 import com.aurora.gplayapi.data.models.PlayResponse
 import com.aurora.gplayapi.network.IHttpClient
 import foundation.e.apps.BuildConfig
+import okhttp3.*
 import okhttp3.Headers.Companion.toHeaders
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-object OkHttpClient : IHttpClient {
+class GPlayHttpClient @Inject constructor(
+    cache: Cache
+) : IHttpClient {
 
-    private const val POST = "POST"
-    private const val GET = "GET"
+    private val POST = "POST"
+    private val GET = "GET"
 
     private val okHttpClient = OkHttpClient().newBuilder()
         .connectTimeout(25, TimeUnit.SECONDS)
@@ -47,6 +46,7 @@ object OkHttpClient : IHttpClient {
         .retryOnConnectionFailure(true)
         .followRedirects(true)
         .followSslRedirects(true)
+        .cache(cache)
         .build()
 
     @Throws(IOException::class)

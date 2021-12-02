@@ -66,13 +66,6 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideCache(@ApplicationContext context: Context): Cache {
-        val cacheSize = (10 * 1024 * 1024).toLong() // 10 MB
-        return Cache(context.cacheDir, cacheSize)
-    }
-
-    @Singleton
-    @Provides
     fun provideOkHttpClient(cache: Cache, interceptor: Interceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
