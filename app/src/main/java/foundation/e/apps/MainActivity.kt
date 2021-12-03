@@ -18,6 +18,7 @@
 
 package foundation.e.apps
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -66,6 +67,11 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigationView.visibility = View.VISIBLE
                 }
             }
+        }
+
+        // Create notification channel on post-nougat devices
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            viewModel.createNotificationChannels()
         }
     }
 }

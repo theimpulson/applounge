@@ -18,6 +18,10 @@
 
 package foundation.e.apps
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,12 +34,16 @@ import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.utils.DataStoreModule
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val fusedAPIRepository: FusedAPIRepository,
     private val dataStoreModule: DataStoreModule,
-    private val gson: Gson
+    private val gson: Gson,
+    private val notificationManager: NotificationManager,
+    @Named("download") private val downloadNotificationChannel: NotificationChannel,
+    @Named("update") private val updateNotificationChannel: NotificationChannel
 ) : ViewModel() {
 
     // Authentication Data for GPlay servers
@@ -58,5 +66,11 @@ class MainActivityViewModel @Inject constructor(
 
     fun generateAuthData() {
         _authData.value = gson.fromJson(authDataJson.value, AuthData::class.java)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createNotificationChannels() {
+        notificationManager.createNotificationChannel(downloadNotificationChannel)
+        notificationManager.createNotificationChannel(updateNotificationChannel)
     }
 }

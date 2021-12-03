@@ -25,6 +25,16 @@
     android:gravity="end"
     android:orientation="horizontal">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/appInstallPB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingStart="10dp"
+        android:indeterminate="true"
+        android:paddingEnd="10dp"
+        android:visibility="gone" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/appSize"
         android:layout_width="wrap_content"

@@ -32,24 +32,20 @@ import javax.inject.Inject
 class DownloadManagerBR : BroadcastReceiver() {
 
     @Inject
-    lateinit var downloadManager: DownloadManager
-
-    @Inject
-    lateinit var downloadManagerQuery: DownloadManager.Query
+    lateinit var downloadManagerUtils: DownloadManagerUtils
 
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
 
     private var TAG = DownloadManagerBR::class.java.simpleName
-    private var EXTRA_DOWNLOAD_FAILED_ID: Long = 0
 
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {
             DownloadManager.ACTION_DOWNLOAD_COMPLETE -> {
                 val id =
-                    intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, EXTRA_DOWNLOAD_FAILED_ID)
-                if (downloadSuccessful(id)) {
-                    val file = File(downloadedFile(id))
+                    intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0)
+                if (downloadManagerUtils.downloadSuccessful(id)) {
+                    val file = File(downloadManagerUtils.downloadedFile(id))
                     if (file.exists()) {
                         pkgManagerModule.installApplication(file)
                     } else {
@@ -62,25 +58,5 @@ class DownloadManagerBR : BroadcastReceiver() {
             DownloadManager.ACTION_NOTIFICATION_CLICKED -> {
             }
         }
-    }
-
-    private fun downloadSuccessful(id: Long): Boolean {
-        if (id == EXTRA_DOWNLOAD_FAILED_ID) return false
-        val cursor = downloadManager.query(downloadManagerQuery.setFilterById(id))
-        if (cursor.moveToFirst()) {
-            val statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-            return if (statusIndex >= 0) cursor.getInt(statusIndex) == DownloadManager.STATUS_SUCCESSFUL else false
-        }
-        return false
-    }
-
-    private fun downloadedFile(id: Long): String {
-        val cursor = downloadManager.query(downloadManagerQuery.setFilterById(id))
-        var fileUri = ""
-        if (cursor.moveToFirst()) {
-            val index = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
-            fileUri = cursor.getString(index)
-        }
-        return fileUri.removePrefix("file://")
     }
 }

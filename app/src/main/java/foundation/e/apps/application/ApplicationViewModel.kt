@@ -37,7 +37,10 @@ class ApplicationViewModel @Inject constructor(
 ) : ViewModel() {
 
     val fusedApp: MutableLiveData<FusedApp> = MutableLiveData()
-    val appStatus: MutableLiveData<Status?> = MutableLiveData(Status.UNAVAILABLE)
+    val appStatus: MutableLiveData<Status?> = MutableLiveData()
+
+    // Download Information
+    private val appDownloadId: MutableLiveData<Long> = MutableLiveData()
 
     fun getApplicationDetails(id: String, packageName: String, authData: AuthData, origin: Origin) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -55,14 +58,16 @@ class ApplicationViewModel @Inject constructor(
     fun getApplication(authData: AuthData, app: FusedApp, origin: Origin) {
         appStatus.value = Status.DOWNLOADING
         viewModelScope.launch(Dispatchers.IO) {
-            fusedAPIRepository.getApplication(
-                app._id,
-                app.name,
-                app.package_name,
-                app.latest_version_code,
-                app.offer_type,
-                authData,
-                origin
+            appDownloadId.postValue(
+                fusedAPIRepository.getApplication(
+                    app._id,
+                    app.name,
+                    app.package_name,
+                    app.latest_version_code,
+                    app.offer_type,
+                    authData,
+                    origin
+                )
             )
         }
     }

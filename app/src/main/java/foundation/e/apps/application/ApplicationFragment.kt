@@ -21,6 +21,7 @@ package foundation.e.apps.application
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -95,7 +96,52 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
         binding.applicationLayout.visibility = View.INVISIBLE
 
+        applicationViewModel.appStatus.observe(viewLifecycleOwner, { status ->
+            val installButton = binding.downloadInclude.installButton
+            val downloadPB = binding.downloadInclude.appInstallPB
+            val appSize = binding.downloadInclude.appSize
+            val fusedApp = applicationViewModel.fusedApp.value
+
+            fusedApp?.let {
+                when (status) {
+                    Status.INSTALLED -> {
+                        installButton.text = getString(R.string.open)
+                        installButton.setOnClickListener { _ ->
+                            startActivity(pkgManagerModule.getLaunchIntent(it.package_name))
+                        }
+                    }
+                    Status.UPDATABLE -> {
+                        installButton.text = getString(R.string.update)
+                        installButton.setOnClickListener { _ ->
+                            mainActivityViewModel.authData.value?.let { data ->
+                                applicationViewModel.getApplication(data, it, args.origin)
+                            }
+                        }
+                    }
+                    Status.UNAVAILABLE -> {
+                        installButton.setOnClickListener { _ ->
+                            mainActivityViewModel.authData.value?.let { data ->
+                                applicationViewModel.getApplication(data, it, args.origin)
+                            }
+                        }
+                    }
+                    Status.DOWNLOADING -> {
+                        installButton.text = getString(R.string.cancel)
+                        downloadPB.visibility = View.VISIBLE
+                        appSize.visibility = View.GONE
+                    }
+                    Status.INSTALLING, Status.UNINSTALLING -> {
+                        downloadPB.visibility = View.GONE
+                        appSize.visibility = View.VISIBLE
+                        installButton.text = getString(R.string.cancel)
+                        installButton.isEnabled = false
+                    }
+                }
+            }
+        })
+
         applicationViewModel.fusedApp.observe(viewLifecycleOwner, {
+            applicationViewModel.appStatus.value = it.status
             screenshotsRVAdapter.setData(it.other_images_path)
 
             if (it.shareUrl.isNotBlank()) {
@@ -202,44 +248,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
             binding.applicationLayout.visibility = View.VISIBLE
             binding.progressBar.visibility = View.GONE
-        })
-
-        applicationViewModel.appStatus.observe(viewLifecycleOwner, { status ->
-            val installButton = binding.downloadInclude.installButton
-            val fusedApp = applicationViewModel.fusedApp.value
-
-            fusedApp?.let {
-                when (status) {
-                    Status.INSTALLED -> {
-                        installButton.text = getString(R.string.open)
-                        installButton.setOnClickListener { _ ->
-                            startActivity(pkgManagerModule.getLaunchIntent(it.package_name))
-                        }
-                    }
-                    Status.UPDATABLE -> {
-                        installButton.text = getString(R.string.update)
-                        installButton.setOnClickListener { _ ->
-                            mainActivityViewModel.authData.value?.let { data ->
-                                applicationViewModel.getApplication(data, it, args.origin)
-                            }
-                        }
-                    }
-                    Status.UNAVAILABLE -> {
-                        installButton.setOnClickListener { _ ->
-                            mainActivityViewModel.authData.value?.let { data ->
-                                applicationViewModel.getApplication(data, it, args.origin)
-                            }
-                        }
-                    }
-                    Status.DOWNLOADING -> {
-                        installButton.text = getString(R.string.cancel)
-                    }
-                    Status.INSTALLING, Status.UNINSTALLING -> {
-                        installButton.text = getString(R.string.cancel)
-                        installButton.isEnabled = false
-                    }
-                }
-            }
         })
     }
 

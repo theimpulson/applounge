@@ -29,6 +29,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Cache
 import java.lang.reflect.Modifier
 import javax.inject.Named
 import javax.inject.Singleton
@@ -93,5 +94,12 @@ object CommonUtilsModule {
         return GsonBuilder()
             .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.STATIC)
             .create()
+    }
+
+    @Singleton
+    @Provides
+    fun provideCache(@ApplicationContext context: Context): Cache {
+        val cacheSize = (10 * 1024 * 1024).toLong() // 10 MB
+        return Cache(context.cacheDir, cacheSize)
     }
 }

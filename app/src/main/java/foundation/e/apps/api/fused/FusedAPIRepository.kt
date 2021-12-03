@@ -51,8 +51,8 @@ class FusedAPIRepository @Inject constructor(
         offerType: Int,
         authData: AuthData,
         origin: Origin
-    ) {
-        fusedAPIImpl.getApplication(
+    ): Long {
+        return fusedAPIImpl.getApplication(
             id,
             name,
             packageName,

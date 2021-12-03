@@ -16,25 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.utils.pkg
+package foundation.e.apps.utils.notification
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.util.Log
-import dagger.hilt.android.AndroidEntryPoint
+import androidx.core.app.NotificationCompat
+import dagger.hilt.android.qualifiers.ApplicationContext
+import foundation.e.apps.R
+import javax.inject.Inject
 
-@AndroidEntryPoint
-open class PkgManagerBR : BroadcastReceiver() {
+class NotificationManagerUtils @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
-    private val TAG = PkgManagerBR::class.java.simpleName
-    private val EXTRA_FAILED_UID = 0
-
-    override fun onReceive(context: Context?, intent: Intent?) {
-        if (context != null && intent?.action == Intent.ACTION_PACKAGE_ADDED) {
-            val packageUid = intent.getIntExtra(Intent.EXTRA_UID, EXTRA_FAILED_UID)
-            val packages = context.packageManager.getPackagesForUid(packageUid)
-            packages?.let { Log.d(TAG, it[0].toString()) }
-        }
+    fun showDownloadNotification(title: String): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, NotificationManagerModule.DOWNLOADS)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(title)
+            .setProgress(0, 0, true)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
     }
 }

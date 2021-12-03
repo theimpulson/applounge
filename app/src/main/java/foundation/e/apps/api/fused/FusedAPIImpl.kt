@@ -175,13 +175,13 @@ class FusedAPIImpl @Inject constructor(
         offerType: Int,
         authData: AuthData,
         origin: Origin
-    ) {
+    ): Long {
         when (origin) {
             Origin.CLEANAPK -> {
                 val downloadInfo = cleanAPKRepository.getDownloadInfo(id).body()
                 val downloadLink = downloadInfo?.download_data?.download_link
                 if (downloadLink != null) {
-                    downloadApp(name, packageName, downloadLink)
+                    return downloadApp(name, packageName, downloadLink)
                 } else {
                     Log.d(TAG, "Download link was null, exiting!")
                 }
@@ -194,11 +194,12 @@ class FusedAPIImpl @Inject constructor(
                     authData
                 )
                 // TODO: DEAL WITH MULTIPLE PACKAGES
-                downloadApp(name, packageName, downloadList[0].url)
+                return downloadApp(name, packageName, downloadList[0].url)
             }
             Origin.GITLAB -> {
             }
         }
+        return 0
     }
 
     suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {
@@ -274,13 +275,14 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
-    private fun downloadApp(name: String, packageName: String, url: String) {
+    private fun downloadApp(name: String, packageName: String, url: String): Long {
         val packagePath = File(cacheDir, "$packageName.apk")
         if (packagePath.exists()) packagePath.delete() // Delete old download if-exists
         val request = DownloadManager.Request(Uri.parse(url))
             .setTitle(name)
             .setDestinationUri(Uri.fromFile(packagePath))
-        downloadManager.enqueue(request)
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
+        return downloadManager.enqueue(request)
     }
 
     private suspend fun fetchTopAppsAndGames(
