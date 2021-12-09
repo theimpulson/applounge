@@ -81,20 +81,6 @@ class PkgManagerModule @Inject constructor(
     }
 
     /**
-     * Checks if the given [packageName] is a system app or not
-     * @param packageName package to verify
-     * @return true if the app is system app. false otherwise
-     */
-    fun isSystemApp(packageName: String): Boolean {
-        return try {
-            val info = packageManager.getPackageInfo(packageName, 0)
-            (info.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-        } catch (exception: Exception) {
-            false
-        }
-    }
-
-    /**
      * Installs the given package using system API
      * @param file An instance of [File]
      */
@@ -156,5 +142,18 @@ class PkgManagerModule @Inject constructor(
     fun getLongVersionCode(versionCode: String): Long {
         val version = versionCode.split(" ")[0]
         return version.replace("[.]".toRegex(), "").toLong()
+    }
+
+    fun getAllUserApps(): List<ApplicationInfo> {
+        val userPackages = mutableListOf<ApplicationInfo>()
+        val allPackages = packageManager.getInstalledApplications(0)
+        allPackages.forEach {
+            if (it.flags and ApplicationInfo.FLAG_SYSTEM == 0) userPackages.add(it)
+        }
+        return userPackages
+    }
+
+    fun getAllSystemApps(): List<ApplicationInfo> {
+        return packageManager.getInstalledApplications(PackageManager.MATCH_SYSTEM_ONLY)
     }
 }
