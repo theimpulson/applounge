@@ -136,6 +136,9 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         installButton.text = getString(R.string.cancel)
                         installButton.isEnabled = false
                     }
+                    else -> {
+                        Log.d(TAG, "Unknown status: $status")
+                    }
                 }
             }
         })
