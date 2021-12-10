@@ -18,7 +18,6 @@
 
 package foundation.e.apps.updates.manager
 
-import android.util.Log
 import com.aurora.gplayapi.data.models.AuthData
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
@@ -47,6 +46,17 @@ class UpdatesManagerImpl @Inject constructor(
             Origin.CLEANAPK
         )
         cleanAPKList.forEach {
+            if (it.package_name in pkgList) pkgList.remove(it.package_name)
+            if (it.status == Status.UPDATABLE) updateList.add(it)
+        }
+
+        // Check for remaining apps from GPlay
+        val gPlayList = fusedAPIRepository.getApplicationDetails(
+            pkgList,
+            authData,
+            Origin.GPLAY
+        )
+        gPlayList.forEach {
             if (it.status == Status.UPDATABLE) updateList.add(it)
         }
         return updateList
