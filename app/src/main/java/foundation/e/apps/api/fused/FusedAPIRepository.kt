@@ -35,6 +35,14 @@ class FusedAPIRepository @Inject constructor(
     }
 
     suspend fun getApplicationDetails(
+        packageNameList: List<String>,
+        authData: AuthData,
+        origin: Origin
+    ): List<FusedApp> {
+        return fusedAPIImpl.getApplicationDetails(packageNameList, authData, origin)
+    }
+
+    suspend fun getApplicationDetails(
         id: String,
         packageName: String,
         authData: AuthData,

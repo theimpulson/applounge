@@ -96,6 +96,15 @@ class GPlayAPIImpl @Inject constructor(
         return appDetails
     }
 
+    suspend fun getAppDetails(packageNameList: List<String>, authData: AuthData): List<App> {
+        val appDetailsList = mutableListOf<App>()
+        withContext(Dispatchers.IO) {
+            val appDetailsHelper = AppDetailsHelper(authData).using(gPlayHttpClient)
+            appDetailsList.addAll(appDetailsHelper.getAppByPackageName(packageNameList))
+        }
+        return appDetailsList
+    }
+
     suspend fun getTopApps(
         type: TopChartsHelper.Type,
         chart: TopChartsHelper.Chart,

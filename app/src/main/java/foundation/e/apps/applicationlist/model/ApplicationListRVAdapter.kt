@@ -37,6 +37,7 @@ import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.applicationlist.ApplicationListFragmentDirections
 import foundation.e.apps.databinding.ApplicationListItemBinding
 import foundation.e.apps.search.SearchFragmentDirections
+import foundation.e.apps.updates.UpdatesFragmentDirections
 import foundation.e.apps.utils.pkg.PkgManagerModule
 import javax.inject.Singleton
 
@@ -52,12 +53,12 @@ class ApplicationListRVAdapter(
     private val TAG = ApplicationListRVAdapter::class.java.simpleName
 
     private val shimmer = Shimmer.ColorHighlightBuilder()
-            .setDuration(500)
-            .setBaseAlpha(0.7f)
-            .setDirection(LEFT_TO_RIGHT)
-            .setHighlightAlpha(0.6f)
-            .setAutoStart(true)
-            .build()
+        .setDuration(500)
+        .setBaseAlpha(0.7f)
+        .setDirection(LEFT_TO_RIGHT)
+        .setHighlightAlpha(0.6f)
+        .setAutoStart(true)
+        .build()
 
     inner class ViewHolder(val binding: ApplicationListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -89,6 +90,13 @@ class ApplicationListRVAdapter(
                     }
                     R.id.searchFragment -> {
                         SearchFragmentDirections.actionSearchFragmentToApplicationFragment(
+                            searchApp._id,
+                            searchApp.package_name,
+                            searchApp.origin
+                        )
+                    }
+                    R.id.updatesFragment -> {
+                        UpdatesFragmentDirections.actionUpdatesFragmentToApplicationFragment(
                             searchApp._id,
                             searchApp.package_name,
                             searchApp.origin

@@ -232,6 +232,36 @@ class FusedAPIImpl @Inject constructor(
     }
 
     suspend fun getApplicationDetails(
+        packageNameList: List<String>,
+        authData: AuthData,
+        origin: Origin
+    ): List<FusedApp> {
+        val list = mutableListOf<FusedApp>()
+        val response = if (origin == Origin.CLEANAPK) {
+            val pkgList = mutableListOf<FusedApp>()
+            packageNameList.forEach {
+                val result = cleanAPKRepository.searchApps(
+                    keyword = it,
+                    by = "package_name"
+                ).body()
+                if (result?.apps?.isNotEmpty() == true && result.numberOfResults == 1) {
+                    pkgList.add(result.apps[0])
+                }
+            }
+            pkgList
+        } else {
+            gPlayAPIRepository.getAppDetails(packageNameList, authData).map { app ->
+                app.transformToFusedApp()
+            }
+        }
+        response.forEach { fusedApp ->
+            fusedApp.status = pkgManagerModule.getPackageStatus(fusedApp.package_name, fusedApp.latest_version_code)
+            list.add(fusedApp)
+        }
+        return list
+    }
+
+    suspend fun getApplicationDetails(
         id: String,
         packageName: String,
         authData: AuthData,
@@ -241,7 +271,6 @@ class FusedAPIImpl @Inject constructor(
             cleanAPKRepository.getAppOrPWADetailsByID(id).body()?.app
         } else {
             val app = gPlayAPIRepository.getAppDetails(packageName, authData)
-            app?.videoArtwork?.let { Log.d(TAG, it.url) }
             app?.transformToFusedApp()
         }
         response?.let {
