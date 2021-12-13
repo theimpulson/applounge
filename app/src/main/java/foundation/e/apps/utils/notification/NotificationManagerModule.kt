@@ -50,7 +50,6 @@ object NotificationManagerModule {
     @Named("download")
     @RequiresApi(Build.VERSION_CODES.O)
     fun provideDownloadNotificationChannel(
-        notificationManager: NotificationManager,
         @ApplicationContext context: Context
     ): NotificationChannel {
         return NotificationChannel(
@@ -65,7 +64,6 @@ object NotificationManagerModule {
     @Named("update")
     @RequiresApi(Build.VERSION_CODES.O)
     fun provideUpdateNotificationChannel(
-        notificationManager: NotificationManager,
         @ApplicationContext context: Context
     ): NotificationChannel {
         return NotificationChannel(

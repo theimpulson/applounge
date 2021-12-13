@@ -19,6 +19,7 @@
 package foundation.e.apps.api.fused
 
 import android.app.DownloadManager
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
@@ -27,9 +28,16 @@ import com.aurora.gplayapi.data.models.Artwork
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
 import com.aurora.gplayapi.helpers.TopChartsHelper
+import dagger.hilt.android.qualifiers.ApplicationContext
+import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
-import foundation.e.apps.api.fused.data.*
+import foundation.e.apps.api.cleanapk.data.home.Home
+import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.api.fused.data.FusedCategory
+import foundation.e.apps.api.fused.data.FusedHome
+import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.utils.PreferenceManagerModule
@@ -46,6 +54,7 @@ class FusedAPIImpl @Inject constructor(
     private val downloadManager: DownloadManager,
     private val pkgManagerModule: PkgManagerModule,
     private val preferenceManagerModule: PreferenceManagerModule,
+    @ApplicationContext private val context: Context,
     @Named("cacheDir") private val cacheDir: String
 ) {
     private var TAG = FusedAPIImpl::class.java.simpleName
@@ -53,11 +62,6 @@ class FusedAPIImpl @Inject constructor(
     suspend fun getHomeScreenData(authData: AuthData): List<FusedHome> {
         val list = mutableListOf<FusedHome>()
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
-        val playList = listOf(
-            TopChartsHelper.Chart.TOP_SELLING_FREE,
-            TopChartsHelper.Chart.TOP_GROSSING,
-            TopChartsHelper.Chart.MOVERS_SHAKERS,
-        )
 
         if (preferredApplicationType != "any") {
             val response = if (preferredApplicationType == "open") {
@@ -67,15 +71,15 @@ class FusedAPIImpl @Inject constructor(
                 ).body()
             } else {
                 cleanAPKRepository.getHomeScreenData(
-                    CleanAPKInterface.APP_TYPE_ANY,
+                    CleanAPKInterface.APP_TYPE_PWA,
                     CleanAPKInterface.APP_SOURCE_ANY
                 ).body()
             }
-        } else {
-            playList.forEach {
-                val result = fetchTopAppsAndGames(it, authData)
-                list.addAll(result)
+            response?.home?.let {
+                list.addAll(generateCleanAPKHome(it, preferredApplicationType))
             }
+        } else {
+            list.addAll(fetchGPlayHome(authData))
         }
         return list
     }
@@ -255,7 +259,10 @@ class FusedAPIImpl @Inject constructor(
             }
         }
         response.forEach { fusedApp ->
-            fusedApp.status = pkgManagerModule.getPackageStatus(fusedApp.package_name, fusedApp.latest_version_code)
+            fusedApp.status = pkgManagerModule.getPackageStatus(
+                fusedApp.package_name,
+                fusedApp.latest_version_code
+            )
             list.add(fusedApp)
         }
         return list
@@ -314,20 +321,107 @@ class FusedAPIImpl @Inject constructor(
         return downloadManager.enqueue(request)
     }
 
-    private suspend fun fetchTopAppsAndGames(
-        chart: TopChartsHelper.Chart,
-        authData: AuthData
-    ): List<FusedHome> {
+    private fun generateCleanAPKHome(home: Home, prefType: String): List<FusedHome> {
         val list = mutableListOf<FusedHome>()
-        val type = listOf(
-            TopChartsHelper.Type.APPLICATION,
-            TopChartsHelper.Type.GAME
+        Log.d("Aayush", home.toString())
+        val headings = if (prefType == "open") {
+            mapOf(
+                "top_updated_apps" to context.getString(R.string.top_updated_apps),
+                "top_updated_games" to context.getString(R.string.top_updated_games),
+                "popular_apps_in_last_24_hours" to context.getString(R.string.popular_apps_in_last_24_hours),
+                "popular_games_in_last_24_hours" to context.getString(R.string.popular_games_in_last_24_hours),
+                "discover" to context.getString(R.string.discover)
+            )
+        } else {
+            mapOf(
+                "popular_apps" to context.getString(R.string.popular_apps),
+                "popular_games" to context.getString(R.string.popular_games),
+                "discover" to context.getString(R.string.discover)
+            )
+        }
+        headings.forEach { (key, value) ->
+            when (key) {
+                "top_updated_apps" -> {
+                    if (home.top_updated_apps.isNotEmpty()) {
+                        list.add(FusedHome(value, home.top_updated_apps))
+                    }
+                }
+                "top_updated_games" -> {
+                    if (home.top_updated_games.isNotEmpty()) {
+                        list.add(FusedHome(value, home.top_updated_games))
+                    }
+                }
+                "popular_apps" -> {
+                    if (home.popular_apps.isNotEmpty()) {
+                        list.add(FusedHome(value, home.popular_apps))
+                    }
+                }
+                "popular_games" -> {
+                    if (home.popular_games.isNotEmpty()) {
+                        list.add(FusedHome(value, home.popular_games))
+                    }
+                }
+                "popular_apps_in_last_24_hours" -> {
+                    if (home.popular_apps_in_last_24_hours.isNotEmpty()) {
+                        list.add(FusedHome(value, home.popular_apps_in_last_24_hours))
+                    }
+                }
+                "popular_games_in_last_24_hours" -> {
+                    if (home.popular_games_in_last_24_hours.isNotEmpty()) {
+                        list.add(FusedHome(value, home.popular_games_in_last_24_hours))
+                    }
+                }
+                "discover" -> {
+                    if (home.discover.isNotEmpty()) {
+                        list.add(FusedHome(value, home.discover))
+                    }
+                }
+            }
+        }
+        return list
+    }
+
+    private suspend fun fetchGPlayHome(authData: AuthData): List<FusedHome> {
+        val list = mutableListOf<FusedHome>()
+        val homeElements = mutableMapOf(
+            context.getString(R.string.topselling_free_apps) to
+                    mapOf(
+                        TopChartsHelper.Chart.TOP_SELLING_FREE to
+                                TopChartsHelper.Type.APPLICATION
+                    ),
+            context.getString(R.string.topselling_free_games) to
+                    mapOf(
+                        TopChartsHelper.Chart.TOP_SELLING_FREE to
+                                TopChartsHelper.Type.GAME
+                    ),
+            context.getString(R.string.topgrossing_apps) to
+                    mapOf(
+                        TopChartsHelper.Chart.TOP_GROSSING to
+                                TopChartsHelper.Type.APPLICATION
+                    ),
+            context.getString(R.string.topgrossing_games) to
+                    mapOf(
+                        TopChartsHelper.Chart.TOP_GROSSING to
+                                TopChartsHelper.Type.GAME
+                    ),
+            context.getString(R.string.movers_shakers_apps) to
+                    mapOf(
+                        TopChartsHelper.Chart.MOVERS_SHAKERS to
+                                TopChartsHelper.Type.APPLICATION
+                    ),
+            context.getString(R.string.movers_shakers_games) to
+                    mapOf(
+                        TopChartsHelper.Chart.MOVERS_SHAKERS to
+                                TopChartsHelper.Type.GAME
+                    ),
         )
-        type.forEach {
-            val result = gPlayAPIRepository.getTopApps(it, chart, authData).map { app ->
+        homeElements.forEach {
+            val chart = it.value.keys.iterator().next()
+            val type = it.value.values.iterator().next()
+            val result = gPlayAPIRepository.getTopApps(type, chart, authData).map { app ->
                 app.transformToFusedApp()
             }
-            list.add(FusedHome("", result))
+            list.add(FusedHome(it.key, result))
         }
         return list
     }

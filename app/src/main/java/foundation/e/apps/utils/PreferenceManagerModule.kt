@@ -41,4 +41,8 @@ class PreferenceManagerModule @Inject constructor(
             else -> "any"
         }
     }
+
+    fun autoUpdatePreferred(): Boolean {
+        return preferenceManager.getBoolean("updateInstallAuto", false)
+    }
 }

@@ -101,6 +101,14 @@
 
     <!-- Updates Fragment -->
     <string name="update_all">Update All</string>
+    <plurals name="updates_notification_title">
+        <item quantity="one"><xliff:g id="version_code">%1$d</xliff:g> app update is available</item>
+        <item quantity="other"><xliff:g id="version_code">%1$d</xliff:g> app updates are available</item>
+    </plurals>
+    <string name="updates_splash_title">All apps are up-to-date</string>
+    <string name="auto_updates_notification">App updates will be installed automatically</string>
+    <string name="manual_updates_notification">App updates will not be installed automatically</string>
+    <string name="updates_network_wait">Waiting for un-metered network</string>
 
     <!-- Error -->
     <string name="retry">Retry</string>
@@ -120,6 +128,15 @@
     <string name="top_updated_games">Top Updated Games</string>
     <string name="popular_apps_in_last_24_hours">Popular Apps In Last 24 Hours</string>
     <string name="popular_games_in_last_24_hours">Popular Games In Last 24 Hours</string>
+    <string name="popular_apps">Popular Apps</string>
+    <string name="popular_games">Popular Games</string>
+
+    <string name="topselling_free_apps">Top Free Apps</string>
+    <string name="topselling_free_games">Top Free Games</string>
+    <string name="topgrossing_apps">Top Grossing Apps</string>
+    <string name="topgrossing_games">Top Grossing Games</string>
+    <string name="movers_shakers_apps">Top Trending Apps</string>
+    <string name="movers_shakers_games">Top Trending Games</string>
 
     <!-- Notification -->
     <string name="downloads">Downloads</string>

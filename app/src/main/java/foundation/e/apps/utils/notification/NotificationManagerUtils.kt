@@ -22,10 +22,12 @@ import android.content.Context
 import androidx.core.app.NotificationCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.R
+import foundation.e.apps.utils.PreferenceManagerModule
 import javax.inject.Inject
 
 class NotificationManagerUtils @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val preferenceManagerModule: PreferenceManagerModule
 ) {
 
     fun showDownloadNotification(title: String): NotificationCompat.Builder {
@@ -33,6 +35,25 @@ class NotificationManagerUtils @Inject constructor(
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
             .setProgress(0, 0, true)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+    }
+
+    fun showUpdateNotification(updateSize: Int): NotificationCompat.Builder {
+        val contentText = if (preferenceManagerModule.autoUpdatePreferred()) {
+            context.getString(R.string.auto_updates_notification)
+        } else {
+            context.getString(R.string.manual_updates_notification)
+        }
+        return NotificationCompat.Builder(context, NotificationManagerModule.UPDATES)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(
+                context.resources.getQuantityString(
+                    R.plurals.updates_notification_title,
+                    updateSize,
+                    updateSize
+                )
+            )
+            .setContentText(contentText)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
     }
 }

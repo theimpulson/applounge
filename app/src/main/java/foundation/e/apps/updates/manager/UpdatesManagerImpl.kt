@@ -32,6 +32,7 @@ class UpdatesManagerImpl @Inject constructor(
 ) {
     private val TAG = UpdatesManagerImpl::class.java.simpleName
 
+    // TODO: MAKE THIS LOGIC MORE SANE
     suspend fun getUpdates(authData: AuthData): List<FusedApp> {
         val pkgList = mutableListOf<String>()
         val updateList = mutableListOf<FusedApp>()

@@ -17,20 +17,12 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".home.HomeFragment">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        app:title="@string/home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmerLayout"
@@ -44,6 +36,7 @@
             android:scrollbars="none">
 
             <LinearLayout
+                android:paddingTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -69,6 +62,9 @@
         android:id="@+id/parentRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="20dp"
+        android:paddingBottom="70dp"
         android:visibility="gone" />
 
 </LinearLayout>
