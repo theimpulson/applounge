@@ -68,8 +68,6 @@
 
     <!-- Application -->
     <string name="share">Share</string>
-    <string name="home">Home</string>
-    <string name="menu" translatable="false">Menu</string>
     <string name="share_intent">Check out \"<xliff:g id="rating">%1$s</xliff:g>\"\n<xliff:g id="rating">%2$s</xliff:g></string>
     <string name="ok">OK</string>
     <string name="install">Install</string>
@@ -105,24 +103,10 @@
         <item quantity="one"><xliff:g id="version_code">%1$d</xliff:g> app update is available</item>
         <item quantity="other"><xliff:g id="version_code">%1$d</xliff:g> app updates are available</item>
     </plurals>
-    <string name="updates_splash_title">All apps are up-to-date</string>
     <string name="auto_updates_notification">App updates will be installed automatically</string>
     <string name="manual_updates_notification">App updates will not be installed automatically</string>
-    <string name="updates_network_wait">Waiting for un-metered network</string>
-
-    <!-- Error -->
-    <string name="retry">Retry</string>
-    <string name="network_error_title">No connection</string>
-    <string name="network_error_desc">Please check your internet\n connection and try again</string>
-    <string name="no_results_title">Error 404!</string>
-    <string name="no_results_desc">Page or resource not found</string>
-    <string name="unimplemented_error_title">Under construction</string>
-    <string name="unimplemented_error_desc">This page or resource is unavailable due to maintenance</string>
-    <string name="internal_error_title">Internal error</string>
-    <string name="internal_error_desc">An internal error happened</string>
 
     <!-- Home Fragment -->
-    <string name="featured">Featured</string>
     <string name="discover">Discover</string>
     <string name="top_updated_apps">Top Updated Apps</string>
     <string name="top_updated_games">Top Updated Games</string>
