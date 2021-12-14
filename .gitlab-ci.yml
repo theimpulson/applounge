@@ -15,7 +15,7 @@ buildDebug:
     - ./gradlew assembleDebug
   artifacts:
     paths:
-      - app/build/outputs/apk/
+      - app/build/outputs/apk/debug/
 
 # Default lint configuration for debug builds
 # Manual as we don't want to run them generally for debug builds
@@ -54,7 +54,7 @@ buildRelease:
     - ./gradlew assembleRelease
   artifacts:
     paths:
-      - app/build/outputs/apk/
+      - app/build/outputs/apk/release/
 
 # Release jobs to generate signed artifacts
 .releaseSigned:
@@ -74,7 +74,7 @@ buildReleaseDev:
     - ./gradlew assembleReleaseDev
   artifacts:
     paths:
-      - app/build/outputs/apk/
+      - app/build/outputs/apk/releaseDev/
 
 buildReleaseStable:
   extends: .releaseSigned
@@ -82,7 +82,7 @@ buildReleaseStable:
     - ./gradlew assembleReleaseStable
   artifacts:
     paths:
-      - app/build/outputs/apk/
+      - app/build/outputs/apk/releaseStable/
 
 # Default lint configuration for release jobs
 .lintReleaseDefault:
