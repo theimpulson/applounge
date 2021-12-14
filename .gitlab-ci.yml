@@ -1,4 +1,4 @@
-image: registry.gitlab.e.foundation/e/apps/docker-android-apps-cicd:backlog_4135-all-upstreamDocker
+image: registry.gitlab.e.foundation/e/apps/docker-android-apps-cicd:latest
 
 stages:
   - debug
@@ -44,25 +44,54 @@ ktlintDebug:
 
 # Default configuration for release builds
 # Only on "master" and "merge_request_event"
-.releaseDefault:
+buildRelease:
   stage: release
   allow_failure: false
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
-      when: always
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: always
-
-buildRelease:
-  extends: .releaseDefault
   script:
     - ./gradlew assembleRelease
   artifacts:
     paths:
       - app/build/outputs/apk/
 
+# Release jobs to generate signed artifacts
+.releaseSigned:
+  stage: release
+  allow_failure: false
+  before_script:
+    - export GRADLE_USER_HOME=$(pwd)/.gradle
+    - chmod +x ./gradlew
+    - echo "${KEYSTORE}" | base64 -d > keystore/proprietary.keystore
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
+
+buildReleaseDev:
+  extends: .releaseSigned
+  script:
+    - ./gradlew assembleReleaseDev
+  artifacts:
+    paths:
+      - app/build/outputs/apk/
+
+buildReleaseStable:
+  extends: .releaseSigned
+  script:
+    - ./gradlew assembleReleaseStable
+  artifacts:
+    paths:
+      - app/build/outputs/apk/
+
+# Default lint configuration for release jobs
+.lintReleaseDefault:
+  stage: release
+  when: always
+  allow_failure: false
+
 lintRelease:
-  extends: .releaseDefault
+  extends: .lintReleaseDefault
   script:
     - ./gradlew lintRelease
   artifacts:
@@ -70,7 +99,7 @@ lintRelease:
       - app/build/reports/
 
 ktlintRelease:
-  extends: .releaseDefault
+  extends: .lintReleaseDefault
   script:
     - ./gradlew app:ktlintCheck --info
   artifacts:

@@ -21,11 +21,24 @@ android {
     }
 
     signingConfigs {
+        def keystore_password = System.getenv('KEYSTORE_PASSWORD')
         debugConfig {
             storeFile file("../keystore/platform.keystore")
             storePassword 'android'
             keyAlias 'platform'
             keyPassword 'android'
+        }
+        releaseDevConfig {
+            storeFile file("../keystore/proprietary.keystore")
+            storePassword keystore_password
+            keyAlias 'platform.dev'
+            keyPassword keystore_password
+        }
+        releaseStableConfig {
+            storeFile file("../keystore/proprietary.keystore")
+            storePassword keystore_password
+            keyAlias 'platform.stable'
+            keyPassword keystore_password
         }
     }
 
@@ -37,6 +50,16 @@ android {
         }
         release {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        releaseDev {
+            minifyEnabled false
+            signingConfig signingConfigs.releaseDevConfig
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        releaseStable {
+            minifyEnabled false
+            signingConfig signingConfigs.releaseStableConfig
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
