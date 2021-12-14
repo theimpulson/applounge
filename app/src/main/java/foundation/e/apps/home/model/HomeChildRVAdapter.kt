@@ -39,12 +39,12 @@ class HomeChildRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
     private var oldList = emptyList<FusedApp>()
 
     private val shimmer = Shimmer.ColorHighlightBuilder()
-            .setDuration(500)
-            .setBaseAlpha(0.7f)
-            .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
-            .setHighlightAlpha(0.6f)
-            .setAutoStart(true)
-            .build()
+        .setDuration(500)
+        .setBaseAlpha(0.7f)
+        .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
+        .setHighlightAlpha(0.6f)
+        .setAutoStart(true)
+        .build()
 
     inner class ViewHolder(val binding: HomeChildListItemBinding) :
         RecyclerView.ViewHolder(binding.root)

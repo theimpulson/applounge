@@ -18,12 +18,10 @@
 
 package foundation.e.apps.api.cleanapk
 
-import android.content.Context
 import android.os.Build
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.Interceptor

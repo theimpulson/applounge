@@ -23,7 +23,6 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.data.Origin
