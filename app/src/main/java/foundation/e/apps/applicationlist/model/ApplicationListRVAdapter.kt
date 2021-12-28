@@ -113,7 +113,10 @@ class ApplicationListRVAdapter(
                 appRatingBar.rating = searchApp.ratings.usageQualityScore.toFloat()
             }
             if (searchApp.ratings.privacyScore != -1.0) {
-                appPrivacyScore.text = searchApp.ratings.privacyScore.toString()
+                appPrivacyScore.text = view.context.getString(
+                    R.string.privacy_rating_out_of,
+                    searchApp.ratings.privacyScore.toInt().toString()
+                )
             }
             when (searchApp.origin) {
                 Origin.GPLAY -> {

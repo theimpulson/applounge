@@ -190,7 +190,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 if (it.ratings.privacyScore != -1.0) {
                     appPrivacyScore.text = getString(
                         R.string.privacy_rating_out_of,
-                        it.ratings.privacyScore.toString()
+                        it.ratings.privacyScore.toInt().toString()
                     )
                 }
                 appPrivacyScoreLayout.setOnClickListener {
@@ -201,13 +201,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     ).show(childFragmentManager, TAG)
                 }
 
-                appEnergyRatingLayout.setOnClickListener {
-                    ApplicationDialogFragment(
-                        R.drawable.ic_energy,
-                        getString(R.string.energy),
-                        getString(R.string.energy_description)
-                    ).show(childFragmentManager, TAG)
-                }
             }
 
             binding.appDescription.text =

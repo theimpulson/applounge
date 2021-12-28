@@ -84,9 +84,7 @@
     <string name="rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/5.0</string>
     <string name="privacy">Privacy</string>
     <string name="privacy_description">Score out of 10. Computed using Exodus Privacy analyses, based on permissions and trackers used in the app.</string>
-    <string name="energy">Energy</string>
-    <string name="energy_description">Score out of 10. Computed using the app\'s battery usage as measured on a device in a dedicated lab. Coming soon.</string>
-    <string name="privacy_rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/10.0</string>
+    <string name="privacy_rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/10</string>
     <string name="privacy_analyses">Privacy analyses</string>
     <string name="permissions">Permissions</string>
     <string name="trackers">Trackers</string>
