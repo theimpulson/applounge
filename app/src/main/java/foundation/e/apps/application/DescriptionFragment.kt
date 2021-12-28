@@ -2,8 +2,8 @@ package foundation.e.apps.application
 
 import android.os.Bundle
 import android.text.Html
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
@@ -28,5 +28,4 @@ class DescriptionFragment : Fragment(R.layout.fragment_description) {
         super.onDestroyView()
         _binding = null
     }
-
 }

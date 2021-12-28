@@ -200,7 +200,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         getString(R.string.privacy_description)
                     ).show(childFragmentManager, TAG)
                 }
-
             }
 
             binding.appDescription.text =
