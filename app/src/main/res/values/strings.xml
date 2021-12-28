@@ -68,6 +68,7 @@
 
     <!-- Application -->
     <string name="share">Share</string>
+    <string name="description">Description</string>
     <string name="share_intent">Check out \"<xliff:g id="rating">%1$s</xliff:g>\"\n<xliff:g id="rating">%2$s</xliff:g></string>
     <string name="ok">OK</string>
     <string name="install">Install</string>

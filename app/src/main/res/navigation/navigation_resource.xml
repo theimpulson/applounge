@@ -112,6 +112,9 @@
         <action
             android:id="@+id/action_applicationFragment_to_screenshotFragment"
             app:destination="@id/screenshotFragment" />
+        <action
+            android:id="@+id/action_applicationFragment_to_descriptionFragment"
+            app:destination="@id/descriptionFragment" />
     </fragment>
     <fragment
         android:id="@+id/applicationListFragment"
@@ -154,5 +157,18 @@
         <action
             android:id="@+id/action_screenshotFragment_to_applicationFragment"
             app:destination="@id/applicationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/descriptionFragment"
+        android:name="foundation.e.apps.application.DescriptionFragment"
+        android:label="fragment_description"
+        tools:layout="@layout/fragment_description" >
+        <action
+            android:id="@+id/action_descriptionFragment_to_applicationFragment"
+            app:destination="@id/applicationFragment" />
+        <argument
+            android:name="description"
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
 </navigation>

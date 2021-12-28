@@ -213,6 +213,11 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             binding.appDescription.text =
                 Html.fromHtml(it.description, Html.FROM_HTML_MODE_COMPACT)
 
+            binding.appDescriptionMore.setOnClickListener { view ->
+                val action = ApplicationFragmentDirections.actionApplicationFragmentToDescriptionFragment(it.description)
+                view.findNavController().navigate(action)
+            }
+
             // Information widgets
             binding.infoInclude.apply {
                 appUpdatedOn.text = getString(

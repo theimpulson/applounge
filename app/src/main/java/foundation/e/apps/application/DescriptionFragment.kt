@@ -1,0 +1,32 @@
+package foundation.e.apps.application
+
+import android.os.Bundle
+import android.text.Html
+import androidx.fragment.app.Fragment
+import android.view.View
+import androidx.navigation.fragment.navArgs
+import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.R
+import foundation.e.apps.databinding.FragmentDescriptionBinding
+
+@AndroidEntryPoint
+class DescriptionFragment : Fragment(R.layout.fragment_description) {
+
+    private var _binding: FragmentDescriptionBinding? = null
+    private val binding get() = _binding!!
+
+    private val args: DescriptionFragmentArgs by navArgs()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentDescriptionBinding.bind(view)
+
+        binding.descriptionTV.text = Html.fromHtml(args.description, Html.FROM_HTML_MODE_COMPACT)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+}
