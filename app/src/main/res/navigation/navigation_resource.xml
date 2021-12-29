@@ -62,18 +62,6 @@
         android:id="@+id/settingsFragment"
         android:name="foundation.e.apps.settings.SettingsFragment"
         android:label="Settings">
-        <action
-            android:id="@+id/action_settingsFragment_to_appRequestFragment"
-            app:destination="@id/appRequestFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/appRequestFragment"
-        android:name="foundation.e.apps.settings.AppRequestFragment"
-        android:label="AppRequest"
-        tools:layout="@layout/fragment_app_request">
-        <action
-            android:id="@+id/action_appRequestFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/applicationFragment"
