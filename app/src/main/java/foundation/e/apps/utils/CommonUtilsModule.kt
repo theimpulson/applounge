@@ -19,6 +19,8 @@
 package foundation.e.apps.utils
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
@@ -101,5 +103,28 @@ object CommonUtilsModule {
     fun provideCache(@ApplicationContext context: Context): Cache {
         val cacheSize = (10 * 1024 * 1024).toLong() // 10 MB
         return Cache(context.cacheDir, cacheSize)
+    }
+
+    /**
+     * Checks if device has internet connection available or not
+     * @param context [Context]
+     * @return true if internet connection is available, false otherwise
+     */
+    @Singleton
+    @Provides
+    fun isNetworkAvailable(@ApplicationContext context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(ConnectivityManager::class.java)
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+
+        if (capabilities != null) {
+            if (capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+            ) {
+                return true
+            }
+        }
+        return false
     }
 }

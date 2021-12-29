@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.helpers.AuthValidator
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
@@ -51,6 +52,7 @@ class MainActivityViewModel @Inject constructor(
 
     private var _authData: MutableLiveData<AuthData> = MutableLiveData()
     val authData: LiveData<AuthData> = _authData
+    val authValidity: MutableLiveData<Boolean> = MutableLiveData()
 
     fun getAuthData() {
         viewModelScope.launch {
@@ -65,7 +67,15 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun generateAuthData() {
-        _authData.value = gson.fromJson(authDataJson.value, AuthData::class.java)
+        val data = gson.fromJson(authDataJson.value, AuthData::class.java)
+        if (validateAuthData(data)) {
+            _authData.value = data
+            authValidity.value = true
+        }
+    }
+
+    private fun validateAuthData(authData: AuthData): Boolean {
+        return AuthValidator(authData).isValid()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

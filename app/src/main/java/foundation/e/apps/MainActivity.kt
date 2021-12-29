@@ -58,6 +58,13 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        viewModel.authValidity.observe(this, {
+            if (it != true) {
+                Log.d(TAG, "Authentication data validation failed!")
+                viewModel.destroyCredentials()
+            }
+        })
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.applicationFragment, R.id.applicationListFragment, R.id.screenshotFragment, R.id.descriptionFragment -> {
