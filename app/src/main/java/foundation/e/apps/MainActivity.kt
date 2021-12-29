@@ -62,6 +62,8 @@ class MainActivity : AppCompatActivity() {
             if (it != true) {
                 Log.d(TAG, "Authentication data validation failed!")
                 viewModel.destroyCredentials()
+            } else {
+                Log.d(TAG, "Authentication data is valid!")
             }
         })
 

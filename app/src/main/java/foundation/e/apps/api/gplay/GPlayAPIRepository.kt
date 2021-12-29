@@ -34,6 +34,10 @@ class GPlayAPIRepository @Inject constructor(
         return gPlayAPIImpl.fetchAuthData()
     }
 
+    suspend fun validateAuthData(authData: AuthData): Boolean {
+        return gPlayAPIImpl.validateAuthData(authData)
+    }
+
     suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
         return gPlayAPIImpl.getSearchSuggestions(query, authData)
     }

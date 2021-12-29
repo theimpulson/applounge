@@ -160,7 +160,7 @@ class FusedAPIImpl @Inject constructor(
                 )
             }
         }
-        return fusedResponse
+        return fusedResponse.distinctBy { it.package_name }
     }
 
     suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
@@ -169,6 +169,10 @@ class FusedAPIImpl @Inject constructor(
 
     suspend fun fetchAuthData(): Unit? {
         return gPlayAPIRepository.fetchAuthData()
+    }
+
+    suspend fun validateAuthData(authData: AuthData): Boolean {
+        return gPlayAPIRepository.validateAuthData(authData)
     }
 
     suspend fun getApplication(

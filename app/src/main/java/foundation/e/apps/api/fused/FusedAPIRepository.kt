@@ -34,6 +34,10 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.getHomeScreenData(authData)
     }
 
+    suspend fun validateAuthData(authData: AuthData): Boolean {
+        return fusedAPIImpl.validateAuthData(authData)
+    }
+
     suspend fun getApplicationDetails(
         packageNameList: List<String>,
         authData: AuthData,

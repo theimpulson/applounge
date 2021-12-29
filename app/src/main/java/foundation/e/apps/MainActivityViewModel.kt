@@ -21,6 +21,7 @@ package foundation.e.apps
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -68,14 +69,14 @@ class MainActivityViewModel @Inject constructor(
 
     fun generateAuthData() {
         val data = gson.fromJson(authDataJson.value, AuthData::class.java)
-        if (validateAuthData(data)) {
-            _authData.value = data
-            authValidity.value = true
+        _authData.value = data
+        viewModelScope.launch {
+            authValidity.postValue(isAuthValid(data))
         }
     }
 
-    private fun validateAuthData(authData: AuthData): Boolean {
-        return AuthValidator(authData).isValid()
+    private suspend fun isAuthValid(authData: AuthData): Boolean {
+        return fusedAPIRepository.validateAuthData(authData)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

@@ -23,11 +23,7 @@ import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
 import com.aurora.gplayapi.data.models.File
-import com.aurora.gplayapi.helpers.AppDetailsHelper
-import com.aurora.gplayapi.helpers.CategoryHelper
-import com.aurora.gplayapi.helpers.PurchaseHelper
-import com.aurora.gplayapi.helpers.SearchHelper
-import com.aurora.gplayapi.helpers.TopChartsHelper
+import com.aurora.gplayapi.helpers.*
 import foundation.e.apps.api.gplay.token.TokenRepository
 import foundation.e.apps.api.gplay.utils.GPlayHttpClient
 import foundation.e.apps.utils.DataStoreModule
@@ -46,6 +42,15 @@ class GPlayAPIImpl @Inject constructor(
     suspend fun fetchAuthData() = withContext(Dispatchers.IO) {
         val data = async { tokenRepository.getAuthData() }
         data.await()?.let { dataStoreModule.saveCredentials(it) }
+    }
+
+    suspend fun validateAuthData(authData: AuthData): Boolean {
+        var validity = false
+        withContext(Dispatchers.IO) {
+            val authValidator = AuthValidator(authData).using(gPlayHttpClient)
+            validity = authValidator.isValid()
+        }
+        return validity
     }
 
     suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
