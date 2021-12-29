@@ -62,6 +62,9 @@
         android:id="@+id/settingsFragment"
         android:name="foundation.e.apps.settings.SettingsFragment"
         android:label="Settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_TOSFragment"
+            app:destination="@id/TOSFragment" />
     </fragment>
     <fragment
         android:id="@+id/applicationFragment"
@@ -158,5 +161,14 @@
             android:name="description"
             android:defaultValue=""
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/TOSFragment"
+        android:name="foundation.e.apps.setup.TOSFragment"
+        android:label="fragment_tos"
+        tools:layout="@layout/fragment_tos" >
+        <action
+            android:id="@+id/action_TOSFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

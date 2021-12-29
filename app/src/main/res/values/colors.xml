@@ -24,6 +24,9 @@
     <color name="colorBackground">#FBFBFB</color>
     <color name="colorSearchBar">#f2f2f2</color>
 
+    <!-- TOS -->
+    <color name="tos_warning">#309DFF</color>
+
     <!-- Shimmer Animation -->
     <color name="colorGrey">#dddddd</color>
 </resources>
