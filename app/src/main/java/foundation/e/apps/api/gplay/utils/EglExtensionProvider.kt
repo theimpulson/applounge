@@ -21,7 +21,6 @@ package foundation.e.apps.api.gplay.utils
 
 import android.opengl.GLES10
 import android.text.TextUtils
-import java.util.Collections
 import javax.microedition.khronos.egl.EGL10
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.egl.EGLContext
@@ -90,9 +89,9 @@ object EglExtensionProvider {
                 }
             }
             egl10.eglTerminate(display)
-            val sorted: List<String> = ArrayList(glExtensions)
-            Collections.sort(sorted)
-            return sorted
+            val extensionsList: MutableList<String> = ArrayList(glExtensions)
+            extensionsList.sort()
+            return extensionsList
         }
 
     private fun addExtensionsForConfig(
