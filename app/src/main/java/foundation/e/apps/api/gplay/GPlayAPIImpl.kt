@@ -50,7 +50,7 @@ class GPlayAPIImpl @Inject constructor(
     }
 
     suspend fun validateAuthData(authData: AuthData): Boolean {
-        var validity = false
+        var validity: Boolean
         withContext(Dispatchers.IO) {
             val authValidator = AuthValidator(authData).using(gPlayHttpClient)
             validity = authValidator.isValid()
