@@ -40,7 +40,6 @@
     </style>
 
     <style name="AutoCompleteTextViewStyle" parent="Widget.AppCompat.Light.AutoCompleteTextView">
-        <item name="android:popupElevation">1.5dp</item>
         <item name="android:completionThreshold">1</item>
     </style>
 
