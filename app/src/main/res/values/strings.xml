@@ -33,7 +33,13 @@
 
     <!-- Search Fragment -->
     <string name="query_hint">Search for apps &amp; games</string>
-    
+
+    <!-- SignIn Fragment -->
+    <string name="sign_in_title">Sign in</string>
+    <string name="sign_in_desc">Use a Google account or Anonymous Mode to sign in privately.</string>
+    <string name="sign_in_google">Google Login</string>
+    <string name="sign_in_anonymous">Anonymous</string>
+
     <!-- TOS Fragment -->
     <string name="tos_agree">Agree</string>
     <string name="tos_disagree">Disagree</string>

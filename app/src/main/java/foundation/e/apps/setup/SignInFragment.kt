@@ -5,23 +5,20 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import foundation.e.apps.R
-import foundation.e.apps.databinding.FragmentTosBinding
+import foundation.e.apps.databinding.FragmentSignInBinding
 
-class TOSFragment : Fragment(R.layout.fragment_tos) {
-
-    private var _binding: FragmentTosBinding? = null
+class SignInFragment : Fragment(R.layout.fragment_sign_in) {
+    private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentTosBinding.bind(view)
+        _binding = FragmentSignInBinding.bind(view)
 
-        binding.disagreeBT.setOnClickListener {
-            activity?.finish()
-        }
+        binding.googleBT.isEnabled = false
 
-        binding.agreeBT.setOnClickListener {
-            view.findNavController().navigate(R.id.signInFragment)
+        binding.anonymousBT.setOnClickListener {
+            view.findNavController().navigate(R.id.homeFragment)
         }
     }
 

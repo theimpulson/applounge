@@ -65,6 +65,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_TOSFragment"
             app:destination="@id/TOSFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
     </fragment>
     <fragment
         android:id="@+id/applicationFragment"
@@ -168,7 +171,16 @@
         android:label="fragment_tos"
         tools:layout="@layout/fragment_tos" >
         <action
-            android:id="@+id/action_TOSFragment_to_homeFragment"
+            android:id="@+id/action_TOSFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="foundation.e.apps.setup.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>
