@@ -25,7 +25,7 @@ import foundation.e.apps.manager.pkg.PkgManagerModule
 import javax.inject.Inject
 
 @HiltAndroidApp
-class AppsApplication : Application() {
+class AppLoungeApplication : Application() {
 
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
