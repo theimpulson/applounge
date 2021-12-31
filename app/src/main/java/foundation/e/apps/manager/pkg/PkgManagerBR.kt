@@ -16,30 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.utils.download
+package foundation.e.apps.manager.pkg
 
-import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import android.content.Intent
+import android.util.Log
+import dagger.hilt.android.AndroidEntryPoint
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DownloadManagerModule {
+@AndroidEntryPoint
+open class PkgManagerBR : BroadcastReceiver() {
 
-    @Provides
-    @Singleton
-    fun provideDownloadManagerInstance(@ApplicationContext context: Context): DownloadManager {
-        return context.getSystemService(DownloadManager::class.java)
-    }
+    private val TAG = PkgManagerBR::class.java.simpleName
+    private val EXTRA_FAILED_UID = 0
 
-    @Provides
-    @Singleton
-    fun provideDownloadManagerQueryInstance(): DownloadManager.Query {
-        return DownloadManager.Query()
+    override fun onReceive(context: Context?, intent: Intent?) {
+        if (context != null && intent?.action == Intent.ACTION_PACKAGE_ADDED) {
+            val packageUid = intent.getIntExtra(Intent.EXTRA_UID, EXTRA_FAILED_UID)
+            val packages = context.packageManager.getPackagesForUid(packageUid)
+            packages?.let { Log.d(TAG, it[0].toString()) }
+        }
     }
 }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.utils.pkg
+package foundation.e.apps.manager.pkg
 
 import android.app.PendingIntent
 import android.content.Context

@@ -38,7 +38,7 @@ import foundation.e.apps.applicationlist.ApplicationListFragmentDirections
 import foundation.e.apps.databinding.ApplicationListItemBinding
 import foundation.e.apps.search.SearchFragmentDirections
 import foundation.e.apps.updates.UpdatesFragmentDirections
-import foundation.e.apps.utils.pkg.PkgManagerModule
+import foundation.e.apps.manager.pkg.PkgManagerModule
 import javax.inject.Singleton
 
 @Singleton

@@ -43,7 +43,7 @@ import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentSearchBinding
-import foundation.e.apps.utils.pkg.PkgManagerModule
+import foundation.e.apps.manager.pkg.PkgManagerModule
 import javax.inject.Inject
 
 @AndroidEntryPoint

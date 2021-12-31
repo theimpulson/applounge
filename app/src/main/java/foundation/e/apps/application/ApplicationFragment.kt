@@ -39,7 +39,7 @@ import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.application.model.ApplicationScreenshotsRVAdapter
 import foundation.e.apps.databinding.FragmentApplicationBinding
-import foundation.e.apps.utils.pkg.PkgManagerModule
+import foundation.e.apps.manager.pkg.PkgManagerModule
 import javax.inject.Inject
 
 @AndroidEntryPoint

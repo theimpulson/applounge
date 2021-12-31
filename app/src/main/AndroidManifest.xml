@@ -43,7 +43,7 @@
         </activity>
 
         <receiver
-            android:name=".utils.download.DownloadManagerBR"
+            android:name="foundation.e.apps.manager.download.DownloadManagerBR"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.utils.download
+package foundation.e.apps.manager.download
 
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
@@ -24,7 +24,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.utils.pkg.PkgManagerModule
+import foundation.e.apps.manager.pkg.PkgManagerModule
 import java.io.File
 import javax.inject.Inject
 

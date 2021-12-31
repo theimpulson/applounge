@@ -20,8 +20,8 @@ package foundation.e.apps
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-import foundation.e.apps.utils.pkg.PkgManagerBR
-import foundation.e.apps.utils.pkg.PkgManagerModule
+import foundation.e.apps.manager.pkg.PkgManagerBR
+import foundation.e.apps.manager.pkg.PkgManagerModule
 import javax.inject.Inject
 
 @HiltAndroidApp

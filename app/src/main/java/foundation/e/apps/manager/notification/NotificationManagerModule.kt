@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.utils.notification
+package foundation.e.apps.manager.notification
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

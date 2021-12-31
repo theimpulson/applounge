@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.utils.download
+package foundation.e.apps.manager.download
 
 import android.app.DownloadManager
 import javax.inject.Inject
