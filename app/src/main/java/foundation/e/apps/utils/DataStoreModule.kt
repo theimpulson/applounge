@@ -19,6 +19,7 @@
 package foundation.e.apps.utils
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -40,8 +41,12 @@ class DataStoreModule @Inject constructor(
     private val Context.dataStore by preferencesDataStore(preferenceDataStoreName)
 
     private val AUTHDATA = stringPreferencesKey("authData")
+    private val USERTYPE = stringPreferencesKey("userType")
+    private val TOCSTATUS = booleanPreferencesKey("tocStatus")
 
     val authData = context.dataStore.data.map { it[AUTHDATA] ?: "" }
+    val userType = context.dataStore.data.map { it[USERTYPE] ?: "" }
+    val tocStatus = context.dataStore.data.map { it[TOCSTATUS] ?: false }
 
     /**
      * Allows to save gplay API token data into datastore
@@ -55,6 +60,24 @@ class DataStoreModule @Inject constructor(
     suspend fun destroyCredentials() {
         context.dataStore.edit {
             it[AUTHDATA] = ""
+        }
+    }
+
+    /**
+     * TOC status
+     */
+    suspend fun saveTOCStatus(status: Boolean) {
+        context.dataStore.edit {
+            it[TOCSTATUS] = status
+        }
+    }
+
+    /**
+     * User auth type
+     */
+    suspend fun saveUserType(user: USER) {
+        context.dataStore.edit {
+            it[USERTYPE] = user.name
         }
     }
 }

@@ -46,8 +46,9 @@ class MainActivityViewModel @Inject constructor(
     @Named("update") private val updateNotificationChannel: NotificationChannel
 ) : ViewModel() {
 
-    // Authentication Data for GPlay servers
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
+    val tocStatus: LiveData<Boolean> = dataStoreModule.tocStatus.asLiveData()
+    val userType: LiveData<String> = dataStoreModule.userType.asLiveData()
 
     private var _authData: MutableLiveData<AuthData> = MutableLiveData()
     val authData: LiveData<AuthData> = _authData
