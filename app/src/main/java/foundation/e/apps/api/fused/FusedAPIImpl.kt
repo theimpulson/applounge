@@ -40,8 +40,8 @@ import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
-import foundation.e.apps.utils.PreferenceManagerModule
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.PreferenceManagerModule
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named

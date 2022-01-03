@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.screenshotFragment,
                 R.id.descriptionFragment,
                 R.id.TOSFragment,
-                R.id.signInFragment-> {
+                R.id.signInFragment -> {
                     bottomNavigationView.visibility = View.GONE
                 }
                 else -> {
