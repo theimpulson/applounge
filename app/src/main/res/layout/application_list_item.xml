@@ -35,8 +35,8 @@
         android:layout_height="80dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="2dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
         app:cardUseCompatPadding="true">
 
         <ImageView
@@ -123,18 +123,17 @@
         android:orientation="vertical">
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:id="@+id/installButton"
             android:layout_width="120dp"
             android:layout_height="43dp"
-            android:backgroundTint="@color/colorAccent95"
             android:text="@string/install"
             android:textAllCaps="false"
             android:textColor="@color/colorAccent"
             android:textSize="18sp"
             app:autoSizeTextType="uniform"
-            app:cornerRadius="8dp"
-            app:strokeColor="@color/colorAccent95"
+            app:cornerRadius="4dp"
+            app:strokeColor="@color/colorAccent"
             app:strokeWidth="1dp" />
 
         <LinearLayout
@@ -164,5 +163,13 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/app_data_container"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorGrey" />
 
 </RelativeLayout>

@@ -63,8 +63,8 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             )
         }
 
+        binding.toolbarTitleTV.text = args.translation
         binding.toolbar.apply {
-            title = args.translation
             setNavigationOnClickListener {
                 view.findNavController().navigate(R.id.categoriesFragment)
             }

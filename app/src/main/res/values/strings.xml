@@ -26,13 +26,13 @@
     <string name="menu_updates">Updates</string>
     <string name="menu_settings">Settings</string>
 
+    <!-- Search Fragment -->
+    <string name="search_hint">Search for an app</string>
+
     <!-- Categories Fragment -->
     <string name="apps">Apps</string>
     <string name="games">Games</string>
     <string name="category_icon">Category Icon</string>
-
-    <!-- Search Fragment -->
-    <string name="query_hint">Search for apps &amp; games</string>
 
     <!-- SignIn Fragment -->
     <string name="sign_in_title">Sign in</string>
@@ -63,7 +63,6 @@
     <string name="show_only_pwa_apps">Show only PWAs</string>
 
     <!-- Application -->
-    <string name="share">Share</string>
     <string name="description">Description</string>
     <string name="share_intent">Check out \"<xliff:g id="rating">%1$s</xliff:g>\"\n<xliff:g id="rating">%2$s</xliff:g></string>
     <string name="ok">OK</string>

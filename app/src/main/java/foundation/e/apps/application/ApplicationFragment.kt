@@ -70,10 +70,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             )
         })
 
-        if (args.origin == Origin.GPLAY) {
-            binding.toolbar.inflateMenu(R.menu.application_menu)
-        }
-
         val startDestination = findNavController().graph.startDestination
         if (startDestination == R.id.applicationFragment) {
             binding.toolbar.setNavigationOnClickListener {
@@ -146,19 +142,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         applicationViewModel.fusedApp.observe(viewLifecycleOwner, {
             applicationViewModel.appStatus.value = it.status
             screenshotsRVAdapter.setData(it.other_images_path)
-
-            if (it.shareUrl.isNotBlank()) {
-                binding.toolbar.setOnMenuItemClickListener { menu ->
-                    when (menu.itemId) {
-                        R.id.share -> {
-                            val intent = Intent.createChooser(shareApp(it.name, it.shareUrl), null)
-                            startActivity(intent)
-                            true
-                        }
-                        else -> false
-                    }
-                }
-            }
 
             // Title widgets
             binding.titleInclude.apply {

@@ -31,7 +31,26 @@
         android:layout_height="wrap_content"
         app:navigationIcon="@drawable/ic_arrow_back"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
+        android:theme="@style/ToolbarStyle" >
+
+        <com.google.android.material.textview.MaterialTextView
+            android:paddingTop="15dp"
+            android:id="@+id/toolbarTitleTV"
+            android:textStyle="bold"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="20sp"
+            android:textAlignment="textStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <View
+        android:id="@+id/divider"
+        android:elevation="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorGrey" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

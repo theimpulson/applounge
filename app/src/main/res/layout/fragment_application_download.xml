@@ -44,16 +44,17 @@
         android:textSize="15sp" />
 
     <com.google.android.material.button.MaterialButton
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:id="@+id/installButton"
         android:layout_width="120dp"
         android:layout_height="43dp"
-        android:backgroundTint="@color/colorAccent95"
         android:text="@string/install"
         android:textAllCaps="false"
         android:textColor="@color/colorAccent"
         android:textSize="18sp"
         app:autoSizeTextType="uniform"
-        app:cornerRadius="8dp"
-        app:strokeColor="@color/colorAccent95"
+        app:cornerRadius="4dp"
+        app:strokeColor="@color/colorAccent"
         app:strokeWidth="1dp" />
+
 </LinearLayout>

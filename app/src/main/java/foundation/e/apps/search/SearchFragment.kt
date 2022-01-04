@@ -25,6 +25,7 @@ import android.provider.BaseColumns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
@@ -67,6 +68,7 @@ class SearchFragment :
     private var searchView: SearchView? = null
     private var shimmerLayout: ShimmerFrameLayout? = null
     private var recyclerView: RecyclerView? = null
+    private var searchHintLayout: LinearLayout? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -75,6 +77,7 @@ class SearchFragment :
         searchView = binding.searchView
         shimmerLayout = binding.shimmerLayout
         recyclerView = binding.recyclerView
+        searchHintLayout = binding.searchHintLayout.root
 
         // Setup SearchView
         setHasOptionsMenu(true)
@@ -130,6 +133,7 @@ class SearchFragment :
         query?.let { text ->
             hideKeyboard(activity as Activity)
             view?.requestFocus()
+            searchHintLayout?.visibility = View.GONE
             shimmerLayout?.visibility = View.VISIBLE
             recyclerView?.visibility = View.GONE
             mainActivityViewModel.authData.value?.let { searchViewModel.getSearchResults(text, it) }
@@ -166,6 +170,7 @@ class SearchFragment :
         searchView = null
         shimmerLayout = null
         recyclerView = null
+        searchHintLayout = null
     }
 
     private fun configureCloseButton(searchView: SearchView) {

@@ -29,7 +29,6 @@ import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel

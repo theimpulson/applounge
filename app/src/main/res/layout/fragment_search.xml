@@ -29,16 +29,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme">
+        android:theme="@style/ToolbarStyle">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/search_background"
             app:iconifiedByDefault="false"
-            app:queryBackground="@android:color/transparent"
-            app:queryHint="@string/query_hint"
             app:searchIcon="@drawable/ic_menu_search" />
     </com.google.android.material.appbar.MaterialToolbar>
 
@@ -55,6 +52,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
+
+    <include
+        android:id="@+id/searchHintLayout"
+        layout="@layout/fragment_search_hint" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmerLayout"
