@@ -23,7 +23,7 @@ data class FusedApp(
     val author: String = String(),
     val category: String = String(),
     val description: String = String(),
-    var perms: String = String(),
+    var perms: List<String> = emptyList(),
     var trackers: List<String> = emptyList(),
     val icon_image_path: String = String(),
     val last_modified: String = String(),

@@ -436,7 +436,7 @@ class FusedAPIImpl @Inject constructor(
             author = this.developerName,
             category = this.categoryName,
             description = this.description,
-            perms = this.permissions.transformPermsToString(),
+            perms = this.permissions,
             icon_image_path = this.iconArtwork.url,
             last_modified = this.updatedOn,
             latest_version_code = this.versionCode,
@@ -452,18 +452,6 @@ class FusedAPIImpl @Inject constructor(
             origin = Origin.GPLAY,
             shareUrl = this.shareUrl
         )
-    }
-
-    fun getYouTubeUrl(youTubeImg: String): String {
-        val ytURL = "https://www.youtube.com/watch?v="
-        val splitID = youTubeImg.split("https://i.ytimg.com/vi/")[1]
-        val id = splitID.split("/")[0]
-        return ytURL + id
-    }
-
-    private fun MutableList<String>.transformPermsToString(): String {
-        val list = this.toString().replace(", ", "\n")
-        return list.substring(1, list.length - 1)
     }
 
     private fun MutableList<Artwork>.transformToList(): List<String> {

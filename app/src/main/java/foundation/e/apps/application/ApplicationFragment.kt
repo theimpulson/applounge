@@ -234,7 +234,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     ApplicationDialogFragment(
                         R.drawable.ic_perm,
                         getString(R.string.permissions),
-                        it.perms
+                        applicationViewModel.transformPermsToString(it.perms.toMutableList())
                     ).show(childFragmentManager, TAG)
                 }
                 appTrackers.setOnClickListener {

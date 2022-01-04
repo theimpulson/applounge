@@ -29,6 +29,7 @@ import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -70,5 +71,26 @@ class ApplicationViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    fun getYouTubeUrl(youTubeImg: String): String {
+        val ytURL = "https://www.youtube.com/watch?v="
+        val splitID = youTubeImg.split("https://i.ytimg.com/vi/")[1]
+        val id = splitID.split("/")[0]
+        return ytURL + id
+    }
+
+    fun transformPermsToString(permissions: MutableList<String>): String {
+        // Filter list to only keep platform permissions
+        val filteredList = permissions.filter {
+            it.startsWith("android.permission.")
+        }
+        // Remove prefix as we only have platform permissions remaining
+        val list = filteredList.map {
+            it.replace("[^>]*permission\\.".toRegex(), "")
+        }
+        // Make it a dialog-friendly string and return it
+        val permString = list.toString().replace(", ", "\n")
+        return permString.substring(1, permString.length - 1)
     }
 }
