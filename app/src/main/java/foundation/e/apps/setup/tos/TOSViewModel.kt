@@ -1,21 +1,20 @@
-package foundation.e.apps.setup
+package foundation.e.apps.setup.tos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.utils.DataStoreModule
-import foundation.e.apps.utils.USER
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignInViewModel @Inject constructor(
+class TOSViewModel @Inject constructor(
     private val dataStoreModule: DataStoreModule
 ) : ViewModel() {
 
-    fun saveUserType(user: USER) {
+    fun saveTOCStatus(status: Boolean) {
         viewModelScope.launch {
-            dataStoreModule.saveUserType(user)
+            dataStoreModule.saveTOCStatus(status)
         }
     }
 }

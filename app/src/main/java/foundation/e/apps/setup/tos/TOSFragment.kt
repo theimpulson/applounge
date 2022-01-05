@@ -1,4 +1,4 @@
-package foundation.e.apps.setup
+package foundation.e.apps.setup.tos
 
 import android.os.Bundle
 import android.view.View

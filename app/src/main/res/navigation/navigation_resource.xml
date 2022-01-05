@@ -164,7 +164,7 @@
     </fragment>
     <fragment
         android:id="@+id/TOSFragment"
-        android:name="foundation.e.apps.setup.TOSFragment"
+        android:name="foundation.e.apps.setup.tos.TOSFragment"
         android:label="fragment_tos"
         tools:layout="@layout/fragment_tos">
         <action
@@ -173,7 +173,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="foundation.e.apps.setup.SignInFragment"
+        android:name="foundation.e.apps.setup.signin.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in">
         <action
