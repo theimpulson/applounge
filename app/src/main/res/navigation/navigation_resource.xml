@@ -32,10 +32,16 @@
             app:destination="@id/applicationFragment" />
         <action
             android:id="@+id/action_homeFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
+            app:destination="@id/signInFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/navigation_resource"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_homeFragment_to_TOSFragment"
-            app:destination="@id/TOSFragment" />
+            app:destination="@id/TOSFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/navigation_resource"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/categoriesFragment"

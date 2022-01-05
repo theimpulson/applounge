@@ -24,10 +24,13 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.databinding.ActivityMainBinding
+import foundation.e.apps.utils.USER
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -47,23 +50,43 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
 
-        // Watch and refresh authentication data
-        viewModel.authDataJson.observe(this, {
-            if (it.isNullOrEmpty()) {
-                Log.d(TAG, "Fetching new authentication data")
-                viewModel.getAuthData()
-            } else {
-                viewModel.generateAuthData()
-                Log.d(TAG, "Authentication data is available!")
+        viewModel.tocStatus.observe(this, {
+            if (it != true) {
+                val navOptions = NavOptions.Builder()
+                    .setPopUpTo(R.id.navigation_resource, true)
+                    .build()
+                navOptions.shouldLaunchSingleTop()
+                Navigation.findNavController(this, binding.fragment.id)
+                    .navigate(R.id.TOSFragment, null, navOptions)
             }
         })
 
-        viewModel.authValidity.observe(this, {
-            if (it != true) {
-                Log.d(TAG, "Authentication data validation failed!")
-                viewModel.destroyCredentials()
-            } else {
-                Log.d(TAG, "Authentication data is valid!")
+        viewModel.userType.observe(this, { user ->
+            if (viewModel.tocStatus.value == true) {
+                when (USER.valueOf(user)) {
+                    USER.ANONYMOUS -> {
+                        // Watch and refresh authentication data
+                        viewModel.authDataJson.observe(this, {
+                            if (it.isNullOrEmpty()) {
+                                Log.d(TAG, "Fetching new authentication data")
+                                viewModel.getAuthData()
+                            } else {
+                                viewModel.generateAuthData()
+                                Log.d(TAG, "Authentication data is available!")
+                            }
+                        })
+
+                        viewModel.authValidity.observe(this, {
+                            if (it != true) {
+                                Log.d(TAG, "Authentication data validation failed!")
+                                viewModel.destroyCredentials()
+                            } else {
+                                Log.d(TAG, "Authentication data is valid!")
+                            }
+                        })
+                    }
+                    else -> {}
+                }
             }
         })
 
