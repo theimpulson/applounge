@@ -25,7 +25,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,14 +49,15 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
 
+        // navOptions and activityNavController for TOS and SignIn Fragments
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.navigation_resource, true)
+            .build()
+        navOptions.shouldLaunchSingleTop()
+
         viewModel.tocStatus.observe(this, {
             if (it != true) {
-                val navOptions = NavOptions.Builder()
-                    .setPopUpTo(R.id.navigation_resource, true)
-                    .build()
-                navOptions.shouldLaunchSingleTop()
-                Navigation.findNavController(this, binding.fragment.id)
-                    .navigate(R.id.TOSFragment, null, navOptions)
+                navController.navigate(R.id.TOSFragment, null, navOptions)
             }
         })
 
@@ -85,7 +85,10 @@ class MainActivity : AppCompatActivity() {
                             }
                         })
                     }
-                    else -> {}
+                    USER.UNAVAILABLE -> {
+                        navController.navigate(R.id.signInFragment, null, navOptions)
+                    }
+                    USER.GOOGLE -> {}
                 }
             }
         })
