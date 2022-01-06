@@ -26,8 +26,12 @@ import androidx.recyclerview.widget.RecyclerView
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedHome
 import foundation.e.apps.databinding.HomeParentListItemBinding
+import foundation.e.apps.manager.pkg.PkgManagerModule
 
-class HomeParentRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
+class HomeParentRVAdapter(
+    private val fusedAPIInterface: FusedAPIInterface,
+    private val pkgManagerModule: PkgManagerModule
+) :
     RecyclerView.Adapter<HomeParentRVAdapter.ViewHolder>() {
 
     private var oldList = emptyList<FusedHome>()
@@ -43,7 +47,7 @@ class HomeParentRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val homeChildRVAdapter = HomeChildRVAdapter(fusedAPIInterface)
+        val homeChildRVAdapter = HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule)
         homeChildRVAdapter.setData(oldList[position].list)
 
         holder.binding.titleTV.text = oldList[position].title

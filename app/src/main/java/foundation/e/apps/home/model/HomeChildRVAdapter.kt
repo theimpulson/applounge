@@ -26,14 +26,20 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
+import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.databinding.HomeChildListItemBinding
 import foundation.e.apps.home.HomeFragmentDirections
+import foundation.e.apps.manager.pkg.PkgManagerModule
 
-class HomeChildRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
+class HomeChildRVAdapter(
+    private val fusedAPIInterface: FusedAPIInterface,
+    private val pkgManagerModule: PkgManagerModule
+) :
     RecyclerView.Adapter<HomeChildRVAdapter.ViewHolder>() {
 
     private var oldList = emptyList<FusedApp>()
@@ -60,6 +66,7 @@ class HomeChildRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val view = holder.itemView
         val homeApp = oldList[position]
         val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
 
@@ -74,6 +81,32 @@ class HomeChildRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
                 }
             }
             appName.text = homeApp.name
+            when (homeApp.status) {
+                Status.INSTALLED -> {
+                    installButton.text = view.context.getString(R.string.open)
+                    installButton.setOnClickListener {
+                        view.context.startActivity(pkgManagerModule.getLaunchIntent(homeApp.package_name))
+                    }
+                }
+                Status.UPDATABLE -> {
+                    installButton.text = view.context.getString(R.string.update)
+                    installButton.setOnClickListener {
+                        installApplication(homeApp)
+                    }
+                }
+                Status.UNAVAILABLE -> {
+                    installButton.setOnClickListener {
+                        installApplication(homeApp)
+                    }
+                }
+                Status.DOWNLOADING -> {
+                    installButton.text = view.context.getString(R.string.cancel)
+                }
+                Status.INSTALLING, Status.UNINSTALLING -> {
+                    installButton.text = view.context.getString(R.string.cancel)
+                    installButton.isEnabled = false
+                }
+            }
             installButton.setOnClickListener {
                 fusedAPIInterface.getApplication(
                     homeApp._id,
@@ -104,5 +137,16 @@ class HomeChildRVAdapter(private val fusedAPIInterface: FusedAPIInterface) :
         val diffResult = DiffUtil.calculateDiff(diffUtil)
         oldList = newList
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    private fun installApplication(searchApp: FusedApp) {
+        fusedAPIInterface.getApplication(
+            searchApp._id,
+            searchApp.name,
+            searchApp.package_name,
+            searchApp.latest_version_code,
+            searchApp.offer_type,
+            searchApp.origin
+        )
     }
 }

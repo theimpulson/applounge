@@ -31,6 +31,8 @@ import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.databinding.FragmentHomeBinding
 import foundation.e.apps.home.model.HomeParentRVAdapter
+import foundation.e.apps.manager.pkg.PkgManagerModule
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
@@ -41,6 +43,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
     private val homeViewModel: HomeViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
+    @Inject
+    lateinit var pkgManagerModule: PkgManagerModule
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
@@ -49,7 +54,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             homeViewModel.getHomeScreenData(it)
         })
 
-        val homeParentRVAdapter = HomeParentRVAdapter(this)
+        val homeParentRVAdapter = HomeParentRVAdapter(this, pkgManagerModule)
         binding.parentRV.apply {
             adapter = homeParentRVAdapter
             layoutManager = LinearLayoutManager(view.context)
