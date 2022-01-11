@@ -43,6 +43,7 @@ import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.PreferenceManagerModule
 import java.io.File
+import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -450,7 +451,8 @@ class FusedAPIImpl @Inject constructor(
             offer_type = this.offerType,
             status = pkgManagerModule.getPackageStatus(this.packageName, this.versionCode),
             origin = Origin.GPLAY,
-            shareUrl = this.shareUrl
+            shareUrl = this.shareUrl,
+            appSize = this.size.toStringFileSize()
         )
     }
 
@@ -468,5 +470,13 @@ class FusedAPIImpl @Inject constructor(
             browseUrl = this.browseUrl,
             imageUrl = this.imageUrl,
         )
+    }
+
+    private fun Long.toStringFileSize() : String {
+        if (this <= 0) return "0"
+        val units = arrayOf("B", "kB", "MB", "GB", "TB")
+        val digitGroups = (Math.log10(this.toDouble()) / Math.log10(1024.0)).toInt()
+        return DecimalFormat("#,##0.#").format(this / Math.pow(1024.0, digitGroups.toDouble()))
+            .toString() + " " + units[digitGroups]
     }
 }

@@ -156,6 +156,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 }
             }
 
+            binding.downloadInclude.appSize.text = it.appSize
+
             // Ratings widgets
             binding.ratingsInclude.apply {
                 if (it.ratings.usageQualityScore != -1.0) {
