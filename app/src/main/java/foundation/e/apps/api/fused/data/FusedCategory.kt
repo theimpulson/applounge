@@ -25,5 +25,6 @@ data class FusedCategory(
     val title: String = String(),
     val browseUrl: String = String(),
     val imageUrl: String = String(),
-    val drawable: Int = -1,
+    var drawable: Int = -1,
+    var tag: String = String()
 )

@@ -21,7 +21,6 @@ package foundation.e.apps.api.fused.utils
 import foundation.e.apps.R
 
 object CategoryUtils {
-
     fun provideCategoryIconResource(categoryId: String): Int {
         return when (categoryId) {
             "comics" ->
@@ -55,6 +54,8 @@ object CategoryUtils {
             "lifestyle" ->
                 R.drawable.ic_cat_lifestyle
             "video_players" ->
+                R.drawable.ic_cat_video_players
+            "video_players_and_editors" ->
                 R.drawable.ic_cat_video_players
             "events" ->
                 R.drawable.ic_cat_events
@@ -172,4 +173,29 @@ object CategoryUtils {
                 R.drawable.ic_cat_default
         }
     }
+
+//    fun provideCategoryIconResourceComparingCategoryId(categoryId: String): Int {
+//        val categoryIds: List<String> = listOf(
+//            "comics",
+//            "connectivity",
+//            "development",
+//            "education",
+//            "graphics",
+//            "internet",
+//            "music_and_audio",
+//            "entertainment",
+//            "tools",
+//            "security",
+//            "system",
+//            "system_apps",
+//            "communication",
+//            "medical",
+//            "lifestyle",
+//            "video_players",
+//            "events",
+//            "productivity",
+//
+//        )
+//
+//    }
 }

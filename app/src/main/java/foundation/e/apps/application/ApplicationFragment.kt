@@ -148,7 +148,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 appName.text = it.name
                 appAuthor.text = it.author
                 categoryTitle.text = it.category
-
                 if (args.origin == Origin.CLEANAPK) {
                     appIcon.load(CleanAPKInterface.ASSET_URL + it.icon_image_path)
                 } else {

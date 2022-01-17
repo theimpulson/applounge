@@ -33,6 +33,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
+import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.home.Home
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.FusedCategory
@@ -44,7 +45,6 @@ import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.PreferenceManagerModule
 import java.io.File
-import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -92,48 +92,90 @@ class FusedAPIImpl @Inject constructor(
 
         if (preferredApplicationType != "any") {
             val data = if (preferredApplicationType == "open") {
-                cleanAPKRepository.getCategoriesList(
-                    CleanAPKInterface.APP_TYPE_ANY,
-                    CleanAPKInterface.APP_SOURCE_FOSS
-                ).body()
+                getOpenSourceCategories()
             } else {
-                cleanAPKRepository.getCategoriesList(
-                    CleanAPKInterface.APP_TYPE_PWA,
-                    CleanAPKInterface.APP_SOURCE_ANY
-                ).body()
+                getPWAsCategories()
             }
+
             data?.let { category ->
-                when (type) {
-                    Category.Type.APPLICATION -> {
-                        for (cat in category.apps) {
-                            val categoryApp = FusedCategory(
-                                id = cat,
-                                title = category.translations.getOrDefault(cat, ""),
-                                drawable = CategoryUtils.provideCategoryIconResource(cat)
-                            )
-                            categoriesList.add(categoryApp)
-                        }
-                    }
-                    Category.Type.GAME -> {
-                        for (cat in category.games) {
-                            val categoryApp = FusedCategory(
-                                id = cat,
-                                title = category.translations.getOrDefault(cat, ""),
-                                drawable = CategoryUtils.provideCategoryIconResource(cat)
-                            )
-                            categoriesList.add(categoryApp)
-                        }
-                    }
-                }
+                categoriesList.addAll(getFusedCategoryBasedOnCategoryType(
+                    category,
+                    type,
+                    if(preferredApplicationType == "open") "Open Source" else "PWA"
+                ))
             }
         } else {
+            var data = getOpenSourceCategories()
+            data?.let {
+                categoriesList.addAll(getFusedCategoryBasedOnCategoryType(it, type, "Open Source"))
+            }
+            data = getPWAsCategories()
+            data?.let {
+                categoriesList.addAll(getFusedCategoryBasedOnCategoryType(it, type, "PWA"))
+            }
             val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
-                app.transformToFusedCategory()
+                val category = app.transformToFusedCategory()
+                var categoryTitle = category.title
+                if(categoryTitle.contains("&")) {
+                    categoryTitle = categoryTitle.replace("&", "and")
+                }
+                categoryTitle = categoryTitle.replace(' ', '_')
+                category.drawable = CategoryUtils.provideCategoryIconResource(categoryTitle.lowercase())
+                category
             }
             categoriesList.addAll(playResponse)
         }
+        categoriesList.sortBy { item -> item.title }
         return categoriesList
     }
+
+    private fun getFusedCategoryBasedOnCategoryType(
+        categories: Categories,
+        categoryType: Category.Type,
+        tag: String
+    ): List<FusedCategory> {
+        return when(categoryType) {
+            Category.Type.APPLICATION -> {
+                getAppsCategoriesAsFusedCategory(categories, tag)
+            }
+            Category.Type.GAME -> {
+                getGamesCategoriesAsFusedCategory(categories, tag)
+            }
+        }
+    }
+
+    private fun getAppsCategoriesAsFusedCategory(categories: Categories, tag: String): List<FusedCategory> {
+        return categories.apps.map { category ->
+            createFusedCategoryFromCategory(category, categories, tag)
+        }
+    }
+
+    private fun getGamesCategoriesAsFusedCategory(categories: Categories, tag: String): List<FusedCategory> {
+        return categories.apps.map { category ->
+            createFusedCategoryFromCategory(category, categories, tag)
+        }
+    }
+
+    private fun createFusedCategoryFromCategory(
+        category: String,
+        categories: Categories,
+        tag: String
+    ) = FusedCategory(
+        id = category,
+        title = categories.translations.getOrDefault(category, ""),
+        drawable = CategoryUtils.provideCategoryIconResource(category),
+        tag = tag
+    )
+
+    private suspend fun getPWAsCategories() = cleanAPKRepository.getCategoriesList(
+        CleanAPKInterface.APP_TYPE_PWA,
+        CleanAPKInterface.APP_SOURCE_ANY
+    ).body()
+
+    private suspend fun getOpenSourceCategories() = cleanAPKRepository.getCategoriesList(
+        CleanAPKInterface.APP_TYPE_ANY,
+        CleanAPKInterface.APP_SOURCE_FOSS
+    ).body()
 
     /**
      * Fetches search results from cleanAPK and GPlay servers and returns them
@@ -391,35 +433,35 @@ class FusedAPIImpl @Inject constructor(
         val list = mutableListOf<FusedHome>()
         val homeElements = mutableMapOf(
             context.getString(R.string.topselling_free_apps) to
-                mapOf(
-                    TopChartsHelper.Chart.TOP_SELLING_FREE to
-                        TopChartsHelper.Type.APPLICATION
-                ),
+                    mapOf(
+                        TopChartsHelper.Chart.TOP_SELLING_FREE to
+                                TopChartsHelper.Type.APPLICATION
+                    ),
             context.getString(R.string.topselling_free_games) to
-                mapOf(
-                    TopChartsHelper.Chart.TOP_SELLING_FREE to
-                        TopChartsHelper.Type.GAME
-                ),
+                    mapOf(
+                        TopChartsHelper.Chart.TOP_SELLING_FREE to
+                                TopChartsHelper.Type.GAME
+                    ),
             context.getString(R.string.topgrossing_apps) to
-                mapOf(
-                    TopChartsHelper.Chart.TOP_GROSSING to
-                        TopChartsHelper.Type.APPLICATION
-                ),
+                    mapOf(
+                        TopChartsHelper.Chart.TOP_GROSSING to
+                                TopChartsHelper.Type.APPLICATION
+                    ),
             context.getString(R.string.topgrossing_games) to
-                mapOf(
-                    TopChartsHelper.Chart.TOP_GROSSING to
-                        TopChartsHelper.Type.GAME
-                ),
+                    mapOf(
+                        TopChartsHelper.Chart.TOP_GROSSING to
+                                TopChartsHelper.Type.GAME
+                    ),
             context.getString(R.string.movers_shakers_apps) to
-                mapOf(
-                    TopChartsHelper.Chart.MOVERS_SHAKERS to
-                        TopChartsHelper.Type.APPLICATION
-                ),
+                    mapOf(
+                        TopChartsHelper.Chart.MOVERS_SHAKERS to
+                                TopChartsHelper.Type.APPLICATION
+                    ),
             context.getString(R.string.movers_shakers_games) to
-                mapOf(
-                    TopChartsHelper.Chart.MOVERS_SHAKERS to
-                        TopChartsHelper.Type.GAME
-                ),
+                    mapOf(
+                        TopChartsHelper.Chart.MOVERS_SHAKERS to
+                                TopChartsHelper.Type.GAME
+                    ),
         )
         homeElements.forEach {
             val chart = it.value.keys.iterator().next()
@@ -473,7 +515,7 @@ class FusedAPIImpl @Inject constructor(
         )
     }
 
-    private fun Long.toStringFileSize() : String {
+    private fun Long.toStringFileSize(): String {
         return Formatter.formatFileSize(context, this)
     }
 }

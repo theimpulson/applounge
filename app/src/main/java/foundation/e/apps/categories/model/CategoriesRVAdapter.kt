@@ -19,6 +19,7 @@
 package foundation.e.apps.categories.model
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -63,6 +64,14 @@ class CategoriesRVAdapter :
                 categoryIcon.load(oldList[position].imageUrl)
             }
             categoryTitle.text = oldList[position].title
+            val tag = oldList[position].tag
+            if(tag.isNotEmpty()) {
+                categoryTag.visibility = View.VISIBLE
+                categoryTag.text = tag
+            } else {
+                categoryTag.visibility = View.INVISIBLE
+                categoryTag.text = ""
+            }
         }
     }
 
