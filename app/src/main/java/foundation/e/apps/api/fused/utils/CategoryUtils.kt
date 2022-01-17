@@ -169,6 +169,10 @@ object CategoryUtils {
                 R.drawable.ic_business
             "web_games" ->
                 R.drawable.ic_cat_sports
+            "watch_faces" ->
+                R.drawable.ic_watchface
+            "watch_apps" ->
+                R.drawable.ic_watch_apps
             else ->
                 R.drawable.ic_cat_default
         }
