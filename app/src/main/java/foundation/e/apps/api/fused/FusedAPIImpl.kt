@@ -45,6 +45,7 @@ import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.PreferenceManagerModule
 import java.io.File
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -115,18 +116,22 @@ class FusedAPIImpl @Inject constructor(
             }
             val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
                 val category = app.transformToFusedCategory()
-                var categoryTitle = category.title
-                if(categoryTitle.contains("&")) {
-                    categoryTitle = categoryTitle.replace("&", "and")
-                }
-                categoryTitle = categoryTitle.replace(' ', '_')
-                category.drawable = CategoryUtils.provideCategoryIconResource(categoryTitle.lowercase())
+                category.drawable = CategoryUtils.provideCategoryIconResource(getCategoryIconName(category))
                 category
             }
             categoriesList.addAll(playResponse)
         }
         categoriesList.sortBy { item -> item.title }
         return categoriesList
+    }
+
+    private fun getCategoryIconName(category: FusedCategory): String {
+        var categoryTitle = category.title
+        if (categoryTitle.contains("&")) {
+            categoryTitle = categoryTitle.replace("&", "and")
+        }
+        categoryTitle = categoryTitle.replace(' ', '_')
+        return categoryTitle.lowercase()
     }
 
     private fun getFusedCategoryBasedOnCategoryType(
