@@ -45,7 +45,6 @@ import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.PreferenceManagerModule
 import java.io.File
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -446,36 +445,12 @@ class FusedAPIImpl @Inject constructor(
     private suspend fun fetchGPlayHome(authData: AuthData): List<FusedHome> {
         val list = mutableListOf<FusedHome>()
         val homeElements = mutableMapOf(
-            context.getString(R.string.topselling_free_apps) to
-                    mapOf(
-                        TopChartsHelper.Chart.TOP_SELLING_FREE to
-                                TopChartsHelper.Type.APPLICATION
-                    ),
-            context.getString(R.string.topselling_free_games) to
-                    mapOf(
-                        TopChartsHelper.Chart.TOP_SELLING_FREE to
-                                TopChartsHelper.Type.GAME
-                    ),
-            context.getString(R.string.topgrossing_apps) to
-                    mapOf(
-                        TopChartsHelper.Chart.TOP_GROSSING to
-                                TopChartsHelper.Type.APPLICATION
-                    ),
-            context.getString(R.string.topgrossing_games) to
-                    mapOf(
-                        TopChartsHelper.Chart.TOP_GROSSING to
-                                TopChartsHelper.Type.GAME
-                    ),
-            context.getString(R.string.movers_shakers_apps) to
-                    mapOf(
-                        TopChartsHelper.Chart.MOVERS_SHAKERS to
-                                TopChartsHelper.Type.APPLICATION
-                    ),
-            context.getString(R.string.movers_shakers_games) to
-                    mapOf(
-                        TopChartsHelper.Chart.MOVERS_SHAKERS to
-                                TopChartsHelper.Type.GAME
-                    ),
+            context.getString(R.string.topselling_free_apps) to mapOf(TopChartsHelper.Chart.TOP_SELLING_FREE to TopChartsHelper.Type.APPLICATION),
+            context.getString(R.string.topselling_free_games) to mapOf(TopChartsHelper.Chart.TOP_SELLING_FREE to TopChartsHelper.Type.GAME),
+            context.getString(R.string.topgrossing_apps) to mapOf(TopChartsHelper.Chart.TOP_GROSSING to TopChartsHelper.Type.APPLICATION),
+            context.getString(R.string.topgrossing_games) to mapOf(TopChartsHelper.Chart.TOP_GROSSING to TopChartsHelper.Type.GAME),
+            context.getString(R.string.movers_shakers_apps) to mapOf(TopChartsHelper.Chart.MOVERS_SHAKERS to TopChartsHelper.Type.APPLICATION),
+            context.getString(R.string.movers_shakers_games) to mapOf(TopChartsHelper.Chart.MOVERS_SHAKERS to TopChartsHelper.Type.GAME),
         )
         homeElements.forEach {
             val chart = it.value.keys.iterator().next()

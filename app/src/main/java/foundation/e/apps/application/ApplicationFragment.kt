@@ -35,11 +35,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
-import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.application.model.ApplicationScreenshotsRVAdapter
-import foundation.e.apps.common.isAFullNumber
 import foundation.e.apps.databinding.FragmentApplicationBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import javax.inject.Inject
@@ -48,7 +46,7 @@ import javax.inject.Inject
 class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
     private val args: ApplicationFragmentArgs by navArgs()
-    private val TAG = ApplicationFragment::class.java.simpleName
+    private val _tag = ApplicationFragment::class.java.simpleName
 
     private var _binding: FragmentApplicationBinding? = null
     private val binding get() = _binding!!
@@ -135,7 +133,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         installButton.isEnabled = false
                     }
                     else -> {
-                        Log.d(TAG, "Unknown status: $status")
+                        Log.d(_tag, "Unknown status: $status")
                     }
                 }
             }
@@ -173,7 +171,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         R.drawable.ic_star,
                         getString(R.string.rating),
                         getString(R.string.rating_description)
-                    ).show(childFragmentManager, TAG)
+                    ).show(childFragmentManager, _tag)
                 }
 
                 if (it.ratings.privacyScore != -1.0) {
@@ -187,7 +185,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         R.drawable.ic_lock,
                         getString(R.string.privacy),
                         getString(R.string.privacy_description)
-                    ).show(childFragmentManager, TAG)
+                    ).show(childFragmentManager, _tag)
                 }
             }
 
@@ -225,14 +223,14 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         R.drawable.ic_perm,
                         getString(R.string.permissions),
                         applicationViewModel.transformPermsToString(it.perms.toMutableList())
-                    ).show(childFragmentManager, TAG)
+                    ).show(childFragmentManager, _tag)
                 }
                 appTrackers.setOnClickListener {
                     ApplicationDialogFragment(
                         R.drawable.ic_tracker,
                         getString(R.string.trackers),
                         getString(R.string.trackers_description, "")
-                    ).show(childFragmentManager, TAG)
+                    ).show(childFragmentManager, _tag)
                 }
             }
 

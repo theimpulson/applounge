@@ -151,7 +151,6 @@ class SearchFragment :
     private fun showShimmerLayout() {
         recyclerView?.adapter?.let {
             (it as ApplicationListRVAdapter).setData(listOf())
-            it.notifyDataSetChanged()
         }
         searchHintLayout?.visibility = View.GONE
         recyclerView?.visibility = View.GONE
@@ -172,13 +171,11 @@ class SearchFragment :
             showSearchHintLayout()
             return true
         }
-        newText?.let { text ->
-            mainActivityViewModel.authData.value?.let {
-                searchViewModel.getSearchSuggestions(
-                    text,
-                    it
-                )
-            }
+        mainActivityViewModel.authData.value?.let {
+            searchViewModel.getSearchSuggestions(
+                newText,
+                it
+            )
         }
         return true
     }
