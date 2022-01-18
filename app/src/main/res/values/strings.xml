@@ -30,7 +30,7 @@
     <string name="search_hint">Search for an app</string>
 
     <!-- Categories Fragment -->
-    <string name="apps">Apps</string>
+    <string name="apps">Applications</string>
     <string name="games">Games</string>
     <string name="category_icon">Category Icon</string>
 
