@@ -57,6 +57,11 @@
         android:id="@+id/searchHintLayout"
         layout="@layout/fragment_search_hint" />
 
+    <include
+        android:id="@+id/noAppsFoundLayout"
+        android:visibility="invisible"
+        layout="@layout/layout_no_apps_found" />
+
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmerLayout"
         android:layout_width="match_parent"

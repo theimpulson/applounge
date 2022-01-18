@@ -28,4 +28,5 @@
 
     <!-- Shimmer Animation -->
     <color name="colorGrey">#f2f2f2</color>
+    <color name="light_grey">#C4CFD9</color>
 </resources>
