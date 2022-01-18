@@ -33,7 +33,11 @@ import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
 import foundation.e.apps.api.cleanapk.data.home.Home
-import foundation.e.apps.api.fused.data.*
+import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.api.fused.data.FusedCategory
+import foundation.e.apps.api.fused.data.FusedHome
+import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
@@ -383,35 +387,35 @@ class FusedAPIImpl @Inject constructor(
         val list = mutableListOf<FusedHome>()
         val homeElements = mutableMapOf(
             context.getString(R.string.topselling_free_apps) to
-                    mapOf(
-                        TopChartsHelper.Chart.TOP_SELLING_FREE to
-                                TopChartsHelper.Type.APPLICATION
-                    ),
+                mapOf(
+                    TopChartsHelper.Chart.TOP_SELLING_FREE to
+                        TopChartsHelper.Type.APPLICATION
+                ),
             context.getString(R.string.topselling_free_games) to
-                    mapOf(
-                        TopChartsHelper.Chart.TOP_SELLING_FREE to
-                                TopChartsHelper.Type.GAME
-                    ),
+                mapOf(
+                    TopChartsHelper.Chart.TOP_SELLING_FREE to
+                        TopChartsHelper.Type.GAME
+                ),
             context.getString(R.string.topgrossing_apps) to
-                    mapOf(
-                        TopChartsHelper.Chart.TOP_GROSSING to
-                                TopChartsHelper.Type.APPLICATION
-                    ),
+                mapOf(
+                    TopChartsHelper.Chart.TOP_GROSSING to
+                        TopChartsHelper.Type.APPLICATION
+                ),
             context.getString(R.string.topgrossing_games) to
-                    mapOf(
-                        TopChartsHelper.Chart.TOP_GROSSING to
-                                TopChartsHelper.Type.GAME
-                    ),
+                mapOf(
+                    TopChartsHelper.Chart.TOP_GROSSING to
+                        TopChartsHelper.Type.GAME
+                ),
             context.getString(R.string.movers_shakers_apps) to
-                    mapOf(
-                        TopChartsHelper.Chart.MOVERS_SHAKERS to
-                                TopChartsHelper.Type.APPLICATION
-                    ),
+                mapOf(
+                    TopChartsHelper.Chart.MOVERS_SHAKERS to
+                        TopChartsHelper.Type.APPLICATION
+                ),
             context.getString(R.string.movers_shakers_games) to
-                    mapOf(
-                        TopChartsHelper.Chart.MOVERS_SHAKERS to
-                                TopChartsHelper.Type.GAME
-                    ),
+                mapOf(
+                    TopChartsHelper.Chart.MOVERS_SHAKERS to
+                        TopChartsHelper.Type.GAME
+                ),
         )
         homeElements.forEach {
             val chart = it.value.keys.iterator().next()
