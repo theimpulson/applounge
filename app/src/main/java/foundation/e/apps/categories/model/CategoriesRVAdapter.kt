@@ -65,7 +65,7 @@ class CategoriesRVAdapter :
             }
             categoryTitle.text = oldList[position].title
             val tag = oldList[position].tag
-            if(tag.isNotEmpty()) {
+            if (tag.isNotEmpty()) {
                 categoryTag.visibility = View.VISIBLE
                 categoryTag.text = tag
             } else {

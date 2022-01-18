@@ -163,7 +163,10 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             binding.ratingsInclude.apply {
                 if (it.ratings.usageQualityScore != -1.0) {
                     appRating.text =
-                        getString(R.string.rating_out_of, applicationViewModel.handleRatingFormat(it.ratings.usageQualityScore))
+                        getString(
+                            R.string.rating_out_of,
+                            applicationViewModel.handleRatingFormat(it.ratings.usageQualityScore)
+                        )
                 }
                 appRatingLayout.setOnClickListener {
                     ApplicationDialogFragment(

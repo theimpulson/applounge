@@ -99,11 +99,13 @@ class FusedAPIImpl @Inject constructor(
             }
 
             data?.let { category ->
-                categoriesList.addAll(getFusedCategoryBasedOnCategoryType(
-                    category,
-                    type,
-                    if(preferredApplicationType == "open") "Open Source" else "PWA"
-                ))
+                categoriesList.addAll(
+                    getFusedCategoryBasedOnCategoryType(
+                        category,
+                        type,
+                        if (preferredApplicationType == "open") "Open Source" else "PWA"
+                    )
+                )
             }
         } else {
             var data = getOpenSourceCategories()
@@ -116,7 +118,8 @@ class FusedAPIImpl @Inject constructor(
             }
             val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
                 val category = app.transformToFusedCategory()
-                category.drawable = CategoryUtils.provideCategoryIconResource(getCategoryIconName(category))
+                category.drawable =
+                    CategoryUtils.provideCategoryIconResource(getCategoryIconName(category))
                 category
             }
             categoriesList.addAll(playResponse)
@@ -139,7 +142,7 @@ class FusedAPIImpl @Inject constructor(
         categoryType: Category.Type,
         tag: String
     ): List<FusedCategory> {
-        return when(categoryType) {
+        return when (categoryType) {
             Category.Type.APPLICATION -> {
                 getAppsCategoriesAsFusedCategory(categories, tag)
             }
@@ -149,13 +152,19 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
-    private fun getAppsCategoriesAsFusedCategory(categories: Categories, tag: String): List<FusedCategory> {
+    private fun getAppsCategoriesAsFusedCategory(
+        categories: Categories,
+        tag: String
+    ): List<FusedCategory> {
         return categories.apps.map { category ->
             createFusedCategoryFromCategory(category, categories, tag)
         }
     }
 
-    private fun getGamesCategoriesAsFusedCategory(categories: Categories, tag: String): List<FusedCategory> {
+    private fun getGamesCategoriesAsFusedCategory(
+        categories: Categories,
+        tag: String
+    ): List<FusedCategory> {
         return categories.apps.map { category ->
             createFusedCategoryFromCategory(category, categories, tag)
         }
