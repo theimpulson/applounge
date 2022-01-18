@@ -125,6 +125,10 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         installButton.text = getString(R.string.cancel)
                         downloadPB.visibility = View.VISIBLE
                         appSize.visibility = View.GONE
+                        applicationViewModel.downloadProgress.observe(viewLifecycleOwner, {
+                            downloadPB.max = it.totalSizeBytes.toInt()
+                            downloadPB.progress = it.bytesDownloadedSoFar.toInt()
+                        })
                     }
                     Status.INSTALLING, Status.UNINSTALLING -> {
                         downloadPB.visibility = View.GONE

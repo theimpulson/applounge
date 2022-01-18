@@ -27,17 +27,20 @@ import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
+import foundation.e.apps.manager.download.data.DownloadProgressLD
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ApplicationViewModel @Inject constructor(
-    private val fusedAPIRepository: FusedAPIRepository
+    private val fusedAPIRepository: FusedAPIRepository,
+    private val downloadProgressLD: DownloadProgressLD
 ) : ViewModel() {
 
     val fusedApp: MutableLiveData<FusedApp> = MutableLiveData()
     val appStatus: MutableLiveData<Status?> = MutableLiveData()
+    val downloadProgress = downloadProgressLD
 
     // Download Information
     private val appDownloadId: MutableLiveData<Long> = MutableLiveData()
