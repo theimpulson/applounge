@@ -18,6 +18,7 @@
 
 package foundation.e.apps.applicationlist.model
 
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -135,19 +136,24 @@ class ApplicationListRVAdapter(
             when (searchApp.status) {
                 Status.INSTALLED -> {
                     installButton.text = view.context.getString(R.string.open)
-                    installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, android.R.color.transparent)
+                    installButton.setTextColor(Color.WHITE)
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.colorAccent)
                     installButton.setOnClickListener {
                         view.context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
                     }
                 }
                 Status.UPDATABLE -> {
                     installButton.text = view.context.getString(R.string.update)
+                    installButton.setTextColor(Color.WHITE)
                     installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.colorAccent)
                     installButton.setOnClickListener {
                         installApplication(searchApp)
                     }
                 }
                 Status.UNAVAILABLE -> {
+                    installButton.text = view.context.getString(R.string.install)
+                    installButton.setTextColor(ContextCompat.getColor(root.context, R.color.colorAccent))
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, android.R.color.transparent)
                     installButton.setOnClickListener {
                         installApplication(searchApp)
                     }
