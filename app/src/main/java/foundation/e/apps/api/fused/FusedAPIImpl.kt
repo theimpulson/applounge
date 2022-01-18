@@ -317,7 +317,6 @@ class FusedAPIImpl @Inject constructor(
         val request = DownloadManager.Request(Uri.parse(url))
             .setTitle(name)
             .setDestinationUri(Uri.fromFile(packagePath))
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
         return downloadManager.enqueue(request)
     }
 
