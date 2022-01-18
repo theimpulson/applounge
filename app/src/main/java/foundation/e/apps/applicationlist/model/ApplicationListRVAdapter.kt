@@ -21,6 +21,7 @@ package foundation.e.apps.applicationlist.model
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -134,12 +135,14 @@ class ApplicationListRVAdapter(
             when (searchApp.status) {
                 Status.INSTALLED -> {
                     installButton.text = view.context.getString(R.string.open)
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, android.R.color.transparent)
                     installButton.setOnClickListener {
                         view.context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
                     }
                 }
                 Status.UPDATABLE -> {
                     installButton.text = view.context.getString(R.string.update)
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.colorAccent)
                     installButton.setOnClickListener {
                         installApplication(searchApp)
                     }

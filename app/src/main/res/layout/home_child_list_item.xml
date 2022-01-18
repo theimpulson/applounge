@@ -30,11 +30,11 @@
     android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
 
         app:cardCornerRadius="20dp"
-        app:cardElevation="2dp"
+        app:cardElevation="0dp"
         app:cardUseCompatPadding="true">
 
         <ImageView
@@ -64,14 +64,13 @@
         android:layout_width="96dp"
         android:layout_height="43dp"
         android:layout_marginStart="1dp"
-        android:backgroundTint="@color/colorAccent95"
         android:text="@string/install"
         android:textAllCaps="false"
         android:textColor="@color/colorAccent"
         android:textSize="18sp"
         app:autoSizeTextType="uniform"
         app:cornerRadius="8dp"
-        app:strokeColor="@color/colorAccent95"
+        app:strokeColor="@color/colorAccent"
         app:strokeWidth="1dp" />
 
 </LinearLayout>
