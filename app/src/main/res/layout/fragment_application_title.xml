@@ -72,24 +72,27 @@
         </LinearLayout>
     </LinearLayout>
 
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:foreground="@drawable/app_category_border"
         android:layout_gravity="end"
         android:layout_marginEnd="20dp"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"
-        android:paddingBottom="3dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/colorBackground"
+        android:backgroundTint="@color/colorBackground"
+        android:elevation="2dp"
+        app:cardCornerRadius="5dp"
         >
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/categoryTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorAccent"
             android:textSize="16sp"
-            tools:text="Racing"/>
-    </RelativeLayout>
+            android:layout_margin="4dp"
+            tools:text="Racing" />
+    </androidx.cardview.widget.CardView>
 
 
 

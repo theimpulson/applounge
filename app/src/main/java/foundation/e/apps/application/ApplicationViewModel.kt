@@ -27,6 +27,7 @@ import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
+import foundation.e.apps.common.isAFullNumber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -92,4 +93,7 @@ class ApplicationViewModel @Inject constructor(
         val permString = list.toString().replace(", ", "\n")
         return permString.substring(1, permString.length - 1)
     }
+
+    fun handleRatingFormat(rating: Double) =
+        if (rating.isAFullNumber()) rating.toString().substringBefore(".0") else rating.toString()
 }

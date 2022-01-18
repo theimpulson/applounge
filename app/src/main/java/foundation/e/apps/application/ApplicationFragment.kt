@@ -35,9 +35,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.application.model.ApplicationScreenshotsRVAdapter
+import foundation.e.apps.common.isAFullNumber
 import foundation.e.apps.databinding.FragmentApplicationBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import javax.inject.Inject
@@ -161,7 +163,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             binding.ratingsInclude.apply {
                 if (it.ratings.usageQualityScore != -1.0) {
                     appRating.text =
-                        getString(R.string.rating_out_of, it.ratings.usageQualityScore.toString())
+                        getString(R.string.rating_out_of, applicationViewModel.handleRatingFormat(it.ratings.usageQualityScore))
                 }
                 appRatingLayout.setOnClickListener {
                     ApplicationDialogFragment(
@@ -190,7 +192,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 Html.fromHtml(it.description, Html.FROM_HTML_MODE_COMPACT)
 
             binding.appDescriptionMore.setOnClickListener { view ->
-                val action = ApplicationFragmentDirections.actionApplicationFragmentToDescriptionFragment(it.description)
+                val action =
+                    ApplicationFragmentDirections.actionApplicationFragmentToDescriptionFragment(it.description)
                 view.findNavController().navigate(action)
             }
 
