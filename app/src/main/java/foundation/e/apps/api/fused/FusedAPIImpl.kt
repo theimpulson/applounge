@@ -117,14 +117,27 @@ class FusedAPIImpl @Inject constructor(
             }
             val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
                 val category = app.transformToFusedCategory()
-                category.drawable =
-                    CategoryUtils.provideCategoryIconResource(getCategoryIconName(category))
+                updateCategoryDrawable(category, app)
                 category
             }
             categoriesList.addAll(playResponse)
         }
-        categoriesList.sortBy { item -> item.title }
+        categoriesList.sortBy { item -> item.title.lowercase() }
         return categoriesList
+    }
+
+    private fun updateCategoryDrawable(
+        category: FusedCategory,
+        app: Category
+    ) {
+        category.drawable =
+            if (app.type == Category.Type.APPLICATION) CategoryUtils.provideCategoryIconResource(
+                getCategoryIconName(category)
+            ) else CategoryUtils.provideGamesCategoryIconResource(
+                getCategoryIconName(
+                    category
+                )
+            )
     }
 
     private fun getCategoryIconName(category: FusedCategory): String {
@@ -156,7 +169,7 @@ class FusedAPIImpl @Inject constructor(
         tag: String
     ): List<FusedCategory> {
         return categories.apps.map { category ->
-            createFusedCategoryFromCategory(category, categories, tag)
+            createFusedCategoryFromCategory(category, categories, Category.Type.APPLICATION, tag)
         }
     }
 
@@ -164,19 +177,22 @@ class FusedAPIImpl @Inject constructor(
         categories: Categories,
         tag: String
     ): List<FusedCategory> {
-        return categories.apps.map { category ->
-            createFusedCategoryFromCategory(category, categories, tag)
+        return categories.games.map { category ->
+            createFusedCategoryFromCategory(category, categories, Category.Type.GAME, tag)
         }
     }
 
     private fun createFusedCategoryFromCategory(
         category: String,
         categories: Categories,
+        appType: Category.Type,
         tag: String
     ) = FusedCategory(
         id = category,
         title = categories.translations.getOrDefault(category, ""),
-        drawable = CategoryUtils.provideCategoryIconResource(category),
+        drawable = if (appType == Category.Type.APPLICATION) CategoryUtils.provideCategoryIconResource(
+            category
+        ) else CategoryUtils.provideGamesCategoryIconResource(category),
         tag = tag
     )
 
