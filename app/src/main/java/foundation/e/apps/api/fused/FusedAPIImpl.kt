@@ -361,7 +361,8 @@ class FusedAPIImpl @Inject constructor(
 
         response?.forEach {
             it.status = pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
-            it.source = if(source.contentEquals(CleanAPKInterface.APP_SOURCE_FOSS)) "Open Source" else "PWA"
+            it.source =
+                if (source.contentEquals(CleanAPKInterface.APP_SOURCE_FOSS)) "Open Source" else "PWA"
             list.add(it)
         }
         return list

@@ -122,7 +122,7 @@ class ApplicationListRVAdapter(
                 )
             }
 
-            if(searchApp.source.isEmpty()) {
+            if (searchApp.source.isEmpty()) {
                 sourceTag.visibility = View.INVISIBLE
             } else {
                 sourceTag.visibility = View.VISIBLE
@@ -145,7 +145,10 @@ class ApplicationListRVAdapter(
                 Status.INSTALLED -> {
                     installButton.text = view.context.getString(R.string.open)
                     installButton.setTextColor(Color.WHITE)
-                    installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.colorAccent)
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(
+                        holder.itemView.context,
+                        R.color.colorAccent
+                    )
                     installButton.setOnClickListener {
                         view.context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
                     }
@@ -153,15 +156,26 @@ class ApplicationListRVAdapter(
                 Status.UPDATABLE -> {
                     installButton.text = view.context.getString(R.string.update)
                     installButton.setTextColor(Color.WHITE)
-                    installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.colorAccent)
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(
+                        holder.itemView.context,
+                        R.color.colorAccent
+                    )
                     installButton.setOnClickListener {
                         installApplication(searchApp)
                     }
                 }
                 Status.UNAVAILABLE -> {
                     installButton.text = view.context.getString(R.string.install)
-                    installButton.setTextColor(ContextCompat.getColor(root.context, R.color.colorAccent))
-                    installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, android.R.color.transparent)
+                    installButton.setTextColor(
+                        ContextCompat.getColor(
+                            root.context,
+                            R.color.colorAccent
+                        )
+                    )
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(
+                        holder.itemView.context,
+                        android.R.color.transparent
+                    )
                     installButton.setOnClickListener {
                         installApplication(searchApp)
                     }
