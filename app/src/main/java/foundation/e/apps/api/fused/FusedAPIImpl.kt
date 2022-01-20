@@ -388,7 +388,6 @@ class FusedAPIImpl @Inject constructor(
         CleanAPKInterface.APP_TYPE_PWA
     ).body()
 
-
     suspend fun getApplicationDetails(
         packageNameList: List<String>,
         authData: AuthData,

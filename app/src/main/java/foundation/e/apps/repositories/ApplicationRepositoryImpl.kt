@@ -6,7 +6,8 @@ import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.domain.repositories.IApplicationsRepository
 import javax.inject.Inject
 
-class ApplicationRepositoryImpl @Inject constructor(private val fusedAPIImpl: FusedAPIImpl) : IApplicationsRepository {
+class ApplicationRepositoryImpl @Inject constructor(private val fusedAPIImpl: FusedAPIImpl) :
+    IApplicationsRepository {
     override suspend fun getOpenSourceApps(category: String): List<FusedApp> {
         return fusedAPIImpl.getOpenSourceApps(category) ?: listOf()
     }
