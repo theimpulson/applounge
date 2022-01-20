@@ -130,6 +130,10 @@
             android:defaultValue=""
             app:argType="string" />
         <argument
+            android:name="source"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
             android:name="browseUrl"
             android:defaultValue=""
             app:argType="string" />

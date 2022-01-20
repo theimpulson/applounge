@@ -54,6 +54,7 @@ class CategoriesRVAdapter :
                     CategoriesFragmentDirections.actionCategoriesFragmentToApplicationListFragment(
                         oldList[position].id,
                         oldList[position].title,
+                        oldList[position].tag,
                         oldList[position].browseUrl
                     )
                 holder.itemView.findNavController().navigate(direction)

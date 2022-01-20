@@ -26,20 +26,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.domain.ApplicationListUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ApplicationListViewModel @Inject constructor(
-    private val fusedAPIRepository: FusedAPIRepository
+    private val fusedAPIRepository: FusedAPIRepository,
+    private val applicationListUseCase: ApplicationListUseCase
 ) : ViewModel() {
 
     val appListLiveData: MutableLiveData<List<FusedApp>> = MutableLiveData()
 
-    fun getList(category: String, browseUrl: String, authData: AuthData) {
+    fun getList(category: String, browseUrl: String, authData: AuthData, source: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            appListLiveData.postValue(fusedAPIRepository.listApps(category, browseUrl, authData))
+            appListLiveData.postValue(applicationListUseCase.getAppsList(category, browseUrl, authData, source))
         }
     }
 

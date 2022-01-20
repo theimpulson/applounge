@@ -59,7 +59,8 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             applicationListViewModel.getList(
                 args.category,
                 args.browseUrl,
-                it
+                it,
+                args.source
             )
         }
 

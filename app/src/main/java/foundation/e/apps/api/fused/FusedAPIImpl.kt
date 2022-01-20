@@ -334,19 +334,11 @@ class FusedAPIImpl @Inject constructor(
     suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
 
-        if (preferredApplicationType != APP_TYPE_ANY) {
-            val response = if (preferredApplicationType == APP_TYPE_OPEN) {
-                cleanAPKRepository.listApps(
-                    category,
-                    CleanAPKInterface.APP_SOURCE_FOSS,
-                    CleanAPKInterface.APP_TYPE_ANY
-                ).body()
+        if (preferredApplicationType != "any") {
+            val response = if (preferredApplicationType == "open") {
+                getOpenSourceAppsResponse(category)
             } else {
-                cleanAPKRepository.listApps(
-                    category,
-                    CleanAPKInterface.APP_SOURCE_ANY,
-                    CleanAPKInterface.APP_TYPE_PWA
-                ).body()
+                getPWAAppsResponse(category)
             }
             response?.apps?.forEach {
                 it.status =
@@ -359,6 +351,43 @@ class FusedAPIImpl @Inject constructor(
             }
         }
     }
+
+    suspend fun getPWAApps(category: String): List<FusedApp>? {
+        val response = getPWAAppsResponse(category)
+        response?.apps?.forEach {
+            it.status =
+                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+        }
+        return response?.apps
+    }
+
+    suspend fun getOpenSourceApps(category: String): List<FusedApp>? {
+        val response = getOpenSourceAppsResponse(category)
+        response?.apps?.forEach {
+            it.status =
+                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+        }
+        return response?.apps
+    }
+
+    suspend fun getPlayStoreApps(browseUrl: String, authData: AuthData): List<FusedApp> {
+        return gPlayAPIRepository.listApps(browseUrl, authData).map { app ->
+            app.transformToFusedApp()
+        }
+    }
+
+    private suspend fun getOpenSourceAppsResponse(category: String) = cleanAPKRepository.listApps(
+        category,
+        CleanAPKInterface.APP_SOURCE_FOSS,
+        CleanAPKInterface.APP_TYPE_ANY
+    ).body()
+
+    private suspend fun getPWAAppsResponse(category: String) = cleanAPKRepository.listApps(
+        category,
+        CleanAPKInterface.APP_SOURCE_ANY,
+        CleanAPKInterface.APP_TYPE_PWA
+    ).body()
+
 
     suspend fun getApplicationDetails(
         packageNameList: List<String>,
