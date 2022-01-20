@@ -28,6 +28,7 @@
 
     <!-- Search Fragment -->
     <string name="search_hint">Search for an app</string>
+    <string name="no_apps_found">No apps found…</string>
 
     <!-- Categories Fragment -->
     <string name="apps">Applications</string>
@@ -119,6 +120,5 @@
     <!-- Notification -->
     <string name="downloads">Downloads</string>
     <string name="updates">Updates</string>
-    <string name="no_apps_found">No apps found...</string>
 
 </resources>

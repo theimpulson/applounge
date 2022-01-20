@@ -72,8 +72,6 @@ class SearchFragment :
     private var searchHintLayout: LinearLayout? = null
     private lateinit var noAppsFoundLayout: LinearLayout
 
-    val TAG = this.javaClass.simpleName
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchBinding.bind(view)
@@ -138,7 +136,6 @@ class SearchFragment :
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        Log.d(TAG, "onQueryTextSubmit: $query")
         showShimmerLayout()
         query?.let { text ->
             hideKeyboard(activity as Activity)
@@ -166,7 +163,6 @@ class SearchFragment :
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        Log.d(TAG, "onQueryTextChange: $newText")
         if (newText.isNullOrEmpty()) {
             showSearchHintLayout()
             return true
@@ -185,7 +181,6 @@ class SearchFragment :
     }
 
     override fun onSuggestionClick(position: Int): Boolean {
-        Log.d(TAG, "onSuggestionClick: ")
         searchViewModel.searchSuggest.value?.let {
             if (it.isEmpty()) {
                 return true

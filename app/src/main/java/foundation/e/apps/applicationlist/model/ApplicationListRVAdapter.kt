@@ -137,7 +137,7 @@ class ApplicationListRVAdapter(
                 Status.INSTALLED -> {
                     installButton.text = view.context.getString(R.string.open)
                     installButton.setTextColor(Color.WHITE)
-                    installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.colorAccent)
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                     installButton.setOnClickListener {
                         view.context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
                     }
@@ -145,7 +145,7 @@ class ApplicationListRVAdapter(
                 Status.UPDATABLE -> {
                     installButton.text = view.context.getString(R.string.update)
                     installButton.setTextColor(Color.WHITE)
-                    installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.colorAccent)
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                     installButton.setOnClickListener {
                         installApplication(searchApp)
                     }
@@ -153,7 +153,7 @@ class ApplicationListRVAdapter(
                 Status.UNAVAILABLE -> {
                     installButton.text = view.context.getString(R.string.install)
                     installButton.setTextColor(ContextCompat.getColor(root.context, R.color.colorAccent))
-                    installButton.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, android.R.color.transparent)
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
                     installButton.setOnClickListener {
                         installApplication(searchApp)
                     }
