@@ -21,7 +21,7 @@
 
     <!-- Base application theme. -->
     <style name="Theme.Apps" parent="@style/BaseTheme">
-        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowLightNavigationBar">@bool/is_day</item>
     </style>
 
 </resources>

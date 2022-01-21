@@ -18,9 +18,7 @@
 
 <resources>
 
-    <style name="AppTheme.ActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Surface">
-        <item name="colorPrimary">@color/colorBackground</item>
-        <item name="colorControlNormal">@android:color/white</item>
-    </style>
+    <!-- Detect Day/Night Theme -->
+    <bool name="is_day">false</bool>
 
 </resources>
