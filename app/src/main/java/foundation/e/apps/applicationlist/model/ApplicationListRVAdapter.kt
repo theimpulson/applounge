@@ -152,7 +152,7 @@ class ApplicationListRVAdapter(
                 }
                 Status.UNAVAILABLE -> {
                     installButton.text = view.context.getString(R.string.install)
-                    installButton.setTextColor(ContextCompat.getColor(root.context, R.color.colorAccent))
+                    installButton.setTextColor(ContextCompat.getColor(view.context, R.color.colorAccent))
                     installButton.backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
                     installButton.setOnClickListener {
                         installApplication(searchApp)

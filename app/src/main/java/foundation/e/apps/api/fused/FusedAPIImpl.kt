@@ -102,18 +102,30 @@ class FusedAPIImpl @Inject constructor(
                     getFusedCategoryBasedOnCategoryType(
                         category,
                         type,
-                        if (preferredApplicationType == "open") "Open Source" else "PWA"
+                        if (preferredApplicationType == "open") context.getString(R.string.open_source) else context.getString(
+                            R.string.pwa
+                        )
                     )
                 )
             }
         } else {
             var data = getOpenSourceCategories()
             data?.let {
-                categoriesList.addAll(getFusedCategoryBasedOnCategoryType(it, type, "Open Source"))
+                categoriesList.addAll(
+                    getFusedCategoryBasedOnCategoryType(
+                        it,
+                        type,
+                        context.getString(R.string.open_source)
+                    )
+                )
             }
             data = getPWAsCategories()
             data?.let {
-                categoriesList.addAll(getFusedCategoryBasedOnCategoryType(it, type, "PWA"))
+                categoriesList.addAll(
+                    getFusedCategoryBasedOnCategoryType(
+                        it, type, context.getString(R.string.pwa)
+                    )
+                )
             }
             val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
                 val category = app.transformToFusedCategory()
@@ -131,7 +143,7 @@ class FusedAPIImpl @Inject constructor(
         app: Category
     ) {
         category.drawable =
-            if (app.type == Category.Type.APPLICATION) CategoryUtils.provideCategoryIconResource(
+            if (app.type == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
                 getCategoryIconName(category)
             ) else CategoryUtils.provideGamesCategoryIconResource(
                 getCategoryIconName(
@@ -190,21 +202,25 @@ class FusedAPIImpl @Inject constructor(
     ) = FusedCategory(
         id = category,
         title = categories.translations.getOrDefault(category, ""),
-        drawable = if (appType == Category.Type.APPLICATION) CategoryUtils.provideCategoryIconResource(
+        drawable = if (appType == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
             category
         ) else CategoryUtils.provideGamesCategoryIconResource(category),
         tag = tag
     )
 
-    private suspend fun getPWAsCategories() = cleanAPKRepository.getCategoriesList(
-        CleanAPKInterface.APP_TYPE_PWA,
-        CleanAPKInterface.APP_SOURCE_ANY
-    ).body()
+    private suspend fun getPWAsCategories(): Categories? {
+        return cleanAPKRepository.getCategoriesList(
+            CleanAPKInterface.APP_TYPE_PWA,
+            CleanAPKInterface.APP_SOURCE_ANY
+        ).body()
+    }
 
-    private suspend fun getOpenSourceCategories() = cleanAPKRepository.getCategoriesList(
-        CleanAPKInterface.APP_TYPE_ANY,
-        CleanAPKInterface.APP_SOURCE_FOSS
-    ).body()
+    private suspend fun getOpenSourceCategories(): Categories? {
+        return cleanAPKRepository.getCategoriesList(
+            CleanAPKInterface.APP_TYPE_ANY,
+            CleanAPKInterface.APP_SOURCE_FOSS
+        ).body()
+    }
 
     /**
      * Fetches search results from cleanAPK and GPlay servers and returns them
@@ -500,7 +516,7 @@ class FusedAPIImpl @Inject constructor(
             status = pkgManagerModule.getPackageStatus(this.packageName, this.versionCode),
             origin = Origin.GPLAY,
             shareUrl = this.shareUrl,
-            appSize = this.size.toStringFileSize()
+            appSize = Formatter.formatFileSize(context, this.size)
         )
     }
 
@@ -518,9 +534,5 @@ class FusedAPIImpl @Inject constructor(
             browseUrl = this.browseUrl,
             imageUrl = this.imageUrl,
         )
-    }
-
-    private fun Long.toStringFileSize(): String {
-        return Formatter.formatFileSize(context, this)
     }
 }

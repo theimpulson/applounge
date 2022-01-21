@@ -21,7 +21,7 @@ package foundation.e.apps.api.fused.utils
 import foundation.e.apps.R
 
 object CategoryUtils {
-    fun provideCategoryIconResource(categoryId: String): Int {
+    fun provideAppsCategoryIconResource(categoryId: String): Int {
         return when (categoryId) {
             "comics" ->
                 R.drawable.ic_cat_comics
@@ -178,7 +178,6 @@ object CategoryUtils {
         }
     }
 
-//    fun provideCategoryIconResourceComparingCategoryId(categoryId: String): Int {
     fun provideGamesCategoryIconResource(categoryId: String): Int {
         return when (categoryId) {
             "action" ->
@@ -199,7 +198,7 @@ object CategoryUtils {
                 R.drawable.ic_educational
             "music" ->
                 R.drawable.ic_music
-            "open_games" ->
+            "game_open_games" ->
                 R.drawable.ic_cat_open_games
             "puzzle" ->
                 R.drawable.ic_puzzle

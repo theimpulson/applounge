@@ -121,4 +121,8 @@
     <string name="downloads">Downloads</string>
     <string name="updates">Updates</string>
 
+<!--    Others-->
+    <string name="open_source">Open Source</string>
+    <string name="pwa">PWA</string>
+
 </resources>
