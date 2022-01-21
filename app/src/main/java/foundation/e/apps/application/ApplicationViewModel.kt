@@ -92,4 +92,10 @@ class ApplicationViewModel @Inject constructor(
         val permString = list.toString().replace(", ", "\n")
         return permString.substring(1, permString.length - 1)
     }
+
+    fun getTrackersText(): String {
+        return fusedApp.value?.let {
+            it.trackers.joinToString("\n")
+        } ?: ""
+    }
 }
