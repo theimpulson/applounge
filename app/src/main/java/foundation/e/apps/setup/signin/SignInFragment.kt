@@ -25,12 +25,12 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
 
         binding.googleBT.setOnClickListener {
             viewModel.saveUserType(USER.GOOGLE)
-            view.findNavController().navigate(R.id.homeFragment)
+            view.findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
         }
 
         binding.anonymousBT.setOnClickListener {
             viewModel.saveUserType(USER.ANONYMOUS)
-            view.findNavController().navigate(R.id.homeFragment)
+            view.findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
         }
     }
 
