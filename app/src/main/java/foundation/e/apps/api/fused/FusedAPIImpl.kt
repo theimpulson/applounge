@@ -254,7 +254,6 @@ class FusedAPIImpl @Inject constructor(
         ).body()
     }
 
-
     /**
      * Fetches search results from cleanAPK and GPlay servers and returns them
      * @param query Query
