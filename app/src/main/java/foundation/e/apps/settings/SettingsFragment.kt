@@ -20,13 +20,23 @@ package foundation.e.apps.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.preference.PreferenceFragmentCompat
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivity
 import foundation.e.apps.R
+import foundation.e.apps.databinding.CustomPreferenceBinding
+import foundation.e.apps.setup.signin.SignInViewModel
+import foundation.e.apps.utils.USER
 
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat() {
+
+    private var _binding: CustomPreferenceBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: SignInViewModel by viewModels()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_preferences, rootKey)
@@ -58,6 +68,28 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = CustomPreferenceBinding.bind(view)
+
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.userType.observe(viewLifecycleOwner, {
+            if (it.equals(USER.ANONYMOUS.name)) {
+                binding.accountType.text = requireContext().getString(R.string.user_anonymous)
+            }
+        })
+
+        binding.tos.setOnClickListener {
+            it.findNavController().navigate(R.id.TOSFragment)
+        }
+
+        binding.logout.setOnClickListener {
+            viewModel.saveUserType(USER.UNAVAILABLE)
+            it.findNavController().navigate(R.id.signInFragment)
+        }
+    }
+
     private fun backToMainActivity() {
         Intent(context, MainActivity::class.java).also {
             activity?.finish()
@@ -65,5 +97,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             startActivity(it)
             activity?.overridePendingTransition(0, 0)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

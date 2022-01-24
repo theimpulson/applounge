@@ -21,6 +21,18 @@ class TOSFragment : Fragment(R.layout.fragment_tos) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTosBinding.bind(view)
 
+        viewModel.tocStatus.observe(viewLifecycleOwner, {
+            if (it == true) {
+                binding.TOSWarning.visibility = View.GONE
+                binding.TOSButtons.visibility = View.GONE
+                binding.toolbar.visibility = View.VISIBLE
+            }
+        })
+
+        binding.toolbar.setNavigationOnClickListener {
+            it.findNavController().navigateUp()
+        }
+
         binding.disagreeBT.setOnClickListener {
             activity?.finish()
         }

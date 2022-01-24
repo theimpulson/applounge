@@ -7,7 +7,15 @@
     android:orientation="vertical"
     tools:context=".setup.tos.TOSFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:navigationIcon="@drawable/ic_arrow_back" />
+
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/TOSWarning"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@color/tos_warning"
@@ -61,6 +69,7 @@
             android:background="@color/colorGrey" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/TOSButtons"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_weight="1"

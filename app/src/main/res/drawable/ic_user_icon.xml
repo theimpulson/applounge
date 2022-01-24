@@ -1,0 +1,35 @@
+<!--
+  ~ Apps  Quickly and easily install Android apps onto your device!
+  ~ Copyright (C) 2021  E FOUNDATION
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+  <path
+      android:pathData="M19.6944,39.3611C8.8056,39.3611 0,30.5556 0,19.6944C0,8.8056 8.8056,0 19.6944,0C30.5556,0 39.3889,8.8056 39.3889,19.6944C39.3611,30.5556 30.5556,39.3611 19.6944,39.3611Z"
+      android:fillColor="#24527F"/>
+  <path
+      android:pathData="M19.6943,8.7778C16.7488,8.7778 14.3609,11.1656 14.3609,14.1112C14.3609,17.0567 16.7488,19.4445 19.6943,19.4445C22.6398,19.4445 25.0276,17.0567 25.0276,14.1112C25.0276,11.1656 22.6398,8.7778 19.6943,8.7778ZM12.4165,14.1112C12.4165,10.0917 15.6749,6.8334 19.6943,6.8334C23.7137,6.8334 26.9721,10.0917 26.9721,14.1112C26.9721,18.1306 23.7137,21.3889 19.6943,21.3889C15.6749,21.3889 12.4165,18.1306 12.4165,14.1112Z"
+      android:fillColor="#ffffff"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="M19.6569,22.0833H19.7315C20.8779,22.0833 22.0507,22.0833 23.1333,22.2248C24.2362,22.3689 25.3238,22.668 26.2707,23.3212C28.2221,24.6675 29.1943,27.2262 29.1943,31.5833C29.1943,32.1203 28.7591,32.5555 28.2221,32.5555C27.6852,32.5555 27.2499,32.1203 27.2499,31.5833C27.2499,27.4127 26.3054,25.7075 25.1666,24.9218C24.5684,24.5091 23.8174,24.2752 22.8813,24.1528C21.9364,24.0293 20.8834,24.0278 19.6943,24.0278C18.4983,24.0278 17.4417,24.0293 16.4955,24.1528C15.5581,24.2752 14.8085,24.5091 14.2125,24.9212C13.0774,25.7061 12.1388,27.4104 12.1388,31.5833C12.1388,32.1203 11.7035,32.5555 11.1666,32.5555C10.6296,32.5555 10.1943,32.1203 10.1943,31.5833C10.1943,27.2285 11.1585,24.6689 13.1067,23.3218C14.0524,22.668 15.1396,22.3689 16.2438,22.2247C17.3276,22.0833 18.5038,22.0833 19.6569,22.0833Z"
+      android:fillColor="#ffffff"
+      android:fillType="evenOdd"/>
+</vector>

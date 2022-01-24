@@ -29,9 +29,14 @@
         <item name="android:navigationBarColor">@color/colorNavBar</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="autoCompleteTextViewStyle">@style/AutoCompleteTextViewStyle</item>
+        <item name="preferenceTheme">@style/CustomPreferenceThemeOverlay</item>
     </style>
 
     <style name="Theme.Apps" parent="BaseTheme" />
+
+    <style name="CustomPreferenceThemeOverlay" parent="PreferenceThemeOverlay">
+        <item name="android:layout">@layout/custom_preference</item>
+    </style>
 
     <style name="AppTheme.ActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Surface">
         <item name="colorPrimary">@color/colorBackground</item>

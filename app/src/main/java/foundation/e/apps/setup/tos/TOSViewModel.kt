@@ -1,6 +1,8 @@
 package foundation.e.apps.setup.tos
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.utils.DataStoreModule
@@ -11,6 +13,8 @@ import javax.inject.Inject
 class TOSViewModel @Inject constructor(
     private val dataStoreModule: DataStoreModule
 ) : ViewModel() {
+
+    val tocStatus: LiveData<Boolean> = dataStoreModule.tocStatus.asLiveData()
 
     fun saveTOCStatus(status: Boolean) {
         viewModelScope.launch {
