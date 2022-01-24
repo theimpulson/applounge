@@ -91,51 +91,71 @@ class FusedAPIImpl @Inject constructor(
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
 
         if (preferredApplicationType != "any") {
-            val data = if (preferredApplicationType == "open") {
-                getOpenSourceCategories()
-            } else {
-                getPWAsCategories()
-            }
-
-            data?.let { category ->
-                categoriesList.addAll(
-                    getFusedCategoryBasedOnCategoryType(
-                        category,
-                        type,
-                        if (preferredApplicationType == "open") context.getString(R.string.open_source) else context.getString(
-                            R.string.pwa
-                        )
-                    )
-                )
-            }
+            handleCleanApkCategories(preferredApplicationType, categoriesList, type)
         } else {
-            var data = getOpenSourceCategories()
-            data?.let {
-                categoriesList.addAll(
-                    getFusedCategoryBasedOnCategoryType(
-                        it,
-                        type,
-                        context.getString(R.string.open_source)
-                    )
-                )
-            }
-            data = getPWAsCategories()
-            data?.let {
-                categoriesList.addAll(
-                    getFusedCategoryBasedOnCategoryType(
-                        it, type, context.getString(R.string.pwa)
-                    )
-                )
-            }
-            val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
-                val category = app.transformToFusedCategory()
-                updateCategoryDrawable(category, app)
-                category
-            }
-            categoriesList.addAll(playResponse)
+            handleAllSourcesCategories(categoriesList, type, authData)
         }
         categoriesList.sortBy { item -> item.title.lowercase() }
         return categoriesList
+    }
+
+    private suspend fun handleCleanApkCategories(
+        preferredApplicationType: String,
+        categoriesList: MutableList<FusedCategory>,
+        type: Category.Type
+    ) {
+        val data = getCleanApkCategories(preferredApplicationType)
+
+        data?.let { category ->
+            categoriesList.addAll(
+                getFusedCategoryBasedOnCategoryType(
+                    category,
+                    type,
+                    if (preferredApplicationType == "open") context.getString(R.string.open_source) else context.getString(
+                        R.string.pwa
+                    )
+                )
+            )
+        }
+    }
+
+    private suspend fun getCleanApkCategories(preferredApplicationType: String): Categories? {
+        return if (preferredApplicationType == "open") {
+            getOpenSourceCategories()
+        } else {
+            getPWAsCategories()
+        }
+    }
+
+    private suspend fun handleAllSourcesCategories(
+        categoriesList: MutableList<FusedCategory>,
+        type: Category.Type,
+        authData: AuthData
+    ) {
+        var data = getOpenSourceCategories()
+        data?.let {
+            categoriesList.addAll(
+                getFusedCategoryBasedOnCategoryType(
+                    it,
+                    type,
+                    context.getString(R.string.open_source)
+                )
+            )
+        }
+        data = getPWAsCategories()
+        data?.let {
+            categoriesList.addAll(
+                getFusedCategoryBasedOnCategoryType(
+                    it, type, context.getString(R.string.pwa)
+                )
+            )
+        }
+        val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
+            val category = app.transformToFusedCategory()
+            updateCategoryDrawable(category, app)
+            category
+        }
+        categoriesList.addAll(playResponse)
     }
 
     private fun updateCategoryDrawable(
