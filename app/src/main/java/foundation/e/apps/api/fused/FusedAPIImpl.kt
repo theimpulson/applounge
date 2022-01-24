@@ -64,6 +64,7 @@ class FusedAPIImpl @Inject constructor(
         private const val CATEGORY_TITLE_REPLACABLE_CONJUNCTION = "&"
         private const val APP_TYPE_ANY = "any"
         private const val APP_TYPE_OPEN = "open"
+        private const val APP_TYPE_PWA = "pwa"
     }
 
     private var TAG = FusedAPIImpl::class.java.simpleName
@@ -72,8 +73,8 @@ class FusedAPIImpl @Inject constructor(
         val list = mutableListOf<FusedHome>()
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
 
-        if (preferredApplicationType != Companion.APP_TYPE_ANY) {
-            val response = if (preferredApplicationType == Companion.APP_TYPE_OPEN) {
+        if (preferredApplicationType != APP_TYPE_ANY) {
+            val response = if (preferredApplicationType == APP_TYPE_OPEN) {
                 cleanAPKRepository.getHomeScreenData(
                     CleanAPKInterface.APP_TYPE_ANY,
                     CleanAPKInterface.APP_SOURCE_FOSS
@@ -97,7 +98,7 @@ class FusedAPIImpl @Inject constructor(
         val categoriesList = mutableListOf<FusedCategory>()
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
 
-        if (preferredApplicationType != Companion.APP_TYPE_ANY) {
+        if (preferredApplicationType != APP_TYPE_ANY) {
             handleCleanApkCategories(preferredApplicationType, categoriesList, type)
         } else {
             handleAllSourcesCategories(categoriesList, type, authData)
@@ -253,6 +254,7 @@ class FusedAPIImpl @Inject constructor(
         ).body()
     }
 
+
     /**
      * Fetches search results from cleanAPK and GPlay servers and returns them
      * @param query Query
@@ -270,7 +272,7 @@ class FusedAPIImpl @Inject constructor(
             APP_TYPE_OPEN -> {
                 fusedResponse.addAll(getCleanAPKSearchResults(query))
             }
-            "pwa" -> {
+            APP_TYPE_PWA -> {
                 fusedResponse.addAll(
                     getCleanAPKSearchResults(
                         query,
