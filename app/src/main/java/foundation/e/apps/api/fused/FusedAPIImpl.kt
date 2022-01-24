@@ -59,14 +59,21 @@ class FusedAPIImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     @Named("cacheDir") private val cacheDir: String
 ) {
+
+    companion object {
+        private const val CATEGORY_TITLE_REPLACABLE_CONJUNCTION = "&"
+        private const val APP_TYPE_ANY = "any"
+        private const val APP_TYPE_OPEN = "open"
+    }
+
     private var TAG = FusedAPIImpl::class.java.simpleName
 
     suspend fun getHomeScreenData(authData: AuthData): List<FusedHome> {
         val list = mutableListOf<FusedHome>()
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
 
-        if (preferredApplicationType != "any") {
-            val response = if (preferredApplicationType == "open") {
+        if (preferredApplicationType != Companion.APP_TYPE_ANY) {
+            val response = if (preferredApplicationType == Companion.APP_TYPE_OPEN) {
                 cleanAPKRepository.getHomeScreenData(
                     CleanAPKInterface.APP_TYPE_ANY,
                     CleanAPKInterface.APP_SOURCE_FOSS
@@ -90,7 +97,7 @@ class FusedAPIImpl @Inject constructor(
         val categoriesList = mutableListOf<FusedCategory>()
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
 
-        if (preferredApplicationType != "any") {
+        if (preferredApplicationType != Companion.APP_TYPE_ANY) {
             handleCleanApkCategories(preferredApplicationType, categoriesList, type)
         } else {
             handleAllSourcesCategories(categoriesList, type, authData)
@@ -111,16 +118,20 @@ class FusedAPIImpl @Inject constructor(
                 getFusedCategoryBasedOnCategoryType(
                     category,
                     type,
-                    if (preferredApplicationType == "open") context.getString(R.string.open_source) else context.getString(
-                        R.string.pwa
-                    )
+                    getCategoryTag(preferredApplicationType)
                 )
             )
         }
     }
 
+    private fun getCategoryTag(preferredApplicationType: String): String {
+        return if (preferredApplicationType == APP_TYPE_OPEN) context.getString(R.string.open_source) else context.getString(
+            R.string.pwa
+        )
+    }
+
     private suspend fun getCleanApkCategories(preferredApplicationType: String): Categories? {
-        return if (preferredApplicationType == "open") {
+        return if (preferredApplicationType == APP_TYPE_OPEN) {
             getOpenSourceCategories()
         } else {
             getPWAsCategories()
@@ -174,8 +185,8 @@ class FusedAPIImpl @Inject constructor(
 
     private fun getCategoryIconName(category: FusedCategory): String {
         var categoryTitle = category.title
-        if (categoryTitle.contains("&")) {
-            categoryTitle = categoryTitle.replace("&", "and")
+        if (categoryTitle.contains(CATEGORY_TITLE_REPLACABLE_CONJUNCTION)) {
+            categoryTitle = categoryTitle.replace(CATEGORY_TITLE_REPLACABLE_CONJUNCTION, "and")
         }
         categoryTitle = categoryTitle.replace(' ', '_')
         return categoryTitle.lowercase()
@@ -252,11 +263,11 @@ class FusedAPIImpl @Inject constructor(
         val fusedResponse = mutableListOf<FusedApp>()
 
         when (preferenceManagerModule.preferredApplicationType()) {
-            "any" -> {
+            APP_TYPE_ANY -> {
                 fusedResponse.addAll(getCleanAPKSearchResults(query))
                 fusedResponse.addAll(getGplaySearchResults(query, authData))
             }
-            "open" -> {
+            APP_TYPE_OPEN -> {
                 fusedResponse.addAll(getCleanAPKSearchResults(query))
             }
             "pwa" -> {
@@ -322,8 +333,8 @@ class FusedAPIImpl @Inject constructor(
     suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
 
-        if (preferredApplicationType != "any") {
-            val response = if (preferredApplicationType == "open") {
+        if (preferredApplicationType != APP_TYPE_ANY) {
+            val response = if (preferredApplicationType == APP_TYPE_OPEN) {
                 cleanAPKRepository.listApps(
                     category,
                     CleanAPKInterface.APP_SOURCE_FOSS,
@@ -437,7 +448,7 @@ class FusedAPIImpl @Inject constructor(
     private fun generateCleanAPKHome(home: Home, prefType: String): List<FusedHome> {
         val list = mutableListOf<FusedHome>()
         Log.d("Aayush", home.toString())
-        val headings = if (prefType == "open") {
+        val headings = if (prefType == APP_TYPE_OPEN) {
             mapOf(
                 "top_updated_apps" to context.getString(R.string.top_updated_apps),
                 "top_updated_games" to context.getString(R.string.top_updated_games),
