@@ -53,10 +53,14 @@ class MainActivityViewModel @Inject constructor(
     private var _authData: MutableLiveData<AuthData> = MutableLiveData()
     val authData: LiveData<AuthData> = _authData
     val authValidity: MutableLiveData<Boolean> = MutableLiveData()
+    var authRequestRunning = false
 
     fun getAuthData() {
-        viewModelScope.launch {
-            fusedAPIRepository.fetchAuthData()
+        if (!authRequestRunning) {
+            authRequestRunning = true
+            viewModelScope.launch {
+                fusedAPIRepository.fetchAuthData()
+            }
         }
     }
 
@@ -71,6 +75,7 @@ class MainActivityViewModel @Inject constructor(
         _authData.value = data
         viewModelScope.launch {
             authValidity.postValue(isAuthValid(data))
+            authRequestRunning = false
         }
     }
 

@@ -49,7 +49,7 @@ class DataStoreModule @Inject constructor(
     private val TOCDATE = stringPreferencesKey("tocDate")
 
     val authData = context.dataStore.data.map { it[AUTHDATA] ?: "" }
-    val userType = context.dataStore.data.map { it[USERTYPE] ?: USER.UNAVAILABLE.name }
+    val userType = context.dataStore.data.map { it[USERTYPE] ?: "" }
     val tocStatus = context.dataStore.data.map { it[TOCSTATUS] ?: false }
     val tocDate = context.dataStore.data.map { it[TOCDATE] ?: "" }
 

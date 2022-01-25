@@ -62,34 +62,36 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewModel.userType.observe(this, { user ->
-            if (viewModel.tocStatus.value == true) {
+            if (user.isNotBlank() && viewModel.tocStatus.value == true) {
                 when (USER.valueOf(user)) {
                     USER.ANONYMOUS -> {
-                        // Watch and refresh authentication data
-                        viewModel.authDataJson.observe(this, {
-                            if (it.isNullOrEmpty()) {
-                                Log.d(TAG, "Fetching new authentication data")
-                                viewModel.getAuthData()
-                            } else {
-                                viewModel.generateAuthData()
-                                Log.d(TAG, "Authentication data is available!")
-                            }
-                        })
-
-                        viewModel.authValidity.observe(this, {
-                            if (it != true) {
-                                Log.d(TAG, "Authentication data validation failed!")
-                                viewModel.destroyCredentials()
-                            } else {
-                                Log.d(TAG, "Authentication data is valid!")
-                            }
-                        })
+                        if (viewModel.authDataJson.value.isNullOrEmpty() && !viewModel.authRequestRunning) {
+                            Log.d(TAG, "Fetching new authentication data")
+                            viewModel.getAuthData()
+                        }
                     }
                     USER.UNAVAILABLE -> {
                         navController.navigate(R.id.signInFragment, null, navOptions)
                     }
                     USER.GOOGLE -> {}
                 }
+            }
+        })
+
+        // Watch and refresh authentication data
+        viewModel.authDataJson.observe(this, {
+            if (!it.isNullOrEmpty()) {
+                viewModel.generateAuthData()
+                Log.d(TAG, "Authentication data is available!")
+            }
+        })
+
+        viewModel.authValidity.observe(this, {
+            if (it != true) {
+                Log.d(TAG, "Authentication data validation failed!")
+                viewModel.destroyCredentials()
+            } else {
+                Log.d(TAG, "Authentication data is valid!")
             }
         })
 
