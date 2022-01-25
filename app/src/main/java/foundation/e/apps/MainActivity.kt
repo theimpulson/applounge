@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.screenshotFragment,
                 R.id.descriptionFragment,
                 R.id.TOSFragment,
+                R.id.googleSignInFragment,
                 R.id.signInFragment -> {
                     bottomNavigationView.visibility = View.GONE
                 }

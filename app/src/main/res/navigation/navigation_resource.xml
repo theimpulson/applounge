@@ -188,4 +188,10 @@
             app:popUpTo="@+id/signInFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/googleSignInFragment"
+        android:name="foundation.e.apps.setup.signin.google.GoogleSignInFragment"
+        android:label="fragment_google_signin"
+        tools:layout="@layout/fragment_google_signin">
+    </fragment>
 </navigation>
