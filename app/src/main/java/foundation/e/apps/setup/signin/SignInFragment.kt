@@ -25,12 +25,23 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
 
         binding.googleBT.setOnClickListener {
             viewModel.saveUserType(USER.GOOGLE)
-            view.findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
         }
 
         binding.anonymousBT.setOnClickListener {
             viewModel.saveUserType(USER.ANONYMOUS)
-            view.findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
+        }
+
+        viewModel.userType.observe(viewLifecycleOwner) {
+            if (it.isNotBlank()) {
+                when (USER.valueOf(it)) {
+                    USER.ANONYMOUS -> {
+                        view.findNavController()
+                            .navigate(R.id.action_signInFragment_to_homeFragment)
+                    }
+                    USER.GOOGLE -> {}
+                    USER.UNAVAILABLE -> {}
+                }
+            }
         }
     }
 
