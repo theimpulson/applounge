@@ -16,27 +16,25 @@ class TrackerRepositoryImpl @Inject constructor(
 ) : ITrackerRepository {
     private var trackers: List<Tracker> = listOf()
 
-    override suspend fun getTrackerOfAnApp(appHandle: String): Result<List<Tracker>> {
-        val appTrackerResult = getResult { exodusTrackerApi.getTrackerListOfAnApp(appHandle) }
-        if (appTrackerResult.isSuccess()) {
-            return getTrackerListOfTheApp(appTrackerResult, appHandle)
+    override suspend fun getTrackersOfAnApp(appHandle: String): Result<List<Tracker>> {
+        val appTrackerInfoResult = getResult { exodusTrackerApi.getTrackerInfoOfApp(appHandle) }
+        if (appTrackerInfoResult.isSuccess()) {
+            return handleAppTrackerInfoResultSuccess(appTrackerInfoResult, appHandle)
         }
-        return Result.error(extractErrorMessage(appTrackerResult))
+        return Result.error(extractErrorMessage(appTrackerInfoResult))
     }
 
-    private suspend fun getTrackerListOfTheApp(
+    private suspend fun handleAppTrackerInfoResultSuccess(
         appTrackerResult: Result<Map<String, TrackerInfo>>,
         appHandle: String
     ): Result<List<Tracker>> {
-        return if (trackers.isNotEmpty()) {
-            handleAppTrackerResult(appTrackerResult, appHandle)
-        } else {
-            getTrackerList()
-            handleAppTrackerResult(appTrackerResult, appHandle)
+        if(trackers.isEmpty()) {
+            generateTrackerList()
         }
+        return createAppTrackerListResult(appTrackerResult, appHandle)
     }
 
-    private suspend fun getTrackerList() {
+    private suspend fun generateTrackerList() {
         val trackerListOfLocalDB = trackerDao.getTrackers()
         if (trackerListOfLocalDB.isNotEmpty()) {
             this.trackers = trackerListOfLocalDB
@@ -54,17 +52,17 @@ class TrackerRepositoryImpl @Inject constructor(
         return appTrackerResult.message ?: "Unknown Error"
     }
 
-    private fun handleAppTrackerResult(
+    private fun createAppTrackerListResult(
         appTrackerResult: Result<Map<String, TrackerInfo>>,
         appHandle: String
     ): Result<List<Tracker>> {
         appTrackerResult.data?.let {
-            return Result.success(findTrackersForApp(it, appHandle))
+            return Result.success(filterTrackersOfTheApp(it, appHandle))
         }
         return Result.error(extractErrorMessage(appTrackerResult))
     }
 
-    private fun findTrackersForApp(
+    private fun filterTrackersOfTheApp(
         appTrackerData: Map<String, TrackerInfo>,
         appHandle: String
     ): List<Tracker> {

@@ -107,7 +107,7 @@ class ApplicationViewModel @Inject constructor(
                     emit(Result.success(it.trackers))
                     return@liveData
                 }
-                val trackerResultOfAnApp = trackerRepository.getTrackerOfAnApp(it.package_name)
+                val trackerResultOfAnApp = trackerRepository.getTrackersOfAnApp(it.package_name)
                 handleAppTrackerResult(trackerResultOfAnApp, it)
             }
         }

@@ -4,5 +4,5 @@ import foundation.e.apps.api.Result
 import foundation.e.apps.api.exodus.Tracker
 
 interface ITrackerRepository {
-    suspend fun getTrackerOfAnApp(appHandle: String): Result<List<Tracker>>
+    suspend fun getTrackersOfAnApp(appHandle: String): Result<List<Tracker>>
 }
