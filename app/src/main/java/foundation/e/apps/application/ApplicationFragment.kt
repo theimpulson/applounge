@@ -152,7 +152,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 appName.text = it.name
                 appAuthor.text = it.author
                 categoryTitle.text = it.category
-
                 if (args.origin == Origin.CLEANAPK) {
                     appIcon.load(CleanAPKInterface.ASSET_URL + it.icon_image_path)
                 } else {
@@ -160,11 +159,16 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 }
             }
 
+            binding.downloadInclude.appSize.text = it.appSize
+
             // Ratings widgets
             binding.ratingsInclude.apply {
                 if (it.ratings.usageQualityScore != -1.0) {
                     appRating.text =
-                        getString(R.string.rating_out_of, it.ratings.usageQualityScore.toString())
+                        getString(
+                            R.string.rating_out_of,
+                            applicationViewModel.handleRatingFormat(it.ratings.usageQualityScore)
+                        )
                 }
                 appRatingLayout.setOnClickListener {
                     ApplicationDialogFragment(
@@ -193,7 +197,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 Html.fromHtml(it.description, Html.FROM_HTML_MODE_COMPACT)
 
             binding.appDescriptionMore.setOnClickListener { view ->
-                val action = ApplicationFragmentDirections.actionApplicationFragmentToDescriptionFragment(it.description)
+                val action =
+                    ApplicationFragmentDirections.actionApplicationFragmentToDescriptionFragment(it.description)
                 view.findNavController().navigate(action)
             }
 

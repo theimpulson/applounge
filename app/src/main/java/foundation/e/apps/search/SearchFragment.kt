@@ -69,6 +69,7 @@ class SearchFragment :
     private var shimmerLayout: ShimmerFrameLayout? = null
     private var recyclerView: RecyclerView? = null
     private var searchHintLayout: LinearLayout? = null
+    private lateinit var noAppsFoundLayout: LinearLayout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -78,6 +79,7 @@ class SearchFragment :
         shimmerLayout = binding.shimmerLayout
         recyclerView = binding.recyclerView
         searchHintLayout = binding.searchHintLayout.root
+        noAppsFoundLayout = binding.noAppsFoundLayout.root
 
         // Setup SearchView
         setHasOptionsMenu(true)
@@ -113,9 +115,12 @@ class SearchFragment :
         }
 
         searchViewModel.searchResult.observe(viewLifecycleOwner, {
+            if (it.isEmpty()) {
+                showNoAppsFoundLayout()
+                return@observe
+            }
             listAdapter?.setData(it)
-            shimmerLayout?.visibility = View.GONE
-            recyclerView?.visibility = View.VISIBLE
+            showRecyclerView()
         })
     }
 
@@ -130,25 +135,42 @@ class SearchFragment :
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
+        showShimmerLayout()
         query?.let { text ->
             hideKeyboard(activity as Activity)
             view?.requestFocus()
-            searchHintLayout?.visibility = View.GONE
-            shimmerLayout?.visibility = View.VISIBLE
-            recyclerView?.visibility = View.GONE
             mainActivityViewModel.authData.value?.let { searchViewModel.getSearchResults(text, it) }
         }
         return false
     }
 
+    private fun showShimmerLayout() {
+        recyclerView?.adapter?.let {
+            (it as ApplicationListRVAdapter).setData(listOf())
+        }
+        searchHintLayout?.visibility = View.GONE
+        recyclerView?.visibility = View.GONE
+        shimmerLayout?.visibility = View.VISIBLE
+        noAppsFoundLayout.visibility = View.GONE
+    }
+
+    private fun showRecyclerView() {
+        searchHintLayout?.visibility = View.GONE
+        recyclerView?.visibility = View.VISIBLE
+        shimmerLayout?.visibility = View.GONE
+        noAppsFoundLayout.visibility = View.GONE
+    }
+
     override fun onQueryTextChange(newText: String?): Boolean {
-        newText?.let { text ->
-            mainActivityViewModel.authData.value?.let {
-                searchViewModel.getSearchSuggestions(
-                    text,
-                    it
-                )
-            }
+        if (newText.isNullOrEmpty()) {
+            showSearchHintLayout()
+            return true
+        }
+        mainActivityViewModel.authData.value?.let {
+            searchViewModel.getSearchSuggestions(
+                newText,
+                it
+            )
         }
         return true
     }
@@ -159,6 +181,10 @@ class SearchFragment :
 
     override fun onSuggestionClick(position: Int): Boolean {
         searchViewModel.searchSuggest.value?.let {
+            if (it.isEmpty()) {
+                return true
+            }
+            showShimmerLayout()
             searchView?.setQuery(it[position].suggestedQuery, true)
         }
         return true
@@ -189,12 +215,36 @@ class SearchFragment :
 
     private fun populateSuggestionsAdapter(suggestions: List<SearchSuggestEntry>?) {
         val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SUGGESTION_KEY))
-        suggestions?.let {
-            for (i in it.indices) {
-                cursor.addRow(arrayOf(i, it[i].suggestedQuery))
-            }
+        if (suggestions.isNullOrEmpty()) {
+            showNoAppsFoundLayout()
+            return
+        }
+
+        if (!isAppListLoadingOrShowing()) {
+            showSearchHintLayout()
+        }
+
+        for (i in suggestions.indices) {
+            cursor.addRow(arrayOf(i, suggestions[i].suggestedQuery))
         }
         searchView?.suggestionsAdapter?.changeCursor(cursor)
+    }
+
+    private fun isAppListLoadingOrShowing() =
+        shimmerLayout?.visibility == View.VISIBLE || recyclerView?.visibility == View.VISIBLE
+
+    private fun showNoAppsFoundLayout() {
+        searchHintLayout?.visibility = View.GONE
+        recyclerView?.visibility = View.GONE
+        shimmerLayout?.visibility = View.GONE
+        noAppsFoundLayout.visibility = View.VISIBLE
+    }
+
+    private fun showSearchHintLayout() {
+        searchHintLayout?.visibility = View.VISIBLE
+        recyclerView?.visibility = View.GONE
+        shimmerLayout?.visibility = View.GONE
+        noAppsFoundLayout.visibility = View.GONE
     }
 
     override fun getApplication(

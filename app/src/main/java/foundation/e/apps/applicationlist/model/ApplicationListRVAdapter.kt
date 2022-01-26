@@ -18,9 +18,11 @@
 
 package foundation.e.apps.applicationlist.model
 
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -134,17 +136,24 @@ class ApplicationListRVAdapter(
             when (searchApp.status) {
                 Status.INSTALLED -> {
                     installButton.text = view.context.getString(R.string.open)
+                    installButton.setTextColor(Color.WHITE)
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                     installButton.setOnClickListener {
                         view.context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
                     }
                 }
                 Status.UPDATABLE -> {
                     installButton.text = view.context.getString(R.string.update)
+                    installButton.setTextColor(Color.WHITE)
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                     installButton.setOnClickListener {
                         installApplication(searchApp)
                     }
                 }
                 Status.UNAVAILABLE -> {
+                    installButton.text = view.context.getString(R.string.install)
+                    installButton.setTextColor(ContextCompat.getColor(view.context, R.color.colorAccent))
+                    installButton.backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
                     installButton.setOnClickListener {
                         installApplication(searchApp)
                     }

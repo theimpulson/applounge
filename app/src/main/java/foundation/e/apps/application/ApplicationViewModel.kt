@@ -95,4 +95,12 @@ class ApplicationViewModel @Inject constructor(
         val permString = list.toString().replace(", ", "\n")
         return permString.substring(1, permString.length - 1)
     }
+
+    fun handleRatingFormat(rating: Double): String {
+        return if (rating % 1 == 0.0) {
+            rating.toInt().toString()
+        } else {
+            rating.toString()
+        }
+    }
 }

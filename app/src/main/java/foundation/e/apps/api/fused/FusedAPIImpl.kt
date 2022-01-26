@@ -21,6 +21,7 @@ package foundation.e.apps.api.fused
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
+import android.text.format.Formatter
 import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
@@ -32,6 +33,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
+import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.home.Home
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.FusedCategory
@@ -57,14 +59,22 @@ class FusedAPIImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     @Named("cacheDir") private val cacheDir: String
 ) {
+
+    companion object {
+        private const val CATEGORY_TITLE_REPLACABLE_CONJUNCTION = "&"
+        private const val APP_TYPE_ANY = "any"
+        private const val APP_TYPE_OPEN = "open"
+        private const val APP_TYPE_PWA = "pwa"
+    }
+
     private var TAG = FusedAPIImpl::class.java.simpleName
 
     suspend fun getHomeScreenData(authData: AuthData): List<FusedHome> {
         val list = mutableListOf<FusedHome>()
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
 
-        if (preferredApplicationType != "any") {
-            val response = if (preferredApplicationType == "open") {
+        if (preferredApplicationType != APP_TYPE_ANY) {
+            val response = if (preferredApplicationType == APP_TYPE_OPEN) {
                 cleanAPKRepository.getHomeScreenData(
                     CleanAPKInterface.APP_TYPE_ANY,
                     CleanAPKInterface.APP_SOURCE_FOSS
@@ -88,49 +98,160 @@ class FusedAPIImpl @Inject constructor(
         val categoriesList = mutableListOf<FusedCategory>()
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
 
-        if (preferredApplicationType != "any") {
-            val data = if (preferredApplicationType == "open") {
-                cleanAPKRepository.getCategoriesList(
-                    CleanAPKInterface.APP_TYPE_ANY,
-                    CleanAPKInterface.APP_SOURCE_FOSS
-                ).body()
-            } else {
-                cleanAPKRepository.getCategoriesList(
-                    CleanAPKInterface.APP_TYPE_PWA,
-                    CleanAPKInterface.APP_SOURCE_ANY
-                ).body()
-            }
-            data?.let { category ->
-                when (type) {
-                    Category.Type.APPLICATION -> {
-                        for (cat in category.apps) {
-                            val categoryApp = FusedCategory(
-                                id = cat,
-                                title = category.translations.getOrDefault(cat, ""),
-                                drawable = CategoryUtils.provideCategoryIconResource(cat)
-                            )
-                            categoriesList.add(categoryApp)
-                        }
-                    }
-                    Category.Type.GAME -> {
-                        for (cat in category.games) {
-                            val categoryApp = FusedCategory(
-                                id = cat,
-                                title = category.translations.getOrDefault(cat, ""),
-                                drawable = CategoryUtils.provideCategoryIconResource(cat)
-                            )
-                            categoriesList.add(categoryApp)
-                        }
-                    }
-                }
-            }
+        if (preferredApplicationType != APP_TYPE_ANY) {
+            handleCleanApkCategories(preferredApplicationType, categoriesList, type)
         } else {
-            val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
-                app.transformToFusedCategory()
-            }
-            categoriesList.addAll(playResponse)
+            handleAllSourcesCategories(categoriesList, type, authData)
         }
+        categoriesList.sortBy { item -> item.title.lowercase() }
         return categoriesList
+    }
+
+    private suspend fun handleCleanApkCategories(
+        preferredApplicationType: String,
+        categoriesList: MutableList<FusedCategory>,
+        type: Category.Type
+    ) {
+        val data = getCleanApkCategories(preferredApplicationType)
+
+        data?.let { category ->
+            categoriesList.addAll(
+                getFusedCategoryBasedOnCategoryType(
+                    category,
+                    type,
+                    getCategoryTag(preferredApplicationType)
+                )
+            )
+        }
+    }
+
+    private fun getCategoryTag(preferredApplicationType: String): String {
+        return if (preferredApplicationType == APP_TYPE_OPEN) context.getString(R.string.open_source) else context.getString(
+            R.string.pwa
+        )
+    }
+
+    private suspend fun getCleanApkCategories(preferredApplicationType: String): Categories? {
+        return if (preferredApplicationType == APP_TYPE_OPEN) {
+            getOpenSourceCategories()
+        } else {
+            getPWAsCategories()
+        }
+    }
+
+    private suspend fun handleAllSourcesCategories(
+        categoriesList: MutableList<FusedCategory>,
+        type: Category.Type,
+        authData: AuthData
+    ) {
+        var data = getOpenSourceCategories()
+        data?.let {
+            categoriesList.addAll(
+                getFusedCategoryBasedOnCategoryType(
+                    it,
+                    type,
+                    context.getString(R.string.open_source)
+                )
+            )
+        }
+        data = getPWAsCategories()
+        data?.let {
+            categoriesList.addAll(
+                getFusedCategoryBasedOnCategoryType(
+                    it, type, context.getString(R.string.pwa)
+                )
+            )
+        }
+        val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
+            val category = app.transformToFusedCategory()
+            updateCategoryDrawable(category, app)
+            category
+        }
+        categoriesList.addAll(playResponse)
+    }
+
+    private fun updateCategoryDrawable(
+        category: FusedCategory,
+        app: Category
+    ) {
+        category.drawable =
+            if (app.type == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
+                getCategoryIconName(category)
+            ) else CategoryUtils.provideGamesCategoryIconResource(
+                getCategoryIconName(
+                    category
+                )
+            )
+    }
+
+    private fun getCategoryIconName(category: FusedCategory): String {
+        var categoryTitle = category.title
+        if (categoryTitle.contains(CATEGORY_TITLE_REPLACABLE_CONJUNCTION)) {
+            categoryTitle = categoryTitle.replace(CATEGORY_TITLE_REPLACABLE_CONJUNCTION, "and")
+        }
+        categoryTitle = categoryTitle.replace(' ', '_')
+        return categoryTitle.lowercase()
+    }
+
+    private fun getFusedCategoryBasedOnCategoryType(
+        categories: Categories,
+        categoryType: Category.Type,
+        tag: String
+    ): List<FusedCategory> {
+        return when (categoryType) {
+            Category.Type.APPLICATION -> {
+                getAppsCategoriesAsFusedCategory(categories, tag)
+            }
+            Category.Type.GAME -> {
+                getGamesCategoriesAsFusedCategory(categories, tag)
+            }
+        }
+    }
+
+    private fun getAppsCategoriesAsFusedCategory(
+        categories: Categories,
+        tag: String
+    ): List<FusedCategory> {
+        return categories.apps.map { category ->
+            createFusedCategoryFromCategory(category, categories, Category.Type.APPLICATION, tag)
+        }
+    }
+
+    private fun getGamesCategoriesAsFusedCategory(
+        categories: Categories,
+        tag: String
+    ): List<FusedCategory> {
+        return categories.games.map { category ->
+            createFusedCategoryFromCategory(category, categories, Category.Type.GAME, tag)
+        }
+    }
+
+    private fun createFusedCategoryFromCategory(
+        category: String,
+        categories: Categories,
+        appType: Category.Type,
+        tag: String
+    ) = FusedCategory(
+        id = category,
+        title = categories.translations.getOrDefault(category, ""),
+        drawable = if (appType == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
+            category
+        ) else CategoryUtils.provideGamesCategoryIconResource(category),
+        tag = tag
+    )
+
+    private suspend fun getPWAsCategories(): Categories? {
+        return cleanAPKRepository.getCategoriesList(
+            CleanAPKInterface.APP_TYPE_PWA,
+            CleanAPKInterface.APP_SOURCE_ANY
+        ).body()
+    }
+
+    private suspend fun getOpenSourceCategories(): Categories? {
+        return cleanAPKRepository.getCategoriesList(
+            CleanAPKInterface.APP_TYPE_ANY,
+            CleanAPKInterface.APP_SOURCE_FOSS
+        ).body()
     }
 
     /**
@@ -143,14 +264,14 @@ class FusedAPIImpl @Inject constructor(
         val fusedResponse = mutableListOf<FusedApp>()
 
         when (preferenceManagerModule.preferredApplicationType()) {
-            "any" -> {
+            APP_TYPE_ANY -> {
                 fusedResponse.addAll(getCleanAPKSearchResults(query))
                 fusedResponse.addAll(getGplaySearchResults(query, authData))
             }
-            "open" -> {
+            APP_TYPE_OPEN -> {
                 fusedResponse.addAll(getCleanAPKSearchResults(query))
             }
-            "pwa" -> {
+            APP_TYPE_PWA -> {
                 fusedResponse.addAll(
                     getCleanAPKSearchResults(
                         query,
@@ -213,8 +334,8 @@ class FusedAPIImpl @Inject constructor(
     suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
 
-        if (preferredApplicationType != "any") {
-            val response = if (preferredApplicationType == "open") {
+        if (preferredApplicationType != APP_TYPE_ANY) {
+            val response = if (preferredApplicationType == APP_TYPE_OPEN) {
                 cleanAPKRepository.listApps(
                     category,
                     CleanAPKInterface.APP_SOURCE_FOSS,
@@ -326,7 +447,7 @@ class FusedAPIImpl @Inject constructor(
 
     private fun generateCleanAPKHome(home: Home, prefType: String): List<FusedHome> {
         val list = mutableListOf<FusedHome>()
-        val headings = if (prefType == "open") {
+        val headings = if (prefType == APP_TYPE_OPEN) {
             mapOf(
                 "top_updated_apps" to context.getString(R.string.top_updated_apps),
                 "top_updated_games" to context.getString(R.string.top_updated_games),
@@ -386,36 +507,12 @@ class FusedAPIImpl @Inject constructor(
     private suspend fun fetchGPlayHome(authData: AuthData): List<FusedHome> {
         val list = mutableListOf<FusedHome>()
         val homeElements = mutableMapOf(
-            context.getString(R.string.topselling_free_apps) to
-                mapOf(
-                    TopChartsHelper.Chart.TOP_SELLING_FREE to
-                        TopChartsHelper.Type.APPLICATION
-                ),
-            context.getString(R.string.topselling_free_games) to
-                mapOf(
-                    TopChartsHelper.Chart.TOP_SELLING_FREE to
-                        TopChartsHelper.Type.GAME
-                ),
-            context.getString(R.string.topgrossing_apps) to
-                mapOf(
-                    TopChartsHelper.Chart.TOP_GROSSING to
-                        TopChartsHelper.Type.APPLICATION
-                ),
-            context.getString(R.string.topgrossing_games) to
-                mapOf(
-                    TopChartsHelper.Chart.TOP_GROSSING to
-                        TopChartsHelper.Type.GAME
-                ),
-            context.getString(R.string.movers_shakers_apps) to
-                mapOf(
-                    TopChartsHelper.Chart.MOVERS_SHAKERS to
-                        TopChartsHelper.Type.APPLICATION
-                ),
-            context.getString(R.string.movers_shakers_games) to
-                mapOf(
-                    TopChartsHelper.Chart.MOVERS_SHAKERS to
-                        TopChartsHelper.Type.GAME
-                ),
+            context.getString(R.string.topselling_free_apps) to mapOf(TopChartsHelper.Chart.TOP_SELLING_FREE to TopChartsHelper.Type.APPLICATION),
+            context.getString(R.string.topselling_free_games) to mapOf(TopChartsHelper.Chart.TOP_SELLING_FREE to TopChartsHelper.Type.GAME),
+            context.getString(R.string.topgrossing_apps) to mapOf(TopChartsHelper.Chart.TOP_GROSSING to TopChartsHelper.Type.APPLICATION),
+            context.getString(R.string.topgrossing_games) to mapOf(TopChartsHelper.Chart.TOP_GROSSING to TopChartsHelper.Type.GAME),
+            context.getString(R.string.movers_shakers_apps) to mapOf(TopChartsHelper.Chart.MOVERS_SHAKERS to TopChartsHelper.Type.APPLICATION),
+            context.getString(R.string.movers_shakers_games) to mapOf(TopChartsHelper.Chart.MOVERS_SHAKERS to TopChartsHelper.Type.GAME),
         )
         homeElements.forEach {
             val chart = it.value.keys.iterator().next()
@@ -448,7 +545,8 @@ class FusedAPIImpl @Inject constructor(
             offer_type = this.offerType,
             status = pkgManagerModule.getPackageStatus(this.packageName, this.versionCode),
             origin = Origin.GPLAY,
-            shareUrl = this.shareUrl
+            shareUrl = this.shareUrl,
+            appSize = Formatter.formatFileSize(context, this.size)
         )
     }
 

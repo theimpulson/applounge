@@ -21,8 +21,7 @@ package foundation.e.apps.api.fused.utils
 import foundation.e.apps.R
 
 object CategoryUtils {
-
-    fun provideCategoryIconResource(categoryId: String): Int {
+    fun provideAppsCategoryIconResource(categoryId: String): Int {
         return when (categoryId) {
             "comics" ->
                 R.drawable.ic_cat_comics
@@ -55,6 +54,8 @@ object CategoryUtils {
             "lifestyle" ->
                 R.drawable.ic_cat_lifestyle
             "video_players" ->
+                R.drawable.ic_cat_video_players
+            "video_players_and_editors" ->
                 R.drawable.ic_cat_video_players
             "events" ->
                 R.drawable.ic_cat_events
@@ -168,6 +169,53 @@ object CategoryUtils {
                 R.drawable.ic_business
             "web_games" ->
                 R.drawable.ic_cat_sports
+            "watch_faces" ->
+                R.drawable.ic_watchface
+            "watch_apps" ->
+                R.drawable.ic_watch_apps
+            else ->
+                R.drawable.ic_cat_default
+        }
+    }
+
+    fun provideGamesCategoryIconResource(categoryId: String): Int {
+        return when (categoryId) {
+            "action" ->
+                R.drawable.ic_action
+            "adventure" ->
+                R.drawable.ic_adventure
+            "arcade" ->
+                R.drawable.ic_arcade
+            "board" ->
+                R.drawable.ic_board
+            "card" ->
+                R.drawable.ic_card
+            "casino" ->
+                R.drawable.ic_casino
+            "casual" ->
+                R.drawable.ic_casual
+            "educational" ->
+                R.drawable.ic_educational
+            "music" ->
+                R.drawable.ic_music
+            "game_open_games" ->
+                R.drawable.ic_cat_open_games
+            "puzzle" ->
+                R.drawable.ic_puzzle
+            "racing" ->
+                R.drawable.ic_racing
+            "role_playing" ->
+                R.drawable.ic_role_playing
+            "simulation" ->
+                R.drawable.ic_simulation
+            "sports" ->
+                R.drawable.ic_sports
+            "strategy" ->
+                R.drawable.ic_strategy
+            "trivia" ->
+                R.drawable.ic_trivia
+            "word" ->
+                R.drawable.ic_word
             else ->
                 R.drawable.ic_cat_default
         }

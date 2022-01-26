@@ -28,9 +28,10 @@
 
     <!-- Search Fragment -->
     <string name="search_hint">Search for an app</string>
+    <string name="no_apps_found">No apps found…</string>
 
     <!-- Categories Fragment -->
-    <string name="apps">Apps</string>
+    <string name="apps">Applications</string>
     <string name="games">Games</string>
     <string name="category_icon">Category Icon</string>
 
@@ -81,7 +82,7 @@
     <string name="ratings">Ratings</string>
     <string name="rating">Rating</string>
     <string name="rating_description">Score out of 5. Computed using users\' ratings of the app.</string>
-    <string name="rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/5.0</string>
+    <string name="rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/5</string>
     <string name="privacy">Privacy</string>
     <string name="privacy_description">Score out of 10. Computed using Exodus Privacy analyses, based on permissions and trackers used in the app.</string>
     <string name="privacy_rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/10</string>
@@ -124,5 +125,9 @@
     <!-- Notification -->
     <string name="downloads">Downloads</string>
     <string name="updates">Updates</string>
+
+<!--    Others-->
+    <string name="open_source">Open Source</string>
+    <string name="pwa">PWA</string>
 
 </resources>
