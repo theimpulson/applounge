@@ -107,6 +107,179 @@ class FusedAPIImpl @Inject constructor(
         return categoriesList
     }
 
+    /**
+     * Fetches search results from cleanAPK and GPlay servers and returns them
+     * @param query Query
+     * @param authData [AuthData]
+     * @return A list of nullable [FusedApp]
+     */
+    suspend fun getSearchResults(query: String, authData: AuthData): List<FusedApp> {
+        val fusedResponse = mutableListOf<FusedApp>()
+
+        when (preferenceManagerModule.preferredApplicationType()) {
+            APP_TYPE_ANY -> {
+                fusedResponse.addAll(getCleanAPKSearchResults(query))
+                fusedResponse.addAll(getGplaySearchResults(query, authData))
+            }
+            APP_TYPE_OPEN -> {
+                fusedResponse.addAll(getCleanAPKSearchResults(query))
+            }
+            APP_TYPE_PWA -> {
+                fusedResponse.addAll(
+                    getCleanAPKSearchResults(
+                        query,
+                        CleanAPKInterface.APP_SOURCE_ANY,
+                        CleanAPKInterface.APP_TYPE_PWA
+                    )
+                )
+            }
+        }
+        return fusedResponse.distinctBy { it.package_name }
+    }
+
+    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
+        return gPlayAPIRepository.getSearchSuggestions(query, authData)
+    }
+
+    suspend fun fetchAuthData(): Unit? {
+        return gPlayAPIRepository.fetchAuthData()
+    }
+
+    suspend fun validateAuthData(authData: AuthData): Boolean {
+        return gPlayAPIRepository.validateAuthData(authData)
+    }
+
+    suspend fun getApplication(
+        id: String,
+        name: String,
+        packageName: String,
+        versionCode: Int,
+        offerType: Int,
+        authData: AuthData,
+        origin: Origin
+    ): Long {
+        when (origin) {
+            Origin.CLEANAPK -> {
+                val downloadInfo = cleanAPKRepository.getDownloadInfo(id).body()
+                val downloadLink = downloadInfo?.download_data?.download_link
+                if (downloadLink != null) {
+                    return downloadApp(name, packageName, downloadLink)
+                } else {
+                    Log.d(TAG, "Download link was null, exiting!")
+                }
+            }
+            Origin.GPLAY -> {
+                val downloadList = gPlayAPIRepository.getDownloadInfo(
+                    packageName,
+                    versionCode,
+                    offerType,
+                    authData
+                )
+                // TODO: DEAL WITH MULTIPLE PACKAGES
+                return downloadApp(name, packageName, downloadList[0].url)
+            }
+            Origin.GITLAB -> {
+            }
+        }
+        return 0
+    }
+
+    suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {
+        val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
+
+        if (preferredApplicationType != "any") {
+            val response = if (preferredApplicationType == "open") {
+                getOpenSourceAppsResponse(category)
+            } else {
+                getPWAAppsResponse(category)
+            }
+            response?.apps?.forEach {
+                it.status =
+                    pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+            }
+            return response?.apps
+        } else {
+            return gPlayAPIRepository.listApps(browseUrl, authData).map { app ->
+                app.transformToFusedApp()
+            }
+        }
+    }
+
+    suspend fun getPWAApps(category: String): List<FusedApp>? {
+        val response = getPWAAppsResponse(category)
+        response?.apps?.forEach {
+            it.status =
+                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+        }
+        return response?.apps
+    }
+
+    suspend fun getOpenSourceApps(category: String): List<FusedApp>? {
+        val response = getOpenSourceAppsResponse(category)
+        response?.apps?.forEach {
+            it.status =
+                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+        }
+        return response?.apps
+    }
+
+    suspend fun getPlayStoreApps(browseUrl: String, authData: AuthData): List<FusedApp> {
+        return gPlayAPIRepository.listApps(browseUrl, authData).map { app ->
+            app.transformToFusedApp()
+        }
+    }
+
+    suspend fun getApplicationDetails(
+        packageNameList: List<String>,
+        authData: AuthData,
+        origin: Origin
+    ): List<FusedApp> {
+        val list = mutableListOf<FusedApp>()
+        val response = if (origin == Origin.CLEANAPK) {
+            val pkgList = mutableListOf<FusedApp>()
+            packageNameList.forEach {
+                val result = cleanAPKRepository.searchApps(
+                    keyword = it,
+                    by = "package_name"
+                ).body()
+                if (result?.apps?.isNotEmpty() == true && result.numberOfResults == 1) {
+                    pkgList.add(result.apps[0])
+                }
+            }
+            pkgList
+        } else {
+            gPlayAPIRepository.getAppDetails(packageNameList, authData).map { app ->
+                app.transformToFusedApp()
+            }
+        }
+        response.forEach { fusedApp ->
+            fusedApp.status = pkgManagerModule.getPackageStatus(
+                fusedApp.package_name,
+                fusedApp.latest_version_code
+            )
+            list.add(fusedApp)
+        }
+        return list
+    }
+
+    suspend fun getApplicationDetails(
+        id: String,
+        packageName: String,
+        authData: AuthData,
+        origin: Origin
+    ): FusedApp {
+        val response = if (origin == Origin.CLEANAPK) {
+            cleanAPKRepository.getAppOrPWADetailsByID(id).body()?.app
+        } else {
+            val app = gPlayAPIRepository.getAppDetails(packageName, authData)
+            app?.transformToFusedApp()
+        }
+        response?.let {
+            it.status = pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+        }
+        return response ?: FusedApp()
+    }
+
     private suspend fun handleCleanApkCategories(
         preferredApplicationType: String,
         categoriesList: MutableList<FusedCategory>,
@@ -254,128 +427,6 @@ class FusedAPIImpl @Inject constructor(
         ).body()
     }
 
-    /**
-     * Fetches search results from cleanAPK and GPlay servers and returns them
-     * @param query Query
-     * @param authData [AuthData]
-     * @return A list of nullable [FusedApp]
-     */
-    suspend fun getSearchResults(query: String, authData: AuthData): List<FusedApp> {
-        val fusedResponse = mutableListOf<FusedApp>()
-
-        when (preferenceManagerModule.preferredApplicationType()) {
-            APP_TYPE_ANY -> {
-                fusedResponse.addAll(getCleanAPKSearchResults(query))
-                fusedResponse.addAll(getGplaySearchResults(query, authData))
-            }
-            APP_TYPE_OPEN -> {
-                fusedResponse.addAll(getCleanAPKSearchResults(query))
-            }
-            APP_TYPE_PWA -> {
-                fusedResponse.addAll(
-                    getCleanAPKSearchResults(
-                        query,
-                        CleanAPKInterface.APP_SOURCE_ANY,
-                        CleanAPKInterface.APP_TYPE_PWA
-                    )
-                )
-            }
-        }
-        return fusedResponse.distinctBy { it.package_name }
-    }
-
-    suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {
-        return gPlayAPIRepository.getSearchSuggestions(query, authData)
-    }
-
-    suspend fun fetchAuthData(): Unit? {
-        return gPlayAPIRepository.fetchAuthData()
-    }
-
-    suspend fun validateAuthData(authData: AuthData): Boolean {
-        return gPlayAPIRepository.validateAuthData(authData)
-    }
-
-    suspend fun getApplication(
-        id: String,
-        name: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int,
-        authData: AuthData,
-        origin: Origin
-    ): Long {
-        when (origin) {
-            Origin.CLEANAPK -> {
-                val downloadInfo = cleanAPKRepository.getDownloadInfo(id).body()
-                val downloadLink = downloadInfo?.download_data?.download_link
-                if (downloadLink != null) {
-                    return downloadApp(name, packageName, downloadLink)
-                } else {
-                    Log.d(TAG, "Download link was null, exiting!")
-                }
-            }
-            Origin.GPLAY -> {
-                val downloadList = gPlayAPIRepository.getDownloadInfo(
-                    packageName,
-                    versionCode,
-                    offerType,
-                    authData
-                )
-                // TODO: DEAL WITH MULTIPLE PACKAGES
-                return downloadApp(name, packageName, downloadList[0].url)
-            }
-            Origin.GITLAB -> {
-            }
-        }
-        return 0
-    }
-
-    suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {
-        val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
-
-        if (preferredApplicationType != "any") {
-            val response = if (preferredApplicationType == "open") {
-                getOpenSourceAppsResponse(category)
-            } else {
-                getPWAAppsResponse(category)
-            }
-            response?.apps?.forEach {
-                it.status =
-                    pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
-            }
-            return response?.apps
-        } else {
-            return gPlayAPIRepository.listApps(browseUrl, authData).map { app ->
-                app.transformToFusedApp()
-            }
-        }
-    }
-
-    suspend fun getPWAApps(category: String): List<FusedApp>? {
-        val response = getPWAAppsResponse(category)
-        response?.apps?.forEach {
-            it.status =
-                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
-        }
-        return response?.apps
-    }
-
-    suspend fun getOpenSourceApps(category: String): List<FusedApp>? {
-        val response = getOpenSourceAppsResponse(category)
-        response?.apps?.forEach {
-            it.status =
-                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
-        }
-        return response?.apps
-    }
-
-    suspend fun getPlayStoreApps(browseUrl: String, authData: AuthData): List<FusedApp> {
-        return gPlayAPIRepository.listApps(browseUrl, authData).map { app ->
-            app.transformToFusedApp()
-        }
-    }
-
     private suspend fun getOpenSourceAppsResponse(category: String) = cleanAPKRepository.listApps(
         category,
         CleanAPKInterface.APP_SOURCE_FOSS,
@@ -387,57 +438,6 @@ class FusedAPIImpl @Inject constructor(
         CleanAPKInterface.APP_SOURCE_ANY,
         CleanAPKInterface.APP_TYPE_PWA
     ).body()
-
-    suspend fun getApplicationDetails(
-        packageNameList: List<String>,
-        authData: AuthData,
-        origin: Origin
-    ): List<FusedApp> {
-        val list = mutableListOf<FusedApp>()
-        val response = if (origin == Origin.CLEANAPK) {
-            val pkgList = mutableListOf<FusedApp>()
-            packageNameList.forEach {
-                val result = cleanAPKRepository.searchApps(
-                    keyword = it,
-                    by = "package_name"
-                ).body()
-                if (result?.apps?.isNotEmpty() == true && result.numberOfResults == 1) {
-                    pkgList.add(result.apps[0])
-                }
-            }
-            pkgList
-        } else {
-            gPlayAPIRepository.getAppDetails(packageNameList, authData).map { app ->
-                app.transformToFusedApp()
-            }
-        }
-        response.forEach { fusedApp ->
-            fusedApp.status = pkgManagerModule.getPackageStatus(
-                fusedApp.package_name,
-                fusedApp.latest_version_code
-            )
-            list.add(fusedApp)
-        }
-        return list
-    }
-
-    suspend fun getApplicationDetails(
-        id: String,
-        packageName: String,
-        authData: AuthData,
-        origin: Origin
-    ): FusedApp {
-        val response = if (origin == Origin.CLEANAPK) {
-            cleanAPKRepository.getAppOrPWADetailsByID(id).body()?.app
-        } else {
-            val app = gPlayAPIRepository.getAppDetails(packageName, authData)
-            app?.transformToFusedApp()
-        }
-        response?.let {
-            it.status = pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
-        }
-        return response ?: FusedApp()
-    }
 
     private suspend fun getCleanAPKSearchResults(
         keyword: String,
