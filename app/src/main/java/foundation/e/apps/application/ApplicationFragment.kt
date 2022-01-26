@@ -61,14 +61,14 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentApplicationBinding.bind(view)
 
-        mainActivityViewModel.authData.observe(viewLifecycleOwner, {
+        mainActivityViewModel.authData.observe(viewLifecycleOwner) {
             applicationViewModel.getApplicationDetails(
                 args.id,
                 args.packageName,
                 it,
                 args.origin
             )
-        })
+        }
 
         val startDestination = findNavController().graph.startDestination
         if (startDestination == R.id.applicationFragment) {
@@ -92,7 +92,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
         binding.applicationLayout.visibility = View.INVISIBLE
 
-        applicationViewModel.appStatus.observe(viewLifecycleOwner, { status ->
+        applicationViewModel.appStatus.observe(viewLifecycleOwner) { status ->
             val installButton = binding.downloadInclude.installButton
             val downloadPB = binding.downloadInclude.appInstallPB
             val appSize = binding.downloadInclude.appSize
@@ -125,10 +125,10 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         installButton.text = getString(R.string.cancel)
                         downloadPB.visibility = View.VISIBLE
                         appSize.visibility = View.GONE
-                        applicationViewModel.downloadProgress.observe(viewLifecycleOwner, {
+                        applicationViewModel.downloadProgress.observe(viewLifecycleOwner) {
                             downloadPB.max = it.totalSizeBytes.toInt()
                             downloadPB.progress = it.bytesDownloadedSoFar.toInt()
-                        })
+                        }
                     }
                     Status.INSTALLING, Status.UNINSTALLING -> {
                         downloadPB.visibility = View.GONE
@@ -141,9 +141,9 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     }
                 }
             }
-        })
+        }
 
-        applicationViewModel.fusedApp.observe(viewLifecycleOwner, {
+        applicationViewModel.fusedApp.observe(viewLifecycleOwner) {
             applicationViewModel.appStatus.value = it.status
             screenshotsRVAdapter.setData(it.other_images_path)
 
@@ -240,7 +240,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
             binding.applicationLayout.visibility = View.VISIBLE
             binding.progressBar.visibility = View.GONE
-        })
+        }
     }
 
     override fun onDestroyView() {

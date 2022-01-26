@@ -59,11 +59,11 @@ class AppsFragment : Fragment(R.layout.fragment_apps) {
             visibility = View.GONE
         }
 
-        categoriesViewModel.categoriesList.observe(viewLifecycleOwner, {
+        categoriesViewModel.categoriesList.observe(viewLifecycleOwner) {
             categoriesRVAdapter.setData(it)
             binding.shimmerLayout.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
-        })
+        }
     }
 
     override fun onResume() {

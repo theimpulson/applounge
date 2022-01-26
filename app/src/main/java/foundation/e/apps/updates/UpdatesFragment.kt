@@ -53,9 +53,9 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
 
         binding.button.isEnabled = false
 
-        mainActivityViewModel.authData.observe(viewLifecycleOwner, {
+        mainActivityViewModel.authData.observe(viewLifecycleOwner) {
             updatesViewModel.getUpdates(it)
-        })
+        }
 
         val recyclerView = binding.recyclerView
         val listAdapter =
@@ -71,11 +71,11 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
             layoutManager = LinearLayoutManager(view.context)
         }
 
-        updatesViewModel.updatesList.observe(viewLifecycleOwner, {
+        updatesViewModel.updatesList.observe(viewLifecycleOwner) {
             listAdapter?.setData(it)
             binding.progressBar.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
-        })
+        }
     }
 
     override fun onDestroyView() {

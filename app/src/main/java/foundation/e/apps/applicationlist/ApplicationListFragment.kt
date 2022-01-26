@@ -85,11 +85,11 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             layoutManager = LinearLayoutManager(view.context)
         }
 
-        applicationListViewModel.appListLiveData.observe(viewLifecycleOwner, {
+        applicationListViewModel.appListLiveData.observe(viewLifecycleOwner) {
             listAdapter?.setData(it)
             binding.shimmerLayout.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
-        })
+        }
     }
 
     override fun onDestroyView() {

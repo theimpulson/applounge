@@ -74,11 +74,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.userType.observe(viewLifecycleOwner, {
+        viewModel.userType.observe(viewLifecycleOwner) {
             if (it.equals(USER.ANONYMOUS.name)) {
                 binding.accountType.text = requireContext().getString(R.string.user_anonymous)
             }
-        })
+        }
 
         binding.tos.setOnClickListener {
             it.findNavController().navigate(R.id.TOSFragment)

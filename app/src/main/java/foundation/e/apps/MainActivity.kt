@@ -55,13 +55,13 @@ class MainActivity : AppCompatActivity() {
             .build()
         navOptions.shouldLaunchSingleTop()
 
-        viewModel.tocStatus.observe(this, {
+        viewModel.tocStatus.observe(this) {
             if (it != true) {
                 navController.navigate(R.id.TOSFragment, null, navOptions)
             }
-        })
+        }
 
-        viewModel.userType.observe(this, { user ->
+        viewModel.userType.observe(this) { user ->
             if (user.isNotBlank() && viewModel.tocStatus.value == true) {
                 when (USER.valueOf(user)) {
                     USER.ANONYMOUS -> {
@@ -76,24 +76,24 @@ class MainActivity : AppCompatActivity() {
                     USER.GOOGLE -> {}
                 }
             }
-        })
+        }
 
         // Watch and refresh authentication data
-        viewModel.authDataJson.observe(this, {
+        viewModel.authDataJson.observe(this) {
             if (!it.isNullOrEmpty()) {
                 viewModel.generateAuthData()
                 Log.d(TAG, "Authentication data is available!")
             }
-        })
+        }
 
-        viewModel.authValidity.observe(this, {
+        viewModel.authValidity.observe(this) {
             if (it != true) {
                 Log.d(TAG, "Authentication data validation failed!")
                 viewModel.destroyCredentials()
             } else {
                 Log.d(TAG, "Authentication data is valid!")
             }
-        })
+        }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {

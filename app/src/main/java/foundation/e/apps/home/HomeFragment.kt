@@ -50,9 +50,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
-        mainActivityViewModel.authData.observe(viewLifecycleOwner, {
+        mainActivityViewModel.authData.observe(viewLifecycleOwner) {
             homeViewModel.getHomeScreenData(it)
-        })
+        }
 
         val homeParentRVAdapter = HomeParentRVAdapter(this, pkgManagerModule)
         binding.parentRV.apply {
@@ -60,11 +60,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             layoutManager = LinearLayoutManager(view.context)
         }
 
-        homeViewModel.homeScreenData.observe(viewLifecycleOwner, {
+        homeViewModel.homeScreenData.observe(viewLifecycleOwner) {
             homeParentRVAdapter.setData(it)
             binding.shimmerLayout.visibility = View.GONE
             binding.parentRV.visibility = View.VISIBLE
-        })
+        }
     }
 
     override fun onResume() {

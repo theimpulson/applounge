@@ -96,9 +96,9 @@ class SearchFragment :
             CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER
         )
 
-        searchViewModel.searchSuggest.observe(viewLifecycleOwner, {
+        searchViewModel.searchSuggest.observe(viewLifecycleOwner) {
             it?.let { populateSuggestionsAdapter(it) }
-        })
+        }
 
         // Setup Search Results
         val listAdapter =
@@ -114,14 +114,14 @@ class SearchFragment :
             layoutManager = LinearLayoutManager(view.context)
         }
 
-        searchViewModel.searchResult.observe(viewLifecycleOwner, {
+        searchViewModel.searchResult.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 showNoAppsFoundLayout()
                 return@observe
             }
             listAdapter?.setData(it)
             showRecyclerView()
-        })
+        }
     }
 
     override fun onResume() {
