@@ -281,6 +281,10 @@ class FusedAPIImpl @Inject constructor(
         return response ?: FusedApp()
     }
 
+    /*
+     * Categories-related internal functions
+     */
+
     private suspend fun handleCleanApkCategories(
         preferredApplicationType: String,
         categoriesList: MutableList<FusedCategory>,
@@ -448,6 +452,18 @@ class FusedAPIImpl @Inject constructor(
         ).body()
     }
 
+    private fun Category.transformToFusedCategory(): FusedCategory {
+        return FusedCategory(
+            title = this.title,
+            browseUrl = this.browseUrl,
+            imageUrl = this.imageUrl,
+        )
+    }
+
+    /*
+     * Search-related internal functions
+     */
+
     private suspend fun getCleanAPKSearchResults(
         keyword: String,
         source: String = CleanAPKInterface.APP_SOURCE_FOSS,
@@ -473,6 +489,10 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
+    /*
+     * Download-related internal functions
+     */
+
     private fun downloadApp(name: String, packageName: String, url: String): Long {
         val packagePath = File(cacheDir, "$packageName.apk")
         if (packagePath.exists()) packagePath.delete() // Delete old download if-exists
@@ -481,6 +501,10 @@ class FusedAPIImpl @Inject constructor(
             .setDestinationUri(Uri.fromFile(packagePath))
         return downloadManager.enqueue(request)
     }
+
+    /*
+     * Home screen-related internal functions
+     */
 
     private fun generateCleanAPKHome(home: Home, prefType: String): List<FusedHome> {
         val list = mutableListOf<FusedHome>()
@@ -562,6 +586,10 @@ class FusedAPIImpl @Inject constructor(
         return list
     }
 
+    /*
+     * FusedApp-related internal extensions and functions
+     */
+
     private fun App.transformToFusedApp(): FusedApp {
         return FusedApp(
             _id = this.id.toString(),
@@ -593,13 +621,5 @@ class FusedAPIImpl @Inject constructor(
             list.add(it.url)
         }
         return list
-    }
-
-    private fun Category.transformToFusedCategory(): FusedCategory {
-        return FusedCategory(
-            title = this.title,
-            browseUrl = this.browseUrl,
-            imageUrl = this.imageUrl,
-        )
     }
 }
