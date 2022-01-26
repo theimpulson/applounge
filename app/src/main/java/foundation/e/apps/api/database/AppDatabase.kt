@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import foundation.e.apps.api.exodus.CategoryConverter
 import foundation.e.apps.api.exodus.Tracker
 import foundation.e.apps.api.exodus.TrackerDao
 
@@ -14,7 +12,6 @@ import foundation.e.apps.api.exodus.TrackerDao
     version = 1,
     exportSchema = false
 )
-@TypeConverters(CategoryConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun trackerDao(): TrackerDao
 

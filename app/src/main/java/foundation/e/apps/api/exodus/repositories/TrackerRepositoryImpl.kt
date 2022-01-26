@@ -1,8 +1,11 @@
 package foundation.e.apps.api.exodus.repositories
 
-import foundation.e.apps.api.getResult
 import foundation.e.apps.api.Result
-import foundation.e.apps.api.exodus.*
+import foundation.e.apps.api.exodus.ExodusTrackerApi
+import foundation.e.apps.api.exodus.Tracker
+import foundation.e.apps.api.exodus.TrackerDao
+import foundation.e.apps.api.exodus.TrackerInfo
+import foundation.e.apps.api.getResult
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,7 +50,7 @@ class TrackerRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun extractErrorMessage(appTrackerResult: Result<Map<String, TrackerInfo>>) : String {
+    private fun extractErrorMessage(appTrackerResult: Result<Map<String, TrackerInfo>>): String {
         return appTrackerResult.message ?: "Unknown Error"
     }
 

@@ -18,17 +18,21 @@
 
 package foundation.e.apps.application
 
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataScope
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import foundation.e.apps.api.Result
 import foundation.e.apps.api.exodus.Tracker
 import foundation.e.apps.api.exodus.repositories.ITrackerRepository
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
-import foundation.e.apps.api.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,15 +43,9 @@ class ApplicationViewModel @Inject constructor(
     private val trackerRepository: ITrackerRepository
 ) : ViewModel() {
 
-    private val TAG = ApplicationViewModel::class.simpleName
-
     val fusedApp: MutableLiveData<FusedApp> = MutableLiveData()
     val appStatus: MutableLiveData<Status?> = MutableLiveData()
 
-    private val _trackerListLiveData: MutableLiveData<Result<List<Tracker>>> = MutableLiveData()
-    val trackerListLiveData: LiveData<Result<List<Tracker>>> = _trackerListLiveData
-
-    private var trackerList: List<Tracker> = listOf()
     // Download Information
     private val appDownloadId: MutableLiveData<Long> = MutableLiveData()
 
@@ -102,20 +100,38 @@ class ApplicationViewModel @Inject constructor(
         return permString.substring(1, permString.length - 1)
     }
 
-    fun fetchTrackerData(): LiveData<Result<List<Tracker>>> {
-
+    fun fetchTrackerData(): LiveData<Result<List<String>>> {
         return liveData {
             fusedApp.value?.let {
-                val trackerOfAnApp = trackerRepository.getTrackerOfAnApp(it.package_name)
-                if(trackerOfAnApp.isSuccess()) {
-                    trackerList = trackerOfAnApp.data ?: listOf()
+                if (it.trackers.isNotEmpty()) {
+                    emit(Result.success(it.trackers))
+                    return@liveData
                 }
-                emit(trackerOfAnApp)
+                val trackerResultOfAnApp = trackerRepository.getTrackerOfAnApp(it.package_name)
+                handleAppTrackerResult(trackerResultOfAnApp, it)
             }
         }
     }
 
+    private suspend fun LiveDataScope<Result<List<String>>>.handleAppTrackerResult(
+        trackerResultOfAnApp: Result<List<Tracker>>,
+        fusedApp: FusedApp
+    ) {
+        if (trackerResultOfAnApp.isSuccess()) {
+            val trackerList = trackerResultOfAnApp.data ?: listOf()
+            fusedApp.trackers = trackerList.map { tracker -> tracker.name }
+            emit(Result.success(fusedApp.trackers))
+        } else {
+            emit(Result.error("Tracker not found!", fusedApp.trackers))
+        }
+    }
+
     fun getTrackerListText(): String {
-        return trackerList.joinToString { tracker -> tracker.name + "\n" }
+        fusedApp.value?.let {
+            if (it.trackers.isNotEmpty()) {
+                return it.trackers.joinToString(separator = "") { tracker -> tracker + "\n" }.trim()
+            }
+        }
+        return ""
     }
 }

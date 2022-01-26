@@ -22,7 +22,11 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
+<<<<<<< HEAD
 import android.text.SpannableString
+=======
+import android.text.method.LinkMovementMethod
+>>>>>>> 6d9552e (App Lounge: Refactoring)
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -42,7 +46,6 @@ import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.application.model.ApplicationScreenshotsRVAdapter
-import foundation.e.apps.databinding.ActivityMainBinding
 import foundation.e.apps.databinding.DialogTrackersLayoutBinding
 import foundation.e.apps.databinding.FragmentApplicationBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
@@ -227,18 +230,31 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     ).show(childFragmentManager, TAG)
                 }
                 appTrackers.setOnClickListener {
-                    val dialog = Dialog(requireContext())
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                    val dialogBinding = DialogTrackersLayoutBinding.inflate(LayoutInflater.from(requireContext()))
-                    dialog.setContentView(dialogBinding.root)
-
-                    dialogBinding.trackersList.text = applicationViewModel.getTrackersText()
-                    dialog.show()
+                    showTrackerListDialog()
                 }
             }
 
             fetchAppTracker()
         })
+    }
+
+    private fun showTrackerListDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val dialogBinding =
+            DialogTrackersLayoutBinding.inflate(LayoutInflater.from(requireContext()))
+        dialog.setContentView(dialogBinding.root)
+
+        val trackerListText = applicationViewModel.getTrackerListText()
+        if (trackerListText.isNotEmpty()) {
+            dialogBinding.trackersList.text = trackerListText
+        }
+        dialogBinding.privacyLinkText.movementMethod = LinkMovementMethod.getInstance()
+        dialog.show()
+
+        dialogBinding.ok.setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
     private fun fetchAppTracker() {

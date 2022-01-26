@@ -83,7 +83,6 @@
     <string name="privacy_analyses">Privacy analyses</string>
     <string name="permissions">Permissions</string>
     <string name="trackers_title">Trackers</string>
-    <string name="trackers_description"><xliff:g id="rating">%1$s</xliff:g> \nComputed using Exodus Privacy analyses</string>
     <string name="information">Information</string>
     <string name="version">Version: <xliff:g id="version_code">%1$s</xliff:g></string>
     <string name="updated_on">Updated on: <xliff:g id="version_code">%1$s</xliff:g></string>
@@ -122,5 +121,6 @@
 
 <!--    trackers_dialog-->
     <string name="privacy_computed_using_text">Computed using <a href="https://exodus-privacy.eu.org/en/">Exodus Privacy Analysis</a></string>
+    <string name="no_tracker_found">No Tracker Found!</string>
 
 </resources>
