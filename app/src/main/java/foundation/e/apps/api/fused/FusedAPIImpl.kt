@@ -35,6 +35,7 @@ import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.cleanapk.CleanAPKRepository
 import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.home.Home
+import foundation.e.apps.api.cleanapk.data.search.Search
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.FusedCategory
 import foundation.e.apps.api.fused.data.FusedHome
@@ -299,9 +300,11 @@ class FusedAPIImpl @Inject constructor(
     }
 
     private fun getCategoryTag(preferredApplicationType: String): String {
-        return if (preferredApplicationType == APP_TYPE_OPEN) context.getString(R.string.open_source) else context.getString(
-            R.string.pwa
-        )
+        return if (preferredApplicationType == APP_TYPE_OPEN) {
+            context.getString(R.string.open_source)
+        } else {
+            context.getString(R.string.pwa)
+        }
     }
 
     private suspend fun getCleanApkCategories(preferredApplicationType: String): Categories? {
@@ -404,14 +407,16 @@ class FusedAPIImpl @Inject constructor(
         categories: Categories,
         appType: Category.Type,
         tag: String
-    ) = FusedCategory(
-        id = category,
-        title = categories.translations.getOrDefault(category, ""),
-        drawable = if (appType == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
-            category
-        ) else CategoryUtils.provideGamesCategoryIconResource(category),
-        tag = tag
-    )
+    ): FusedCategory {
+        return FusedCategory(
+            id = category,
+            title = categories.translations.getOrDefault(category, ""),
+            drawable = if (appType == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
+                category
+            ) else CategoryUtils.provideGamesCategoryIconResource(category),
+            tag = tag
+        )
+    }
 
     private suspend fun getPWAsCategories(): Categories? {
         return cleanAPKRepository.getCategoriesList(
@@ -427,17 +432,21 @@ class FusedAPIImpl @Inject constructor(
         ).body()
     }
 
-    private suspend fun getOpenSourceAppsResponse(category: String) = cleanAPKRepository.listApps(
-        category,
-        CleanAPKInterface.APP_SOURCE_FOSS,
-        CleanAPKInterface.APP_TYPE_ANY
-    ).body()
+    private suspend fun getOpenSourceAppsResponse(category: String): Search? {
+        return cleanAPKRepository.listApps(
+            category,
+            CleanAPKInterface.APP_SOURCE_FOSS,
+            CleanAPKInterface.APP_TYPE_ANY
+        ).body()
+    }
 
-    private suspend fun getPWAAppsResponse(category: String) = cleanAPKRepository.listApps(
-        category,
-        CleanAPKInterface.APP_SOURCE_ANY,
-        CleanAPKInterface.APP_TYPE_PWA
-    ).body()
+    private suspend fun getPWAAppsResponse(category: String): Search? {
+        return cleanAPKRepository.listApps(
+            category,
+            CleanAPKInterface.APP_SOURCE_ANY,
+            CleanAPKInterface.APP_TYPE_PWA
+        ).body()
+    }
 
     private suspend fun getCleanAPKSearchResults(
         keyword: String,
