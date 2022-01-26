@@ -19,14 +19,17 @@
 package foundation.e.apps.api.cleanapk
 
 import android.os.Build
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import foundation.e.apps.api.exodus.ExodusTrackerApi
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
@@ -47,6 +50,17 @@ object RetrofitModule {
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create(CleanAPKInterface::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideExodusApi(okHttpClient: OkHttpClient): ExodusTrackerApi {
+        return Retrofit.Builder()
+            .baseUrl(ExodusTrackerApi.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+            .create(ExodusTrackerApi::class.java)
     }
 
     @Singleton

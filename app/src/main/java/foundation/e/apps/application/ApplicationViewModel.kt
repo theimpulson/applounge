@@ -18,27 +18,36 @@
 
 package foundation.e.apps.application
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.lifecycle.*
 import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import foundation.e.apps.api.exodus.Tracker
+import foundation.e.apps.api.exodus.repositories.ITrackerRepository
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
+import foundation.e.apps.api.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ApplicationViewModel @Inject constructor(
-    private val fusedAPIRepository: FusedAPIRepository
+    private val fusedAPIRepository: FusedAPIRepository,
+    private val trackerRepository: ITrackerRepository
 ) : ViewModel() {
+
+    private val TAG = ApplicationViewModel::class.simpleName
 
     val fusedApp: MutableLiveData<FusedApp> = MutableLiveData()
     val appStatus: MutableLiveData<Status?> = MutableLiveData()
 
+    private val _trackerListLiveData: MutableLiveData<Result<List<Tracker>>> = MutableLiveData()
+    val trackerListLiveData: LiveData<Result<List<Tracker>>> = _trackerListLiveData
+
+    private var trackerList: List<Tracker> = listOf()
     // Download Information
     private val appDownloadId: MutableLiveData<Long> = MutableLiveData()
 
@@ -93,9 +102,20 @@ class ApplicationViewModel @Inject constructor(
         return permString.substring(1, permString.length - 1)
     }
 
-    fun getTrackersText(): String {
-        return fusedApp.value?.let {
-            it.trackers.joinToString("\n")
-        } ?: ""
+    fun fetchTrackerData(): LiveData<Result<List<Tracker>>> {
+
+        return liveData {
+            fusedApp.value?.let {
+                val trackerOfAnApp = trackerRepository.getTrackerOfAnApp(it.package_name)
+                if(trackerOfAnApp.isSuccess()) {
+                    trackerList = trackerOfAnApp.data ?: listOf()
+                }
+                emit(trackerOfAnApp)
+            }
+        }
+    }
+
+    fun getTrackerListText(): String {
+        return trackerList.joinToString { tracker -> tracker.name + "\n" }
     }
 }

@@ -237,9 +237,15 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 }
             }
 
+            fetchAppTracker()
+        })
+    }
+
+    private fun fetchAppTracker() {
+        applicationViewModel.fetchTrackerData().observe(viewLifecycleOwner) {
             binding.applicationLayout.visibility = View.VISIBLE
             binding.progressBar.visibility = View.GONE
-        })
+        }
     }
 
     override fun onDestroyView() {
