@@ -39,7 +39,14 @@ class ApplicationListViewModel @Inject constructor(
 
     fun getList(category: String, browseUrl: String, authData: AuthData, source: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            appListLiveData.postValue(fusedAPIRepository.getAppsListBasedOnCategory(category, browseUrl, authData, source))
+            appListLiveData.postValue(
+                fusedAPIRepository.getAppsListBasedOnCategory(
+                    category,
+                    browseUrl,
+                    authData,
+                    source
+                )
+            )
         }
     }
 
