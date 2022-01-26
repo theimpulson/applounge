@@ -28,7 +28,7 @@ class TrackerRepositoryImpl @Inject constructor(
         appTrackerResult: Result<Map<String, TrackerInfo>>,
         appHandle: String
     ): Result<List<Tracker>> {
-        if(trackers.isEmpty()) {
+        if (trackers.isEmpty()) {
             generateTrackerList()
         }
         return createAppTrackerListResult(appTrackerResult, appHandle)
