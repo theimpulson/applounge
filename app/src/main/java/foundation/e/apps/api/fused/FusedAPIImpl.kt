@@ -62,7 +62,7 @@ class FusedAPIImpl @Inject constructor(
 ) {
 
     companion object {
-        private const val CATEGORY_TITLE_REPLACABLE_CONJUNCTION = "&"
+        private const val CATEGORY_TITLE_REPLACEABLE_CONJUNCTION = "&"
         private const val APP_TYPE_ANY = "any"
         private const val APP_TYPE_OPEN = "open"
         private const val APP_TYPE_PWA = "pwa"
@@ -366,8 +366,8 @@ class FusedAPIImpl @Inject constructor(
 
     private fun getCategoryIconName(category: FusedCategory): String {
         var categoryTitle = category.title
-        if (categoryTitle.contains(CATEGORY_TITLE_REPLACABLE_CONJUNCTION)) {
-            categoryTitle = categoryTitle.replace(CATEGORY_TITLE_REPLACABLE_CONJUNCTION, "and")
+        if (categoryTitle.contains(CATEGORY_TITLE_REPLACEABLE_CONJUNCTION)) {
+            categoryTitle = categoryTitle.replace(CATEGORY_TITLE_REPLACEABLE_CONJUNCTION, "and")
         }
         categoryTitle = categoryTitle.replace(' ', '_')
         return categoryTitle.lowercase()
