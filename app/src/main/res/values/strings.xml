@@ -34,6 +34,8 @@
     <string name="apps">Applications</string>
     <string name="games">Games</string>
     <string name="category_icon">Category Icon</string>
+    <string name="open_source">Open Source</string>
+    <string name="pwa">PWA</string>
 
     <!-- SignIn Fragment -->
     <string name="sign_in_title">Sign in</string>
@@ -125,9 +127,5 @@
     <!-- Notification -->
     <string name="downloads">Downloads</string>
     <string name="updates">Updates</string>
-
-<!--    Others-->
-    <string name="open_source">Open Source</string>
-    <string name="pwa">PWA</string>
 
 </resources>
