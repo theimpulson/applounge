@@ -22,11 +22,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
-<<<<<<< HEAD
-import android.text.SpannableString
-=======
 import android.text.method.LinkMovementMethod
->>>>>>> 6d9552e (App Lounge: Refactoring)
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View

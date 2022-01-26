@@ -94,17 +94,4 @@ class FusedAPIRepository @Inject constructor(
     suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {
         return fusedAPIImpl.listApps(category, browseUrl, authData)
     }
-
-    suspend fun getAppsListBasedOnCategory(
-        category: String,
-        browseUrl: String,
-        authData: AuthData,
-        source: String
-    ): List<FusedApp> {
-        return when (source) {
-            "Open Source" -> fusedAPIImpl.getOpenSourceApps(category) ?: listOf()
-            "PWA" -> fusedAPIImpl.getPWAApps(category) ?: listOf()
-            else -> fusedAPIImpl.getPlayStoreApps(browseUrl, authData)
-        }
-    }
 }
