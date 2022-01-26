@@ -66,15 +66,15 @@ android {
     buildFeatures {
         viewBinding true
     }
-    lintOptions {
-        lintConfig file("lint.xml")
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = '11'
+    }
+    lint {
+        lintConfig file('lint.xml')
     }
 }
 
