@@ -20,8 +20,13 @@ class TOSFragment : Fragment(R.layout.fragment_tos) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTosBinding.bind(view)
+        var canNavigate = false
 
         viewModel.tocStatus.observe(viewLifecycleOwner) {
+            if (canNavigate) {
+                view.findNavController().navigate(R.id.action_TOSFragment_to_signInFragment)
+            }
+
             if (it == true) {
                 binding.TOSWarning.visibility = View.GONE
                 binding.TOSButtons.visibility = View.GONE
@@ -33,11 +38,11 @@ class TOSFragment : Fragment(R.layout.fragment_tos) {
                         this.text = context.getString(R.string.tos_agree_date, date)
                     }
                 }
-
-                binding.toolbar.setNavigationOnClickListener {
-                    view.findNavController().navigateUp()
-                }
             }
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            view.findNavController().navigateUp()
         }
 
         binding.disagreeBT.setOnClickListener {
@@ -46,7 +51,7 @@ class TOSFragment : Fragment(R.layout.fragment_tos) {
 
         binding.agreeBT.setOnClickListener {
             viewModel.saveTOCStatus(true)
-            view.findNavController().navigate(R.id.signInFragment)
+            canNavigate = true
         }
     }
 
