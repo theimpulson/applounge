@@ -24,12 +24,17 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceFragmentCompat
+import coil.load
+import com.aurora.gplayapi.data.models.AuthData
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivity
+import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.databinding.CustomPreferenceBinding
 import foundation.e.apps.setup.signin.SignInViewModel
 import foundation.e.apps.utils.USER
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -37,6 +42,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private var _binding: CustomPreferenceBinding? = null
     private val binding get() = _binding!!
     private val viewModel: SignInViewModel by viewModels()
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
+
+    @Inject
+    lateinit var gson: Gson
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_preferences, rootKey)
@@ -73,10 +82,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
         _binding = CustomPreferenceBinding.bind(view)
 
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.userType.observe(viewLifecycleOwner) {
-            if (it.equals(USER.ANONYMOUS.name)) {
-                binding.accountType.text = view.context.getString(R.string.user_anonymous)
+        
+        mainActivityViewModel.authDataJson.observe(viewLifecycleOwner) {
+            val authData = gson.fromJson(it, AuthData::class.java)
+            viewModel.userType.observe(viewLifecycleOwner) { user ->
+                when (user) {
+                    USER.ANONYMOUS.name -> {
+                        binding.accountType.text = view.context.getString(R.string.user_anonymous)
+                    }
+                    USER.GOOGLE.name -> {
+                        if (authData.userProfile != null) {
+                            binding.accountType.text = authData.userProfile?.name
+                            binding.email.text = authData.userProfile?.email
+                            binding.avatar.load(authData.userProfile?.artwork?.url)
+                        }
+                    }
+                }
             }
         }
 
