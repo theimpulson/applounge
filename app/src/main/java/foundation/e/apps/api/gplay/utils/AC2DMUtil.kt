@@ -42,7 +42,9 @@ object AC2DMUtil {
         while (matcher.find()) {
             val cookieKey = matcher.group(1)
             val cookieValue = matcher.group(2)
-            cookieList[cookieKey] = cookieValue
+            if (!cookieKey.isNullOrBlank() && !cookieValue.isNullOrBlank()) {
+                cookieList[cookieKey] = cookieValue
+            }
         }
         return cookieList
     }

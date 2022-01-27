@@ -28,4 +28,8 @@ class TokenRepository @Inject constructor(
     fun getAuthData(): AuthData? {
         return tokenImpl.getAuthData()
     }
+
+    fun getAuthData(email: String, aasToken: String): AuthData {
+        return tokenImpl.getAuthData(email, aasToken)
+    }
 }

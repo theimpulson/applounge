@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     USER.UNAVAILABLE -> {
+                        viewModel.destroyCredentials()
                         navController.navigate(R.id.signInFragment, null, navOptions)
                     }
                     USER.GOOGLE -> {}

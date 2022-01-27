@@ -76,7 +76,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         viewModel.userType.observe(viewLifecycleOwner) {
             if (it.equals(USER.ANONYMOUS.name)) {
-                binding.accountType.text = requireContext().getString(R.string.user_anonymous)
+                binding.accountType.text = view.context.getString(R.string.user_anonymous)
             }
         }
 
@@ -86,7 +86,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         binding.logout.setOnClickListener {
             viewModel.saveUserType(USER.UNAVAILABLE)
-            it.findNavController().navigate(R.id.signInFragment)
         }
     }
 

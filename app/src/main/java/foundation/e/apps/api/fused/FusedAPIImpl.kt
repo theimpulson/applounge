@@ -146,6 +146,10 @@ class FusedAPIImpl @Inject constructor(
         return gPlayAPIRepository.fetchAuthData()
     }
 
+    suspend fun fetchAuthData(email: String, aasToken: String) {
+        return gPlayAPIRepository.fetchAuthData(email, aasToken)
+    }
+
     suspend fun validateAuthData(authData: AuthData): Boolean {
         return gPlayAPIRepository.validateAuthData(authData)
     }

@@ -49,6 +49,11 @@ class GPlayAPIImpl @Inject constructor(
         data.await()?.let { dataStoreModule.saveCredentials(it) }
     }
 
+    suspend fun fetchAuthData(email: String, aasToken: String) = withContext(Dispatchers.IO) {
+        val data = async { tokenRepository.getAuthData(email, aasToken) }
+        dataStoreModule.saveCredentials(data.await())
+    }
+
     suspend fun validateAuthData(authData: AuthData): Boolean {
         var validity: Boolean
         withContext(Dispatchers.IO) {

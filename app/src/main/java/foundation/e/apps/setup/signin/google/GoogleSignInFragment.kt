@@ -21,38 +21,49 @@ package foundation.e.apps.setup.signin.google
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
-import foundation.e.apps.api.gplay.utils.AC2DMTask
 import foundation.e.apps.api.gplay.utils.AC2DMUtil
 import foundation.e.apps.databinding.FragmentGoogleSigninBinding
+import foundation.e.apps.setup.signin.SignInViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class GoogleSignInFragment : Fragment(R.layout.fragment_google_signin),
+class GoogleSignInFragment :
+    Fragment(R.layout.fragment_google_signin),
     CoroutineScope by CoroutineScope(Dispatchers.IO) {
     private var _binding: FragmentGoogleSigninBinding? = null
     private val binding get() = _binding!!
 
-    @Inject
-    lateinit var aC2DMTask: AC2DMTask
+    private val viewModel: SignInViewModel by viewModels()
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
 
     private val cookieManager = CookieManager.getInstance()
+
+    private val EMBEDDED_SETUP_URL =
+        "https://accounts.google.com/EmbeddedSetup/identifier?flowName=EmbeddedSetupAndroid"
+    private val AUTH_TOKEN = "oauth_token"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGoogleSigninBinding.bind(view)
         setupWebView()
+
+        mainActivityViewModel.authDataJson.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty()) {
+                view.findNavController().navigate(R.id.action_googleSignInFragment_to_homeFragment)
+            }
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -70,12 +81,10 @@ class GoogleSignInFragment : Fragment(R.layout.fragment_google_signin),
                 val cookies = CookieManager.getInstance().getCookie(url)
                 val cookieMap = AC2DMUtil.parseCookieString(cookies)
                 if (cookieMap.isNotEmpty() && cookieMap[AUTH_TOKEN] != null) {
-                    val oauthToken = cookieMap[AUTH_TOKEN]
+                    val oauthToken = cookieMap[AUTH_TOKEN] ?: ""
                     binding.webview.evaluateJavascript("(function() { return document.getElementById('profileIdentifier').innerHTML; })();") {
                         val email = it.replace("\"".toRegex(), "")
-                        launch {
-                            val response = aC2DMTask.getAC2DMResponse(email, oauthToken)
-                        }
+                        viewModel.fetchAuthData(email, oauthToken)
                     }
                 }
             }
@@ -91,11 +100,5 @@ class GoogleSignInFragment : Fragment(R.layout.fragment_google_signin),
             }
             loadUrl(EMBEDDED_SETUP_URL)
         }
-    }
-
-    companion object {
-        const val EMBEDDED_SETUP_URL =
-            "https://accounts.google.com/EmbeddedSetup/identifier?flowName=EmbeddedSetupAndroid"
-        const val AUTH_TOKEN = "oauth_token"
     }
 }

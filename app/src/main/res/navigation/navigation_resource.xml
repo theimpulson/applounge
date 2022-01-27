@@ -193,5 +193,10 @@
         android:name="foundation.e.apps.setup.signin.google.GoogleSignInFragment"
         android:label="fragment_google_signin"
         tools:layout="@layout/fragment_google_signin">
+        <action
+            android:id="@+id/action_googleSignInFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@+id/signInFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>
