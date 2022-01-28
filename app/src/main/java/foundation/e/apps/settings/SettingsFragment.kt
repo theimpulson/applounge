@@ -82,7 +82,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         _binding = CustomPreferenceBinding.bind(view)
 
         super.onViewCreated(view, savedInstanceState)
-        
+
         mainActivityViewModel.authDataJson.observe(viewLifecycleOwner) {
             val authData = gson.fromJson(it, AuthData::class.java)
             viewModel.userType.observe(viewLifecycleOwner) { user ->
