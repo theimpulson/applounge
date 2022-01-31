@@ -135,34 +135,43 @@ class ApplicationListRVAdapter(
             }
             when (searchApp.status) {
                 Status.INSTALLED -> {
-                    installButton.text = view.context.getString(R.string.open)
-                    installButton.setTextColor(Color.WHITE)
-                    installButton.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
-                    installButton.setOnClickListener {
-                        view.context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
+                    installButton.apply {
+                        isEnabled = true
+                        text = context.getString(R.string.open)
+                        setTextColor(Color.WHITE)
+                        backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        setOnClickListener {
+                            context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
+                        }
                     }
                 }
                 Status.UPDATABLE -> {
-                    installButton.text = view.context.getString(R.string.update)
-                    installButton.setTextColor(Color.WHITE)
-                    installButton.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
-                    installButton.setOnClickListener {
-                        installApplication(searchApp)
+                    installButton.apply {
+                        text = context.getString(R.string.update)
+                        setTextColor(Color.WHITE)
+                        backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        setOnClickListener {
+                            installApplication(searchApp)
+                        }
                     }
                 }
                 Status.UNAVAILABLE -> {
-                    installButton.text = view.context.getString(R.string.install)
-                    installButton.setTextColor(ContextCompat.getColor(view.context, R.color.colorAccent))
-                    installButton.backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
-                    installButton.setOnClickListener {
-                        installApplication(searchApp)
+                    installButton.apply {
+                        text = context.getString(R.string.install)
+                        setOnClickListener {
+                            installApplication(searchApp)
+                        }
                     }
                 }
-                Status.DOWNLOADING -> {
-                    installButton.text = view.context.getString(R.string.cancel)
+                Status.QUEUED, Status.DOWNLOADING -> {
+                    installButton.apply {
+                        text = context.getString(R.string.cancel)
+                        setOnClickListener {
+                            cancelDownload(searchApp)
+                        }
+                    }
                 }
                 Status.INSTALLING, Status.UNINSTALLING -> {
-                    installButton.text = view.context.getString(R.string.cancel)
                     installButton.isEnabled = false
                 }
             }
@@ -181,13 +190,10 @@ class ApplicationListRVAdapter(
     }
 
     private fun installApplication(searchApp: FusedApp) {
-        fusedAPIInterface.getApplication(
-            searchApp._id,
-            searchApp.name,
-            searchApp.package_name,
-            searchApp.latest_version_code,
-            searchApp.offer_type,
-            searchApp.origin
-        )
+        fusedAPIInterface.getApplication(searchApp)
+    }
+
+    private fun cancelDownload(searchApp: FusedApp) {
+        fusedAPIInterface.cancelDownload(searchApp)
     }
 }

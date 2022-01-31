@@ -22,9 +22,11 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 import foundation.e.apps.manager.pkg.PkgManagerBR
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import kotlinx.coroutines.DelicateCoroutinesApi
 import javax.inject.Inject
 
 @HiltAndroidApp
+@DelicateCoroutinesApi
 class AppLoungeApplication : Application() {
 
     @Inject

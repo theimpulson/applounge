@@ -18,8 +18,10 @@
 
 package foundation.e.apps.home.model
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -81,42 +83,6 @@ class HomeChildRVAdapter(
                 }
             }
             appName.text = homeApp.name
-            when (homeApp.status) {
-                Status.INSTALLED -> {
-                    installButton.text = view.context.getString(R.string.open)
-                    installButton.setOnClickListener {
-                        view.context.startActivity(pkgManagerModule.getLaunchIntent(homeApp.package_name))
-                    }
-                }
-                Status.UPDATABLE -> {
-                    installButton.text = view.context.getString(R.string.update)
-                    installButton.setOnClickListener {
-                        installApplication(homeApp)
-                    }
-                }
-                Status.UNAVAILABLE -> {
-                    installButton.setOnClickListener {
-                        installApplication(homeApp)
-                    }
-                }
-                Status.DOWNLOADING -> {
-                    installButton.text = view.context.getString(R.string.cancel)
-                }
-                Status.INSTALLING, Status.UNINSTALLING -> {
-                    installButton.text = view.context.getString(R.string.cancel)
-                    installButton.isEnabled = false
-                }
-            }
-            installButton.setOnClickListener {
-                fusedAPIInterface.getApplication(
-                    homeApp._id,
-                    homeApp.name,
-                    homeApp.package_name,
-                    homeApp.latest_version_code,
-                    homeApp.offer_type,
-                    homeApp.origin
-                )
-            }
             homeLayout.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToApplicationFragment(
                     homeApp._id,
@@ -124,6 +90,48 @@ class HomeChildRVAdapter(
                     homeApp.origin
                 )
                 holder.itemView.findNavController().navigate(action)
+            }
+            when (homeApp.status) {
+                Status.INSTALLED -> {
+                    installButton.apply {
+                        isEnabled = true
+                        text = context.getString(R.string.open)
+                        setTextColor(Color.WHITE)
+                        backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        setOnClickListener {
+                            context.startActivity(pkgManagerModule.getLaunchIntent(homeApp.package_name))
+                        }
+                    }
+                }
+                Status.UPDATABLE -> {
+                    installButton.apply {
+                        text = context.getString(R.string.update)
+                        setTextColor(Color.WHITE)
+                        backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        setOnClickListener {
+                            installApplication(homeApp)
+                        }
+                    }
+                }
+                Status.UNAVAILABLE -> {
+                    installButton.apply {
+                        text = context.getString(R.string.install)
+                        setOnClickListener {
+                            installApplication(homeApp)
+                        }
+                    }
+                }
+                Status.QUEUED, Status.DOWNLOADING -> {
+                    installButton.apply {
+                        text = context.getString(R.string.cancel)
+                        setOnClickListener {
+                            cancelDownload(homeApp)
+                        }
+                    }
+                }
+                Status.INSTALLING, Status.UNINSTALLING -> {
+                    installButton.isEnabled = false
+                }
             }
         }
     }
@@ -139,14 +147,11 @@ class HomeChildRVAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun installApplication(searchApp: FusedApp) {
-        fusedAPIInterface.getApplication(
-            searchApp._id,
-            searchApp.name,
-            searchApp.package_name,
-            searchApp.latest_version_code,
-            searchApp.offer_type,
-            searchApp.origin
-        )
+    private fun installApplication(homeApp: FusedApp) {
+        fusedAPIInterface.getApplication(homeApp)
+    }
+
+    private fun cancelDownload(homeApp: FusedApp) {
+        fusedAPIInterface.cancelDownload(homeApp)
     }
 }

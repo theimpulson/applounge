@@ -22,40 +22,31 @@ import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.manager.pkg.PkgManagerModule
-import java.io.File
+import kotlinx.coroutines.DelicateCoroutinesApi
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@DelicateCoroutinesApi
 class DownloadManagerBR : BroadcastReceiver() {
 
     @Inject
     lateinit var downloadManagerUtils: DownloadManagerUtils
 
-    @Inject
-    lateinit var pkgManagerModule: PkgManagerModule
-
-    private var TAG = DownloadManagerBR::class.java.simpleName
-
     override fun onReceive(context: Context?, intent: Intent?) {
-        when (intent?.action) {
-            DownloadManager.ACTION_DOWNLOAD_COMPLETE -> {
-                val id =
-                    intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0)
-                if (downloadManagerUtils.downloadSuccessful(id)) {
-                    val file = File(downloadManagerUtils.downloadedFile(id))
-                    if (file.exists()) {
-                        pkgManagerModule.installApplication(file)
-                    } else {
-                        Log.d(TAG, "Given file doesn't exists, exiting!")
+        val action = intent?.action
+        if (context != null && action != null) {
+            val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0)
+            when (action) {
+                DownloadManager.ACTION_DOWNLOAD_COMPLETE -> {
+                    when (downloadManagerUtils.downloadStatus(id)) {
+                        DownloadManager.STATUS_SUCCESSFUL -> downloadManagerUtils.installApplication(id)
+                        else -> downloadManagerUtils.cancelDownload(id)
                     }
-                } else {
-                    Log.d(TAG, "Unable to get download id, exiting!")
                 }
-            }
-            DownloadManager.ACTION_NOTIFICATION_CLICKED -> {
+                DownloadManager.ACTION_NOTIFICATION_CLICKED -> {
+                    if (id != 0L) downloadManagerUtils.cancelDownload(id)
+                }
             }
         }
     }

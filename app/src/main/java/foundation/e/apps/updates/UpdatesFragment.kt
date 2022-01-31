@@ -29,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
-import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentUpdatesBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
@@ -53,8 +53,11 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
 
         binding.button.isEnabled = false
 
-        mainActivityViewModel.authData.observe(viewLifecycleOwner) {
-            updatesViewModel.getUpdates(it)
+        mainActivityViewModel.authData.observe(viewLifecycleOwner) { date ->
+            updatesViewModel.getUpdates(date)
+            binding.button.setOnClickListener {
+                updatesViewModel.updateAllApps(date)
+            }
         }
 
         val recyclerView = binding.recyclerView
@@ -71,10 +74,23 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
             layoutManager = LinearLayoutManager(view.context)
         }
 
+        mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
+            val updatesList = updatesViewModel.updatesList.value?.toMutableList()
+            if (!updatesList.isNullOrEmpty()) {
+                list.forEach {
+                    updatesList.find { app ->
+                        app.origin == it.origin && (app.package_name == it.package_name || app._id == it.id)
+                    }?.status = it.status
+                }
+                updatesViewModel.updatesList.value = updatesList
+            }
+        }
+
         updatesViewModel.updatesList.observe(viewLifecycleOwner) {
             listAdapter?.setData(it)
             binding.progressBar.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
+            if (!it.isNullOrEmpty()) binding.button.isEnabled = true
         }
     }
 
@@ -83,26 +99,13 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
         _binding = null
     }
 
-    override fun getApplication(
-        id: String,
-        name: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int?,
-        origin: Origin?
-    ) {
-        val offer = offerType ?: 0
-        val org = origin ?: Origin.CLEANAPK
+    override fun getApplication(app: FusedApp) {
         mainActivityViewModel.authData.value?.let {
-            updatesViewModel.getApplication(
-                id,
-                name,
-                packageName,
-                versionCode,
-                offer,
-                it,
-                org
-            )
+            updatesViewModel.getApplication(it, app)
         }
+    }
+
+    override fun cancelDownload(app: FusedApp) {
+        updatesViewModel.cancelDownload(app.package_name)
     }
 }

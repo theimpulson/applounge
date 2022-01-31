@@ -41,7 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
-import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentSearchBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
@@ -69,7 +69,7 @@ class SearchFragment :
     private var shimmerLayout: ShimmerFrameLayout? = null
     private var recyclerView: RecyclerView? = null
     private var searchHintLayout: LinearLayout? = null
-    private lateinit var noAppsFoundLayout: LinearLayout
+    private var noAppsFoundLayout: LinearLayout? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -114,13 +114,27 @@ class SearchFragment :
             layoutManager = LinearLayoutManager(view.context)
         }
 
-        searchViewModel.searchResult.observe(viewLifecycleOwner) {
-            if (it.isEmpty()) {
-                showNoAppsFoundLayout()
-                return@observe
+        mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
+            val searchResult = searchViewModel.searchResult.value?.toMutableList()
+            if (!searchResult.isNullOrEmpty()) {
+                list.forEach {
+                    searchResult.find { app ->
+                        app.origin == it.origin && (app.package_name == it.package_name || app._id == it.id)
+                    }?.status = it.status
+                }
+                searchViewModel.searchResult.value = searchResult
             }
-            listAdapter?.setData(it)
-            showRecyclerView()
+        }
+
+        searchViewModel.searchResult.observe(viewLifecycleOwner) {
+            if (it.isNullOrEmpty()) {
+                noAppsFoundLayout?.visibility = View.VISIBLE
+            } else {
+                listAdapter?.setData(it)
+                shimmerLayout?.visibility = View.GONE
+                recyclerView?.visibility = View.VISIBLE
+                noAppsFoundLayout?.visibility = View.GONE
+            }
         }
     }
 
@@ -135,42 +149,23 @@ class SearchFragment :
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        showShimmerLayout()
         query?.let { text ->
             hideKeyboard(activity as Activity)
             view?.requestFocus()
+            searchHintLayout?.visibility = View.GONE
+            shimmerLayout?.visibility = View.VISIBLE
+            recyclerView?.visibility = View.GONE
+            noAppsFoundLayout?.visibility = View.GONE
             mainActivityViewModel.authData.value?.let { searchViewModel.getSearchResults(text, it) }
         }
         return false
     }
 
-    private fun showShimmerLayout() {
-        recyclerView?.adapter?.let {
-            (it as ApplicationListRVAdapter).setData(listOf())
-        }
-        searchHintLayout?.visibility = View.GONE
-        recyclerView?.visibility = View.GONE
-        shimmerLayout?.visibility = View.VISIBLE
-        noAppsFoundLayout.visibility = View.GONE
-    }
-
-    private fun showRecyclerView() {
-        searchHintLayout?.visibility = View.GONE
-        recyclerView?.visibility = View.VISIBLE
-        shimmerLayout?.visibility = View.GONE
-        noAppsFoundLayout.visibility = View.GONE
-    }
-
     override fun onQueryTextChange(newText: String?): Boolean {
-        if (newText.isNullOrEmpty()) {
-            showSearchHintLayout()
-            return true
-        }
-        mainActivityViewModel.authData.value?.let {
-            searchViewModel.getSearchSuggestions(
-                newText,
-                it
-            )
+        newText?.let { text ->
+            mainActivityViewModel.authData.value?.let {
+                searchViewModel.getSearchSuggestions(text, it)
+            }
         }
         return true
     }
@@ -181,10 +176,6 @@ class SearchFragment :
 
     override fun onSuggestionClick(position: Int): Boolean {
         searchViewModel.searchSuggest.value?.let {
-            if (it.isEmpty()) {
-                return true
-            }
-            showShimmerLayout()
             searchView?.setQuery(it[position].suggestedQuery, true)
         }
         return true
@@ -197,6 +188,7 @@ class SearchFragment :
         shimmerLayout = null
         recyclerView = null
         searchHintLayout = null
+        noAppsFoundLayout = null
     }
 
     private fun configureCloseButton(searchView: SearchView) {
@@ -215,58 +207,21 @@ class SearchFragment :
 
     private fun populateSuggestionsAdapter(suggestions: List<SearchSuggestEntry>?) {
         val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SUGGESTION_KEY))
-        if (suggestions.isNullOrEmpty()) {
-            showNoAppsFoundLayout()
-            return
-        }
-
-        if (!isAppListLoadingOrShowing()) {
-            showSearchHintLayout()
-        }
-
-        for (i in suggestions.indices) {
-            cursor.addRow(arrayOf(i, suggestions[i].suggestedQuery))
+        suggestions?.let {
+            for (i in it.indices) {
+                cursor.addRow(arrayOf(i, it[i].suggestedQuery))
+            }
         }
         searchView?.suggestionsAdapter?.changeCursor(cursor)
     }
 
-    private fun isAppListLoadingOrShowing() =
-        shimmerLayout?.visibility == View.VISIBLE || recyclerView?.visibility == View.VISIBLE
-
-    private fun showNoAppsFoundLayout() {
-        searchHintLayout?.visibility = View.GONE
-        recyclerView?.visibility = View.GONE
-        shimmerLayout?.visibility = View.GONE
-        noAppsFoundLayout.visibility = View.VISIBLE
-    }
-
-    private fun showSearchHintLayout() {
-        searchHintLayout?.visibility = View.VISIBLE
-        recyclerView?.visibility = View.GONE
-        shimmerLayout?.visibility = View.GONE
-        noAppsFoundLayout.visibility = View.GONE
-    }
-
-    override fun getApplication(
-        id: String,
-        name: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int?,
-        origin: Origin?
-    ) {
-        val offer = offerType ?: 0
-        val org = origin ?: Origin.CLEANAPK
+    override fun getApplication(app: FusedApp) {
         mainActivityViewModel.authData.value?.let {
-            searchViewModel.getApplication(
-                id,
-                name,
-                packageName,
-                versionCode,
-                offer,
-                it,
-                org
-            )
+            searchViewModel.getApplication(it, app)
         }
+    }
+
+    override fun cancelDownload(app: FusedApp) {
+        searchViewModel.cancelDownload(app.package_name)
     }
 }

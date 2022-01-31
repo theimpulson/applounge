@@ -27,7 +27,9 @@ import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Status
+import foundation.e.apps.manager.database.fused.FusedDownload
 import foundation.e.apps.manager.download.data.DownloadProgressLD
+import foundation.e.apps.manager.fused.FusedManagerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,15 +37,15 @@ import javax.inject.Inject
 @HiltViewModel
 class ApplicationViewModel @Inject constructor(
     private val fusedAPIRepository: FusedAPIRepository,
-    private val downloadProgressLD: DownloadProgressLD
+    private val downloadProgressLD: DownloadProgressLD,
+    private val fusedManagerRepository: FusedManagerRepository
 ) : ViewModel() {
 
     val fusedApp: MutableLiveData<FusedApp> = MutableLiveData()
     val appStatus: MutableLiveData<Status?> = MutableLiveData()
     val downloadProgress = downloadProgressLD
 
-    // Download Information
-    private val appDownloadId: MutableLiveData<Long> = MutableLiveData()
+    var fusedDownload: FusedDownload? = null
 
     fun getApplicationDetails(id: String, packageName: String, authData: AuthData, origin: Origin) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -59,19 +61,32 @@ class ApplicationViewModel @Inject constructor(
     }
 
     fun getApplication(authData: AuthData, app: FusedApp, origin: Origin) {
-        appStatus.value = Status.DOWNLOADING
-        viewModelScope.launch(Dispatchers.IO) {
-            appDownloadId.postValue(
-                fusedAPIRepository.getApplication(
-                    app._id,
-                    app.name,
-                    app.package_name,
-                    app.latest_version_code,
-                    app.offer_type,
-                    authData,
-                    origin
-                )
+        viewModelScope.launch {
+            val downloadLink = fusedAPIRepository.getDownloadLink(
+                app._id,
+                app.package_name,
+                app.latest_version_code,
+                app.offer_type,
+                authData,
+                origin
             )
+            fusedDownload = FusedDownload(
+                app._id,
+                app.origin,
+                app.status,
+                app.name,
+                app.package_name,
+                downloadLink,
+                0,
+                app.status
+            )
+            fusedDownload?.let { fusedManagerRepository.addDownload(it) }
+        }
+    }
+
+    fun cancelDownload() {
+        viewModelScope.launch {
+            fusedDownload?.let { fusedManagerRepository.cancelDownload(it.downloadId) }
         }
     }
 

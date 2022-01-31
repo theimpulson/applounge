@@ -26,7 +26,9 @@ import foundation.e.apps.api.fused.data.FusedCategory
 import foundation.e.apps.api.fused.data.FusedHome
 import foundation.e.apps.api.fused.data.Origin
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FusedAPIRepository @Inject constructor(
     private val fusedAPIImpl: FusedAPIImpl
 ) {
@@ -55,18 +57,16 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.getApplicationDetails(id, packageName, authData, origin)
     }
 
-    suspend fun getApplication(
+    suspend fun getDownloadLink(
         id: String,
-        name: String,
         packageName: String,
         versionCode: Int,
         offerType: Int,
         authData: AuthData,
         origin: Origin
-    ): Long {
-        return fusedAPIImpl.getApplication(
+    ): String {
+        return fusedAPIImpl.getDownloadLink(
             id,
-            name,
             packageName,
             versionCode,
             offerType,

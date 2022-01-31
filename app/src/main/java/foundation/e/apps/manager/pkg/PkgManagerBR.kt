@@ -21,20 +21,51 @@ package foundation.e.apps.manager.pkg
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.api.fused.data.Status
+import foundation.e.apps.manager.fused.FusedManagerRepository
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
+@DelicateCoroutinesApi
 open class PkgManagerBR : BroadcastReceiver() {
 
-    private val TAG = PkgManagerBR::class.java.simpleName
-    private val EXTRA_FAILED_UID = 0
+    @Inject
+    lateinit var fusedManagerRepository: FusedManagerRepository
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        if (context != null && intent?.action == Intent.ACTION_PACKAGE_ADDED) {
-            val packageUid = intent.getIntExtra(Intent.EXTRA_UID, EXTRA_FAILED_UID)
+        val action = intent?.action
+        if (context != null && action != null) {
+            val packageUid = intent.getIntExtra(Intent.EXTRA_UID, 0)
+            val isUpdating = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)
             val packages = context.packageManager.getPackagesForUid(packageUid)
-            packages?.let { Log.d(TAG, it[0].toString()) }
+
+            packages?.let { pkgList ->
+                pkgList.forEach { pkgName ->
+                    when (action) {
+                        Intent.ACTION_PACKAGE_ADDED -> updateDownloadStatus(pkgName)
+                        Intent.ACTION_PACKAGE_REMOVED -> {
+                            if (!isUpdating) deleteDownload(pkgName)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // TODO: FIND A BETTER WAY TO DO THIS
+    private fun updateDownloadStatus(packageName: String) {
+        GlobalScope.launch {
+            fusedManagerRepository.updateDownloadStatus(packageName, Status.INSTALLED)
+        }
+    }
+
+    private fun deleteDownload(packageName: String) {
+        GlobalScope.launch {
+            fusedManagerRepository.cancelDownload(packageName)
         }
     }
 }
