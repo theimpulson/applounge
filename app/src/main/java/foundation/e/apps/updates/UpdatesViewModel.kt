@@ -25,16 +25,17 @@ import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
-import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.manager.database.fused.FusedDownload
+import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.updates.manager.UpdatesManagerRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class UpdatesViewModel @Inject constructor(
     private val updatesManagerRepository: UpdatesManagerRepository,
-    private val fusedAPIRepository: FusedAPIRepository
+    private val fusedAPIRepository: FusedAPIRepository,
+    private val fusedManagerRepository: FusedManagerRepository
 ) : ViewModel() {
 
     val updatesList: MutableLiveData<List<FusedApp>> = MutableLiveData()
@@ -45,25 +46,41 @@ class UpdatesViewModel @Inject constructor(
         }
     }
 
-    fun getApplication(
-        id: String,
-        name: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int,
-        authData: AuthData,
-        origin: Origin
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            fusedAPIRepository.getApplication(
-                id,
-                name,
-                packageName,
-                versionCode,
-                offerType,
+    fun getApplication(authData: AuthData, app: FusedApp) {
+        viewModelScope.launch {
+            val downloadLink = fusedAPIRepository.getDownloadLink(
+                app._id,
+                app.package_name,
+                app.latest_version_code,
+                app.offer_type,
                 authData,
-                origin
+                app.origin
             )
+            val fusedDownload = FusedDownload(
+                app._id,
+                app.origin,
+                app.status,
+                app.name,
+                app.package_name,
+                downloadLink,
+                0,
+                app.status
+            )
+            fusedManagerRepository.addDownload(fusedDownload)
+        }
+    }
+
+    fun updateAllApps(authData: AuthData) {
+        viewModelScope.launch {
+            updatesList.value?.forEach { app ->
+                getApplication(authData, app)
+            }
+        }
+    }
+
+    fun cancelDownload(packageName: String) {
+        viewModelScope.launch {
+            fusedManagerRepository.cancelDownload(packageName)
         }
     }
 }

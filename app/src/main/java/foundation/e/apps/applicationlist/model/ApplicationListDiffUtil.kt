@@ -34,19 +34,34 @@ class ApplicationListDiffUtil(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        // Check both id and package name as we are fetching data from multiple sources to avoid issues
-        return oldList[oldItemPosition]._id == newList[newItemPosition]._id && oldList[oldItemPosition].package_name == newList[newItemPosition].package_name
+        // Check id, package name and origin as we are fetching data from multiple sources to avoid issues
+        return oldList[oldItemPosition]._id == newList[newItemPosition]._id &&
+            oldList[oldItemPosition].package_name == newList[newItemPosition].package_name &&
+            oldList[oldItemPosition].origin == newList[newItemPosition].origin
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return when {
             oldList[oldItemPosition]._id != newList[newItemPosition]._id -> false
-            oldList[oldItemPosition].name != newList[newItemPosition].name -> false
             oldList[oldItemPosition].author != newList[newItemPosition].author -> false
-            oldList[oldItemPosition].ratings.privacyScore != newList[newItemPosition].ratings.privacyScore -> false
-            oldList[oldItemPosition].ratings.usageQualityScore != newList[newItemPosition].ratings.usageQualityScore -> false
-            oldList[oldItemPosition].icon_image_path != newList[newItemPosition].icon_image_path -> false
-            else -> true
+            oldList[oldItemPosition].category != newList[newItemPosition].category -> false
+            oldList[oldItemPosition].description != newList[newItemPosition].description -> false
+            oldList[oldItemPosition].perms != newList[newItemPosition].perms -> false
+            oldList[oldItemPosition].trackers != newList[newItemPosition].trackers -> false
+            oldList[oldItemPosition].last_modified != newList[newItemPosition].last_modified -> false
+            oldList[oldItemPosition].latest_version_code != newList[newItemPosition].latest_version_code -> false
+            oldList[oldItemPosition].latest_version_number != newList[newItemPosition].latest_version_number -> false
+            oldList[oldItemPosition].licence != newList[newItemPosition].licence -> false
+            oldList[oldItemPosition].name != newList[newItemPosition].name -> false
+            oldList[oldItemPosition].other_images_path != newList[newItemPosition].other_images_path -> false
+            oldList[oldItemPosition].package_name != newList[newItemPosition].package_name -> false
+            oldList[oldItemPosition].ratings != newList[newItemPosition].ratings -> false
+            oldList[oldItemPosition].offer_type != newList[newItemPosition].offer_type -> false
+            oldList[oldItemPosition].status != newList[newItemPosition].status -> false
+            oldList[oldItemPosition].origin != newList[newItemPosition].origin -> false
+            oldList[oldItemPosition].shareUrl != newList[newItemPosition].shareUrl -> false
+            oldList[oldItemPosition].appSize != newList[newItemPosition].appSize -> false
+            else -> false
         }
     }
 }

@@ -19,51 +19,63 @@
 package foundation.e.apps.manager.download
 
 import android.app.DownloadManager
+import android.util.Log
+import foundation.e.apps.api.fused.data.Status
+import foundation.e.apps.manager.fused.FusedManagerRepository
+import foundation.e.apps.manager.pkg.PkgManagerModule
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
+@DelicateCoroutinesApi
 class DownloadManagerUtils @Inject constructor(
     private val downloadManager: DownloadManager,
-    private val downloadManagerQuery: DownloadManager.Query
+    private val downloadManagerQuery: DownloadManager.Query,
+    private val pkgManagerModule: PkgManagerModule,
+    private val fusedManagerRepository: FusedManagerRepository
 ) {
-    private var EXTRA_DOWNLOAD_FAILED_ID: Long = 0
+    private val TAG = DownloadManagerUtils::class.java.simpleName
 
-    fun downloadSuccessful(id: Long): Boolean {
-        if (id == EXTRA_DOWNLOAD_FAILED_ID) return false
+    fun downloadStatus(id: Long): Int {
         val cursor = downloadManager.query(downloadManagerQuery.setFilterById(id))
         if (cursor.moveToFirst()) {
-            val statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-            return if (statusIndex >= 0) cursor.getInt(statusIndex) == DownloadManager.STATUS_SUCCESSFUL else false
+            val statusIndex = cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)
+            return cursor.getInt(statusIndex)
         }
-        return false
+        return DownloadManager.STATUS_FAILED
     }
 
-    fun downloadedFile(id: Long): String {
+    fun installApplication(downloadId: Long) {
+        val file = File(downloadedFile(downloadId))
+        if (file.exists()) {
+            updateDownloadStatus(downloadId)
+            pkgManagerModule.installApplication(file)
+        } else {
+            Log.d(TAG, "Given file doesn't exists, exiting!")
+        }
+    }
+
+    fun cancelDownload(downloadId: Long) {
+        GlobalScope.launch {
+            fusedManagerRepository.cancelDownload(downloadId)
+        }
+    }
+
+    private fun downloadedFile(id: Long): String {
         val cursor = downloadManager.query(downloadManagerQuery.setFilterById(id))
         var fileUri = ""
         if (cursor.moveToFirst()) {
-            val index = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
+            val index = cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_URI)
             fileUri = cursor.getString(index)
         }
         return fileUri.removePrefix("file://")
     }
 
-    fun totalDownloadedBytes(id: Long): Long {
-        val cursor = downloadManager.query(downloadManagerQuery.setFilterById(id))
-        var size = ""
-        if (cursor.moveToFirst()) {
-            val index = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
-            size = cursor.getString(index)
+    private fun updateDownloadStatus(downloadId: Long) {
+        GlobalScope.launch {
+            fusedManagerRepository.updateDownloadStatus(downloadId, Status.INSTALLING)
         }
-        return if (size.isNotBlank()) size.toLong() else 0
-    }
-
-    fun currentDownloadedBytes(id: Long): Long {
-        val cursor = downloadManager.query(downloadManagerQuery.setFilterById(id))
-        var size = ""
-        if (cursor.moveToFirst()) {
-            val index = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
-            size = cursor.getString(index)
-        }
-        return if (size.isNotBlank()) size.toLong() else 0
     }
 }

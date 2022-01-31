@@ -31,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
-import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentApplicationListBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
@@ -45,7 +45,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
 
-    private val applicationListViewModel: ApplicationListViewModel by viewModels()
+    private val viewModel: ApplicationListViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
     private var _binding: FragmentApplicationListBinding? = null
@@ -56,7 +56,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         _binding = FragmentApplicationListBinding.bind(view)
 
         mainActivityViewModel.authData.value?.let {
-            applicationListViewModel.getList(
+            viewModel.getList(
                 args.category,
                 args.browseUrl,
                 it,
@@ -85,7 +85,19 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             layoutManager = LinearLayoutManager(view.context)
         }
 
-        applicationListViewModel.appListLiveData.observe(viewLifecycleOwner) {
+        mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
+            val categoryList = viewModel.appListLiveData.value?.toMutableList()
+            if (!categoryList.isNullOrEmpty()) {
+                list.forEach {
+                    categoryList.find { app ->
+                        app.origin == it.origin && (app.package_name == it.package_name || app._id == it.id)
+                    }?.status = it.status
+                }
+                viewModel.appListLiveData.value = categoryList
+            }
+        }
+
+        viewModel.appListLiveData.observe(viewLifecycleOwner) {
             listAdapter?.setData(it)
             binding.shimmerLayout.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
@@ -107,26 +119,13 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         super.onPause()
     }
 
-    override fun getApplication(
-        id: String,
-        name: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int?,
-        origin: Origin?
-    ) {
-        val offer = offerType ?: 0
-        val org = origin ?: Origin.CLEANAPK
+    override fun getApplication(app: FusedApp) {
         mainActivityViewModel.authData.value?.let {
-            applicationListViewModel.getApplication(
-                id,
-                name,
-                packageName,
-                versionCode,
-                offer,
-                it,
-                org
-            )
+            viewModel.getApplication(it, app)
         }
+    }
+
+    override fun cancelDownload(app: FusedApp) {
+        viewModel.cancelDownload(app.package_name)
     }
 }

@@ -18,8 +18,6 @@
 
 package foundation.e.apps
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
@@ -31,19 +29,18 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
+import foundation.e.apps.manager.database.fused.FusedDownload
+import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.utils.DataStoreModule
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val fusedAPIRepository: FusedAPIRepository,
     private val dataStoreModule: DataStoreModule,
     private val gson: Gson,
-    private val notificationManager: NotificationManager,
-    @Named("download") private val downloadNotificationChannel: NotificationChannel,
-    @Named("update") private val updateNotificationChannel: NotificationChannel
+    private val fusedManagerRepository: FusedManagerRepository
 ) : ViewModel() {
 
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
@@ -54,6 +51,10 @@ class MainActivityViewModel @Inject constructor(
     val authData: LiveData<AuthData> = _authData
     val authValidity: MutableLiveData<Boolean> = MutableLiveData()
     var authRequestRunning = false
+
+    // Downloads
+    val downloadList = fusedManagerRepository.getDownloadList()
+    var isInstallInProgress = false
 
     fun getAuthData() {
         if (!authRequestRunning) {
@@ -85,7 +86,13 @@ class MainActivityViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun createNotificationChannels() {
-        notificationManager.createNotificationChannel(downloadNotificationChannel)
-        notificationManager.createNotificationChannel(updateNotificationChannel)
+        fusedManagerRepository.createNotificationChannels()
+    }
+
+    fun downloadAndInstallApp(fusedDownload: FusedDownload) {
+        isInstallInProgress = true
+        viewModelScope.launch {
+            fusedManagerRepository.downloadAndInstallApp(fusedDownload)
+        }
     }
 }

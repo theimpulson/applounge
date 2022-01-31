@@ -18,11 +18,8 @@
 
 package foundation.e.apps.api.fused
 
-import android.app.DownloadManager
 import android.content.Context
-import android.net.Uri
 import android.text.format.Formatter
-import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
@@ -45,7 +42,6 @@ import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.PreferenceManagerModule
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -54,7 +50,6 @@ import javax.inject.Singleton
 class FusedAPIImpl @Inject constructor(
     private val cleanAPKRepository: CleanAPKRepository,
     private val gPlayAPIRepository: GPlayAPIRepository,
-    private val downloadManager: DownloadManager,
     private val pkgManagerModule: PkgManagerModule,
     private val preferenceManagerModule: PreferenceManagerModule,
     @ApplicationContext private val context: Context,
@@ -150,24 +145,19 @@ class FusedAPIImpl @Inject constructor(
         return gPlayAPIRepository.validateAuthData(authData)
     }
 
-    suspend fun getApplication(
+    suspend fun getDownloadLink(
         id: String,
-        name: String,
         packageName: String,
         versionCode: Int,
         offerType: Int,
         authData: AuthData,
         origin: Origin
-    ): Long {
+    ): String {
+        var downloadLink = String()
         when (origin) {
             Origin.CLEANAPK -> {
                 val downloadInfo = cleanAPKRepository.getDownloadInfo(id).body()
-                val downloadLink = downloadInfo?.download_data?.download_link
-                if (downloadLink != null) {
-                    return downloadApp(name, packageName, downloadLink)
-                } else {
-                    Log.d(TAG, "Download link was null, exiting!")
-                }
+                downloadInfo?.download_data?.download_link?.let { downloadLink = it }
             }
             Origin.GPLAY -> {
                 val downloadList = gPlayAPIRepository.getDownloadInfo(
@@ -177,12 +167,12 @@ class FusedAPIImpl @Inject constructor(
                     authData
                 )
                 // TODO: DEAL WITH MULTIPLE PACKAGES
-                return downloadApp(name, packageName, downloadList[0].url)
+                downloadLink = downloadList[0].url
             }
             Origin.GITLAB -> {
             }
         }
-        return 0
+        return downloadLink
     }
 
     suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {
@@ -487,19 +477,6 @@ class FusedAPIImpl @Inject constructor(
         return gPlayAPIRepository.getSearchResults(query, authData).map { app ->
             app.transformToFusedApp()
         }
-    }
-
-    /*
-     * Download-related internal functions
-     */
-
-    private fun downloadApp(name: String, packageName: String, url: String): Long {
-        val packagePath = File(cacheDir, "$packageName.apk")
-        if (packagePath.exists()) packagePath.delete() // Delete old download if-exists
-        val request = DownloadManager.Request(Uri.parse(url))
-            .setTitle(name)
-            .setDestinationUri(Uri.fromFile(packagePath))
-        return downloadManager.enqueue(request)
     }
 
     /*

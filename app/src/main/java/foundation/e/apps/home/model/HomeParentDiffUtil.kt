@@ -41,7 +41,7 @@ class HomeParentDiffUtil(
         return when {
             oldList[oldItemPosition].title != newList[newItemPosition].title -> false
             oldList[oldItemPosition].list != newList[newItemPosition].list -> false
-            else -> true
+            else -> false
         }
     }
 }

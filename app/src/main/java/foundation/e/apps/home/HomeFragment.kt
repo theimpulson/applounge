@@ -28,7 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
-import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.databinding.FragmentHomeBinding
 import foundation.e.apps.home.model.HomeParentRVAdapter
 import foundation.e.apps.manager.pkg.PkgManagerModule
@@ -60,6 +60,20 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             layoutManager = LinearLayoutManager(view.context)
         }
 
+        mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
+            val homeList = homeViewModel.homeScreenData.value?.toMutableList()
+            if (!homeList.isNullOrEmpty()) {
+                homeList.forEach { home ->
+                    list.forEach {
+                        home.list.find { app ->
+                            app.origin == it.origin && (app.package_name == it.package_name || app._id == it.id)
+                        }?.status = it.status
+                    }
+                }
+                homeViewModel.homeScreenData.value = homeList
+            }
+        }
+
         homeViewModel.homeScreenData.observe(viewLifecycleOwner) {
             homeParentRVAdapter.setData(it)
             binding.shimmerLayout.visibility = View.GONE
@@ -82,26 +96,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
         _binding = null
     }
 
-    override fun getApplication(
-        id: String,
-        name: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int?,
-        origin: Origin?
-    ) {
-        val offer = offerType ?: 0
-        val org = origin ?: Origin.CLEANAPK
+    override fun getApplication(app: FusedApp) {
         mainActivityViewModel.authData.value?.let {
-            homeViewModel.getApplication(
-                id,
-                name,
-                packageName,
-                versionCode,
-                offer,
-                it,
-                org
-            )
+            homeViewModel.getApplication(it, app)
         }
+    }
+
+    override fun cancelDownload(app: FusedApp) {
+        homeViewModel.cancelDownload(app.package_name)
     }
 }

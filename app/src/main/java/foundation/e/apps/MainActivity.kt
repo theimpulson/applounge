@@ -28,6 +28,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.databinding.ActivityMainBinding
 import foundation.e.apps.utils.USER
 
@@ -114,6 +115,21 @@ class MainActivity : AppCompatActivity() {
         // Create notification channel on post-nougat devices
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             viewModel.createNotificationChannels()
+        }
+
+        // Observe and handle downloads
+        viewModel.downloadList.observe(this) {
+            val installInProgress = it.any { app ->
+                app.status == Status.DOWNLOADING || app.status == Status.INSTALLING
+            }
+            if (!installInProgress && it.isNotEmpty()) {
+                for (item in it) {
+                    if (item.status == Status.QUEUED) {
+                        viewModel.downloadAndInstallApp(item)
+                        break
+                    }
+                }
+            }
         }
     }
 }
