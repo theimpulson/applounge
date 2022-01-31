@@ -357,13 +357,7 @@ class FusedAPIImpl @Inject constructor(
         app: Category
     ) {
         category.drawable =
-            if (app.type == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
-                getCategoryIconName(category)
-            ) else CategoryUtils.provideGamesCategoryIconResource(
-                getCategoryIconName(
-                    category
-                )
-            )
+            getCategoryIconResource(app.type, getCategoryIconName(category))
     }
 
     private fun getCategoryIconName(category: FusedCategory): String {
@@ -416,16 +410,27 @@ class FusedAPIImpl @Inject constructor(
     ): FusedCategory {
         return FusedCategory(
             id = category,
-            title = if (category.contentEquals(CATEGORY_OPEN_GAMES_ID)) CATEGORY_OPEN_GAMES_TITLE else categories.translations.getOrDefault(
-                category,
-                ""
-            ),
-            drawable = if (appType == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
-                category
-            ) else CategoryUtils.provideGamesCategoryIconResource(category),
+            title = getCategoryTitle(category, categories),
+            drawable = getCategoryIconResource(appType, category),
             tag = tag
         )
     }
+
+    private fun getCategoryIconResource(
+        appType: Category.Type,
+        category: String
+    ) = if (appType == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
+        category
+    ) else CategoryUtils.provideGamesCategoryIconResource(category)
+
+    private fun getCategoryTitle(
+        category: String,
+        categories: Categories
+    ) =
+        if (category.contentEquals(CATEGORY_OPEN_GAMES_ID)) CATEGORY_OPEN_GAMES_TITLE else categories.translations.getOrDefault(
+            category,
+            ""
+        )
 
     private suspend fun getPWAsCategories(): Categories? {
         return cleanAPKRepository.getCategoriesList(
