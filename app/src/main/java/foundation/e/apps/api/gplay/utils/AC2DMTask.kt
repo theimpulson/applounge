@@ -26,9 +26,11 @@ import javax.inject.Inject
 class AC2DMTask @Inject constructor(
     private val gPlayHttpClient: GPlayHttpClient
 ) {
-    private val TOKEN_AUTH_URL = "https://android.clients.google.com/auth"
-    private val BUILD_VERSION_SDK = 28
-    private val PLAY_SERVICES_VERSION_CODE = 19629032
+    companion object {
+        private const val TOKEN_AUTH_URL = "https://android.clients.google.com/auth"
+        private const val BUILD_VERSION_SDK = 28
+        private const val PLAY_SERVICES_VERSION_CODE = 19629032
+    }
 
     fun getAC2DMResponse(email: String?, oAuthToken: String?): Map<String, String> {
         if (email == null || oAuthToken == null)

@@ -50,9 +50,11 @@ class GoogleSignInFragment :
 
     private val cookieManager = CookieManager.getInstance()
 
-    private val EMBEDDED_SETUP_URL =
-        "https://accounts.google.com/EmbeddedSetup/identifier?flowName=EmbeddedSetupAndroid"
-    private val AUTH_TOKEN = "oauth_token"
+    companion object {
+        private const val EMBEDDED_SETUP_URL =
+            "https://accounts.google.com/EmbeddedSetup/identifier?flowName=EmbeddedSetupAndroid"
+        private const val AUTH_TOKEN = "oauth_token"
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
