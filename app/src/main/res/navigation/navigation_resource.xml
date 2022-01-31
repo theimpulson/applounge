@@ -173,7 +173,9 @@
         tools:layout="@layout/fragment_tos">
         <action
             android:id="@+id/action_TOSFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
+            app:destination="@id/signInFragment"
+            app:popUpTo="@id/TOSFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -185,5 +187,16 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@+id/signInFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/googleSignInFragment"
+        android:name="foundation.e.apps.setup.signin.google.GoogleSignInFragment"
+        android:label="fragment_google_signin"
+        tools:layout="@layout/fragment_google_signin">
+        <action
+            android:id="@+id/action_googleSignInFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@+id/signInFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

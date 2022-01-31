@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     USER.UNAVAILABLE -> {
+                        viewModel.destroyCredentials()
                         navController.navigate(R.id.signInFragment, null, navOptions)
                     }
                     USER.GOOGLE -> {}
@@ -102,6 +103,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.screenshotFragment,
                 R.id.descriptionFragment,
                 R.id.TOSFragment,
+                R.id.googleSignInFragment,
                 R.id.signInFragment -> {
                     bottomNavigationView.visibility = View.GONE
                 }

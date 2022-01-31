@@ -21,8 +21,6 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSignInBinding.bind(view)
 
-        binding.googleBT.isEnabled = false
-
         binding.googleBT.setOnClickListener {
             viewModel.saveUserType(USER.GOOGLE)
         }
@@ -38,7 +36,9 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
                         view.findNavController()
                             .navigate(R.id.action_signInFragment_to_homeFragment)
                     }
-                    USER.GOOGLE -> {}
+                    USER.GOOGLE -> {
+                        view.findNavController().navigate(R.id.googleSignInFragment)
+                    }
                     USER.UNAVAILABLE -> {}
                 }
             }
