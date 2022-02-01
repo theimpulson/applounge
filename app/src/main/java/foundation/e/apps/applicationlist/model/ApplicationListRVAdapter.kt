@@ -21,6 +21,7 @@ package foundation.e.apps.applicationlist.model
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
@@ -120,6 +121,14 @@ class ApplicationListRVAdapter(
                     searchApp.ratings.privacyScore.toInt().toString()
                 )
             }
+
+            if (searchApp.source.isEmpty()) {
+                sourceTag.visibility = View.INVISIBLE
+            } else {
+                sourceTag.visibility = View.VISIBLE
+            }
+            sourceTag.text = searchApp.source
+
             when (searchApp.origin) {
                 Origin.GPLAY -> {
                     appIcon.load(searchApp.icon_image_path) {

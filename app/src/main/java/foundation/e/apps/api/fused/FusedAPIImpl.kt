@@ -33,7 +33,11 @@ import foundation.e.apps.api.cleanapk.CleanAPKRepository
 import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.home.Home
 import foundation.e.apps.api.cleanapk.data.search.Search
-import foundation.e.apps.api.fused.data.*
+import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.api.fused.data.FusedCategory
+import foundation.e.apps.api.fused.data.FusedHome
+import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
@@ -478,6 +482,8 @@ class FusedAPIImpl @Inject constructor(
 
         response?.forEach {
             it.status = pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+            it.source =
+                if (source.contentEquals(CleanAPKInterface.APP_SOURCE_FOSS)) "Open Source" else "PWA"
             list.add(it)
         }
         return list
