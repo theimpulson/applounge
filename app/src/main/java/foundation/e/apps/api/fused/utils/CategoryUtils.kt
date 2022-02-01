@@ -167,8 +167,6 @@ object CategoryUtils {
                 R.drawable.ic_cat_travel
             "pwa_business" ->
                 R.drawable.ic_business
-            "web_games" ->
-                R.drawable.ic_cat_sports
             "watch_faces" ->
                 R.drawable.ic_watchface
             "watch_apps" ->
@@ -198,7 +196,7 @@ object CategoryUtils {
                 R.drawable.ic_educational
             "music" ->
                 R.drawable.ic_music
-            "game_open_games" ->
+            "game_open_games", "web_games" ->
                 R.drawable.ic_arcade
             "puzzle" ->
                 R.drawable.ic_puzzle
