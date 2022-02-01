@@ -1,27 +1,21 @@
-<!--
-  ~ Apps  Quickly and easily install Android apps onto your device!
-  ~ Copyright (C) 2021  E FOUNDATION
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="384dp"
-    android:height="512dp"
-    android:viewportWidth="384"
-    android:viewportHeight="512">
+    android:width="25dp"
+    android:height="24dp"
+    android:viewportWidth="25"
+    android:viewportHeight="24">
   <path
-      android:fillColor="@color/colorAccent"
-      android:pathData="M373.679,338.344l-35.16,-44.832c20.236,-16.151 24.079,-45.619 8.359,-66.438l-34.932,-46.261c21.067,-17.62 23.055,-49.355 4.372,-69.475l-89.143,-96.006c-18.969,-20.428 -51.352,-20.457 -70.348,0l-89.143,96.006c-18.704,20.143 -16.67,51.876 4.372,69.475l-34.932,46.261c-15.73,20.831 -11.864,50.298 8.359,66.438l-35.167,44.832C-14.37,369.762 8.032,416 48.058,416H160c0,36.341 -3.919,56.605 -29.657,82.343C125.318,503.368 128.88,512 136,512h112c7.106,0 10.692,-8.622 5.657,-13.657C227.943,472.629 224,452.386 224,416h111.935c39.956,0 62.472,-46.182 37.744,-77.656zM224,368v-24c0,-8.837 -7.163,-16 -16,-16h-32c-8.837,0 -16,7.163 -16,16v24H48l88,-112H75.429L160,144h-57.143L192,48l89.143,96H224l84.571,112H248l88,112H224z"/>
+      android:pathData="M5.7303,10.0143C3.0446,10.0143 0.8732,7.8429 0.8732,5.1572C0.8732,2.4715 3.0446,0.3 5.7303,0.3C8.416,0.3 10.5875,2.4715 10.5875,5.1572C10.5875,7.8429 8.3875,10.0143 5.7303,10.0143ZM5.7303,2.3286C4.1589,2.3286 2.8732,3.6143 2.8732,5.1857C2.8732,6.7572 4.1589,8.0429 5.7303,8.0429C7.3017,8.0429 8.5875,6.7572 8.5875,5.1857C8.5875,3.6143 7.3017,2.3286 5.7303,2.3286Z"
+      android:fillColor="#0088ED"/>
+  <path
+      android:pathData="M23.216,10.0143H15.5017C14.9589,10.0143 14.5017,9.5571 14.5017,9.0143V1.3286C14.5017,0.7857 14.9589,0.3286 15.5017,0.3286H23.1874C23.7303,0.3286 24.1874,0.7857 24.1874,1.3286V9.0143C24.216,9.5857 23.7589,10.0143 23.216,10.0143ZM16.5017,8.0143H22.1874V2.3286H16.5017V8.0143Z"
+      android:fillColor="#0088ED"/>
+  <path
+      android:pathData="M5.7303,14.9572L1.2732,22.6714H10.1589L5.7303,14.9572Z"
+      android:fillColor="#0088ED"/>
+  <path
+      android:pathData="M10.1589,23.6714H1.2732C0.9303,23.6714 0.5875,23.4714 0.416,23.1572C0.2446,22.8429 0.2446,22.4714 0.416,22.1572L4.8446,14.4714C5.016,14.1572 5.3589,13.9572 5.7018,13.9572C6.0446,13.9572 6.3875,14.1572 6.5589,14.4714L11.016,22.1572C11.1875,22.4714 11.1875,22.8429 11.016,23.1572C10.8446,23.4714 10.5303,23.6714 10.1589,23.6714ZM3.0161,21.6714H8.4446L5.7303,16.9857L3.0161,21.6714Z"
+      android:fillColor="#0088ED"/>
+  <path
+      android:pathData="M21.5876,23.6714H17.1304C16.7876,23.6714 16.4447,23.4714 16.2733,23.1572L14.0447,19.3C13.8733,18.9857 13.8733,18.6143 14.0447,18.3L16.2733,14.4714C16.4447,14.1572 16.7876,13.9572 17.1304,13.9572H21.5876C21.9304,13.9572 22.2733,14.1572 22.4447,14.4714L24.6733,18.3286C24.8447,18.6429 24.8447,19.0143 24.6733,19.3286L22.4447,23.1857C22.2733,23.4714 21.9304,23.6714 21.5876,23.6714ZM17.7019,21.6714H20.9876L22.6447,18.8143L20.9876,15.9572H17.7019L16.0447,18.8143L17.7019,21.6714Z"
+      android:fillColor="#0088ED"/>
 </vector>
