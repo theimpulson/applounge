@@ -33,11 +33,7 @@ import foundation.e.apps.api.cleanapk.CleanAPKRepository
 import foundation.e.apps.api.cleanapk.data.categories.Categories
 import foundation.e.apps.api.cleanapk.data.home.Home
 import foundation.e.apps.api.cleanapk.data.search.Search
-import foundation.e.apps.api.fused.data.FusedApp
-import foundation.e.apps.api.fused.data.FusedCategory
-import foundation.e.apps.api.fused.data.FusedHome
-import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.api.fused.data.Ratings
+import foundation.e.apps.api.fused.data.*
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
@@ -410,21 +406,21 @@ class FusedAPIImpl @Inject constructor(
         )
     }
 
-    private fun getCategoryIconResource(
-        appType: Category.Type,
-        category: String
-    ) = if (appType == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
-        category
-    ) else CategoryUtils.provideGamesCategoryIconResource(category)
+    private fun getCategoryIconResource(appType: Category.Type, category: String): Int {
+        return if (appType == Category.Type.APPLICATION) {
+            CategoryUtils.provideAppsCategoryIconResource(category)
+        } else {
+            CategoryUtils.provideGamesCategoryIconResource(category)
+        }
+    }
 
-    private fun getCategoryTitle(
-        category: String,
-        categories: Categories
-    ) =
-        if (category.contentEquals(CATEGORY_OPEN_GAMES_ID)) CATEGORY_OPEN_GAMES_TITLE else categories.translations.getOrDefault(
-            category,
-            ""
-        )
+    private fun getCategoryTitle(category: String, categories: Categories): String {
+        return if (category.contentEquals(CATEGORY_OPEN_GAMES_ID)) {
+            CATEGORY_OPEN_GAMES_TITLE
+        } else {
+            categories.translations.getOrDefault(category, "")
+        }
+    }
 
     private suspend fun getPWAsCategories(): Categories? {
         return cleanAPKRepository.getCategoriesList(
