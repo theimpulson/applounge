@@ -199,7 +199,7 @@ object CategoryUtils {
             "music" ->
                 R.drawable.ic_music
             "game_open_games" ->
-                R.drawable.ic_cat_open_games
+                R.drawable.ic_arcade
             "puzzle" ->
                 R.drawable.ic_puzzle
             "racing" ->

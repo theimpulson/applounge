@@ -61,6 +61,8 @@ class FusedAPIImpl @Inject constructor(
         private const val APP_TYPE_ANY = "any"
         private const val APP_TYPE_OPEN = "open"
         private const val APP_TYPE_PWA = "pwa"
+        private const val CATEGORY_OPEN_GAMES_ID = "game_open_games"
+        private const val CATEGORY_OPEN_GAMES_TITLE = "Open games"
     }
 
     private var TAG = FusedAPIImpl::class.java.simpleName
@@ -349,13 +351,7 @@ class FusedAPIImpl @Inject constructor(
         app: Category
     ) {
         category.drawable =
-            if (app.type == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
-                getCategoryIconName(category)
-            ) else CategoryUtils.provideGamesCategoryIconResource(
-                getCategoryIconName(
-                    category
-                )
-            )
+            getCategoryIconResource(app.type, getCategoryIconName(category))
     }
 
     private fun getCategoryIconName(category: FusedCategory): String {
@@ -408,13 +404,27 @@ class FusedAPIImpl @Inject constructor(
     ): FusedCategory {
         return FusedCategory(
             id = category,
-            title = categories.translations.getOrDefault(category, ""),
-            drawable = if (appType == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
-                category
-            ) else CategoryUtils.provideGamesCategoryIconResource(category),
+            title = getCategoryTitle(category, categories),
+            drawable = getCategoryIconResource(appType, category),
             tag = tag
         )
     }
+
+    private fun getCategoryIconResource(
+        appType: Category.Type,
+        category: String
+    ) = if (appType == Category.Type.APPLICATION) CategoryUtils.provideAppsCategoryIconResource(
+        category
+    ) else CategoryUtils.provideGamesCategoryIconResource(category)
+
+    private fun getCategoryTitle(
+        category: String,
+        categories: Categories
+    ) =
+        if (category.contentEquals(CATEGORY_OPEN_GAMES_ID)) CATEGORY_OPEN_GAMES_TITLE else categories.translations.getOrDefault(
+            category,
+            ""
+        )
 
     private suspend fun getPWAsCategories(): Categories? {
         return cleanAPKRepository.getCategoriesList(
