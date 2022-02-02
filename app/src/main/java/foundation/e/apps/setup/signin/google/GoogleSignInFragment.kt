@@ -35,6 +35,7 @@ import foundation.e.apps.R
 import foundation.e.apps.api.gplay.utils.AC2DMUtil
 import foundation.e.apps.databinding.FragmentGoogleSigninBinding
 import foundation.e.apps.setup.signin.SignInViewModel
+import foundation.e.apps.utils.enums.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
@@ -63,6 +64,7 @@ class GoogleSignInFragment :
 
         mainActivityViewModel.authDataJson.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
+                viewModel.saveUserType(User.GOOGLE)
                 view.findNavController().navigate(R.id.action_googleSignInFragment_to_homeFragment)
             }
         }
@@ -102,5 +104,14 @@ class GoogleSignInFragment :
             }
             loadUrl(EMBEDDED_SETUP_URL)
         }
+
+        binding.toolbar.setNavigationOnClickListener {
+            it.findNavController().navigate(R.id.action_googleSignInFragment_to_signInFragment)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }
