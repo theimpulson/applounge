@@ -75,13 +75,7 @@ class MainActivity : AppCompatActivity() {
                         viewModel.destroyCredentials()
                         navController.navigate(R.id.signInFragment, null, navOptions)
                     }
-                    User.GOOGLE -> {
-                        if (viewModel.authDataJson.value.isNullOrEmpty() && !viewModel.authRequestRunning) {
-                            Log.d(TAG, "Fetching new authentication data")
-                            viewModel.destroyCredentials()
-                            navController.navigate(R.id.signInFragment, null, navOptions)
-                        }
-                    }
+                    USER.GOOGLE -> {}
                 }
             }
         }
