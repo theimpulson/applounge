@@ -17,6 +17,11 @@ class TOSFragment : Fragment(R.layout.fragment_tos) {
 
     private val viewModel: TOSViewModel by viewModels()
 
+    companion object {
+        private const val mimeType = "text/html"
+        private const val encoding = "UTF-8"
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTosBinding.bind(view)
@@ -34,6 +39,10 @@ class TOSFragment : Fragment(R.layout.fragment_tos) {
                 binding.acceptDateTV.visibility = View.VISIBLE
             }
         }
+
+        val tosHtml = resources.openRawResource(R.raw.terms_of_use)
+        val tosHtmlData = tosHtml.reader().readText()
+        binding.TOSWebView.loadData(tosHtmlData, mimeType, encoding)
 
         binding.toolbar.setNavigationOnClickListener {
             view.findNavController().navigateUp()
