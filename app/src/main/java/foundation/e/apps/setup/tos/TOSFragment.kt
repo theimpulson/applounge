@@ -31,13 +31,7 @@ class TOSFragment : Fragment(R.layout.fragment_tos) {
                 binding.TOSWarning.visibility = View.GONE
                 binding.TOSButtons.visibility = View.GONE
                 binding.toolbar.visibility = View.VISIBLE
-
-                binding.acceptDateTV.apply {
-                    visibility = View.VISIBLE
-                    viewModel.tocDate.observe(viewLifecycleOwner) { date ->
-                        this.text = context.getString(R.string.tos_agree_date, date)
-                    }
-                }
+                binding.acceptDateTV.visibility = View.VISIBLE
             }
         }
 

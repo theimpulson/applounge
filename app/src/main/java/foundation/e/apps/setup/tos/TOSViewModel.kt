@@ -15,7 +15,6 @@ class TOSViewModel @Inject constructor(
 ) : ViewModel() {
 
     val tocStatus: LiveData<Boolean> = dataStoreModule.tocStatus.asLiveData()
-    val tocDate: LiveData<String> = dataStoreModule.tocDate.asLiveData()
 
     fun saveTOCStatus(status: Boolean) {
         viewModelScope.launch {

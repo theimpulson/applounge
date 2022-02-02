@@ -27,8 +27,6 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
-import java.text.SimpleDateFormat
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,12 +43,10 @@ class DataStoreModule @Inject constructor(
     private val AUTHDATA = stringPreferencesKey("authData")
     private val USERTYPE = stringPreferencesKey("userType")
     private val TOCSTATUS = booleanPreferencesKey("tocStatus")
-    private val TOCDATE = stringPreferencesKey("tocDate")
 
     val authData = context.dataStore.data.map { it[AUTHDATA] ?: "" }
     val userType = context.dataStore.data.map { it[USERTYPE] ?: "" }
     val tocStatus = context.dataStore.data.map { it[TOCSTATUS] ?: false }
-    val tocDate = context.dataStore.data.map { it[TOCDATE] ?: "" }
 
     /**
      * Allows to save gplay API token data into datastore
@@ -73,15 +69,6 @@ class DataStoreModule @Inject constructor(
     suspend fun saveTOCStatus(status: Boolean) {
         context.dataStore.edit {
             it[TOCSTATUS] = status
-        }
-        saveTOCDate()
-    }
-
-    private suspend fun saveTOCDate() {
-        val sdf = SimpleDateFormat("dd/MM/yyyy", context.resources.configuration.locales[0])
-        val currentDate = sdf.format(Date())
-        context.dataStore.edit {
-            it[TOCDATE] = currentDate
         }
     }
 
