@@ -33,6 +33,7 @@ import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentUpdatesBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.enums.User
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -61,14 +62,15 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
         }
 
         val recyclerView = binding.recyclerView
-        val listAdapter =
-            findNavController().currentDestination?.id?.let {
-                ApplicationListRVAdapter(
-                    this,
-                    it,
-                    pkgManagerModule
-                )
-            }
+        val listAdapter = findNavController().currentDestination?.id?.let {
+            ApplicationListRVAdapter(
+                this,
+                it,
+                pkgManagerModule,
+                User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name)
+            )
+        }
+
         recyclerView.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)

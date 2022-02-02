@@ -40,8 +40,10 @@ import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.DataStoreModule
 import foundation.e.apps.utils.PreferenceManagerModule
 import foundation.e.apps.utils.enums.Origin
+import foundation.e.apps.utils.enums.Status
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -52,6 +54,7 @@ class FusedAPIImpl @Inject constructor(
     private val gPlayAPIRepository: GPlayAPIRepository,
     private val pkgManagerModule: PkgManagerModule,
     private val preferenceManagerModule: PreferenceManagerModule,
+    private val dataStoreModule: DataStoreModule,
     @ApplicationContext private val context: Context,
     @Named("cacheDir") private val cacheDir: String
 ) {
@@ -205,8 +208,11 @@ class FusedAPIImpl @Inject constructor(
     suspend fun getPWAApps(category: String): List<FusedApp>? {
         val response = getPWAAppsResponse(category)
         response?.apps?.forEach {
-            it.status =
+            it.status = if (it.isFree) {
                 pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+            } else {
+                Status.BLOCKED
+            }
         }
         return response?.apps
     }
@@ -214,8 +220,11 @@ class FusedAPIImpl @Inject constructor(
     suspend fun getOpenSourceApps(category: String): List<FusedApp>? {
         val response = getOpenSourceAppsResponse(category)
         response?.apps?.forEach {
-            it.status =
+            it.status = if (it.isFree) {
                 pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+            } else {
+                Status.BLOCKED
+            }
         }
         return response?.apps
     }
@@ -250,10 +259,14 @@ class FusedAPIImpl @Inject constructor(
             }
         }
         response.forEach { fusedApp ->
-            fusedApp.status = pkgManagerModule.getPackageStatus(
-                fusedApp.package_name,
-                fusedApp.latest_version_code
-            )
+            fusedApp.status = if (fusedApp.isFree) {
+                pkgManagerModule.getPackageStatus(
+                    fusedApp.package_name,
+                    fusedApp.latest_version_code
+                )
+            } else {
+                Status.BLOCKED
+            }
             list.add(fusedApp)
         }
         return list
@@ -272,7 +285,11 @@ class FusedAPIImpl @Inject constructor(
             app?.transformToFusedApp()
         }
         response?.let {
-            it.status = pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+            it.status = if (it.isFree) {
+                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+            } else {
+                Status.BLOCKED
+            }
         }
         return response ?: FusedApp()
     }
@@ -481,7 +498,11 @@ class FusedAPIImpl @Inject constructor(
             cleanAPKRepository.searchApps(keyword, source, type, nres, page, by).body()?.apps
 
         response?.forEach {
-            it.status = pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+            it.status = if (it.isFree) {
+                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+            } else {
+                Status.BLOCKED
+            }
             it.source =
                 if (source.contentEquals(CleanAPKInterface.APP_SOURCE_FOSS)) "Open Source" else "PWA"
             list.add(it)
@@ -601,10 +622,14 @@ class FusedAPIImpl @Inject constructor(
                 usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDouble() else -1.0
             ),
             offer_type = this.offerType,
-            status = pkgManagerModule.getPackageStatus(this.packageName, this.versionCode),
+            status = if (this.isFree) pkgManagerModule.getPackageStatus(
+                this.packageName,
+                this.versionCode
+            ) else Status.BLOCKED,
             origin = Origin.GPLAY,
             shareUrl = this.shareUrl,
-            appSize = Formatter.formatFileSize(context, this.size)
+            appSize = Formatter.formatFileSize(context, this.size),
+            isFree = this.isFree
         )
     }
 

@@ -42,5 +42,6 @@ data class FusedApp(
     var origin: Origin = Origin.CLEANAPK,
     val shareUrl: String = String(),
     val appSize: String = String(),
-    var source: String = String()
+    var source: String = String(),
+    val isFree: Boolean = true
 )

@@ -35,6 +35,7 @@ import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentApplicationListBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.enums.User
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -77,7 +78,8 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                 ApplicationListRVAdapter(
                     this,
                     it,
-                    pkgManagerModule
+                    pkgManagerModule,
+                    User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name)
                 )
             }
         recyclerView.apply {

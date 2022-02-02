@@ -27,10 +27,12 @@ import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedHome
 import foundation.e.apps.databinding.HomeParentListItemBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.enums.User
 
 class HomeParentRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
-    private val pkgManagerModule: PkgManagerModule
+    private val pkgManagerModule: PkgManagerModule,
+    private val user: User
 ) :
     RecyclerView.Adapter<HomeParentRVAdapter.ViewHolder>() {
 
@@ -47,7 +49,7 @@ class HomeParentRVAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val homeChildRVAdapter = HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule)
+        val homeChildRVAdapter = HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, user)
         homeChildRVAdapter.setData(oldList[position].list)
 
         holder.binding.titleTV.text = oldList[position].title

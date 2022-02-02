@@ -98,6 +98,8 @@
     <string name="min_android_version">Requires: <xliff:g id="version_code">%1$s</xliff:g></string>
     <string name="license">License: <xliff:g id="version_code">%1$s</xliff:g></string>
     <string name="package_name">Package name: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="install_blocked_anonymous">Paid apps cannot be installed in anonymous mode. Please log into your Google account to install paid apps.</string>
+    <string name="install_blocked_google">Paid apps are not supported in App Lounge yet. Just a little more patience, it will soon be the case.</string>
 
     <!-- Updates Fragment -->
     <string name="update_all">Update All</string>

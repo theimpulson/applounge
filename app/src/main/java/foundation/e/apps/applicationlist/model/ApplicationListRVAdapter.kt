@@ -31,6 +31,7 @@ import coil.load
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.Shimmer.Direction.LEFT_TO_RIGHT
 import com.facebook.shimmer.ShimmerDrawable
+import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
@@ -42,13 +43,15 @@ import foundation.e.apps.search.SearchFragmentDirections
 import foundation.e.apps.updates.UpdatesFragmentDirections
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
+import foundation.e.apps.utils.enums.User
 import javax.inject.Singleton
 
 @Singleton
 class ApplicationListRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val currentDestinationId: Int,
-    private val pkgManagerModule: PkgManagerModule
+    private val pkgManagerModule: PkgManagerModule,
+    private val user: User
 ) :
     RecyclerView.Adapter<ApplicationListRVAdapter.ViewHolder>() {
 
@@ -182,6 +185,18 @@ class ApplicationListRVAdapter(
                 }
                 Status.INSTALLING, Status.UNINSTALLING -> {
                     installButton.isEnabled = false
+                }
+                Status.BLOCKED -> {
+                    installButton.setOnClickListener {
+                        val errorMsg = when (user) {
+                            User.ANONYMOUS -> view.context.getString(R.string.install_blocked_anonymous)
+                            User.GOOGLE -> view.context.getString(R.string.install_blocked_google)
+                            User.UNAVAILABLE -> String()
+                        }
+                        if (errorMsg.isNotBlank()) {
+                            Snackbar.make(view, errorMsg, Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }

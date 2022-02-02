@@ -25,5 +25,6 @@ enum class Status {
     DOWNLOADING,
     UNAVAILABLE,
     UNINSTALLING,
-    QUEUED
+    QUEUED,
+    BLOCKED
 }

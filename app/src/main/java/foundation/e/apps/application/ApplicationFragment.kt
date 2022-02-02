@@ -33,6 +33,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
@@ -43,6 +44,7 @@ import foundation.e.apps.databinding.FragmentApplicationBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
+import foundation.e.apps.utils.enums.User
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -180,6 +182,22 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     installButton.isEnabled = false
                     downloadPB.visibility = View.GONE
                     appSize.visibility = View.VISIBLE
+                }
+                Status.BLOCKED -> {
+                    installButton.setOnClickListener {
+                        val errorMsg = when (
+                            User.valueOf(
+                                mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name
+                            )
+                        ) {
+                            User.ANONYMOUS -> getString(R.string.install_blocked_anonymous)
+                            User.GOOGLE -> getString(R.string.install_blocked_google)
+                            User.UNAVAILABLE -> String()
+                        }
+                        if (errorMsg.isNotBlank()) {
+                            Snackbar.make(view, errorMsg, Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
                 }
                 else -> {
                     Log.d(TAG, "Unknown status: $status")

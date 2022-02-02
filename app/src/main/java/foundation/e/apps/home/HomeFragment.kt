@@ -32,6 +32,7 @@ import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.databinding.FragmentHomeBinding
 import foundation.e.apps.home.model.HomeParentRVAdapter
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.enums.User
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -54,7 +55,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             homeViewModel.getHomeScreenData(it)
         }
 
-        val homeParentRVAdapter = HomeParentRVAdapter(this, pkgManagerModule)
+        val homeParentRVAdapter = HomeParentRVAdapter(
+            this,
+            pkgManagerModule,
+            User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name)
+        )
+
         binding.parentRV.apply {
             adapter = homeParentRVAdapter
             layoutManager = LinearLayoutManager(view.context)
