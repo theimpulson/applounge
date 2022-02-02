@@ -2,8 +2,8 @@ package foundation.e.apps.manager.database.fused
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.api.fused.data.Status
+import foundation.e.apps.utils.enums.Origin
+import foundation.e.apps.utils.enums.Status
 
 @Entity
 data class FusedDownload(

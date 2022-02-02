@@ -8,7 +8,7 @@ import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
 import foundation.e.apps.databinding.FragmentSignInBinding
-import foundation.e.apps.utils.USER
+import foundation.e.apps.utils.enums.User
 
 @AndroidEntryPoint
 class SignInFragment : Fragment(R.layout.fragment_sign_in) {
@@ -22,24 +22,24 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
         _binding = FragmentSignInBinding.bind(view)
 
         binding.googleBT.setOnClickListener {
-            viewModel.saveUserType(USER.GOOGLE)
+            viewModel.saveUserType(User.GOOGLE)
         }
 
         binding.anonymousBT.setOnClickListener {
-            viewModel.saveUserType(USER.ANONYMOUS)
+            viewModel.saveUserType(User.ANONYMOUS)
         }
 
         viewModel.userType.observe(viewLifecycleOwner) {
             if (it.isNotBlank()) {
-                when (USER.valueOf(it)) {
-                    USER.ANONYMOUS -> {
+                when (User.valueOf(it)) {
+                    User.ANONYMOUS -> {
                         view.findNavController()
                             .navigate(R.id.action_signInFragment_to_homeFragment)
                     }
-                    USER.GOOGLE -> {
+                    User.GOOGLE -> {
                         view.findNavController().navigate(R.id.googleSignInFragment)
                     }
-                    USER.UNAVAILABLE -> {}
+                    User.UNAVAILABLE -> {}
                 }
             }
         }

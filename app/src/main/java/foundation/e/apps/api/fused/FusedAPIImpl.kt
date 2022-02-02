@@ -36,12 +36,12 @@ import foundation.e.apps.api.cleanapk.data.search.Search
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.FusedCategory
 import foundation.e.apps.api.fused.data.FusedHome
-import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.PreferenceManagerModule
+import foundation.e.apps.utils.enums.Origin
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton

@@ -20,9 +20,9 @@ package foundation.e.apps.manager.download
 
 import android.app.DownloadManager
 import android.util.Log
-import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

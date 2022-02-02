@@ -27,8 +27,8 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
-import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.databinding.ScreenshotListItemBinding
+import foundation.e.apps.utils.enums.Origin
 
 class ScreenshotRVAdapter(private val list: List<String>, private val origin: Origin) :
     RecyclerView.Adapter<ScreenshotRVAdapter.ViewHolder>() {

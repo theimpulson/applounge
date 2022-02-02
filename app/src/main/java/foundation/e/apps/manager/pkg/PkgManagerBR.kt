@@ -22,8 +22,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.manager.fused.FusedManagerRepository
+import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

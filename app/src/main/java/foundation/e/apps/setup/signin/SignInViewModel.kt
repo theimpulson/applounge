@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.gplay.utils.AC2DMTask
 import foundation.e.apps.utils.DataStoreModule
-import foundation.e.apps.utils.USER
+import foundation.e.apps.utils.enums.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,7 +22,7 @@ class SignInViewModel @Inject constructor(
 
     val userType: LiveData<String> = dataStoreModule.userType.asLiveData()
 
-    fun saveUserType(user: USER) {
+    fun saveUserType(user: User) {
         viewModelScope.launch {
             dataStoreModule.saveUserType(user)
         }

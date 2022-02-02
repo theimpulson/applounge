@@ -25,11 +25,11 @@ import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
-import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.manager.database.fused.FusedDownload
 import foundation.e.apps.manager.download.data.DownloadProgressLD
 import foundation.e.apps.manager.fused.FusedManagerRepository
+import foundation.e.apps.utils.enums.Origin
+import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -25,9 +25,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
-import foundation.e.apps.api.fused.data.Origin
 import foundation.e.apps.application.ApplicationFragmentDirections
 import foundation.e.apps.databinding.ApplicationScreenshotsListItemBinding
+import foundation.e.apps.utils.enums.Origin
 
 class ApplicationScreenshotsRVAdapter(
     private val origin: Origin

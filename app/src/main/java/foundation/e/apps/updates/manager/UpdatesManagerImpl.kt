@@ -21,9 +21,9 @@ package foundation.e.apps.updates.manager
 import com.aurora.gplayapi.data.models.AuthData
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
-import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.enums.Origin
+import foundation.e.apps.utils.enums.Status
 import javax.inject.Inject
 
 class UpdatesManagerImpl @Inject constructor(

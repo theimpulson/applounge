@@ -28,9 +28,9 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.databinding.ActivityMainBinding
-import foundation.e.apps.utils.USER
+import foundation.e.apps.utils.enums.Status
+import foundation.e.apps.utils.enums.User
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -64,18 +64,18 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.userType.observe(this) { user ->
             if (user.isNotBlank() && viewModel.tocStatus.value == true) {
-                when (USER.valueOf(user)) {
-                    USER.ANONYMOUS -> {
+                when (User.valueOf(user)) {
+                    User.ANONYMOUS -> {
                         if (viewModel.authDataJson.value.isNullOrEmpty() && !viewModel.authRequestRunning) {
                             Log.d(TAG, "Fetching new authentication data")
                             viewModel.getAuthData()
                         }
                     }
-                    USER.UNAVAILABLE -> {
+                    User.UNAVAILABLE -> {
                         viewModel.destroyCredentials()
                         navController.navigate(R.id.signInFragment, null, navOptions)
                     }
-                    USER.GOOGLE -> {
+                    User.GOOGLE -> {
                         if (viewModel.authDataJson.value.isNullOrEmpty() && !viewModel.authRequestRunning) {
                             Log.d(TAG, "Fetching new authentication data")
                             viewModel.destroyCredentials()

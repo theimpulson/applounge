@@ -26,6 +26,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
+import foundation.e.apps.utils.enums.User
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -75,7 +76,7 @@ class DataStoreModule @Inject constructor(
     /**
      * User auth type
      */
-    suspend fun saveUserType(user: USER) {
+    suspend fun saveUserType(user: User) {
         context.dataStore.edit {
             it[USERTYPE] = user.name
         }

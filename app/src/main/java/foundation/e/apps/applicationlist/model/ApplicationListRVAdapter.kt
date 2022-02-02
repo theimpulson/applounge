@@ -35,13 +35,13 @@ import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
-import foundation.e.apps.api.fused.data.Origin
-import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.applicationlist.ApplicationListFragmentDirections
 import foundation.e.apps.databinding.ApplicationListItemBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.search.SearchFragmentDirections
 import foundation.e.apps.updates.UpdatesFragmentDirections
+import foundation.e.apps.utils.enums.Origin
+import foundation.e.apps.utils.enums.Status
 import javax.inject.Singleton
 
 @Singleton

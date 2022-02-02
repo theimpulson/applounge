@@ -16,14 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.api.fused.data
+package foundation.e.apps.utils.enums
 
-enum class Status {
-    INSTALLED,
-    UPDATABLE,
-    INSTALLING,
-    DOWNLOADING,
-    UNAVAILABLE,
-    UNINSTALLING,
-    QUEUED
+enum class Origin {
+    CLEANAPK,
+    GITLAB,
+    GPLAY
 }

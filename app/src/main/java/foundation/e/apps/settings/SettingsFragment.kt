@@ -33,7 +33,7 @@ import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.databinding.CustomPreferenceBinding
 import foundation.e.apps.setup.signin.SignInViewModel
-import foundation.e.apps.utils.USER
+import foundation.e.apps.utils.enums.User
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -87,10 +87,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             val authData = gson.fromJson(it, AuthData::class.java)
             viewModel.userType.observe(viewLifecycleOwner) { user ->
                 when (user) {
-                    USER.ANONYMOUS.name -> {
+                    User.ANONYMOUS.name -> {
                         binding.accountType.text = view.context.getString(R.string.user_anonymous)
                     }
-                    USER.GOOGLE.name -> {
+                    User.GOOGLE.name -> {
                         if (authData.userProfile != null) {
                             binding.accountType.text = authData.userProfile?.name
                             binding.email.text = authData.userProfile?.email
@@ -106,7 +106,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         binding.logout.setOnClickListener {
-            viewModel.saveUserType(USER.UNAVAILABLE)
+            viewModel.saveUserType(User.UNAVAILABLE)
         }
     }
 

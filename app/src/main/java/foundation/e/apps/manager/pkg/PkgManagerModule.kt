@@ -28,7 +28,7 @@ import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
 import androidx.core.content.pm.PackageInfoCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
-import foundation.e.apps.api.fused.data.Status
+import foundation.e.apps.utils.enums.Status
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton

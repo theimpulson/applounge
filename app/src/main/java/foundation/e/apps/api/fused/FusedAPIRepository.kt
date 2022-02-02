@@ -24,7 +24,7 @@ import com.aurora.gplayapi.data.models.Category
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.FusedCategory
 import foundation.e.apps.api.fused.data.FusedHome
-import foundation.e.apps.api.fused.data.Origin
+import foundation.e.apps.utils.enums.Origin
 import javax.inject.Inject
 import javax.inject.Singleton
 

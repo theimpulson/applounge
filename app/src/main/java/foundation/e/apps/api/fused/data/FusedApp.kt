@@ -18,6 +18,9 @@
 
 package foundation.e.apps.api.fused.data
 
+import foundation.e.apps.utils.enums.Origin
+import foundation.e.apps.utils.enums.Status
+
 data class FusedApp(
     val _id: String = String(),
     val author: String = String(),

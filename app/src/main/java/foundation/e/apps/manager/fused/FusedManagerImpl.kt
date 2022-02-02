@@ -8,9 +8,9 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import foundation.e.apps.api.fused.data.Status
 import foundation.e.apps.manager.database.DatabaseRepository
 import foundation.e.apps.manager.database.fused.FusedDownload
+import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.delay
 import java.io.File
 import javax.inject.Inject
