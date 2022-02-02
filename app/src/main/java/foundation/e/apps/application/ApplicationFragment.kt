@@ -190,9 +190,9 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                                 mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name
                             )
                         ) {
-                            User.ANONYMOUS -> getString(R.string.install_blocked_anonymous)
+                            User.ANONYMOUS,
+                            User.UNAVAILABLE -> getString(R.string.install_blocked_anonymous)
                             User.GOOGLE -> getString(R.string.install_blocked_google)
-                            User.UNAVAILABLE -> String()
                         }
                         if (errorMsg.isNotBlank()) {
                             Snackbar.make(view, errorMsg, Snackbar.LENGTH_SHORT).show()

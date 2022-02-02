@@ -189,9 +189,9 @@ class ApplicationListRVAdapter(
                 Status.BLOCKED -> {
                     installButton.setOnClickListener {
                         val errorMsg = when (user) {
-                            User.ANONYMOUS -> view.context.getString(R.string.install_blocked_anonymous)
+                            User.ANONYMOUS,
+                            User.UNAVAILABLE -> view.context.getString(R.string.install_blocked_anonymous)
                             User.GOOGLE -> view.context.getString(R.string.install_blocked_google)
-                            User.UNAVAILABLE -> String()
                         }
                         if (errorMsg.isNotBlank()) {
                             Snackbar.make(view, errorMsg, Snackbar.LENGTH_SHORT).show()

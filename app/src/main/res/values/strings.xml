@@ -46,7 +46,6 @@
     <!-- TOS Fragment -->
     <string name="tos_agree">Accept</string>
     <string name="tos_disagree">Reject</string>
-    <string name="tos_title">Terms of Service</string>
     <string name="tos_agree_date">Accepted</string>
     <string name="tos_warning">Before we can proceed you must read and agree to the Terms of Service.</string>
 
