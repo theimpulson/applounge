@@ -40,7 +40,9 @@ class TOSFragment : Fragment(R.layout.fragment_tos) {
         val tosHtmlData = tosHtml.reader().readText()
         binding.TOSTextView.text = Html.fromHtml(
             tosHtmlData,
-            Html.FROM_HTML_MODE_COMPACT and Html.FROM_HTML_SEPARATOR_LINE_BREAK_HEADING
+            Html.FROM_HTML_MODE_COMPACT and
+                Html.FROM_HTML_SEPARATOR_LINE_BREAK_HEADING and
+                Html.FROM_HTML_OPTION_USE_CSS_COLORS
         )
 
         binding.toolbar.setNavigationOnClickListener {
