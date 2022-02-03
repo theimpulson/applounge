@@ -18,6 +18,11 @@
 
 package foundation.e.apps.application
 
+import android.graphics.Bitmap
+import android.util.Base64
+import android.util.Log
+import android.widget.ImageView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,8 +35,10 @@ import foundation.e.apps.manager.download.data.DownloadProgressLD
 import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
+import foundation.e.apps.utils.enums.Type
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,16 +67,25 @@ class ApplicationViewModel @Inject constructor(
         }
     }
 
-    fun getApplication(authData: AuthData, app: FusedApp, origin: Origin) {
+    fun getApplication(authData: AuthData, app: FusedApp, origin: Origin, imageView: ImageView) {
         viewModelScope.launch {
-            val downloadLink = fusedAPIRepository.getDownloadLink(
-                app._id,
-                app.package_name,
-                app.latest_version_code,
-                app.offer_type,
-                authData,
-                origin
-            )
+            val byteArrayOS = ByteArrayOutputStream()
+            val bitmap = imageView.drawable.toBitmap()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOS)
+
+            val downloadLink = if (app.type == Type.PWA) {
+                app.url
+            } else {
+                fusedAPIRepository.getDownloadLink(
+                    app._id,
+                    app.package_name,
+                    app.latest_version_code,
+                    app.offer_type,
+                    authData,
+                    origin
+                )
+            }
+
             fusedDownload = FusedDownload(
                 app._id,
                 app.origin,
@@ -78,7 +94,9 @@ class ApplicationViewModel @Inject constructor(
                 app.package_name,
                 downloadLink,
                 0,
-                app.status
+                app.status,
+                app.type,
+                Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT)
             )
             fusedDownload?.let { fusedManagerRepository.addDownload(it) }
         }

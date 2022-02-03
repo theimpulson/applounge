@@ -10,7 +10,9 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import foundation.e.apps.manager.database.DatabaseRepository
 import foundation.e.apps.manager.database.fused.FusedDownload
+import foundation.e.apps.utils.PWAManagerModule
 import foundation.e.apps.utils.enums.Status
+import foundation.e.apps.utils.enums.Type
 import kotlinx.coroutines.delay
 import java.io.File
 import javax.inject.Inject
@@ -21,6 +23,7 @@ class FusedManagerImpl @Inject constructor(
     private val downloadManager: DownloadManager,
     private val notificationManager: NotificationManager,
     private val databaseRepository: DatabaseRepository,
+    private val pwaManagerModule: PWAManagerModule,
     @Named("download") private val downloadNotificationChannel: NotificationChannel,
     @Named("update") private val updateNotificationChannel: NotificationChannel
 ) {
@@ -67,17 +70,10 @@ class FusedManagerImpl @Inject constructor(
     }
 
     suspend fun downloadAndInstallApp(fusedDownload: FusedDownload) {
-        val packagePath = File(cacheDir, "${fusedDownload.package_name}.apk")
-        if (packagePath.exists()) packagePath.delete() // Delete old download if-exists
-        val request = DownloadManager.Request(Uri.parse(fusedDownload.downloadLink))
-            .setTitle(fusedDownload.name)
-            .setDestinationUri(Uri.fromFile(packagePath))
-        val requestId = downloadManager.enqueue(request)
-        fusedDownload.apply {
-            status = Status.DOWNLOADING
-            downloadId = requestId
+        when (fusedDownload.type) {
+            Type.NATIVE -> downloadNativeApp(fusedDownload)
+            Type.PWA -> pwaManagerModule.installPWAApp(fusedDownload)
         }
-        databaseRepository.updateDownload(fusedDownload)
     }
 
     suspend fun cancelDownload(downloadId: Long) {
@@ -115,5 +111,19 @@ class FusedManagerImpl @Inject constructor(
     private fun flushOldDownload(packageName: String) {
         val packagePath = File(cacheDir, "$packageName.apk")
         if (packagePath.exists()) packagePath.delete()
+    }
+
+    private suspend fun downloadNativeApp(fusedDownload: FusedDownload) {
+        val packagePath = File(cacheDir, "${fusedDownload.package_name}.apk")
+        if (packagePath.exists()) packagePath.delete() // Delete old download if-exists
+        val request = DownloadManager.Request(Uri.parse(fusedDownload.downloadLink))
+            .setTitle(fusedDownload.name)
+            .setDestinationUri(Uri.fromFile(packagePath))
+        val requestId = downloadManager.enqueue(request)
+        fusedDownload.apply {
+            status = Status.DOWNLOADING
+            downloadId = requestId
+        }
+        databaseRepository.updateDownload(fusedDownload)
     }
 }

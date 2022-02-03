@@ -44,6 +44,7 @@ import foundation.e.apps.utils.DataStoreModule
 import foundation.e.apps.utils.PreferenceManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
+import foundation.e.apps.utils.enums.Type
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -194,8 +195,12 @@ class FusedAPIImpl @Inject constructor(
                 getPWAAppsResponse(category)
             }
             response?.apps?.forEach {
-                it.status =
+                it.status = if (it.isFree) {
                     pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+                } else {
+                    Status.BLOCKED
+                }
+                it.type = if (it.is_pwa) Type.PWA else Type.NATIVE
             }
             return response?.apps
         } else {
@@ -213,6 +218,7 @@ class FusedAPIImpl @Inject constructor(
             } else {
                 Status.BLOCKED
             }
+            it.type = if (it.is_pwa) Type.PWA else Type.NATIVE
         }
         return response?.apps
     }
@@ -225,6 +231,7 @@ class FusedAPIImpl @Inject constructor(
             } else {
                 Status.BLOCKED
             }
+            it.type = if (it.is_pwa) Type.PWA else Type.NATIVE
         }
         return response?.apps
     }
@@ -267,6 +274,7 @@ class FusedAPIImpl @Inject constructor(
             } else {
                 Status.BLOCKED
             }
+            fusedApp.type = if (fusedApp.is_pwa) Type.PWA else Type.NATIVE
             list.add(fusedApp)
         }
         return list
@@ -290,6 +298,7 @@ class FusedAPIImpl @Inject constructor(
             } else {
                 Status.BLOCKED
             }
+            it.type = if (it.is_pwa) Type.PWA else Type.NATIVE
         }
         return response ?: FusedApp()
     }
@@ -503,6 +512,7 @@ class FusedAPIImpl @Inject constructor(
             } else {
                 Status.BLOCKED
             }
+            it.type = if (it.is_pwa) Type.PWA else Type.NATIVE
             it.source =
                 if (source.contentEquals(CleanAPKInterface.APP_SOURCE_FOSS)) "Open Source" else "PWA"
             list.add(it)

@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -61,6 +62,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
     private val applicationViewModel: ApplicationViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
+
+    private var applicationIcon: ImageView? = null
 
     companion object {
         private const val PRIVACY_CALCULATION_SOURCE_CODE_URL =
@@ -141,7 +144,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             mainActivityViewModel.authData.value?.let { data ->
-                                applicationViewModel.getApplication(data, fusedApp, args.origin)
+                                applicationViewModel.getApplication(data, fusedApp, args.origin, applicationIcon!!)
                             }
                         }
                     }
@@ -153,7 +156,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         text = getString(R.string.install)
                         setOnClickListener {
                             mainActivityViewModel.authData.value?.let { data ->
-                                applicationViewModel.getApplication(data, fusedApp, args.origin)
+                                applicationViewModel.getApplication(data, fusedApp, args.origin, applicationIcon!!)
                             }
                         }
                     }
@@ -221,6 +224,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
             // Title widgets
             binding.titleInclude.apply {
+                applicationIcon = appIcon
                 appName.text = it.name
                 appAuthor.text = it.author
                 categoryTitle.text = it.category
@@ -323,6 +327,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        applicationIcon = null
     }
 
     private fun shareApp(name: String, shareUrl: String): Intent {

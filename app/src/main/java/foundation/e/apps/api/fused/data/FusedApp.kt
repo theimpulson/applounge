@@ -20,6 +20,7 @@ package foundation.e.apps.api.fused.data
 
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
+import foundation.e.apps.utils.enums.Type
 
 data class FusedApp(
     val _id: String = String(),
@@ -43,5 +44,8 @@ data class FusedApp(
     val shareUrl: String = String(),
     val appSize: String = String(),
     var source: String = String(),
-    val isFree: Boolean = true
+    val isFree: Boolean = true,
+    val is_pwa: Boolean = false,
+    val url: String = String(),
+    var type: Type = Type.NATIVE
 )

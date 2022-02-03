@@ -28,6 +28,7 @@ import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fused.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.updates.manager.UpdatesManagerRepository
+import foundation.e.apps.utils.enums.Type
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -48,14 +49,18 @@ class UpdatesViewModel @Inject constructor(
 
     fun getApplication(authData: AuthData, app: FusedApp) {
         viewModelScope.launch {
-            val downloadLink = fusedAPIRepository.getDownloadLink(
-                app._id,
-                app.package_name,
-                app.latest_version_code,
-                app.offer_type,
-                authData,
-                app.origin
-            )
+            val downloadLink = if (app.type == Type.PWA) {
+                app.url
+            } else {
+                fusedAPIRepository.getDownloadLink(
+                    app._id,
+                    app.package_name,
+                    app.latest_version_code,
+                    app.offer_type,
+                    authData,
+                    app.origin
+                )
+            }
             val fusedDownload = FusedDownload(
                 app._id,
                 app.origin,
@@ -64,7 +69,9 @@ class UpdatesViewModel @Inject constructor(
                 app.package_name,
                 downloadLink,
                 0,
-                app.status
+                app.status,
+                app.type,
+                app.icon_image_path
             )
             fusedManagerRepository.addDownload(fusedDownload)
         }

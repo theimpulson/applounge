@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
+import foundation.e.apps.utils.enums.Type
 
 @Entity
 data class FusedDownload(
@@ -14,5 +15,7 @@ data class FusedDownload(
     val package_name: String,
     val downloadLink: String,
     var downloadId: Long = 0,
-    val orgStatus: Status = Status.UNAVAILABLE
+    val orgStatus: Status = Status.UNAVAILABLE,
+    val type: Type = Type.NATIVE,
+    val iconByteArray: String = String()
 )
