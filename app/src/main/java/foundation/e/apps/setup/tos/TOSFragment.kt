@@ -1,6 +1,7 @@
 package foundation.e.apps.setup.tos
 
 import android.os.Bundle
+import android.text.Html
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -42,7 +43,10 @@ class TOSFragment : Fragment(R.layout.fragment_tos) {
 
         val tosHtml = resources.openRawResource(R.raw.terms_of_use)
         val tosHtmlData = tosHtml.reader().readText()
-        binding.TOSWebView.loadData(tosHtmlData, mimeType, encoding)
+        binding.TOSTextView.text = Html.fromHtml(
+            tosHtmlData,
+            Html.FROM_HTML_MODE_COMPACT and Html.FROM_HTML_SEPARATOR_LINE_BREAK_HEADING
+        )
 
         binding.toolbar.setNavigationOnClickListener {
             view.findNavController().navigateUp()
