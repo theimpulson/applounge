@@ -111,10 +111,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
             list.forEach {
                 if (it.origin == args.origin && (it.package_name == args.packageName || it.id == args.id)) {
-                    applicationViewModel.apply {
-                        appStatus.value = it.status
-                        fusedDownload = it
-                    }
+                    applicationViewModel.appStatus.value = it.status
                 }
             }
         }
@@ -143,8 +140,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         setTextColor(Color.WHITE)
                         backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
-                            mainActivityViewModel.authData.value?.let { data ->
-                                applicationViewModel.getApplication(data, fusedApp, args.origin, applicationIcon!!)
+                            applicationIcon?.let {
+                                mainActivityViewModel.getApplication(fusedApp, it)
                             }
                         }
                     }
@@ -155,8 +152,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     installButton.apply {
                         text = getString(R.string.install)
                         setOnClickListener {
-                            mainActivityViewModel.authData.value?.let { data ->
-                                applicationViewModel.getApplication(data, fusedApp, args.origin, applicationIcon!!)
+                            applicationIcon?.let {
+                                mainActivityViewModel.getApplication(fusedApp, it)
                             }
                         }
                     }
@@ -167,9 +164,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     installButton.apply {
                         text = getString(R.string.cancel)
                         setOnClickListener {
-                            applicationViewModel.apply {
-                                cancelDownload()
-                            }
+                            mainActivityViewModel.cancelDownload(fusedApp)
                         }
                     }
                 }
@@ -177,9 +172,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     installButton.apply {
                         text = getString(R.string.cancel)
                         setOnClickListener {
-                            applicationViewModel.apply {
-                                cancelDownload()
-                            }
+                            mainActivityViewModel.cancelDownload(fusedApp)
                         }
                     }
                     downloadPB.visibility = View.VISIBLE

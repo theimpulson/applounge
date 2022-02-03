@@ -23,6 +23,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -163,7 +164,7 @@ class ApplicationListRVAdapter(
                         setTextColor(Color.WHITE)
                         backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
-                            installApplication(searchApp)
+                            installApplication(searchApp, appIcon)
                         }
                     }
                 }
@@ -171,7 +172,7 @@ class ApplicationListRVAdapter(
                     installButton.apply {
                         text = context.getString(R.string.install)
                         setOnClickListener {
-                            installApplication(searchApp)
+                            installApplication(searchApp, appIcon)
                         }
                     }
                 }
@@ -213,8 +214,8 @@ class ApplicationListRVAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun installApplication(searchApp: FusedApp) {
-        fusedAPIInterface.getApplication(searchApp)
+    private fun installApplication(searchApp: FusedApp, appIcon: ImageView) {
+        fusedAPIInterface.getApplication(searchApp, appIcon)
     }
 
     private fun cancelDownload(searchApp: FusedApp) {

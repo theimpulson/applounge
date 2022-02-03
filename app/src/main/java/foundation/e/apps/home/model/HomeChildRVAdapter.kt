@@ -21,6 +21,7 @@ package foundation.e.apps.home.model
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -112,7 +113,7 @@ class HomeChildRVAdapter(
                         setTextColor(Color.WHITE)
                         backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
-                            installApplication(homeApp)
+                            installApplication(homeApp, appIcon)
                         }
                     }
                 }
@@ -120,7 +121,7 @@ class HomeChildRVAdapter(
                     installButton.apply {
                         text = context.getString(R.string.install)
                         setOnClickListener {
-                            installApplication(homeApp)
+                            installApplication(homeApp, appIcon)
                         }
                     }
                 }
@@ -162,8 +163,8 @@ class HomeChildRVAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun installApplication(homeApp: FusedApp) {
-        fusedAPIInterface.getApplication(homeApp)
+    private fun installApplication(homeApp: FusedApp, appIcon: ImageView) {
+        fusedAPIInterface.getApplication(homeApp, appIcon)
     }
 
     private fun cancelDownload(homeApp: FusedApp) {

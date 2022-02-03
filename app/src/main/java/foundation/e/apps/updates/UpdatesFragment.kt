@@ -20,6 +20,7 @@ package foundation.e.apps.updates
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -54,10 +55,12 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
 
         binding.button.isEnabled = false
 
-        mainActivityViewModel.authData.observe(viewLifecycleOwner) { date ->
-            updatesViewModel.getUpdates(date)
+        mainActivityViewModel.authData.observe(viewLifecycleOwner) { data ->
+            updatesViewModel.getUpdates(data)
             binding.button.setOnClickListener {
-                updatesViewModel.updateAllApps(date)
+                updatesViewModel.updatesList.value?.forEach { app ->
+                    getApplication(app)
+                }
             }
         }
 
@@ -101,13 +104,11 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
         _binding = null
     }
 
-    override fun getApplication(app: FusedApp) {
-        mainActivityViewModel.authData.value?.let {
-            updatesViewModel.getApplication(it, app)
-        }
+    override fun getApplication(app: FusedApp, appIcon: ImageView?) {
+        mainActivityViewModel.getApplication(app, appIcon)
     }
 
     override fun cancelDownload(app: FusedApp) {
-        updatesViewModel.cancelDownload(app.package_name)
+        mainActivityViewModel.cancelDownload(app)
     }
 }

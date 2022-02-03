@@ -25,17 +25,13 @@ import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
-import foundation.e.apps.manager.database.fused.FusedDownload
-import foundation.e.apps.manager.fused.FusedManagerRepository
-import foundation.e.apps.utils.enums.Type
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ApplicationListViewModel @Inject constructor(
-    private val fusedAPIRepository: FusedAPIRepository,
-    private val fusedManagerRepository: FusedManagerRepository
+    private val fusedAPIRepository: FusedAPIRepository
 ) : ViewModel() {
 
     val appListLiveData: MutableLiveData<List<FusedApp>> = MutableLiveData()
@@ -50,42 +46,6 @@ class ApplicationListViewModel @Inject constructor(
                     source
                 )
             )
-        }
-    }
-
-    fun getApplication(authData: AuthData, app: FusedApp) {
-        viewModelScope.launch {
-            val downloadLink = if (app.type == Type.PWA) {
-                app.url
-            } else {
-                fusedAPIRepository.getDownloadLink(
-                    app._id,
-                    app.package_name,
-                    app.latest_version_code,
-                    app.offer_type,
-                    authData,
-                    app.origin
-                )
-            }
-            val fusedDownload = FusedDownload(
-                app._id,
-                app.origin,
-                app.status,
-                app.name,
-                app.package_name,
-                downloadLink,
-                0,
-                app.status,
-                app.type,
-                app.icon_image_path
-            )
-            fusedManagerRepository.addDownload(fusedDownload)
-        }
-    }
-
-    fun cancelDownload(packageName: String) {
-        viewModelScope.launch {
-            fusedManagerRepository.cancelDownload(packageName)
         }
     }
 }

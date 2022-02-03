@@ -20,6 +20,7 @@ package foundation.e.apps.home
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -102,13 +103,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
         _binding = null
     }
 
-    override fun getApplication(app: FusedApp) {
-        mainActivityViewModel.authData.value?.let {
-            homeViewModel.getApplication(it, app)
-        }
+    override fun getApplication(app: FusedApp, appIcon: ImageView?) {
+        mainActivityViewModel.getApplication(app, appIcon)
     }
 
     override fun cancelDownload(app: FusedApp) {
-        homeViewModel.cancelDownload(app.package_name)
+        mainActivityViewModel.cancelDownload(app)
     }
 }

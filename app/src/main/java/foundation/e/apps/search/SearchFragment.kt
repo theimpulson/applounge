@@ -217,13 +217,11 @@ class SearchFragment :
         searchView?.suggestionsAdapter?.changeCursor(cursor)
     }
 
-    override fun getApplication(app: FusedApp) {
-        mainActivityViewModel.authData.value?.let {
-            searchViewModel.getApplication(it, app)
-        }
+    override fun getApplication(app: FusedApp, appIcon: ImageView?) {
+        mainActivityViewModel.getApplication(app, appIcon)
     }
 
     override fun cancelDownload(app: FusedApp) {
-        searchViewModel.cancelDownload(app.package_name)
+        mainActivityViewModel.cancelDownload(app)
     }
 }

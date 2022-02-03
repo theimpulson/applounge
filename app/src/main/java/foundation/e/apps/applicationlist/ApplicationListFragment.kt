@@ -20,6 +20,7 @@ package foundation.e.apps.applicationlist
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -121,13 +122,11 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         super.onPause()
     }
 
-    override fun getApplication(app: FusedApp) {
-        mainActivityViewModel.authData.value?.let {
-            viewModel.getApplication(it, app)
-        }
+    override fun getApplication(app: FusedApp, appIcon: ImageView?) {
+        mainActivityViewModel.getApplication(app, appIcon)
     }
 
     override fun cancelDownload(app: FusedApp) {
-        viewModel.cancelDownload(app.package_name)
+        mainActivityViewModel.cancelDownload(app)
     }
 }

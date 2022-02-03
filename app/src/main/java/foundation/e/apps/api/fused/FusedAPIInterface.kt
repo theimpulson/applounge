@@ -18,6 +18,7 @@
 
 package foundation.e.apps.api.fused
 
+import android.widget.ImageView
 import foundation.e.apps.api.fused.data.FusedApp
 
 /**
@@ -25,7 +26,7 @@ import foundation.e.apps.api.fused.data.FusedApp
  */
 interface FusedAPIInterface {
 
-    fun getApplication(app: FusedApp)
+    fun getApplication(app: FusedApp, appIcon: ImageView? = null)
 
     fun cancelDownload(app: FusedApp)
 }

@@ -18,8 +18,12 @@
 
 package foundation.e.apps
 
+import android.graphics.Bitmap
 import android.os.Build
+import android.util.Base64
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,17 +33,20 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fused.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.utils.DataStoreModule
+import foundation.e.apps.utils.enums.Type
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    private val fusedAPIRepository: FusedAPIRepository,
-    private val dataStoreModule: DataStoreModule,
     private val gson: Gson,
+    private val dataStoreModule: DataStoreModule,
+    private val fusedAPIRepository: FusedAPIRepository,
     private val fusedManagerRepository: FusedManagerRepository
 ) : ViewModel() {
 
@@ -55,6 +62,10 @@ class MainActivityViewModel @Inject constructor(
     // Downloads
     val downloadList = fusedManagerRepository.getDownloadList()
     var isInstallInProgress = false
+
+    /*
+     * Authentication related functions
+     */
 
     fun getAuthData() {
         if (!authRequestRunning) {
@@ -84,15 +95,75 @@ class MainActivityViewModel @Inject constructor(
         return fusedAPIRepository.validateAuthData(authData)
     }
 
+    /*
+     * Notification functions
+     */
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun createNotificationChannels() {
         fusedManagerRepository.createNotificationChannels()
     }
+
+    /*
+     * Download and cancellation functions
+     */
 
     fun downloadAndInstallApp(fusedDownload: FusedDownload) {
         isInstallInProgress = true
         viewModelScope.launch {
             fusedManagerRepository.downloadAndInstallApp(fusedDownload)
         }
+    }
+
+    fun getApplication(app: FusedApp, imageView: ImageView?) {
+        viewModelScope.launch {
+            val appIcon = imageView?.let { getImageBase64(it) } ?: ""
+            val downloadLink = getAppDownloadLink(app)
+
+            val fusedDownload = FusedDownload(
+                app._id,
+                app.origin,
+                app.status,
+                app.name,
+                app.package_name,
+                downloadLink,
+                0,
+                app.status,
+                app.type,
+                appIcon
+            )
+            fusedManagerRepository.addDownload(fusedDownload)
+        }
+    }
+
+    fun cancelDownload(app: FusedApp) {
+        viewModelScope.launch {
+            fusedManagerRepository.cancelDownload(app.package_name)
+        }
+    }
+
+    private suspend fun getAppDownloadLink(app: FusedApp): String {
+        authData.value?.let {
+            return if (app.type == Type.PWA) {
+                app.url
+            } else {
+                fusedAPIRepository.getDownloadLink(
+                    app._id,
+                    app.package_name,
+                    app.latest_version_code,
+                    app.offer_type,
+                    it,
+                    app.origin
+                )
+            }
+        }
+        return String()
+    }
+
+    private fun getImageBase64(imageView: ImageView): String {
+        val byteArrayOS = ByteArrayOutputStream()
+        val bitmap = imageView.drawable.toBitmap()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOS)
+        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT)
     }
 }
