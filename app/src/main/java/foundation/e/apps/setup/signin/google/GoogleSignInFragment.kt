@@ -62,10 +62,14 @@ class GoogleSignInFragment :
         _binding = FragmentGoogleSigninBinding.bind(view)
         setupWebView()
 
-        mainActivityViewModel.authDataJson.observe(viewLifecycleOwner) {
-            if (!it.isNullOrEmpty()) {
-                viewModel.saveUserType(User.GOOGLE)
-                view.findNavController().navigate(R.id.action_googleSignInFragment_to_homeFragment)
+        viewModel.userType.observe(viewLifecycleOwner) {
+            if (it.isNotBlank()) {
+                when (User.valueOf(it)) {
+                    User.GOOGLE -> {
+                        view.findNavController().navigate(R.id.action_googleSignInFragment_to_homeFragment)
+                    }
+                    else -> {}
+                }
             }
         }
     }
@@ -89,6 +93,7 @@ class GoogleSignInFragment :
                     binding.webview.evaluateJavascript("(function() { return document.getElementById('profileIdentifier').innerHTML; })();") {
                         val email = it.replace("\"".toRegex(), "")
                         viewModel.fetchAuthData(email, oauthToken)
+                        viewModel.saveUserType(User.GOOGLE)
                     }
                 }
             }
