@@ -40,13 +40,11 @@ import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
-import foundation.e.apps.utils.DataStoreModule
 import foundation.e.apps.utils.PreferenceManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -55,9 +53,7 @@ class FusedAPIImpl @Inject constructor(
     private val gPlayAPIRepository: GPlayAPIRepository,
     private val pkgManagerModule: PkgManagerModule,
     private val preferenceManagerModule: PreferenceManagerModule,
-    private val dataStoreModule: DataStoreModule,
-    @ApplicationContext private val context: Context,
-    @Named("cacheDir") private val cacheDir: String
+    @ApplicationContext private val context: Context
 ) {
 
     companion object {
@@ -195,12 +191,8 @@ class FusedAPIImpl @Inject constructor(
                 getPWAAppsResponse(category)
             }
             response?.apps?.forEach {
-                it.status = if (it.isFree) {
-                    pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
-                } else {
-                    Status.BLOCKED
-                }
-                it.type = if (it.is_pwa) Type.PWA else Type.NATIVE
+                it.updateStatus()
+                it.updateType()
             }
             return response?.apps
         } else {
@@ -213,12 +205,8 @@ class FusedAPIImpl @Inject constructor(
     suspend fun getPWAApps(category: String): List<FusedApp>? {
         val response = getPWAAppsResponse(category)
         response?.apps?.forEach {
-            it.status = if (it.isFree) {
-                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
-            } else {
-                Status.BLOCKED
-            }
-            it.type = if (it.is_pwa) Type.PWA else Type.NATIVE
+            it.updateStatus()
+            it.updateType()
         }
         return response?.apps
     }
@@ -226,12 +214,8 @@ class FusedAPIImpl @Inject constructor(
     suspend fun getOpenSourceApps(category: String): List<FusedApp>? {
         val response = getOpenSourceAppsResponse(category)
         response?.apps?.forEach {
-            it.status = if (it.isFree) {
-                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
-            } else {
-                Status.BLOCKED
-            }
-            it.type = if (it.is_pwa) Type.PWA else Type.NATIVE
+            it.updateStatus()
+            it.updateType()
         }
         return response?.apps
     }
@@ -265,17 +249,10 @@ class FusedAPIImpl @Inject constructor(
                 app.transformToFusedApp()
             }
         }
-        response.forEach { fusedApp ->
-            fusedApp.status = if (fusedApp.isFree) {
-                pkgManagerModule.getPackageStatus(
-                    fusedApp.package_name,
-                    fusedApp.latest_version_code
-                )
-            } else {
-                Status.BLOCKED
-            }
-            fusedApp.type = if (fusedApp.is_pwa) Type.PWA else Type.NATIVE
-            list.add(fusedApp)
+        response.forEach {
+            it.updateStatus()
+            it.updateType()
+            list.add(it)
         }
         return list
     }
@@ -293,12 +270,8 @@ class FusedAPIImpl @Inject constructor(
             app?.transformToFusedApp()
         }
         response?.let {
-            it.status = if (it.isFree) {
-                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
-            } else {
-                Status.BLOCKED
-            }
-            it.type = if (it.is_pwa) Type.PWA else Type.NATIVE
+            it.updateStatus()
+            it.updateType()
         }
         return response ?: FusedApp()
     }
@@ -507,12 +480,8 @@ class FusedAPIImpl @Inject constructor(
             cleanAPKRepository.searchApps(keyword, source, type, nres, page, by).body()?.apps
 
         response?.forEach {
-            it.status = if (it.isFree) {
-                pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
-            } else {
-                Status.BLOCKED
-            }
-            it.type = if (it.is_pwa) Type.PWA else Type.NATIVE
+            it.updateStatus()
+            it.updateType()
             it.source =
                 if (source.contentEquals(CleanAPKInterface.APP_SOURCE_FOSS)) "Open Source" else "PWA"
             list.add(it)
@@ -551,36 +520,64 @@ class FusedAPIImpl @Inject constructor(
             when (key) {
                 "top_updated_apps" -> {
                     if (home.top_updated_apps.isNotEmpty()) {
+                        home.top_updated_apps.forEach {
+                            it.updateStatus()
+                            it.updateType()
+                        }
                         list.add(FusedHome(value, home.top_updated_apps))
                     }
                 }
                 "top_updated_games" -> {
                     if (home.top_updated_games.isNotEmpty()) {
+                        home.top_updated_games.forEach {
+                            it.updateStatus()
+                            it.updateType()
+                        }
                         list.add(FusedHome(value, home.top_updated_games))
                     }
                 }
                 "popular_apps" -> {
                     if (home.popular_apps.isNotEmpty()) {
+                        home.popular_apps.forEach {
+                            it.updateStatus()
+                            it.updateType()
+                        }
                         list.add(FusedHome(value, home.popular_apps))
                     }
                 }
                 "popular_games" -> {
                     if (home.popular_games.isNotEmpty()) {
+                        home.popular_games.forEach {
+                            it.updateStatus()
+                            it.updateType()
+                        }
                         list.add(FusedHome(value, home.popular_games))
                     }
                 }
                 "popular_apps_in_last_24_hours" -> {
                     if (home.popular_apps_in_last_24_hours.isNotEmpty()) {
+                        home.popular_apps_in_last_24_hours.forEach {
+                            it.updateStatus()
+                            it.updateType()
+                        }
                         list.add(FusedHome(value, home.popular_apps_in_last_24_hours))
                     }
                 }
                 "popular_games_in_last_24_hours" -> {
                     if (home.popular_games_in_last_24_hours.isNotEmpty()) {
+                        home.popular_games_in_last_24_hours.forEach {
+                            it.updateStatus()
+                            it.updateType()
+                        }
                         list.add(FusedHome(value, home.popular_games_in_last_24_hours))
                     }
                 }
                 "discover" -> {
                     if (home.discover.isNotEmpty()) {
+                        home.discover.forEach {
+                            it.updateStatus()
+                            it.updateType()
+                        }
                         list.add(FusedHome(value, home.discover))
                     }
                 }
@@ -615,7 +612,7 @@ class FusedAPIImpl @Inject constructor(
      */
 
     private fun App.transformToFusedApp(): FusedApp {
-        return FusedApp(
+        val app = FusedApp(
             _id = this.id.toString(),
             author = this.developerName,
             category = this.categoryName,
@@ -632,15 +629,25 @@ class FusedAPIImpl @Inject constructor(
                 usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDouble() else -1.0
             ),
             offer_type = this.offerType,
-            status = if (this.isFree) pkgManagerModule.getPackageStatus(
-                this.packageName,
-                this.versionCode
-            ) else Status.BLOCKED,
             origin = Origin.GPLAY,
             shareUrl = this.shareUrl,
             appSize = Formatter.formatFileSize(context, this.size),
             isFree = this.isFree
         )
+        app.updateStatus()
+        return app
+    }
+
+    private fun FusedApp.updateStatus() {
+        this.status = if (this.isFree) {
+            pkgManagerModule.getPackageStatus(this.package_name, this.latest_version_code)
+        } else {
+            Status.BLOCKED
+        }
+    }
+
+    private fun FusedApp.updateType() {
+        this.type = if (this.is_pwa) Type.PWA else Type.NATIVE
     }
 
     private fun MutableList<Artwork>.transformToList(): List<String> {
