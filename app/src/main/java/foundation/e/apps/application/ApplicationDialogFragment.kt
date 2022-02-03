@@ -20,6 +20,12 @@ package foundation.e.apps.application
 
 import android.app.Dialog
 import android.os.Bundle
+import android.text.Html
+import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.URLSpan
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,10 +42,35 @@ class ApplicationDialogFragment(
         return MaterialAlertDialogBuilder(requireContext())
             .setIcon(drawable)
             .setTitle(title)
-            .setMessage(message)
+            .setMessage(Html.fromHtml(message, Html.FROM_HTML_MODE_COMPACT))
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 this.dismiss()
             }
             .create()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        dialog?.findViewById<TextView>(android.R.id.message)?.apply {
+            movementMethod = LinkMovementMethod.getInstance()
+            isClickable = true
+            removeUnderlineFromLinks()
+        }
+    }
+
+    private fun TextView.removeUnderlineFromLinks() {
+        val spannable = SpannableString(text)
+        for (urlSpan in spannable.getSpans(0, spannable.length, URLSpan::class.java)) {
+            spannable.setSpan(
+                object : URLSpan(urlSpan.url) {
+                    override fun updateDrawState(textPaint: TextPaint) {
+                        super.updateDrawState(textPaint)
+                        textPaint.isUnderlineText = false
+                    }
+                },
+                spannable.getSpanStart(urlSpan), spannable.getSpanEnd(urlSpan), 0
+            )
+        }
+        text = spannable
     }
 }

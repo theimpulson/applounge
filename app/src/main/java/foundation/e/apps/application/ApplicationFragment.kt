@@ -62,6 +62,14 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
     private val applicationViewModel: ApplicationViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
+    companion object {
+        private const val PRIVACY_CALCULATION_SOURCE_CODE_URL =
+            "https://doc.e.foundation/privacy_score"
+        private const val EXODUS_URL = "https://exodus-privacy.eu.org"
+        private const val PRIVACY_GUIDELINE_URL =
+            "https://doc.e.foundation/apps.html#what-information-is-provided-for-each-app-within-the-e-application-installer"
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentApplicationBinding.bind(view)
@@ -251,8 +259,13 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 appPrivacyScoreLayout.setOnClickListener {
                     ApplicationDialogFragment(
                         R.drawable.ic_lock,
-                        getString(R.string.privacy),
-                        getString(R.string.privacy_description)
+                        getString(R.string.privacy_score),
+                        getString(
+                            R.string.privacy_description,
+                            PRIVACY_CALCULATION_SOURCE_CODE_URL,
+                            EXODUS_URL,
+                            PRIVACY_GUIDELINE_URL
+                        )
                     ).show(childFragmentManager, TAG)
                 }
             }
