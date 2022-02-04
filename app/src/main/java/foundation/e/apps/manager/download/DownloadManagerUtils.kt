@@ -21,19 +21,17 @@ package foundation.e.apps.manager.download
 import android.app.DownloadManager
 import android.util.Log
 import foundation.e.apps.manager.fused.FusedManagerRepository
-import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
-@DelicateCoroutinesApi
 class DownloadManagerUtils @Inject constructor(
     private val downloadManager: DownloadManager,
     private val downloadManagerQuery: DownloadManager.Query,
-    private val pkgManagerModule: PkgManagerModule,
     private val fusedManagerRepository: FusedManagerRepository
 ) {
     private val TAG = DownloadManagerUtils::class.java.simpleName
@@ -47,19 +45,21 @@ class DownloadManagerUtils @Inject constructor(
         return DownloadManager.STATUS_FAILED
     }
 
-    fun installApplication(downloadId: Long) {
+    @DelicateCoroutinesApi
+    fun checkAndUpdateStatus(downloadId: Long) {
         val file = File(downloadedFile(downloadId))
         if (file.exists()) {
             updateDownloadStatus(downloadId)
-            pkgManagerModule.installApplication(file)
         } else {
             Log.d(TAG, "Given file doesn't exists, exiting!")
         }
     }
 
+    @DelicateCoroutinesApi
     fun cancelDownload(downloadId: Long) {
         GlobalScope.launch {
-            fusedManagerRepository.cancelDownload(downloadId)
+            val fusedDownload = fusedManagerRepository.getFusedDownload(downloadId)
+            fusedManagerRepository.cancelDownload(fusedDownload)
         }
     }
 
@@ -73,9 +73,12 @@ class DownloadManagerUtils @Inject constructor(
         return fileUri.removePrefix("file://")
     }
 
+    @DelicateCoroutinesApi
     private fun updateDownloadStatus(downloadId: Long) {
         GlobalScope.launch {
-            fusedManagerRepository.updateDownloadStatus(downloadId, Status.INSTALLING)
+            delay(100)
+            val fusedDownload = fusedManagerRepository.getFusedDownload(downloadId)
+            fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLING, downloadId)
         }
     }
 }

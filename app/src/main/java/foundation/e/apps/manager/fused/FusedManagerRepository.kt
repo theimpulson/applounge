@@ -18,31 +18,35 @@ class FusedManagerRepository @Inject constructor(
         return fusedManagerImpl.createNotificationChannels()
     }
 
-    suspend fun downloadAndInstallApp(fusedDownload: FusedDownload) {
-        return fusedManagerImpl.downloadAndInstallApp(fusedDownload)
+    suspend fun downloadApp(fusedDownload: FusedDownload) {
+        return fusedManagerImpl.downloadApp(fusedDownload)
     }
 
     suspend fun addDownload(fusedDownload: FusedDownload) {
         return fusedManagerImpl.addDownload(fusedDownload)
     }
 
-    fun getDownloadList(): LiveData<List<FusedDownload>> {
+    suspend fun getDownloadList(): List<FusedDownload> {
         return fusedManagerImpl.getDownloadList()
     }
 
-    suspend fun updateDownloadStatus(downloadId: Long, status: Status) {
-        return fusedManagerImpl.updateDownloadStatus(downloadId, status)
+    fun getDownloadLiveList(): LiveData<List<FusedDownload>> {
+        return fusedManagerImpl.getDownloadLiveList()
     }
 
-    suspend fun updateDownloadStatus(packageName: String, status: Status) {
-        return fusedManagerImpl.updateDownloadStatus(packageName, status)
+    fun installApp(fusedDownload: FusedDownload) {
+        return fusedManagerImpl.installApp(fusedDownload)
     }
 
-    suspend fun cancelDownload(downloadId: Long) {
-        return fusedManagerImpl.cancelDownload(downloadId)
+    suspend fun getFusedDownload(downloadId: Long = 0, packageName: String = ""): FusedDownload {
+        return fusedManagerImpl.getFusedDownload(downloadId, packageName)
     }
 
-    suspend fun cancelDownload(packageName: String) {
-        return fusedManagerImpl.cancelDownload(packageName)
+    suspend fun updateDownloadStatus(fusedDownload: FusedDownload, status: Status, downloadId: Long = 0) {
+        return fusedManagerImpl.updateDownloadStatus(fusedDownload, status, downloadId)
+    }
+
+    suspend fun cancelDownload(fusedDownload: FusedDownload) {
+        return fusedManagerImpl.cancelDownload(fusedDownload)
     }
 }

@@ -60,8 +60,8 @@ class MainActivityViewModel @Inject constructor(
     var authRequestRunning = false
 
     // Downloads
-    val downloadList = fusedManagerRepository.getDownloadList()
-    var isInstallInProgress = false
+    val downloadList = fusedManagerRepository.getDownloadLiveList()
+    var installInProgress = false
 
     /*
      * Authentication related functions
@@ -108,17 +108,20 @@ class MainActivityViewModel @Inject constructor(
      * Download and cancellation functions
      */
 
-    fun downloadAndInstallApp(fusedDownload: FusedDownload) {
-        isInstallInProgress = true
+    fun downloadApp(fusedDownload: FusedDownload) {
         viewModelScope.launch {
-            fusedManagerRepository.downloadAndInstallApp(fusedDownload)
+            fusedManagerRepository.downloadApp(fusedDownload)
         }
+    }
+
+    fun installApp(fusedDownload: FusedDownload) {
+        fusedManagerRepository.installApp(fusedDownload)
     }
 
     fun getApplication(app: FusedApp, imageView: ImageView?) {
         viewModelScope.launch {
             val appIcon = imageView?.let { getImageBase64(it) } ?: ""
-            val downloadLink = getAppDownloadLink(app)
+            val downloadList = getAppDownloadLink(app).toMutableList()
 
             val fusedDownload = FusedDownload(
                 app._id,
@@ -126,8 +129,8 @@ class MainActivityViewModel @Inject constructor(
                 app.status,
                 app.name,
                 app.package_name,
-                downloadLink,
-                0,
+                downloadList,
+                mutableMapOf(),
                 app.status,
                 app.type,
                 appIcon
@@ -138,26 +141,31 @@ class MainActivityViewModel @Inject constructor(
 
     fun cancelDownload(app: FusedApp) {
         viewModelScope.launch {
-            fusedManagerRepository.cancelDownload(app.package_name)
+            val fusedDownload =
+                fusedManagerRepository.getFusedDownload(packageName = app.package_name)
+            fusedManagerRepository.cancelDownload(fusedDownload)
         }
     }
 
-    private suspend fun getAppDownloadLink(app: FusedApp): String {
+    private suspend fun getAppDownloadLink(app: FusedApp): List<String> {
+        val downloadList = mutableListOf<String>()
         authData.value?.let {
-            return if (app.type == Type.PWA) {
-                app.url
+            if (app.type == Type.PWA) {
+                downloadList.add(app.url)
             } else {
-                fusedAPIRepository.getDownloadLink(
-                    app._id,
-                    app.package_name,
-                    app.latest_version_code,
-                    app.offer_type,
-                    it,
-                    app.origin
+                downloadList.addAll(
+                    fusedAPIRepository.getDownloadLink(
+                        app._id,
+                        app.package_name,
+                        app.latest_version_code,
+                        app.offer_type,
+                        it,
+                        app.origin
+                    )
                 )
             }
         }
-        return String()
+        return downloadList
     }
 
     private fun getImageBase64(imageView: ImageView): String {

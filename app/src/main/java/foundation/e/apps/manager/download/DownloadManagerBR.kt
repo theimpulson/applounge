@@ -39,9 +39,8 @@ class DownloadManagerBR : BroadcastReceiver() {
             val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0)
             when (action) {
                 DownloadManager.ACTION_DOWNLOAD_COMPLETE -> {
-                    when (downloadManagerUtils.downloadStatus(id)) {
-                        DownloadManager.STATUS_SUCCESSFUL -> downloadManagerUtils.installApplication(id)
-                        else -> downloadManagerUtils.cancelDownload(id)
+                    if (downloadManagerUtils.downloadStatus(id) == DownloadManager.STATUS_SUCCESSFUL) {
+                        downloadManagerUtils.checkAndUpdateStatus(id)
                     }
                 }
                 DownloadManager.ACTION_NOTIFICATION_CLICKED -> {

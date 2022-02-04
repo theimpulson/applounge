@@ -41,7 +41,7 @@ class PWAManagerModule @Inject constructor(
 
         val values = ContentValues()
         values.apply {
-            put(URL, fusedDownload.downloadLink)
+            put(URL, fusedDownload.downloadURLList[0])
             put(SHORTCUT_ID, fusedDownload.id)
             put(TITLE, fusedDownload.name)
             put(ICON, iconByteArray)
@@ -56,7 +56,7 @@ class PWAManagerModule @Inject constructor(
     private fun publishShortcut(fusedDownload: FusedDownload, bitmap: Bitmap, databaseID: Long) {
         val intent = Intent().apply {
             action = VIEW_PWA
-            data = Uri.parse(fusedDownload.downloadLink)
+            data = Uri.parse(fusedDownload.downloadURLList[0])
             putExtra(PWA_NAME, fusedDownload.name)
             putExtra(PWA_ID, databaseID)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

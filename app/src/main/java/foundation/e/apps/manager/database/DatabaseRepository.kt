@@ -13,16 +13,12 @@ class DatabaseRepository @Inject constructor(
         return fusedDatabase.fusedDao().addDownload(fusedDownload)
     }
 
-    fun getDownloadList(): LiveData<List<FusedDownload>> {
+    suspend fun getDownloadList(): List<FusedDownload> {
         return fusedDatabase.fusedDao().getDownloadList()
     }
 
-    suspend fun getDownloadById(downloadId: Long): List<FusedDownload> {
-        return fusedDatabase.fusedDao().getDownloadByID(downloadId)
-    }
-
-    suspend fun getDownloadByPkg(packageName: String): List<FusedDownload> {
-        return fusedDatabase.fusedDao().getDownloadByPkg(packageName)
+    fun getDownloadLiveList(): LiveData<List<FusedDownload>> {
+        return fusedDatabase.fusedDao().getDownloadLiveList()
     }
 
     suspend fun updateDownload(fusedDownload: FusedDownload) {

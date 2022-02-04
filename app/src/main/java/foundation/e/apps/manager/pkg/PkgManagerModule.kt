@@ -84,7 +84,7 @@ class PkgManagerModule @Inject constructor(
      * Installs the given package using system API
      * @param file An instance of [File]
      */
-    fun installApplication(file: File) {
+    fun installApplication(list: List<File>) {
         val packageInstaller = packageManager.packageInstaller
         val params = PackageInstaller
             .SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
@@ -94,10 +94,14 @@ class PkgManagerModule @Inject constructor(
         val session = packageInstaller.openSession(sessionId)
 
         // Install the package using the provided stream
-        val inputStream = file.inputStream()
-        val outputStream = session.openWrite("app", 0, -1)
-        inputStream.copyTo(outputStream)
-        session.fsync(outputStream)
+        list.forEach {
+            val inputStream = it.inputStream()
+            val outputStream = session.openWrite(it.nameWithoutExtension, 0, -1)
+            inputStream.copyTo(outputStream)
+            session.fsync(outputStream)
+            inputStream.close()
+            outputStream.close()
+        }
 
         // We are done, close everything
         val pendingIntent = PendingIntent.getBroadcast(
@@ -106,9 +110,8 @@ class PkgManagerModule @Inject constructor(
             Intent(Intent.ACTION_PACKAGE_ADDED),
             PendingIntent.FLAG_IMMUTABLE
         )
-        inputStream.close()
-        outputStream.close()
         session.commit(pendingIntent.intentSender)
+        session.close()
     }
 
     /**

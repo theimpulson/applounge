@@ -15,13 +15,10 @@ interface FusedDAO {
     suspend fun addDownload(fusedDownload: FusedDownload)
 
     @Query("SELECT * FROM fuseddownload")
-    fun getDownloadList(): LiveData<List<FusedDownload>>
+    fun getDownloadLiveList(): LiveData<List<FusedDownload>>
 
-    @Query("SELECT * FROM fuseddownload WHERE downloadId=:downloadId")
-    suspend fun getDownloadByID(downloadId: Long): List<FusedDownload>
-
-    @Query("SELECT * FROM fuseddownload WHERE package_name=:packageName")
-    suspend fun getDownloadByPkg(packageName: String): List<FusedDownload>
+    @Query("SELECT * FROM fuseddownload")
+    suspend fun getDownloadList(): List<FusedDownload>
 
     @Update
     suspend fun updateDownload(fusedDownload: FusedDownload)

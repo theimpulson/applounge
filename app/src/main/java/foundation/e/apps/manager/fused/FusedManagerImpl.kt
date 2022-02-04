@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import foundation.e.apps.manager.database.DatabaseRepository
 import foundation.e.apps.manager.database.fused.FusedDownload
+import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.PWAManagerModule
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
@@ -24,6 +25,7 @@ class FusedManagerImpl @Inject constructor(
     private val notificationManager: NotificationManager,
     private val databaseRepository: DatabaseRepository,
     private val pwaManagerModule: PWAManagerModule,
+    private val pkgManagerModule: PkgManagerModule,
     @Named("download") private val downloadNotificationChannel: NotificationChannel,
     @Named("update") private val updateNotificationChannel: NotificationChannel
 ) {
@@ -43,87 +45,108 @@ class FusedManagerImpl @Inject constructor(
         databaseRepository.addDownload(fusedDownload)
     }
 
-    fun getDownloadList(): LiveData<List<FusedDownload>> {
+    suspend fun getDownloadList(): List<FusedDownload> {
         return databaseRepository.getDownloadList()
     }
 
-    suspend fun updateDownloadStatus(downloadId: Long, status: Status) {
-        val fusedDownload = databaseRepository.getDownloadById(downloadId)
-        if (fusedDownload.isNotEmpty() && fusedDownload.size == 1) {
-            fusedDownload[0].status = status
-            databaseRepository.updateDownload(fusedDownload[0])
-        } else {
-            Log.d(TAG, "Download ID mismatch!")
-        }
-        if (status == Status.INSTALLED) flushOldDownload(fusedDownload[0].package_name)
+    fun getDownloadLiveList(): LiveData<List<FusedDownload>> {
+        return databaseRepository.getDownloadLiveList()
     }
 
-    suspend fun updateDownloadStatus(packageName: String, status: Status) {
-        val fusedDownload = databaseRepository.getDownloadByPkg(packageName)
-        if (fusedDownload.isNotEmpty() && fusedDownload.size == 1) {
-            fusedDownload[0].status = status
-            databaseRepository.updateDownload(fusedDownload[0])
+    suspend fun updateDownloadStatus(fusedDownload: FusedDownload, status: Status, downloadId: Long = 0) {
+        if (fusedDownload.id.isNotBlank()) {
+            if (downloadId != 0L && fusedDownload.downloadIdMap.containsKey(downloadId)) {
+                fusedDownload.downloadIdMap[downloadId] = true
+                databaseRepository.updateDownload(fusedDownload)
+            }
+            fusedDownload.status = status
+            databaseRepository.updateDownload(fusedDownload)
         } else {
-            Log.d(TAG, "Package name mismatch!")
+            Log.d(TAG, "Unable to update download status!")
         }
-        if (status == Status.INSTALLED) flushOldDownload(packageName)
+        if (status == Status.INSTALLED) flushOldDownload(fusedDownload.package_name)
     }
 
-    suspend fun downloadAndInstallApp(fusedDownload: FusedDownload) {
+    suspend fun downloadApp(fusedDownload: FusedDownload) {
         when (fusedDownload.type) {
             Type.NATIVE -> downloadNativeApp(fusedDownload)
             Type.PWA -> pwaManagerModule.installPWAApp(fusedDownload)
         }
     }
 
-    suspend fun cancelDownload(downloadId: Long) {
-        val fusedDownload = databaseRepository.getDownloadById(downloadId)
-        if (fusedDownload.isNotEmpty() && fusedDownload.size == 1) {
-            if (downloadId != 0L) downloadManager.remove(downloadId)
-
-            // Reset the status before deleting download
-            updateDownloadStatus(downloadId, fusedDownload[0].orgStatus)
-            delay(100)
-
-            databaseRepository.deleteDownload(fusedDownload[0])
-            flushOldDownload(fusedDownload[0].package_name)
-        } else {
-            Log.d(TAG, "Download ID mismatch!")
+    fun installApp(fusedDownload: FusedDownload) {
+        val list = mutableListOf<File>()
+        when (fusedDownload.type) {
+            Type.NATIVE -> {
+                val parentPathFile = File("$cacheDir/${fusedDownload.package_name}")
+                parentPathFile.listFiles()?.let { list.addAll(it) }
+                list.sort()
+                if (list.size != 0) pkgManagerModule.installApplication(list)
+            }
+            else -> Log.d(TAG, "Unsupported application type!")
         }
     }
 
-    suspend fun cancelDownload(packageName: String) {
-        val fusedDownload = databaseRepository.getDownloadByPkg(packageName)
-        if (fusedDownload.isNotEmpty() && fusedDownload.size == 1) {
-            if (fusedDownload[0].downloadId != 0L) downloadManager.remove(fusedDownload[0].downloadId)
+    suspend fun cancelDownload(fusedDownload: FusedDownload) {
+        if (fusedDownload.id.isNotBlank()) {
+            fusedDownload.downloadIdMap.forEach { (key, _) ->
+                downloadManager.remove(key)
+            }
 
             // Reset the status before deleting download
-            updateDownloadStatus(packageName, fusedDownload[0].orgStatus)
+            updateDownloadStatus(fusedDownload, fusedDownload.orgStatus)
             delay(100)
 
-            databaseRepository.deleteDownload(fusedDownload[0])
-            flushOldDownload(fusedDownload[0].package_name)
+            databaseRepository.deleteDownload(fusedDownload)
+            flushOldDownload(fusedDownload.package_name)
         } else {
-            Log.d(TAG, "Package name mismatch!")
+            Log.d(TAG, "Unable to cancel download!")
         }
+    }
+
+    suspend fun getFusedDownload(downloadId: Long = 0, packageName: String = ""): FusedDownload {
+        val downloadList = getDownloadList()
+        var fusedDownload = FusedDownload()
+        downloadList.forEach {
+            if (downloadId != 0L) {
+                if (it.downloadIdMap.contains(downloadId)) {
+                    fusedDownload = it
+                }
+            } else if (packageName.isNotBlank()) {
+                if (it.package_name == packageName) {
+                    fusedDownload = it
+                }
+            }
+        }
+        return fusedDownload
     }
 
     private fun flushOldDownload(packageName: String) {
-        val packagePath = File(cacheDir, "$packageName.apk")
-        if (packagePath.exists()) packagePath.delete()
+        val parentPathFile = File("$cacheDir/$packageName")
+        if (parentPathFile.exists()) parentPathFile.delete()
     }
 
     private suspend fun downloadNativeApp(fusedDownload: FusedDownload) {
-        val packagePath = File(cacheDir, "${fusedDownload.package_name}.apk")
-        if (packagePath.exists()) packagePath.delete() // Delete old download if-exists
-        val request = DownloadManager.Request(Uri.parse(fusedDownload.downloadLink))
-            .setTitle(fusedDownload.name)
-            .setDestinationUri(Uri.fromFile(packagePath))
-        val requestId = downloadManager.enqueue(request)
-        fusedDownload.apply {
-            status = Status.DOWNLOADING
-            downloadId = requestId
+        var count = 0
+        fusedDownload.downloadURLList.forEach {
+            count += 1
+            val parentPath = "$cacheDir/${fusedDownload.package_name}"
+            val packagePath = File(parentPath, "${fusedDownload.package_name}_$count.apk")
+
+            // Clean old downloads and re-create download dir
+            flushOldDownload(fusedDownload.package_name)
+            File(parentPath).mkdir()
+
+            val request = DownloadManager.Request(Uri.parse(it))
+                .setTitle(if (count == 1) fusedDownload.name else "Additional file for ${fusedDownload.name}")
+                .setDestinationUri(Uri.fromFile(packagePath))
+            val requestId = downloadManager.enqueue(request)
+            fusedDownload.apply {
+                status = Status.DOWNLOADING
+                downloadIdMap[requestId] = false
+            }
+            databaseRepository.updateDownload(fusedDownload)
         }
-        databaseRepository.updateDownload(fusedDownload)
     }
+
 }

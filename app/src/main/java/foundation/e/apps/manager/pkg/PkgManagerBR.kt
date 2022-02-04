@@ -57,15 +57,17 @@ open class PkgManagerBR : BroadcastReceiver() {
     }
 
     // TODO: FIND A BETTER WAY TO DO THIS
-    private fun updateDownloadStatus(packageName: String) {
+    private fun updateDownloadStatus(pkgName: String) {
         GlobalScope.launch {
-            fusedManagerRepository.updateDownloadStatus(packageName, Status.INSTALLED)
+            val fusedDownload = fusedManagerRepository.getFusedDownload(packageName = pkgName)
+            fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLED)
         }
     }
 
-    private fun deleteDownload(packageName: String) {
+    private fun deleteDownload(pkgName: String) {
         GlobalScope.launch {
-            fusedManagerRepository.cancelDownload(packageName)
+            val fusedDownload = fusedManagerRepository.getFusedDownload(packageName = pkgName)
+            fusedManagerRepository.cancelDownload(fusedDownload)
         }
     }
 }

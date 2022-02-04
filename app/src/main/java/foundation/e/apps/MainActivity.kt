@@ -120,16 +120,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Observe and handle downloads
-        viewModel.downloadList.observe(this) {
-            val installInProgress = it.any { app ->
-                app.status == Status.DOWNLOADING || app.status == Status.INSTALLING
+        viewModel.downloadList.observe(this) { list ->
+            val shouldDownload = list.any {
+                it.status == Status.INSTALLING || it.status == Status.DOWNLOADING
             }
-            if (!installInProgress && it.isNotEmpty()) {
-                for (item in it) {
+            if (!shouldDownload && list.isNotEmpty()) {
+                for (item in list) {
                     if (item.status == Status.QUEUED) {
-                        viewModel.downloadAndInstallApp(item)
+                        viewModel.downloadApp(item)
                         break
                     }
+                }
+            }
+            list.forEach { app ->
+                if (app.status == Status.INSTALLING && !viewModel.installInProgress) {
+                    if (app.downloadIdMap.all { it.value }) {
+                        viewModel.installInProgress = true
+                        viewModel.installApp(app)
+                    }
+                } else if (app.status == Status.INSTALLED) {
+                    viewModel.installInProgress = false
                 }
             }
         }

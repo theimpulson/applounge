@@ -25,6 +25,7 @@ import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
+import com.aurora.gplayapi.data.models.File
 import com.aurora.gplayapi.helpers.TopChartsHelper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.R
@@ -158,12 +159,12 @@ class FusedAPIImpl @Inject constructor(
         offerType: Int,
         authData: AuthData,
         origin: Origin
-    ): String {
-        var downloadLink = String()
+    ): List<String> {
+        val list = mutableListOf<String>()
         when (origin) {
             Origin.CLEANAPK -> {
                 val downloadInfo = cleanAPKRepository.getDownloadInfo(id).body()
-                downloadInfo?.download_data?.download_link?.let { downloadLink = it }
+                downloadInfo?.download_data?.download_link?.let { list.add(it) }
             }
             Origin.GPLAY -> {
                 val downloadList = gPlayAPIRepository.getDownloadInfo(
@@ -173,12 +174,16 @@ class FusedAPIImpl @Inject constructor(
                     authData
                 )
                 // TODO: DEAL WITH MULTIPLE PACKAGES
-                downloadLink = downloadList[0].url
+                downloadList.forEach {
+                    if (it.type == File.FileType.BASE || it.type == File.FileType.SPLIT) {
+                        list.add(it.url)
+                    }
+                }
             }
             Origin.GITLAB -> {
             }
         }
-        return downloadLink
+        return list
     }
 
     suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {

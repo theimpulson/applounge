@@ -64,7 +64,7 @@ class FusedAPIRepository @Inject constructor(
         offerType: Int,
         authData: AuthData,
         origin: Origin
-    ): String {
+    ): List<String> {
         return fusedAPIImpl.getDownloadLink(
             id,
             packageName,

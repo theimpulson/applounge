@@ -8,13 +8,13 @@ import foundation.e.apps.utils.enums.Type
 
 @Entity
 data class FusedDownload(
-    @PrimaryKey val id: String,
-    val origin: Origin,
-    var status: Status,
-    val name: String,
-    val package_name: String,
-    val downloadLink: String,
-    var downloadId: Long = 0,
+    @PrimaryKey val id: String = String(),
+    val origin: Origin = Origin.CLEANAPK,
+    var status: Status = Status.UNAVAILABLE,
+    val name: String = String(),
+    val package_name: String = String(),
+    val downloadURLList: MutableList<String> = mutableListOf(),
+    var downloadIdMap: MutableMap<Long, Boolean> = mutableMapOf(),
     val orgStatus: Status = Status.UNAVAILABLE,
     val type: Type = Type.NATIVE,
     val iconByteArray: String = String()
