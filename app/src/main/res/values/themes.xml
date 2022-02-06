@@ -58,4 +58,13 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="InstallButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/install_button_background</item>
+        <item name="strokeColor">@color/install_button_background</item>
+    </style>
+
+    <style name="UpdateButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/install_button_background</item>
+    </style>
+
 </resources>

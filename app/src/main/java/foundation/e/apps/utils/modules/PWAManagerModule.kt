@@ -22,7 +22,7 @@ import javax.inject.Singleton
 class PWAManagerModule @Inject constructor(
     @ApplicationContext private val context: Context,
     private val databaseRepository: DatabaseRepository
-    ) {
+) {
 
     companion object {
         private const val URL = "URL"
