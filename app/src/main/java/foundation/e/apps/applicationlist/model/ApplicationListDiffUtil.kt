@@ -40,6 +40,7 @@ class ApplicationListDiffUtil(
             oldList[oldItemPosition].origin == newList[newItemPosition].origin
     }
 
+    // TODO: FIX LOGIC HERE TO AVOID UPDATING ENTIRE ITEM
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return when {
             oldList[oldItemPosition]._id != newList[newItemPosition]._id -> false

@@ -37,6 +37,7 @@ class HomeParentDiffUtil(
         return oldList[oldItemPosition].list == newList[newItemPosition].list
     }
 
+    // TODO: FIX LOGIC HERE TO AVOID UPDATING ENTIRE ITEM
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return when {
             oldList[oldItemPosition].title != newList[newItemPosition].title -> false
