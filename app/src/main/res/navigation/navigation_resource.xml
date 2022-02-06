@@ -143,7 +143,7 @@
     </fragment>
     <fragment
         android:id="@+id/screenshotFragment"
-        android:name="foundation.e.apps.application.ScreenshotFragment"
+        android:name="foundation.e.apps.application.subFrags.ScreenshotFragment"
         android:label="Screenshot"
         tools:layout="@layout/fragment_screenshot">
         <argument
@@ -158,7 +158,7 @@
     </fragment>
     <fragment
         android:id="@+id/descriptionFragment"
-        android:name="foundation.e.apps.application.DescriptionFragment"
+        android:name="foundation.e.apps.application.subFrags.DescriptionFragment"
         android:label="fragment_description"
         tools:layout="@layout/fragment_description">
         <argument

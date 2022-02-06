@@ -148,5 +148,4 @@ class FusedManagerImpl @Inject constructor(
             databaseRepository.updateDownload(fusedDownload)
         }
     }
-
 }

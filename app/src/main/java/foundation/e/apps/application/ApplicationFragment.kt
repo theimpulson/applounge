@@ -41,6 +41,7 @@ import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.application.model.ApplicationScreenshotsRVAdapter
+import foundation.e.apps.application.subFrags.ApplicationDialogFragment
 import foundation.e.apps.databinding.FragmentApplicationBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin

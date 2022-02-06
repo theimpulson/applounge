@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.application
+package foundation.e.apps.application.subFrags
 
 import android.os.Bundle
 import android.view.View
