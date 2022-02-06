@@ -30,6 +30,7 @@ import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.databinding.ActivityMainBinding
 import foundation.e.apps.utils.enums.Status
+import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.enums.User
 
 @AndroidEntryPoint
@@ -133,13 +134,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             list.forEach { app ->
-                if (app.status == Status.INSTALLING && !viewModel.installInProgress) {
-                    if (app.downloadIdMap.all { it.value }) {
-                        viewModel.installInProgress = true
-                        viewModel.installApp(app)
+                if (app.type == Type.NATIVE) {
+                    if (app.status == Status.INSTALLING && !viewModel.installInProgress) {
+                        if (app.downloadIdMap.all { it.value }) {
+                            viewModel.installInProgress = true
+                            viewModel.installApp(app)
+                        }
+                    } else if (app.status == Status.INSTALLED) {
+                        viewModel.installInProgress = false
                     }
-                } else if (app.status == Status.INSTALLED) {
-                    viewModel.installInProgress = false
                 }
             }
         }

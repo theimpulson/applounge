@@ -123,7 +123,7 @@ class FusedManagerImpl @Inject constructor(
 
     private fun flushOldDownload(packageName: String) {
         val parentPathFile = File("$cacheDir/$packageName")
-        if (parentPathFile.exists()) parentPathFile.delete()
+        if (parentPathFile.exists()) parentPathFile.deleteRecursively()
     }
 
     private suspend fun downloadNativeApp(fusedDownload: FusedDownload) {

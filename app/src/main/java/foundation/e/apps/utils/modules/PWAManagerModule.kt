@@ -12,14 +12,17 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import foundation.e.apps.manager.database.DatabaseRepository
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
+import foundation.e.apps.utils.enums.Status
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PWAManagerModule @Inject constructor(
-    @ApplicationContext private val context: Context
-) {
+    @ApplicationContext private val context: Context,
+    private val databaseRepository: DatabaseRepository
+    ) {
 
     companion object {
         private const val URL = "URL"
@@ -34,7 +37,11 @@ class PWAManagerModule @Inject constructor(
         private const val VIEW_PWA = "foundation.e.blisslauncher.VIEW_PWA"
     }
 
-    fun installPWAApp(fusedDownload: FusedDownload) {
+    suspend fun installPWAApp(fusedDownload: FusedDownload) {
+        // Update status
+        fusedDownload.status = Status.DOWNLOADING
+        databaseRepository.updateDownload(fusedDownload)
+
         // Get bitmap and byteArray for icon
         val iconByteArray = Base64.decode(fusedDownload.iconByteArray, Base64.DEFAULT)
         val iconBitmap = BitmapFactory.decodeByteArray(iconByteArray, 0, iconByteArray.size)
@@ -53,7 +60,11 @@ class PWAManagerModule @Inject constructor(
         }
     }
 
-    private fun publishShortcut(fusedDownload: FusedDownload, bitmap: Bitmap, databaseID: Long) {
+    private suspend fun publishShortcut(fusedDownload: FusedDownload, bitmap: Bitmap, databaseID: Long) {
+        // Update status
+        fusedDownload.status = Status.INSTALLING
+        databaseRepository.updateDownload(fusedDownload)
+
         val intent = Intent().apply {
             action = VIEW_PWA
             data = Uri.parse(fusedDownload.downloadURLList[0])
@@ -69,5 +80,9 @@ class PWAManagerModule @Inject constructor(
             .setIntent(intent)
             .build()
         ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null)
+
+        // Update status
+        fusedDownload.status = Status.INSTALLED
+        databaseRepository.updateDownload(fusedDownload)
     }
 }
