@@ -34,7 +34,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
-import foundation.e.apps.manager.database.fused.FusedDownload
+import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.utils.modules.DataStoreModule
 import foundation.e.apps.utils.enums.Type

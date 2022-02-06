@@ -1,12 +1,14 @@
-package foundation.e.apps.manager.database.fused
+package foundation.e.apps.manager.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import foundation.e.apps.manager.database.fusedDownload.FusedDownloadDAO
+import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 
 @Database(entities = [FusedDownload::class], version = 1, exportSchema = false)
 @TypeConverters(FusedConverter::class)
 abstract class FusedDatabase : RoomDatabase() {
 
-    abstract fun fusedDao(): FusedDAO
+    abstract fun fusedDownloadDao(): FusedDownloadDAO
 }

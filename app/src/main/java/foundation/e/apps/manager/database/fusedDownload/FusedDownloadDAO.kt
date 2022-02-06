@@ -1,4 +1,4 @@
-package foundation.e.apps.manager.database.fused
+package foundation.e.apps.manager.database.fusedDownload
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -9,7 +9,7 @@ import androidx.room.Query
 import androidx.room.Update
 
 @Dao
-interface FusedDAO {
+interface FusedDownloadDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addDownload(fusedDownload: FusedDownload)

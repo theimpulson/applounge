@@ -1,31 +1,31 @@
 package foundation.e.apps.manager.database
 
 import androidx.lifecycle.LiveData
-import foundation.e.apps.manager.database.fused.FusedDatabase
-import foundation.e.apps.manager.database.fused.FusedDownload
+import foundation.e.apps.manager.database.fusedDownload.FusedDownload
+import foundation.e.apps.manager.database.fusedDownload.FusedDownloadDAO
 import javax.inject.Inject
 
 class DatabaseRepository @Inject constructor(
-    private val fusedDatabase: FusedDatabase
+    private val fusedDownloadDAO: FusedDownloadDAO
 ) {
 
     suspend fun addDownload(fusedDownload: FusedDownload) {
-        return fusedDatabase.fusedDao().addDownload(fusedDownload)
+        return fusedDownloadDAO.addDownload(fusedDownload)
     }
 
     suspend fun getDownloadList(): List<FusedDownload> {
-        return fusedDatabase.fusedDao().getDownloadList()
+        return fusedDownloadDAO.getDownloadList()
     }
 
     fun getDownloadLiveList(): LiveData<List<FusedDownload>> {
-        return fusedDatabase.fusedDao().getDownloadLiveList()
+        return fusedDownloadDAO.getDownloadLiveList()
     }
 
     suspend fun updateDownload(fusedDownload: FusedDownload) {
-        return fusedDatabase.fusedDao().updateDownload(fusedDownload)
+        return fusedDownloadDAO.updateDownload(fusedDownload)
     }
 
     suspend fun deleteDownload(fusedDownload: FusedDownload) {
-        return fusedDatabase.fusedDao().deleteDownload(fusedDownload)
+        return fusedDownloadDAO.deleteDownload(fusedDownload)
     }
 }

@@ -3,7 +3,7 @@ package foundation.e.apps.manager.fused
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import foundation.e.apps.manager.database.fused.FusedDownload
+import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.utils.enums.Status
 import javax.inject.Inject
 import javax.inject.Singleton

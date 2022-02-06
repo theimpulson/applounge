@@ -1,4 +1,4 @@
-package foundation.e.apps.manager.database.fused
+package foundation.e.apps.manager.database.fusedDownload
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,4 +1,4 @@
-package foundation.e.apps.manager.database.fused
+package foundation.e.apps.manager.database
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

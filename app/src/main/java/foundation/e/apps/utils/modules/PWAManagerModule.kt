@@ -12,7 +12,7 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
-import foundation.e.apps.manager.database.fused.FusedDownload
+import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import javax.inject.Inject
 import javax.inject.Singleton
 
