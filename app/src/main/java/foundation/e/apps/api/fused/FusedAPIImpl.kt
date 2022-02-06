@@ -41,7 +41,7 @@ import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
-import foundation.e.apps.utils.PreferenceManagerModule
+import foundation.e.apps.utils.modules.PreferenceManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type

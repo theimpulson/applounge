@@ -1,4 +1,4 @@
-package foundation.e.apps.utils
+package foundation.e.apps.utils.modules
 
 import android.content.ContentUris
 import android.content.ContentValues

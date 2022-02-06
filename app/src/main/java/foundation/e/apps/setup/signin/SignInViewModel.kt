@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.gplay.utils.AC2DMTask
-import foundation.e.apps.utils.DataStoreModule
+import foundation.e.apps.utils.modules.DataStoreModule
 import foundation.e.apps.utils.enums.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

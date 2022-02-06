@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.utils
+package foundation.e.apps.utils.modules
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey

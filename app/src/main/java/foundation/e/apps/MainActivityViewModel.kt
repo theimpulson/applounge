@@ -36,7 +36,7 @@ import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fused.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
-import foundation.e.apps.utils.DataStoreModule
+import foundation.e.apps.utils.modules.DataStoreModule
 import foundation.e.apps.utils.enums.Type
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream

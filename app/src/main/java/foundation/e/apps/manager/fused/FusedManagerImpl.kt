@@ -11,7 +11,7 @@ import androidx.lifecycle.LiveData
 import foundation.e.apps.manager.database.DatabaseRepository
 import foundation.e.apps.manager.database.fused.FusedDownload
 import foundation.e.apps.manager.pkg.PkgManagerModule
-import foundation.e.apps.utils.PWAManagerModule
+import foundation.e.apps.utils.modules.PWAManagerModule
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import kotlinx.coroutines.delay

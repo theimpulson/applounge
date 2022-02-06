@@ -31,7 +31,7 @@ import com.aurora.gplayapi.helpers.SearchHelper
 import com.aurora.gplayapi.helpers.TopChartsHelper
 import foundation.e.apps.api.gplay.token.TokenRepository
 import foundation.e.apps.api.gplay.utils.GPlayHttpClient
-import foundation.e.apps.utils.DataStoreModule
+import foundation.e.apps.utils.modules.DataStoreModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
