@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:background="?android:selectableItemBackground"
-            android:text="@string/trackers"
+            android:text="@string/trackers_title"
             android:textColor="?android:textColorPrimary"
             android:textSize="15sp" />
 

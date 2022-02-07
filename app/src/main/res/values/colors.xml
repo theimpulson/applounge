@@ -29,5 +29,7 @@
     <!-- Shimmer Animation -->
     <color name="colorGrey">#f2f2f2</color>
     <color name="light_grey">#C4CFD9</color>
+
+<!--    Application Page-->
     <color name="app_info_text_color_grey">#A4AEB7</color>
 </resources>

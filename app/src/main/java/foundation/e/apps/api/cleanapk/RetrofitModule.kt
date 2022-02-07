@@ -23,6 +23,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import foundation.e.apps.api.exodus.ExodusTrackerApi
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -47,6 +48,17 @@ object RetrofitModule {
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create(CleanAPKInterface::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideExodusApi(okHttpClient: OkHttpClient): ExodusTrackerApi {
+        return Retrofit.Builder()
+            .baseUrl(ExodusTrackerApi.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(ExodusTrackerApi::class.java)
     }
 
     @Singleton
