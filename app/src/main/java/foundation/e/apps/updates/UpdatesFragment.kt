@@ -55,11 +55,15 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
 
         binding.button.isEnabled = false
 
-        mainActivityViewModel.authData.observe(viewLifecycleOwner) { data ->
-            updatesViewModel.getUpdates(data)
-            binding.button.setOnClickListener {
-                updatesViewModel.updatesList.value?.forEach { app ->
-                    getApplication(app)
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { hasInternet ->
+            mainActivityViewModel.authData.observe(viewLifecycleOwner) { data ->
+                if (hasInternet) {
+                    updatesViewModel.getUpdates(data)
+                    binding.button.setOnClickListener {
+                        updatesViewModel.updatesList.value?.forEach { app ->
+                            getApplication(app)
+                        }
+                    }
                 }
             }
         }

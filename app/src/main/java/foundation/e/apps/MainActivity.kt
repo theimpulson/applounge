@@ -33,6 +33,7 @@ import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.modules.CommonUtilsModule
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -50,6 +51,8 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         bottomNavigationView.setupWithNavController(navController)
 
+        var hasInternet = true
+
         val viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
 
         // navOptions and activityNavController for TOS and SignIn Fragments
@@ -64,29 +67,38 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.userType.observe(this) { user ->
-            if (user.isNotBlank() && viewModel.tocStatus.value == true) {
-                when (User.valueOf(user)) {
-                    User.ANONYMOUS -> {
-                        if (viewModel.authDataJson.value.isNullOrEmpty() && !viewModel.authRequestRunning) {
-                            Log.d(TAG, "Fetching new authentication data")
-                            viewModel.getAuthData()
+        viewModel.internetConnection.observe(this) { isInternetAvailable ->
+            hasInternet = isInternetAvailable
+            if (isInternetAvailable) {
+                binding.noInternet.visibility = View.GONE
+                binding.fragment.visibility = View.VISIBLE
+
+                viewModel.userType.observe(this) { user ->
+                    if (user.isNotBlank() && viewModel.tocStatus.value == true) {
+                        when (User.valueOf(user)) {
+                            User.ANONYMOUS -> {
+                                if (viewModel.authDataJson.value.isNullOrEmpty() && !viewModel.authRequestRunning) {
+                                    Log.d(TAG, "Fetching new authentication data")
+                                    viewModel.getAuthData()
+                                }
+                            }
+                            User.UNAVAILABLE -> {
+                                viewModel.destroyCredentials()
+                                navController.navigate(R.id.signInFragment, null, navOptions)
+                            }
+                            User.GOOGLE -> {
+                            }
                         }
                     }
-                    User.UNAVAILABLE -> {
-                        viewModel.destroyCredentials()
-                        navController.navigate(R.id.signInFragment, null, navOptions)
-                    }
-                    User.GOOGLE -> {}
                 }
-            }
-        }
 
-        // Watch and refresh authentication data
-        viewModel.authDataJson.observe(this) {
-            if (!it.isNullOrEmpty()) {
-                viewModel.generateAuthData()
-                Log.d(TAG, "Authentication data is available!")
+                // Watch and refresh authentication data
+                viewModel.authDataJson.observe(this) {
+                    if (!it.isNullOrEmpty()) {
+                        viewModel.generateAuthData()
+                        Log.d(TAG, "Authentication data is available!")
+                    }
+                }
             }
         }
 
@@ -100,6 +112,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (!hasInternet) {
+                showNoInternet()
+            }
+
             when (destination.id) {
                 R.id.applicationFragment,
                 R.id.applicationListFragment,
@@ -151,5 +167,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        if (!CommonUtilsModule.isNetworkAvailable(this)) {
+            showNoInternet()
+        }
+    }
+
+    private fun showNoInternet() {
+        binding.noInternet.visibility = View.VISIBLE
+        binding.fragment.visibility = View.GONE
     }
 }

@@ -43,26 +43,30 @@ class AppsFragment : Fragment(R.layout.fragment_apps) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAppsBinding.bind(view)
 
-        mainActivityViewModel.authData.value?.let {
-            categoriesViewModel.getCategoriesList(
-                Category.Type.APPLICATION,
-                it
-            )
-        }
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { hasInternet ->
+            mainActivityViewModel.authData.value?.let { authData ->
+                if (hasInternet) {
+                    categoriesViewModel.getCategoriesList(
+                        Category.Type.APPLICATION,
+                        authData
+                    )
+                }
+            }
 
-        val categoriesRVAdapter = CategoriesRVAdapter()
-        val recyclerView = binding.recyclerView
+            val categoriesRVAdapter = CategoriesRVAdapter()
+            val recyclerView = binding.recyclerView
 
-        recyclerView.apply {
-            adapter = categoriesRVAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            visibility = View.GONE
-        }
+            recyclerView.apply {
+                adapter = categoriesRVAdapter
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                visibility = View.GONE
+            }
 
-        categoriesViewModel.categoriesList.observe(viewLifecycleOwner) {
-            categoriesRVAdapter.setData(it)
-            binding.shimmerLayout.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
+            categoriesViewModel.categoriesList.observe(viewLifecycleOwner) {
+                categoriesRVAdapter.setData(it)
+                binding.shimmerLayout.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            }
         }
     }
 

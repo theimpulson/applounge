@@ -57,13 +57,17 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentApplicationListBinding.bind(view)
 
-        mainActivityViewModel.authData.value?.let {
-            viewModel.getList(
-                args.category,
-                args.browseUrl,
-                it,
-                args.source
-            )
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { isInternetConnection ->
+            mainActivityViewModel.authData.value?.let { authData ->
+                if (isInternetConnection) {
+                    viewModel.getList(
+                        args.category,
+                        args.browseUrl,
+                        authData,
+                        args.source
+                    )
+                }
+            }
         }
 
         binding.toolbarTitleTV.text = args.translation

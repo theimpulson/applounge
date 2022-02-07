@@ -43,11 +43,15 @@ class GamesFragment : Fragment(R.layout.fragment_games) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGamesBinding.bind(view)
 
-        mainActivityViewModel.authData.value?.let {
-            categoriesViewModel.getCategoriesList(
-                Category.Type.GAME,
-                it
-            )
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { hasInternet ->
+            mainActivityViewModel.authData.value?.let { authData ->
+                if (hasInternet) {
+                    categoriesViewModel.getCategoriesList(
+                        Category.Type.GAME,
+                        authData
+                    )
+                }
+            }
         }
 
         val categoriesRVAdapter = CategoriesRVAdapter()

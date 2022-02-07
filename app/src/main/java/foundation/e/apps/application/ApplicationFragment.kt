@@ -78,13 +78,17 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentApplicationBinding.bind(view)
 
-        mainActivityViewModel.authData.observe(viewLifecycleOwner) {
-            applicationViewModel.getApplicationDetails(
-                args.id,
-                args.packageName,
-                it,
-                args.origin
-            )
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { hasInternet ->
+            mainActivityViewModel.authData.observe(viewLifecycleOwner) { authData ->
+                if (hasInternet) {
+                    applicationViewModel.getApplicationDetails(
+                        args.id,
+                        args.packageName,
+                        authData,
+                        args.origin
+                    )
+                }
+            }
         }
 
         val startDestination = findNavController().graph.startDestination
