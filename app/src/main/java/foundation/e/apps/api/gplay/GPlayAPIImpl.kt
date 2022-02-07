@@ -152,6 +152,6 @@ class GPlayAPIImpl @Inject constructor(
                 list.addAll(it.clusterAppList)
             }
         }
-        return list
+        return list.distinctBy { it.packageName }
     }
 }
