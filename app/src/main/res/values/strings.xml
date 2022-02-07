@@ -85,7 +85,7 @@
     <string name="rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/5</string>
     <string name="privacy">Privacy</string>
     <string name="privacy_score">Privacy Score</string>
-    <string name="privacy_description">The Privacy Score is automatically computed from permissions and trackers that are detected in applications. It gives an idea indication about how much an application is likely to be micro-targeting its users.&lt;br /&gt;&lt;br /&gt;Trackers detection is performed using &lt;a href="<xliff:g id="exodus">%2$s</xliff:g>"&gt;Exodus Privacy tools&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;Score out of 10.&lt;br /&gt;&lt;br /&gt;Learn more about how the Privacy Score is computed, its limitations and how you can protect yourself from micro-targeting &lt;a href="<xliff:g id="e_doc">%3$s</xliff:g>&gt;on this page&lt;/a&gt;.</string>
+    <string name="privacy_description">The Privacy Score is automatically computed from permissions and trackers that are detected in applications. It gives an idea indication about how much an application is likely to be micro-targeting its users.&lt;br /&gt;&lt;br /&gt;Trackers detection is performed using &lt;a href="<xliff:g id="exodus">%1$s</xliff:g>"&gt;Exodus Privacy tools&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;Score out of 10.&lt;br /&gt;&lt;br /&gt;Learn more about how the Privacy Score is computed, its limitations and how you can protect yourself from micro-targeting &lt;a href="<xliff:g id="e_doc">%2$s</xliff:g>&gt;on this page&lt;/a&gt;.</string>
     <string name="privacy_rating_out_of" translatable="false"><xliff:g id="rating">%1$s</xliff:g>/10</string>
     <string name="privacy_analyses">Privacy analyses</string>
     <string name="permissions">Permissions</string>

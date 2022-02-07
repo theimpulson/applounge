@@ -67,11 +67,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
     private var applicationIcon: ImageView? = null
 
     companion object {
-        private const val PRIVACY_CALCULATION_SOURCE_CODE_URL =
-            "https://doc.e.foundation/privacy_score"
         private const val EXODUS_URL = "https://exodus-privacy.eu.org"
-        private const val PRIVACY_GUIDELINE_URL =
-            "https://doc.e.foundation/apps.html#what-information-is-provided-for-each-app-within-the-e-application-installer"
+        private const val PRIVACY_GUIDELINE_URL = "https://doc.e.foundation/privacy_score"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -260,7 +257,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         getString(R.string.privacy_score),
                         getString(
                             R.string.privacy_description,
-                            PRIVACY_CALCULATION_SOURCE_CODE_URL,
                             EXODUS_URL,
                             PRIVACY_GUIDELINE_URL
                         )
