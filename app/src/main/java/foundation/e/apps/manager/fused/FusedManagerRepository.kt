@@ -3,8 +3,10 @@ package foundation.e.apps.manager.fused
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asFlow
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.utils.enums.Status
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,6 +34,10 @@ class FusedManagerRepository @Inject constructor(
 
     fun getDownloadLiveList(): LiveData<List<FusedDownload>> {
         return fusedManagerImpl.getDownloadLiveList()
+    }
+
+    fun getDownloadListFlow(): Flow<List<FusedDownload>> {
+        return fusedManagerImpl.getDownloadLiveList().asFlow()
     }
 
     fun installApp(fusedDownload: FusedDownload) {

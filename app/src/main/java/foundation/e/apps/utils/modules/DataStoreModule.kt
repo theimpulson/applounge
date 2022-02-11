@@ -27,7 +27,9 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.utils.enums.User
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -79,6 +81,12 @@ class DataStoreModule @Inject constructor(
     suspend fun saveUserType(user: User) {
         context.dataStore.edit {
             it[USERTYPE] = user.name
+        }
+    }
+
+    fun getAuthDataSync(): String {
+        return runBlocking {
+            authData.first()
         }
     }
 }

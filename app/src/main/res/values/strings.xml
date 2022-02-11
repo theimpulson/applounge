@@ -132,4 +132,7 @@
     <string name="privacy_computed_using_text">Computed using <a href="https://exodus-privacy.eu.org/en/">Exodus Privacy Analysis</a></string>
     <string name="no_tracker_found">No Tracker Found!</string>
 
+<!-- Settings Preferences-->
+    <string name="update_check_intervals">updateCheckIntervals</string>
+
 </resources>

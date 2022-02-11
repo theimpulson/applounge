@@ -127,6 +127,8 @@ dependencies {
     def hilt_version = '2.40.5'
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation 'androidx.hilt:hilt-work:1.0.0'
+    kapt 'androidx.hilt:hilt-compiler:1.0.0'
 
     // Lifecycle Components
     def lifecycle_version = "2.4.0"
@@ -143,4 +145,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     implementation "androidx.room:room-runtime:$roomVersion"
+
+    // WorkManager
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
 }
