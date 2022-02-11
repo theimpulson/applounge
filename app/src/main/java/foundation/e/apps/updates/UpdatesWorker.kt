@@ -1,26 +1,33 @@
 package foundation.e.apps.updates
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Base64
 import android.util.Log
 import androidx.hilt.work.HiltWorker
+import androidx.preference.PreferenceManager
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import foundation.e.apps.R
+import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.updates.manager.UpdatesManagerRepository
+import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.modules.DataStoreModule
-import kotlinx.coroutines.flow.collect
 import java.io.ByteArrayOutputStream
 import java.net.URL
 
@@ -35,19 +42,75 @@ class UpdatesWorker @AssistedInject constructor(
     private val gson: Gson,
 ) : CoroutineWorker(context, params) {
     val TAG = UpdatesWorker::class.simpleName
+    private var shouldShowNotification = true
+    private var automaticInstallEnabled = true
+    private var onlyOnUnmeteredNetwork = false
 
     override suspend fun doWork(): Result {
-        Log.d(TAG, "doWork: triggered")
-        val authDataJson = dataStoreModule.getAuthDataSync()
-        Log.d(TAG, "doWork: authdata: $authDataJson")
-        val authData = gson.fromJson(authDataJson, AuthData::class.java)
-        val appsNeededToUpdate = updatesManagerRepository.getUpdates(authData)
-        Log.d(TAG, "doWork: update needs: ${appsNeededToUpdate.size}")
+        return try {
+            checkForUpdates()
+            Result.success()
+        } catch (e: Throwable) {
+            Result.failure()
+        }
+    }
 
+    private suspend fun checkForUpdates() {
+        loadSettings()
+        val authData = getAuthData()
+        val appsNeededToUpdate = updatesManagerRepository.getUpdates(authData)
+        val isConnectedToUnmeteredNetwork = isConnectedToUnmeteredNetwork(applicationContext)
+        handleNotification(appsNeededToUpdate, isConnectedToUnmeteredNetwork)
+        triggerUpdateProcessOnSettings(
+            isConnectedToUnmeteredNetwork,
+            appsNeededToUpdate,
+            authData
+        )
+    }
+
+    private suspend fun triggerUpdateProcessOnSettings(
+        isConnectedToUnmeteredNetwork: Boolean,
+        appsNeededToUpdate: List<FusedApp>,
+        authData: AuthData
+    ) {
+        if (automaticInstallEnabled &&
+            applicationContext.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        ) {
+            if (onlyOnUnmeteredNetwork && isConnectedToUnmeteredNetwork) {
+                startUpdateProcess(appsNeededToUpdate, authData)
+            } else if (!onlyOnUnmeteredNetwork) {
+                startUpdateProcess(appsNeededToUpdate, authData)
+            }
+        }
+    }
+
+    private fun handleNotification(
+        appsNeededToUpdate: List<FusedApp>,
+        isConnectedToUnmeteredNetwork: Boolean
+    ) {
+        if (appsNeededToUpdate.isNotEmpty()) {
+            UpdatesNotifier().showNotification(
+                applicationContext,
+                appsNeededToUpdate.size,
+                automaticInstallEnabled,
+                onlyOnUnmeteredNetwork,
+                isConnectedToUnmeteredNetwork
+            )
+        }
+    }
+
+    private fun getAuthData(): AuthData {
+        val authDataJson = dataStoreModule.getAuthDataSync()
+        return gson.fromJson(authDataJson, AuthData::class.java)
+    }
+
+    private suspend fun startUpdateProcess(
+        appsNeededToUpdate: List<FusedApp>,
+        authData: AuthData
+    ) {
         appsNeededToUpdate.forEach { fusedApp ->
-            Log.d(TAG, "doWork: triggering update for: ${fusedApp.name}")
             val downloadList = getAppDownloadLink(fusedApp, authData).toMutableList()
-            val iconBase64 = fusedApp.getIconImageToBase64()
+            val iconBase64 = getIconImageToBase64(fusedApp)
 
             val fusedDownload = FusedDownload(
                 fusedApp._id,
@@ -63,16 +126,16 @@ class UpdatesWorker @AssistedInject constructor(
             )
 
             fusedManagerRepository.addDownload(fusedDownload)
-            Log.d(TAG, "doWork: triggering update for: ${fusedApp.name} added download in db")
             Log.d(TAG, "doWork: triggering update for: ${fusedApp.name} downloading...")
             fusedManagerRepository.downloadApp(fusedDownload)
             Log.d(TAG, "doWork: triggering update for: ${fusedApp.name} downloaded...")
         }
+        observeFusedDownload()
+    }
 
+    private suspend fun observeFusedDownload() {
         fusedManagerRepository.getDownloadListFlow().collect {
-            Log.d(TAG, "doWork: updated downloadlist ${it.size}")
             it.forEach { fusedDownload ->
-                Log.d(TAG, "doWork: updated downloadlistitem ${fusedDownload.name}")
                 if (fusedDownload.type == Type.NATIVE && fusedDownload.status == Status.INSTALLING && fusedDownload.downloadIdMap.all { it.value }) {
                     Log.d(TAG, "doWork: triggering update for: ${fusedDownload.name} installing...")
                     fusedManagerRepository.installApp(fusedDownload)
@@ -80,7 +143,30 @@ class UpdatesWorker @AssistedInject constructor(
                 }
             }
         }
-        return Result.success()
+    }
+
+    private fun loadSettings() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        shouldShowNotification =
+            preferences.getBoolean(
+                applicationContext.getString(
+                    R.string.updateNotify
+                ),
+                true
+            )
+        automaticInstallEnabled = preferences.getBoolean(
+            applicationContext.getString(
+                R.string.auto_install_enabled
+            ),
+            true
+        )
+
+        onlyOnUnmeteredNetwork = preferences.getBoolean(
+            applicationContext.getString(
+                R.string.only_unmetered_network
+            ),
+            false
+        )
     }
 
     private suspend fun getAppDownloadLink(app: FusedApp, authData: AuthData): List<String> {
@@ -101,12 +187,33 @@ class UpdatesWorker @AssistedInject constructor(
         }
         return downloadList
     }
-}
 
-fun FusedApp.getIconImageToBase64(): String {
-    val stream = URL(icon_image_path).openStream()
-    val bitmap = BitmapFactory.decodeStream(stream)
-    val byteArrayOS = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOS)
-    return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT)
+    private fun getIconImageToBase64(fusedApp: FusedApp): String {
+        val url =
+            if (fusedApp.origin == Origin.CLEANAPK) "${CleanAPKInterface.ASSET_URL}${fusedApp.icon_image_path}" else fusedApp.icon_image_path
+        val stream = URL(url).openStream()
+        val bitmap = BitmapFactory.decodeStream(stream)
+        val byteArrayOS = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOS)
+        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT)
+    }
+
+    /*
+     * Checks if the device is connected to a metered connection or not
+     * @param context current Context
+     * @return returns true if the connections is not metered, false otherwise
+     */
+    private fun isConnectedToUnmeteredNetwork(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+
+        if (capabilities != null) {
+            if (capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)) {
+                return true
+            }
+        }
+        return false
+    }
 }

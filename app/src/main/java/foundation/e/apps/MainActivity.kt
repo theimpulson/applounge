@@ -29,6 +29,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.databinding.ActivityMainBinding
+import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.enums.User
@@ -113,6 +114,10 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigationView.visibility = View.VISIBLE
                 }
             }
+        }
+
+        if (intent.hasExtra(UpdatesNotifier.UPDATES_NOTIFICATION_CLICK_EXTRA)) {
+            bottomNavigationView.selectedItemId = R.id.updatesFragment
         }
 
         // Create notification channel on post-nougat devices
