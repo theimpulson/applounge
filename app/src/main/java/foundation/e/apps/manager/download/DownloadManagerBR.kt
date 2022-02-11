@@ -33,7 +33,10 @@ class DownloadManagerBR : BroadcastReceiver() {
 
     @Inject
     lateinit var downloadManagerUtils: DownloadManagerUtils
-    private val TAG = DownloadManagerBR::class.simpleName
+
+    companion object {
+        private const val TAG = "DownloadManagerBR"
+    }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val action = intent?.action

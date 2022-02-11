@@ -1,4 +1,4 @@
-package foundation.e.apps.updates
+package foundation.e.apps.updates.manager
 
 import android.Manifest
 import android.content.Context
@@ -23,7 +23,7 @@ import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
-import foundation.e.apps.updates.manager.UpdatesManagerRepository
+import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
@@ -128,7 +128,6 @@ class UpdatesWorker @AssistedInject constructor(
             fusedManagerRepository.addDownload(fusedDownload)
             Log.d(TAG, "doWork: triggering update for: ${fusedApp.name} downloading...")
             fusedManagerRepository.downloadApp(fusedDownload)
-            Log.d(TAG, "doWork: triggering update for: ${fusedApp.name} downloaded...")
         }
         observeFusedDownload()
     }
@@ -136,12 +135,16 @@ class UpdatesWorker @AssistedInject constructor(
     private suspend fun observeFusedDownload() {
         fusedManagerRepository.getDownloadListFlow().collect {
             it.forEach { fusedDownload ->
-                if (fusedDownload.type == Type.NATIVE && fusedDownload.status == Status.INSTALLING && fusedDownload.downloadIdMap.all { it.value }) {
-                    Log.d(TAG, "doWork: triggering update for: ${fusedDownload.name} installing...")
-                    fusedManagerRepository.installApp(fusedDownload)
-                    Log.d(TAG, "doWork: triggering update for: ${fusedDownload.name} installed")
-                }
+                checkForInstall(fusedDownload)
             }
+        }
+    }
+
+    private fun checkForInstall(fusedDownload: FusedDownload) {
+        if (fusedDownload.type == Type.NATIVE && fusedDownload.status == Status.INSTALLING && fusedDownload.downloadIdMap.all { it.value }) {
+            Log.d(TAG, "doWork: triggering update for: ${fusedDownload.name} installing...")
+            fusedManagerRepository.installApp(fusedDownload)
+            Log.d(TAG, "doWork: triggering update for: ${fusedDownload.name} installed")
         }
     }
 
@@ -208,7 +211,6 @@ class UpdatesWorker @AssistedInject constructor(
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities =
             connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-
         if (capabilities != null) {
             if (capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)) {
                 return true

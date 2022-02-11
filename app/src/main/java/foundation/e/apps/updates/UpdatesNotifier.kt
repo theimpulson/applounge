@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021  E FOUNDATION
+ * Copyright (C) 2019-2022  E FOUNDATION
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,12 +28,13 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import foundation.e.apps.MainActivity
 import foundation.e.apps.R
+
 class UpdatesNotifier {
     companion object {
-        const val UPDATES_NOTIFICATION_ID = 76
-        const val UPDATES_NOTIFICATION_CHANNEL_ID = "updates_notification"
-        const val UPDATES_NOTIFICATION_CHANNEL_TITLE = "App updates"
         const val UPDATES_NOTIFICATION_CLICK_EXTRA = "updates_notification_click_extra"
+        private const val UPDATES_NOTIFICATION_ID = 76
+        private const val UPDATES_NOTIFICATION_CHANNEL_ID = "updates_notification"
+        private const val UPDATES_NOTIFICATION_CHANNEL_TITLE = "App updates"
     }
 
     private fun getNotification(
@@ -42,8 +43,7 @@ class UpdatesNotifier {
         installAutomatically: Boolean,
         unmeteredNetworkOnly: Boolean,
         isConnectedToUnmeteredNetwork: Boolean
-    ):
-        Notification {
+    ): Notification {
         val notificationBuilder =
             NotificationCompat.Builder(context, UPDATES_NOTIFICATION_CHANNEL_ID)
         notificationBuilder.setSmallIcon(R.drawable.ic_app_updated_on)
@@ -66,7 +66,7 @@ class UpdatesNotifier {
             )
         }
         if (installAutomatically) {
-            notificationBuilder.setContentText(context.getString(R.string.AUTOMATICALLY_INSTALL_updates_notification_text))
+            notificationBuilder.setContentText(context.getString(R.string.automatically_install_updates_notification_text))
             if (unmeteredNetworkOnly && !isConnectedToUnmeteredNetwork) {
                 notificationBuilder.setSubText(
                     context
@@ -74,7 +74,7 @@ class UpdatesNotifier {
                 )
             }
         } else {
-            notificationBuilder.setContentText(context.getString(R.string.MANUALLY_INSTALL_updates_notification_text))
+            notificationBuilder.setContentText(context.getString(R.string.manually_install_updates_notification_text))
         }
         notificationBuilder.setContentIntent(getClickIntent(context))
         notificationBuilder.setAutoCancel(true)
@@ -98,8 +98,7 @@ class UpdatesNotifier {
                 importance
             )
             val notificationManager: NotificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as
-                    NotificationManager
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }

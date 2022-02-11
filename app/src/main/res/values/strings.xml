@@ -127,8 +127,8 @@
     <!-- Notification -->
     <string name="downloads">Downloads</string>
     <string name="updates">Updates</string>
-    <string name="AUTOMATICALLY_INSTALL_updates_notification_text">App updates will be installed automatically</string>
-    <string name="MANUALLY_INSTALL_updates_notification_text">App updates will not be installed automatically</string>
+    <string name="automatically_install_updates_notification_text">App updates will be installed automatically</string>
+    <string name="manually_install_updates_notification_text">App updates will not be installed automatically</string>
     <string name="updates_notification_unmetered_network_warning">Waiting for un-metered network</string>
 
 <!--    trackers_dialog-->
@@ -136,9 +136,9 @@
     <string name="no_tracker_found">No Tracker Found!</string>
 
 <!-- Settings Preferences-->
-    <string name="update_check_intervals">updateCheckIntervals</string>
-    <string name="updateNotify">updateNotify</string>
-    <string name="auto_install_enabled">updateInstallAuto</string>
-    <string name="only_unmetered_network">updateUnmeteredOnly</string>
+    <string name="update_check_intervals" translatable="false">updateCheckIntervals</string>
+    <string name="updateNotify" translatable="false">updateNotify</string>
+    <string name="auto_install_enabled" translatable="false">updateInstallAuto</string>
+    <string name="only_unmetered_network" translatable="false">updateUnmeteredOnly</string>
 
 </resources>

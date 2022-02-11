@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021  E FOUNDATION
+ * Copyright (C) 2019-2022  E FOUNDATION
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,26 +15,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.updates
+package foundation.e.apps.updates.manager
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.preference.PreferenceManager
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import foundation.e.apps.R
 import java.util.concurrent.TimeUnit
 
 class UpdatesManager : BroadcastReceiver() {
-    private val TAG = "UpdatesManager"
 
     companion object {
         const val UPDATES_WORK_NAME = "updates_work"
+        private const val TAG = "UpdatesManager"
     }
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        if (context != null && intent?.action == Intent.ACTION_BOOT_COMPLETED) {
+    override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             val interval =
                 preferences.getString(
@@ -45,18 +49,18 @@ class UpdatesManager : BroadcastReceiver() {
         }
     }
 
-    private fun getWorkerConstraints() = Constraints.Builder().apply {
+    private fun buildWorkerConstraints() = Constraints.Builder().apply {
         setRequiresBatteryNotLow(true)
         setRequiredNetworkType(NetworkType.CONNECTED)
     }.build()
 
-    private fun getPeriodicWorkRequest(interval: Long): PeriodicWorkRequest {
+    private fun buildPeriodicWorkRequest(interval: Long): PeriodicWorkRequest {
         return PeriodicWorkRequest.Builder(
             UpdatesWorker::class.java,
             interval,
             TimeUnit.HOURS
         ).apply {
-            setConstraints(getWorkerConstraints())
+            setConstraints(buildWorkerConstraints())
         }.build()
     }
 
@@ -64,7 +68,7 @@ class UpdatesManager : BroadcastReceiver() {
         Log.i(TAG, "UpdatesWorker interval: $interval hours")
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             UPDATES_WORK_NAME,
-            existingPeriodicWorkPolicy, getPeriodicWorkRequest(interval)
+            existingPeriodicWorkPolicy, buildPeriodicWorkRequest(interval)
         )
         Log.i(TAG, "UpdatesWorker started")
     }
