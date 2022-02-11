@@ -18,16 +18,12 @@
 
 package foundation.e.apps.application
 
-import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
-import android.text.method.LinkMovementMethod
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.Window
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -46,7 +42,6 @@ import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.application.model.ApplicationScreenshotsRVAdapter
 import foundation.e.apps.application.subFrags.ApplicationDialogFragment
-import foundation.e.apps.databinding.DialogTrackersLayoutBinding
 import foundation.e.apps.databinding.FragmentApplicationBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin
@@ -131,7 +126,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         isEnabled = true
                         text = getString(R.string.open)
                         setTextColor(Color.WHITE)
-                        backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        backgroundTintList =
+                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             startActivity(pkgManagerModule.getLaunchIntent(fusedApp.package_name))
                         }
@@ -141,7 +137,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     installButton.apply {
                         text = getString(R.string.update)
                         setTextColor(Color.WHITE)
-                        backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        backgroundTintList =
+                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             applicationIcon?.let {
                                 mainActivityViewModel.getApplication(fusedApp, it)
@@ -306,30 +303,27 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     ).show(childFragmentManager, TAG)
                 }
                 appTrackers.setOnClickListener {
-                    showTrackerListDialog()
+                    var trackers = applicationViewModel.getTrackerListText()
+
+                    if (trackers.isNotEmpty()) {
+                        trackers += "<br /> <br />" + getString(
+                            R.string.privacy_computed_using_text,
+                            EXODUS_URL
+                        )
+                    } else {
+                        trackers = getString(R.string.no_tracker_found)
+                    }
+
+                    ApplicationDialogFragment(
+                        R.drawable.ic_tracker,
+                        getString(R.string.trackers_title),
+                        trackers
+                    ).show(childFragmentManager, TAG)
+
                 }
             }
 
             fetchAppTracker()
-        }
-    }
-
-    private fun showTrackerListDialog() {
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        val dialogBinding =
-            DialogTrackersLayoutBinding.inflate(LayoutInflater.from(requireContext()))
-        dialog.setContentView(dialogBinding.root)
-
-        val trackerListText = applicationViewModel.getTrackerListText()
-        if (trackerListText.isNotEmpty()) {
-            dialogBinding.trackersList.text = trackerListText
-        }
-        dialogBinding.privacyLinkText.movementMethod = LinkMovementMethod.getInstance()
-        dialog.show()
-
-        dialogBinding.ok.setOnClickListener {
-            dialog.dismiss()
         }
     }
 
