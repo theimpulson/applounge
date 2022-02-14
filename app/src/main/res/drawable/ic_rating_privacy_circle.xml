@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Apps  Quickly and easily install Android apps onto your device!
   ~ Copyright (C) 2021  E FOUNDATION
@@ -17,25 +16,13 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <color name="colorAccent">#0086FF</color>
-    <color name="colorAccent95">#e6f2ff</color>
-    <color name="colorNavBar">#FFFFFF</color>
-    <color name="colorBackground">#FBFBFB</color>
-
-    <!-- TOS -->
-    <color name="tos_warning">#309DFF</color>
-
-    <!-- Shimmer Animation -->
-    <color name="colorGrey">#f2f2f2</color>
-    <color name="light_grey">#C4CFD9</color>
-
-    <!-- Application Page-->
-    <color name="app_info_text_color_grey">#A4AEB7</color>
-
-    <!-- Rating Dot -->
-    <color name="colorGreen">#34A853</color>
-    <color name="colorRed">#FB3846</color>
-    <color name="colorYellow">#FFEB3B</color>
-
-</resources>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="11dp"
+    android:height="11dp"
+    android:viewportWidth="11"
+    android:viewportHeight="11"
+    android:tint="@color/colorAccent">
+    <path
+        android:pathData="M5.2093,5.8407m-5.0443,0a5.0443,5.0443 0,1 1,10.0885 0a5.0443,5.0443 0,1 1,-10.0885 0"
+        android:fillColor="@color/colorAccent"/>
+</vector>

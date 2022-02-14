@@ -20,12 +20,15 @@ package foundation.e.apps.application
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -233,11 +236,17 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             // Ratings widgets
             binding.ratingsInclude.apply {
                 if (it.ratings.usageQualityScore != -1.0) {
+                    val rating =
+                        applicationViewModel.handleRatingFormat(it.ratings.usageQualityScore)
                     appRating.text =
                         getString(
-                            R.string.rating_out_of,
-                            applicationViewModel.handleRatingFormat(it.ratings.usageQualityScore)
+                            R.string.rating_out_of, rating
                         )
+
+                    appRating.setCompoundDrawablesWithIntrinsicBounds(
+                        null, null, getRatingDrawable(rating), null
+                    )
+                    appRating.compoundDrawablePadding = 15
                 }
                 appRatingLayout.setOnClickListener {
                     ApplicationDialogFragment(
@@ -248,10 +257,16 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 }
 
                 if (it.ratings.privacyScore != -1.0) {
+                    val privacyScore = it.ratings.privacyScore.toInt().toString()
                     appPrivacyScore.text = getString(
                         R.string.privacy_rating_out_of,
-                        it.ratings.privacyScore.toInt().toString()
+                        privacyScore
                     )
+
+                    appPrivacyScore.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        null, null, getPrivacyDrawable(privacyScore), null
+                    )
+                    appPrivacyScore.compoundDrawablePadding = 15
                 }
                 appPrivacyScoreLayout.setOnClickListener {
                     ApplicationDialogFragment(
@@ -319,7 +334,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         getString(R.string.trackers_title),
                         trackers
                     ).show(childFragmentManager, TAG)
-
                 }
             }
 
@@ -347,5 +361,43 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             type = "text/plain"
         }
         return shareIntent
+    }
+
+    private fun getPrivacyDrawable(privacyRating: String): Drawable? {
+        val rating = privacyRating.toInt()
+
+        var dotColor = ContextCompat.getColor(requireContext(), R.color.colorGreen)
+        if (rating <= 3) {
+            dotColor = ContextCompat.getColor(requireContext(), R.color.colorRed)
+        } else if (rating <= 6) {
+            dotColor = ContextCompat.getColor(requireContext(), R.color.colorYellow)
+        }
+
+        return applyDotAccent(dotColor)
+    }
+
+    private fun getRatingDrawable(reviewRating: String): Drawable? {
+        val rating = reviewRating.toDouble()
+
+        var dotColor = ContextCompat.getColor(requireContext(), R.color.colorGreen)
+        if (rating <= 2.0) {
+            dotColor = ContextCompat.getColor(requireContext(), R.color.colorRed)
+        } else if (rating <= 3.4) {
+            dotColor = ContextCompat.getColor(requireContext(), R.color.colorYellow)
+        }
+
+        return applyDotAccent(dotColor)
+    }
+
+    private fun applyDotAccent(dotColor: Int): Drawable? {
+        val circleDrawable =
+            ContextCompat.getDrawable(requireContext(), R.drawable.ic_rating_privacy_circle)
+
+        circleDrawable?.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+            dotColor,
+            BlendModeCompat.SRC_ATOP
+        )
+
+        return circleDrawable
     }
 }
