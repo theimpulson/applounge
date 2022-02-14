@@ -148,4 +148,7 @@ dependencies {
 
     // WorkManager
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
+
+    // JSoup
+    implementation 'org.jsoup:jsoup:1.13.1'
 }

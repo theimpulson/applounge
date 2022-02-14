@@ -24,4 +24,7 @@
     <color name="colorBackground">#121212</color>
 
     <color name="colorGrey">#262626</color>
+
+    <!-- TOS -->
+    <color name="tos_bottom">@color/colorNavBar</color>
 </resources>
