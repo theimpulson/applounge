@@ -113,7 +113,7 @@ class ApplicationViewModel @Inject constructor(
     fun getTrackerListText(): String {
         fusedApp.value?.let {
             if (it.trackers.isNotEmpty()) {
-                return it.trackers.joinToString(separator = "") { tracker -> tracker + "\n" }.trim()
+                return it.trackers.joinToString(separator = "") { tracker -> "$tracker<br />" }
             }
         }
         return ""
