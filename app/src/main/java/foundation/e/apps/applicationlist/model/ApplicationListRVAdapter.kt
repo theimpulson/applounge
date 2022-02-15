@@ -26,7 +26,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.facebook.shimmer.Shimmer
@@ -53,10 +53,8 @@ class ApplicationListRVAdapter(
     private val currentDestinationId: Int,
     private val pkgManagerModule: PkgManagerModule,
     private val user: User
-) :
-    RecyclerView.Adapter<ApplicationListRVAdapter.ViewHolder>() {
+) : ListAdapter<FusedApp, ApplicationListRVAdapter.ViewHolder>(ApplicationDiffUtil()) {
 
-    private var oldList = emptyList<FusedApp>()
     private val TAG = ApplicationListRVAdapter::class.java.simpleName
 
     private val shimmer = Shimmer.ColorHighlightBuilder()
@@ -82,7 +80,7 @@ class ApplicationListRVAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val view = holder.itemView
-        val searchApp = oldList[position]
+        val searchApp = getItem(position)
         val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
 
         holder.binding.apply {
@@ -203,15 +201,8 @@ class ApplicationListRVAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return oldList.size
-    }
-
     fun setData(newList: List<FusedApp>) {
-        val diffUtil = ApplicationListDiffUtil(oldList, newList)
-        val diffResult = DiffUtil.calculateDiff(diffUtil)
-        oldList = newList
-        diffResult.dispatchUpdatesTo(this)
+        this.submitList(newList.map { it.copy() })
     }
 
     private fun installApplication(searchApp: FusedApp, appIcon: ImageView) {

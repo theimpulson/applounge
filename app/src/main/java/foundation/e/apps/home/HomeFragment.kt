@@ -59,26 +59,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
         val homeParentRVAdapter = HomeParentRVAdapter(
             this,
             pkgManagerModule,
-            User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name)
+            User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
+            mainActivityViewModel, viewLifecycleOwner
         )
 
         binding.parentRV.apply {
             adapter = homeParentRVAdapter
             layoutManager = LinearLayoutManager(view.context)
-        }
-
-        mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
-            val homeList = homeViewModel.homeScreenData.value?.toMutableList()
-            if (!homeList.isNullOrEmpty()) {
-                homeList.forEach { home ->
-                    list.forEach {
-                        home.list.find { app ->
-                            app.origin == it.origin && (app.package_name == it.package_name || app._id == it.id)
-                        }?.status = it.status
-                    }
-                }
-                homeViewModel.homeScreenData.value = homeList
-            }
         }
 
         homeViewModel.homeScreenData.observe(viewLifecycleOwner) {

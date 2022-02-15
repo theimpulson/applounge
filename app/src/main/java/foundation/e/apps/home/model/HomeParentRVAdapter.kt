@@ -20,23 +20,27 @@ package foundation.e.apps.home.model
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.api.fused.FusedAPIInterface
+import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.FusedHome
 import foundation.e.apps.databinding.HomeParentListItemBinding
+import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.User
 
 class HomeParentRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val pkgManagerModule: PkgManagerModule,
-    private val user: User
-) :
-    RecyclerView.Adapter<HomeParentRVAdapter.ViewHolder>() {
+    private val user: User,
+    private val mainActivityViewModel: MainActivityViewModel,
+    private val lifecycleOwner: LifecycleOwner
+) : ListAdapter<FusedHome, HomeParentRVAdapter.ViewHolder>(FusedHomeDiffUtil()) {
 
-    private var oldList = emptyList<FusedHome>()
     private val viewPool = RecyclerView.RecycledViewPool()
 
     inner class ViewHolder(val binding: HomeParentListItemBinding) :
@@ -49,10 +53,11 @@ class HomeParentRVAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val fusedHome = getItem(position)
         val homeChildRVAdapter = HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, user)
-        homeChildRVAdapter.setData(oldList[position].list)
+        homeChildRVAdapter.setData(fusedHome.list)
 
-        holder.binding.titleTV.text = oldList[position].title
+        holder.binding.titleTV.text = fusedHome.title
         holder.binding.childRV.apply {
             adapter = homeChildRVAdapter
             layoutManager =
@@ -63,16 +68,35 @@ class HomeParentRVAdapter(
                 )
             setRecycledViewPool(viewPool)
         }
+        observeAppInstall(fusedHome, homeChildRVAdapter)
     }
 
-    override fun getItemCount(): Int {
-        return oldList.size
+    private fun observeAppInstall(
+        fusedHome: FusedHome,
+        homeChildRVAdapter: RecyclerView.Adapter<*>?
+    ) {
+        mainActivityViewModel.downloadList.observe(lifecycleOwner) {
+            updateInstallingAppStatus(it, fusedHome)
+            (homeChildRVAdapter as HomeChildRVAdapter).setData(fusedHome.list)
+        }
+    }
+
+    private fun updateInstallingAppStatus(
+        downloadList: List<FusedDownload>,
+        fusedHome: FusedHome
+    ) {
+        downloadList.forEach { fusedDownload ->
+            findInstallingApp(fusedHome, fusedDownload)?.status = fusedDownload.status
+        }
+    }
+
+    private fun findInstallingApp(fusedHome: FusedHome, fusedDownload: FusedDownload): FusedApp? {
+        return fusedHome.list.find { app ->
+            app.origin == fusedDownload.origin && (app.package_name == fusedDownload.package_name || app._id == fusedDownload.id)
+        }
     }
 
     fun setData(newList: List<FusedHome>) {
-        val diffUtil = HomeParentDiffUtil(oldList, newList)
-        val diffResult = DiffUtil.calculateDiff(diffUtil)
-        oldList = newList
-        diffResult.dispatchUpdatesTo(this)
+        submitList(newList.map { it.copy() })
     }
 }
