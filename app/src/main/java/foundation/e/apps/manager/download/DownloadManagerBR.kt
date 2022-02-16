@@ -22,6 +22,7 @@ import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import javax.inject.Inject
@@ -33,10 +34,15 @@ class DownloadManagerBR : BroadcastReceiver() {
     @Inject
     lateinit var downloadManagerUtils: DownloadManagerUtils
 
+    companion object {
+        private const val TAG = "DownloadManagerBR"
+    }
+
     override fun onReceive(context: Context?, intent: Intent?) {
         val action = intent?.action
         if (context != null && action != null) {
             val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0)
+            Log.d(TAG, "onReceive: $action")
             when (action) {
                 DownloadManager.ACTION_DOWNLOAD_COMPLETE -> {
                     if (downloadManagerUtils.downloadStatus(id) == DownloadManager.STATUS_SUCCESSFUL) {

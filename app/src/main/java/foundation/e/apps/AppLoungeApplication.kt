@@ -19,6 +19,8 @@
 package foundation.e.apps
 
 import android.app.Application
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import foundation.e.apps.manager.pkg.PkgManagerBR
 import foundation.e.apps.manager.pkg.PkgManagerModule
@@ -27,10 +29,12 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 @DelicateCoroutinesApi
-class AppLoungeApplication : Application() {
+class AppLoungeApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
 
     override fun onCreate() {
         super.onCreate()
@@ -39,4 +43,9 @@ class AppLoungeApplication : Application() {
         val pkgManagerBR = object : PkgManagerBR() {}
         registerReceiver(pkgManagerBR, pkgManagerModule.getFilter())
     }
+
+    override fun getWorkManagerConfiguration() =
+        Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }

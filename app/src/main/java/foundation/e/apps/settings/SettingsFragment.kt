@@ -1,6 +1,6 @@
 /*
  * Apps  Quickly and easily install Android apps onto your device!
- * Copyright (C) 2021  E FOUNDATION
+ * Copyright (C) 2022  E FOUNDATION
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,10 +20,13 @@ package foundation.e.apps.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.work.ExistingPeriodicWorkPolicy
 import coil.load
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
@@ -33,6 +36,7 @@ import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.databinding.CustomPreferenceBinding
 import foundation.e.apps.setup.signin.SignInViewModel
+import foundation.e.apps.updates.manager.UpdatesManager
 import foundation.e.apps.utils.enums.User
 import javax.inject.Inject
 
@@ -47,6 +51,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
     @Inject
     lateinit var gson: Gson
 
+    companion object {
+        private const val TAG = "SettingsFragment"
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_preferences, rootKey)
 
@@ -54,6 +62,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val showAllApplications = findPreference<RadioButtonPreference>("showAllApplications")
         val showFOSSApplications = findPreference<RadioButtonPreference>("showFOSSApplications")
         val showPWAApplications = findPreference<RadioButtonPreference>("showPWAApplications")
+
+        val updateCheckInterval =
+            preferenceManager.findPreference<Preference>(getString(R.string.update_check_intervals))
+        updateCheckInterval?.setOnPreferenceChangeListener { _, newValue ->
+            Log.d(TAG, "onCreatePreferences: updated Value: $newValue")
+            context?.let { UpdatesManager().enqueueWork(it, newValue.toString().toLong(), ExistingPeriodicWorkPolicy.REPLACE) }
+            true
+        }
 
         showAllApplications?.setOnPreferenceChangeListener { _, _ ->
             showFOSSApplications?.isChecked = false
