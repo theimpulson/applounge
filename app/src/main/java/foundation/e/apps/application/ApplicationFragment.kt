@@ -87,7 +87,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             )
         }
 
-        val startDestination = findNavController().graph.startDestination
+        val startDestination = findNavController().graph.startDestinationId
         if (startDestination == R.id.applicationFragment) {
             binding.toolbar.setNavigationOnClickListener {
                 val action = ApplicationFragmentDirections.actionApplicationFragmentToHomeFragment()

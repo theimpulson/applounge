@@ -119,7 +119,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.9.2"
 
     // Navigation Components
-    def navigation_version = "2.3.5"
+    def navigation_version = "2.4.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
@@ -129,7 +129,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
 
     // Lifecycle Components
-    def lifecycle_version = "2.4.0"
+    def lifecycle_version = "2.4.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
