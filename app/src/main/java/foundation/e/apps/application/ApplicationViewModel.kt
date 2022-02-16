@@ -37,6 +37,8 @@ import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.ceil
+import kotlin.math.round
 
 @HiltViewModel
 class ApplicationViewModel @Inject constructor(
@@ -117,5 +119,29 @@ class ApplicationViewModel @Inject constructor(
             }
         }
         return ""
+    }
+
+    fun getPrivacyScore(): Int {
+        fusedApp.value?.let {
+            return calculatePrivacyScore(it)
+        }
+        return -1
+    }
+
+    private fun calculatePrivacyScore(fusedApp: FusedApp): Int {
+        return calculateTrackersScore(fusedApp.trackers.size) + calculatePermissionsScore(
+            countAndroidPermissions(fusedApp)
+        )
+    }
+
+    private fun countAndroidPermissions(fusedApp: FusedApp) =
+        fusedApp.perms.filter { it.contains("android.permission") }.size
+
+    private fun calculateTrackersScore(numberOfTrackers: Int): Int {
+        return if (numberOfTrackers > 5) 0 else 9 - numberOfTrackers
+    }
+
+    private fun calculatePermissionsScore(numberOfPermission: Int): Int {
+        return if (numberOfPermission > 9) 0 else round(0.2 * ceil((10 - numberOfPermission) / 2.0)).toInt()
     }
 }
