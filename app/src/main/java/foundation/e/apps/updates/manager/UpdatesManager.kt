@@ -38,6 +38,7 @@ class UpdatesManager : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
+        Log.d(TAG, "onReceive: ${intent.action}")
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             val interval =
