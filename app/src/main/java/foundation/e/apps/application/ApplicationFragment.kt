@@ -302,11 +302,18 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
             // Privacy widgets
             binding.privacyInclude.apply {
+                var permission =
+                    applicationViewModel.transformPermsToString(it.perms.toMutableList())
+                if (permission.isEmpty()) {
+                    permission = getString(
+                        R.string.no_permission_found
+                    )
+                }
                 appPermissions.setOnClickListener { _ ->
                     ApplicationDialogFragment(
                         R.drawable.ic_perm,
                         getString(R.string.permissions),
-                        applicationViewModel.transformPermsToString(it.perms.toMutableList())
+                        permission
                     ).show(childFragmentManager, TAG)
                 }
                 appTrackers.setOnClickListener {
