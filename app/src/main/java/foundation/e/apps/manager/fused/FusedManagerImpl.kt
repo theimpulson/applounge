@@ -54,20 +54,34 @@ class FusedManagerImpl @Inject constructor(
         return databaseRepository.getDownloadLiveList()
     }
 
-    suspend fun updateDownloadStatus(fusedDownload: FusedDownload, status: Status, downloadId: Long = 0) {
+    suspend fun updateDownloadStatus(
+        fusedDownload: FusedDownload,
+        status: Status,
+        downloadId: Long = 0
+    ) {
         if (fusedDownload.id.isNotBlank()) {
             if (downloadId != 0L && fusedDownload.downloadIdMap.containsKey(downloadId)) {
                 fusedDownload.downloadIdMap[downloadId] = true
                 databaseRepository.updateDownload(fusedDownload)
+                delay(100)
             }
-            fusedDownload.status = status
-            databaseRepository.updateDownload(fusedDownload)
         } else {
             Log.d(TAG, "Unable to update download status!")
         }
+
         if (status == Status.INSTALLED) {
+            fusedDownload.status = status
+            databaseRepository.updateDownload(fusedDownload)
+            delay(100)
             flushOldDownload(fusedDownload.package_name)
             databaseRepository.deleteDownload(fusedDownload)
+        } else if (status == Status.INSTALLING) {
+            if (fusedDownload.downloadIdMap.all { it.value }) {
+                fusedDownload.status = status
+                databaseRepository.updateDownload(fusedDownload)
+                delay(100)
+                installApp(fusedDownload)
+            }
         }
     }
 
@@ -85,7 +99,10 @@ class FusedManagerImpl @Inject constructor(
                 val parentPathFile = File("$cacheDir/${fusedDownload.package_name}")
                 parentPathFile.listFiles()?.let { list.addAll(it) }
                 list.sort()
-                if (list.size != 0) pkgManagerModule.installApplication(list)
+                if (list.size != 0) pkgManagerModule.installApplication(
+                    list,
+                    fusedDownload.package_name
+                )
             }
             else -> Log.d(TAG, "Unsupported application type!")
         }
@@ -139,6 +156,8 @@ class FusedManagerImpl @Inject constructor(
         File(parentPath).mkdir()
         DownloadProgressLD.setDownloadId(-1L)
 
+        fusedDownload.status = Status.DOWNLOADING
+
         fusedDownload.downloadURLList.forEach {
             count += 1
             val packagePath = File(parentPath, "${fusedDownload.package_name}_$count.apk")
@@ -148,11 +167,14 @@ class FusedManagerImpl @Inject constructor(
                 .setDestinationUri(Uri.fromFile(packagePath))
             val requestId = downloadManager.enqueue(request)
             DownloadProgressLD.setDownloadId(requestId)
-            fusedDownload.apply {
-                status = Status.DOWNLOADING
-                downloadIdMap[requestId] = false
-            }
-            databaseRepository.updateDownload(fusedDownload)
+            fusedDownload.downloadIdMap[requestId] = false
         }
+        databaseRepository.updateDownload(fusedDownload)
+    }
+
+    suspend fun installationIssue(fusedDownload: FusedDownload) {
+        flushOldDownload(fusedDownload.package_name)
+        fusedDownload.status = Status.INSTALLATION_ISSUE
+        databaseRepository.updateDownload(fusedDownload)
     }
 }

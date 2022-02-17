@@ -55,4 +55,8 @@ class FusedManagerRepository @Inject constructor(
     suspend fun cancelDownload(fusedDownload: FusedDownload) {
         return fusedManagerImpl.cancelDownload(fusedDownload)
     }
+
+    suspend fun installationIssue(fusedDownload: FusedDownload) {
+        return fusedManagerImpl.installationIssue(fusedDownload)
+    }
 }

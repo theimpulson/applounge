@@ -646,6 +646,8 @@ class FusedAPIImpl @Inject constructor(
     private fun FusedApp.updateStatus() {
         this.status = if (this.isFree) {
             pkgManagerModule.getPackageStatus(this.package_name, this.latest_version_code)
+        } else if (this.status == Status.INSTALLATION_ISSUE) {
+            this.status
         } else {
             Status.BLOCKED
         }

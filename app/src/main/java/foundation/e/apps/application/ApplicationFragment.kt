@@ -210,6 +210,18 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         }
                     }
                 }
+                Status.INSTALLATION_ISSUE -> {
+                    installButton.apply {
+                        text = getString(R.string.retry)
+                        setOnClickListener {
+                            applicationIcon?.let {
+                                mainActivityViewModel.getApplication(fusedApp, it)
+                            }
+                        }
+                    }
+                    downloadPB.visibility = View.GONE
+                    appSize.visibility = View.VISIBLE
+                }
                 else -> {
                     Log.d(TAG, "Unknown status: $status")
                 }

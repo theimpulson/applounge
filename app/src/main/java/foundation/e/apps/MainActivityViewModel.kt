@@ -117,10 +117,6 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    fun installApp(fusedDownload: FusedDownload) {
-        fusedManagerRepository.installApp(fusedDownload)
-    }
-
     fun getApplication(app: FusedApp, imageView: ImageView?) {
         viewModelScope.launch {
             val appIcon = imageView?.let { getImageBase64(it) } ?: ""

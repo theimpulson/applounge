@@ -37,12 +37,13 @@ class DownloadManagerUtils @Inject constructor(
     private val TAG = DownloadManagerUtils::class.java.simpleName
 
     fun downloadStatus(id: Long): Int {
-        val cursor = downloadManager.query(downloadManagerQuery.setFilterById(id))
-        if (cursor.moveToFirst()) {
-            val statusIndex = cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)
-            return cursor.getInt(statusIndex)
+        downloadManager.query(downloadManagerQuery.setFilterById(id)).use { cursor ->
+            if (cursor.moveToFirst()) {
+                val statusIndex = cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)
+                return cursor.getInt(statusIndex)
+            }
+            return DownloadManager.STATUS_FAILED
         }
-        return DownloadManager.STATUS_FAILED
     }
 
     @DelicateCoroutinesApi
@@ -64,13 +65,14 @@ class DownloadManagerUtils @Inject constructor(
     }
 
     private fun downloadedFile(id: Long): String {
-        val cursor = downloadManager.query(downloadManagerQuery.setFilterById(id))
-        var fileUri = ""
-        if (cursor.moveToFirst()) {
-            val index = cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_URI)
-            fileUri = cursor.getString(index)
+        downloadManager.query(downloadManagerQuery.setFilterById(id)).use { cursor ->
+            var fileUri = ""
+            if (cursor.moveToFirst()) {
+                val index = cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_URI)
+                fileUri = cursor.getString(index)
+            }
+            return fileUri.removePrefix("file://")
         }
-        return fileUri.removePrefix("file://")
     }
 
     @DelicateCoroutinesApi

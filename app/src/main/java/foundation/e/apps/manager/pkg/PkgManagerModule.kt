@@ -26,9 +26,11 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.core.content.pm.PackageInfoCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.utils.enums.Status
+import kotlinx.coroutines.DelicateCoroutinesApi
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -84,10 +86,17 @@ class PkgManagerModule @Inject constructor(
      * Installs the given package using system API
      * @param file An instance of [File]
      */
-    fun installApplication(list: List<File>) {
+    @OptIn(DelicateCoroutinesApi::class)
+    fun installApplication(list: List<File>, packageName: String) {
         val packageInstaller = packageManager.packageInstaller
         val params = PackageInstaller
-            .SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
+            .SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL).apply {
+                setAppPackageName(packageName)
+                setOriginatingUid(android.os.Process.myUid())
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED)
+                }
+            }
 
         // Open a new specific session
         val sessionId = packageInstaller.createSession(params)
@@ -102,13 +111,16 @@ class PkgManagerModule @Inject constructor(
             inputStream.close()
             outputStream.close()
         }
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE else
+            PendingIntent.FLAG_UPDATE_CURRENT
 
         // We are done, close everything
-        val pendingIntent = PendingIntent.getBroadcast(
+        val pendingIntent = PendingIntent.getService(
             context,
             sessionId,
-            Intent(Intent.ACTION_PACKAGE_ADDED),
-            PendingIntent.FLAG_IMMUTABLE
+            Intent(context, PackageInstallerService::class.java),
+            flags
         )
         session.commit(pendingIntent.intentSender)
         session.close()
@@ -137,7 +149,6 @@ class PkgManagerModule @Inject constructor(
     fun getFilter(): IntentFilter {
         val filter = IntentFilter()
         filter.addDataScheme("package")
-        filter.addAction(Intent.ACTION_PACKAGE_ADDED)
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED)
         return filter
     }

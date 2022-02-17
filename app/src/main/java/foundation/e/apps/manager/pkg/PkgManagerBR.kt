@@ -23,7 +23,6 @@ import android.content.Context
 import android.content.Intent
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.manager.fused.FusedManagerRepository
-import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -46,21 +45,12 @@ open class PkgManagerBR : BroadcastReceiver() {
             packages?.let { pkgList ->
                 pkgList.forEach { pkgName ->
                     when (action) {
-                        Intent.ACTION_PACKAGE_ADDED -> updateDownloadStatus(pkgName)
                         Intent.ACTION_PACKAGE_REMOVED -> {
                             if (!isUpdating) deleteDownload(pkgName)
                         }
                     }
                 }
             }
-        }
-    }
-
-    // TODO: FIND A BETTER WAY TO DO THIS
-    private fun updateDownloadStatus(pkgName: String) {
-        GlobalScope.launch {
-            val fusedDownload = fusedManagerRepository.getFusedDownload(packageName = pkgName)
-            fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLED)
         }
     }
 

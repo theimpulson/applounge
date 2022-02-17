@@ -197,6 +197,14 @@ class ApplicationListRVAdapter(
                         }
                     }
                 }
+                Status.INSTALLATION_ISSUE -> {
+                    installButton.apply {
+                        text = view.context.getString(R.string.retry)
+                        setOnClickListener {
+                            installApplication(searchApp, appIcon)
+                        }
+                    }
+                }
             }
         }
     }
