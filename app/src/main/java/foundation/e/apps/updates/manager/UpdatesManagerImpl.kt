@@ -40,25 +40,27 @@ class UpdatesManagerImpl @Inject constructor(
         val userApplications = pkgManagerModule.getAllUserApps()
         userApplications.forEach { pkgList.add(it.packageName) }
 
-        // Get updates from CleanAPK
-        val cleanAPKList = fusedAPIRepository.getApplicationDetails(
-            pkgList,
-            authData,
-            Origin.CLEANAPK
-        )
-        cleanAPKList.forEach {
-            if (it.package_name in pkgList) pkgList.remove(it.package_name)
-            if (it.status == Status.UPDATABLE) updateList.add(it)
-        }
+        if (pkgList.isNotEmpty()) {
+            // Get updates from CleanAPK
+            val cleanAPKList = fusedAPIRepository.getApplicationDetails(
+                pkgList,
+                authData,
+                Origin.CLEANAPK
+            )
+            cleanAPKList.forEach {
+                if (it.package_name in pkgList) pkgList.remove(it.package_name)
+                if (it.status == Status.UPDATABLE) updateList.add(it)
+            }
 
-        // Check for remaining apps from GPlay
-        val gPlayList = fusedAPIRepository.getApplicationDetails(
-            pkgList,
-            authData,
-            Origin.GPLAY
-        )
-        gPlayList.forEach {
-            if (it.status == Status.UPDATABLE) updateList.add(it)
+            // Check for remaining apps from GPlay
+            val gPlayList = fusedAPIRepository.getApplicationDetails(
+                pkgList,
+                authData,
+                Origin.GPLAY
+            )
+            gPlayList.forEach {
+                if (it.status == Status.UPDATABLE) updateList.add(it)
+            }
         }
         return updateList
     }
