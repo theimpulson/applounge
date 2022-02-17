@@ -18,13 +18,13 @@
   -->
 
 <resources>
-    <color name="colorAccent">#0086FF</color>
+    <color name="colorAccent">#309DFF</color>
     <color name="colorAccent95">#e6f2ff</color>
     <color name="colorNavBar">#FFFFFF</color>
     <color name="colorBackground">#FBFBFB</color>
 
     <!-- TOS -->
-    <color name="tos_warning">#309DFF</color>
+    <color name="tos_bottom">@android:color/white</color>
 
     <!-- Shimmer Animation -->
     <color name="colorGrey">#f2f2f2</color>
