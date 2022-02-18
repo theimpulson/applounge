@@ -135,10 +135,13 @@
     <string name="privacy_computed_using_text">Computed using &lt;a href="<xliff:g id="exodus">%1$s</xliff:g>"&gt; Exodus Privacy Analysis</string>
     <string name="no_tracker_found">No Tracker Found!</string>
 
-<!-- Settings Preferences-->
+    <!-- Settings Preferences-->
     <string name="update_check_intervals" translatable="false">updateCheckIntervals</string>
     <string name="updateNotify" translatable="false">updateNotify</string>
     <string name="auto_install_enabled" translatable="false">updateInstallAuto</string>
     <string name="only_unmetered_network" translatable="false">updateUnmeteredOnly</string>
+
+    <!-- No Internet Fragment -->
+    <string name="no_internet_message">Can\'t connect! Please check your internet connection and try again</string>
 
 </resources>

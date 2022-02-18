@@ -52,8 +52,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
-        mainActivityViewModel.authData.observe(viewLifecycleOwner) {
-            homeViewModel.getHomeScreenData(it)
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { hasInternet ->
+            mainActivityViewModel.authData.observe(viewLifecycleOwner) { authData ->
+                if (hasInternet) {
+                    homeViewModel.getHomeScreenData(authData)
+                }
+            }
         }
 
         val homeParentRVAdapter = HomeParentRVAdapter(

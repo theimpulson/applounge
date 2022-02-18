@@ -151,4 +151,7 @@ dependencies {
 
     // JSoup
     implementation 'org.jsoup:jsoup:1.13.1'
+
+    // Flow reactive network
+    implementation 'ru.beryukhov:flowreactivenetwork:1.0.4'
 }

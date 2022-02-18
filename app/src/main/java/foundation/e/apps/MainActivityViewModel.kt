@@ -28,6 +28,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
@@ -38,7 +39,9 @@ import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.modules.DataStoreModule
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.beryukhov.reactivenetwork.ReactiveNetwork
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
@@ -173,5 +176,9 @@ class MainActivityViewModel @Inject constructor(
         val bitmap = imageView.drawable.toBitmap()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOS)
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT)
+    }
+
+    val internetConnection = liveData {
+        emitSource(ReactiveNetwork().observeInternetConnectivity().asLiveData(Dispatchers.Default))
     }
 }
