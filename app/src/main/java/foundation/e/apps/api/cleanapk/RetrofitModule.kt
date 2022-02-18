@@ -19,6 +19,7 @@
 package foundation.e.apps.api.cleanapk
 
 import android.os.Build
+import android.util.Log
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,9 +27,14 @@ import dagger.hilt.components.SingletonComponent
 import foundation.e.apps.api.exodus.ExodusTrackerApi
 import okhttp3.Cache
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
+import okhttp3.Response
+import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.net.ConnectException
 import javax.inject.Singleton
 
 @Module
@@ -70,8 +76,28 @@ object RetrofitModule {
                 "User-Agent",
                 "Dalvik/2.1.0 (Linux; U; Android ${Build.VERSION.RELEASE}; ${Build.FINGERPRINT})"
             )
-            return@Interceptor chain.proceed(builder.build())
+            try {
+                return@Interceptor chain.proceed(builder.build())
+            } catch (e: ConnectException) {
+                return@Interceptor buildErrorResponse(e, chain)
+            } catch (e: Exception) {
+                return@Interceptor buildErrorResponse(e, chain)
+            }
         }
+    }
+
+    private fun buildErrorResponse(
+        e: Exception,
+        chain: Interceptor.Chain
+    ): Response {
+        Log.e("Retrofit", "buildErrorResponse: ${e.localizedMessage}")
+        return Response.Builder()
+            .code(999)
+            .message(e.localizedMessage ?: "Unknown error")
+            .request(chain.request())
+            .protocol(Protocol.HTTP_1_1)
+            .body("{}".toResponseBody("application/json; charset=utf-8".toMediaTypeOrNull()))
+            .build()
     }
 
     @Singleton

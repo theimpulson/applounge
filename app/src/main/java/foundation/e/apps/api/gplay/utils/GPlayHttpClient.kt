@@ -34,6 +34,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.io.IOException
+import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -43,6 +44,10 @@ class GPlayHttpClient @Inject constructor(
 
     private val POST = "POST"
     private val GET = "GET"
+
+    companion object {
+        private const val TAG = "GPlayHttpClient"
+    }
 
     private val okHttpClient = OkHttpClient().newBuilder()
         .connectTimeout(25, TimeUnit.SECONDS)
@@ -148,8 +153,13 @@ class GPlayHttpClient @Inject constructor(
     }
 
     private fun processRequest(request: Request): PlayResponse {
-        val call = okHttpClient.newCall(request)
-        return buildPlayResponse(call.execute())
+        return try {
+            val call = okHttpClient.newCall(request)
+            buildPlayResponse(call.execute())
+        } catch (e: UnknownHostException) {
+            Log.e(TAG, "processRequest: ${e.localizedMessage}")
+            PlayResponse()
+        }
     }
 
     private fun buildUrl(url: String, params: Map<String, String>): HttpUrl {
