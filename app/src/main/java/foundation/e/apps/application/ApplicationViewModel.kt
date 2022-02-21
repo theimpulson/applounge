@@ -129,8 +129,9 @@ class ApplicationViewModel @Inject constructor(
     }
 
     private fun calculatePrivacyScore(fusedApp: FusedApp): Int {
-        return calculateTrackersScore(fusedApp.trackers.size) +
-                calculatePermissionsScore(countAndroidPermissions(fusedApp))
+        return calculateTrackersScore(fusedApp.trackers.size) + calculatePermissionsScore(
+            countAndroidPermissions(fusedApp)
+        )
     }
 
     private fun countAndroidPermissions(fusedApp: FusedApp) =
