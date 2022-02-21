@@ -74,8 +74,8 @@ class ApplicationViewModel @Inject constructor(
             it.replace("[^>]*permission\\.".toRegex(), "")
         }
         // Make it a dialog-friendly string and return it
-        val permString = list.toString().replace(", ", "\n")
-        return permString.substring(1, permString.length - 1)
+        return list.joinToString(separator = "") { "$it<br />" }
+
     }
 
     fun handleRatingFormat(rating: Double): String {
