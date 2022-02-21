@@ -260,18 +260,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     ).show(childFragmentManager, TAG)
                 }
 
-                if (it.ratings.privacyScore != -1.0) {
-                    val privacyScore = it.ratings.privacyScore.toInt().toString()
-                    appPrivacyScore.text = getString(
-                        R.string.privacy_rating_out_of,
-                        privacyScore
-                    )
-
-                    appPrivacyScore.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                        null, null, getPrivacyDrawable(privacyScore), null
-                    )
-                    appPrivacyScore.compoundDrawablePadding = 15
-                }
                 appPrivacyScoreLayout.setOnClickListener {
                     ApplicationDialogFragment(
                         R.drawable.ic_lock,
@@ -347,8 +335,25 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
     private fun fetchAppTracker() {
         applicationViewModel.fetchTrackerData().observe(viewLifecycleOwner) {
+            updatePrivacyScore()
             binding.applicationLayout.visibility = View.VISIBLE
             binding.progressBar.visibility = View.GONE
+        }
+    }
+
+    private fun updatePrivacyScore() {
+        val privacyScore = applicationViewModel.getPrivacyScore()
+        if (privacyScore != -1) {
+            val appPrivacyScore = binding.ratingsInclude.appPrivacyScore
+            appPrivacyScore.text = getString(
+                R.string.privacy_rating_out_of,
+                privacyScore.toString()
+            )
+
+            appPrivacyScore.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                null, null, getPrivacyDrawable(privacyScore.toString()), null
+            )
+            appPrivacyScore.compoundDrawablePadding = 15
         }
     }
 
