@@ -75,7 +75,6 @@ class ApplicationViewModel @Inject constructor(
         }
         // Make it a dialog-friendly string and return it
         return list.joinToString(separator = "") { "$it<br />" }
-
     }
 
     fun handleRatingFormat(rating: Double): String {

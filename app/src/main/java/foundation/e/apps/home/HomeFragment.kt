@@ -24,6 +24,7 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
@@ -51,6 +52,14 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
+
+        mainActivityViewModel.userType.observe(viewLifecycleOwner) { user ->
+            if (user.isNullOrEmpty() || User.valueOf(user) == User.UNAVAILABLE) {
+                mainActivityViewModel.tocStatus.observe(viewLifecycleOwner) { tosAccepted ->
+                    onTosAccepted(tosAccepted)
+                }
+            }
+        }
 
         mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { hasInternet ->
             mainActivityViewModel.authData.observe(viewLifecycleOwner) { authData ->
@@ -100,5 +109,14 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
 
     override fun cancelDownload(app: FusedApp) {
         mainActivityViewModel.cancelDownload(app)
+    }
+
+    private fun onTosAccepted(isTosAccepted: Boolean) {
+        if (isTosAccepted) {
+            view?.findNavController()
+                ?.navigate(R.id.action_homeFragment_to_signInFragment)
+        } else {
+            view?.findNavController()?.navigate(R.id.action_homeFragment_to_TOSFragment)
+        }
     }
 }
