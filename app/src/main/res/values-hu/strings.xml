@@ -47,7 +47,7 @@
     <string name="games_categories_title">Játékok</string>
     <string name="updates_splash_title">Az összes alkalmazás naprakész</string>
     <plurals name="updates_notification_title">
-        <item quantity="one">%1$d alkalmazásfrissítés elérhető</item>
-        <item quantity="other">%1$d alkalmazásfrissítés elérhető</item>
+        <item quantity="one">%1$d alkalmazás frissítés elérhető</item>
+        <item quantity="other">%1$d alkalmazás frissítések elérhetők</item>
     </plurals>
 </resources>
