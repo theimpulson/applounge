@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import foundation.e.apps.manager.database.DatabaseRepository
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
+import foundation.e.apps.manager.download.data.DownloadProgressLD
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
@@ -128,19 +129,22 @@ class FusedManagerImpl @Inject constructor(
 
     private suspend fun downloadNativeApp(fusedDownload: FusedDownload) {
         var count = 0
+        val parentPath = "$cacheDir/${fusedDownload.package_name}"
+
+        // Clean old downloads and re-create download dir
+        flushOldDownload(fusedDownload.package_name)
+        File(parentPath).mkdir()
+        DownloadProgressLD.setDownloadId(-1L)
+
         fusedDownload.downloadURLList.forEach {
             count += 1
-            val parentPath = "$cacheDir/${fusedDownload.package_name}"
             val packagePath = File(parentPath, "${fusedDownload.package_name}_$count.apk")
-
-            // Clean old downloads and re-create download dir
-            flushOldDownload(fusedDownload.package_name)
-            File(parentPath).mkdir()
 
             val request = DownloadManager.Request(Uri.parse(it))
                 .setTitle(if (count == 1) fusedDownload.name else "Additional file for ${fusedDownload.name}")
                 .setDestinationUri(Uri.fromFile(packagePath))
             val requestId = downloadManager.enqueue(request)
+            DownloadProgressLD.setDownloadId(requestId)
             fusedDownload.apply {
                 status = Status.DOWNLOADING
                 downloadIdMap[requestId] = false

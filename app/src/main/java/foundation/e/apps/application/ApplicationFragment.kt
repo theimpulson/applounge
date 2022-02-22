@@ -185,8 +185,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     downloadPB.visibility = View.VISIBLE
                     appSize.visibility = View.GONE
                     applicationViewModel.downloadProgress.observe(viewLifecycleOwner) {
-                        downloadPB.max = it.totalSizeBytes.toInt()
-                        downloadPB.progress = it.bytesDownloadedSoFar.toInt()
+                        downloadPB.max = it.totalSizeBytes.values.sum().toInt()
+                        downloadPB.progress = it.bytesDownloadedSoFar.values.sum().toInt()
                     }
                 }
                 Status.INSTALLING, Status.UNINSTALLING -> {
