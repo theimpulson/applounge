@@ -65,7 +65,10 @@ class FusedManagerImpl @Inject constructor(
         } else {
             Log.d(TAG, "Unable to update download status!")
         }
-        if (status == Status.INSTALLED) flushOldDownload(fusedDownload.package_name)
+        if (status == Status.INSTALLED) {
+            flushOldDownload(fusedDownload.package_name)
+            databaseRepository.deleteDownload(fusedDownload)
+        }
     }
 
     suspend fun downloadApp(fusedDownload: FusedDownload) {
