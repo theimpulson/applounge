@@ -1,2 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="search_splash_title">Alkalmazás keresése</string>
+    <string name="applications_categories_title">Alkalmazások</string>
+    <string name="menu_home">Főoldal</string>
+    <string name="menu_categories">Kategóriák</string>
+    <string name="menu_search">Keresés</string>
+    <string name="more">több</string>
+    <string name="no_permissions">Nem igényel engedélyeket</string>
+    <string name="no_trackers">Nem használ követőket</string>
+    <string name="app_licence">Engedély, lincenc</string>
+    <string name="app_package_name">Csomagnév</string>
+    <string name="app_version">Változat</string>
+    <string name="app_updated_on">Frissítve</string>
+    <string name="app_trackers_title">Követők</string>
+    <string name="app_privacy_title">Adatvédelmi elemzés</string>
+    <string name="app_ratings_title">Értékelések</string>
+    <string name="action_update">Frissítés</string>
+    <string name="action_update_all">Mindegyik frissítése</string>
+    <string name="action_installing">Telepítés</string>
+    <string name="featured">Kiemelt</string>
+    <string name="action_install">Telepítés</string>
+    <string name="app_privacy_score_content_description">Alkalmazás adatvédelmi pontszáma</string>
+    <string name="not_available">N/A</string>
+    <string name="not_available_full">Nem elérhető</string>
+    <string name="app_name">Alkalmazások</string>
+    <string name="service_description">Ez a szolgáltatás segít az alkalmazások kezelésében, mint letöltés és telepítés. Így a leállítása megszakíthatja az alkalmazások letöltését.</string>
+    <string name="app_icon_content_description">Alkalmazás ikon</string>
+    <string name="app_rating_content_description">Alkalmazás osztályozása</string>
+    <string name="action_cancel">Megszakítás</string>
+    <string name="state_installing">Telepítés</string>
+    <string name="action_launch">Megnyitás</string>
+    <string name="app_privacy_score">Adatvédelem</string>
+    <string name="app_privacy_description">Pontszám 10-ből. Az <a href="https://exodus-privacy.eu.org"> Exodus Privacy analyses </a> által számolva, az alkalmazás engedélyei és követők alapján.</string>
+    <string name="app_privacy_description_short">Az <a href="https://exodus-privacy.eu.org"> Exodus Privacy analyses</a> alapján számolva.</string>
+    <string name="app_rating">Értékelés</string>
+    <string name="app_rating_description">A felhasználók értékelései alapján számolva egy ötös skálán.</string>
+    <string name="app_permissions_title">Engedélyek</string>
+    <string name="app_information_title">Információ</string>
+    <string name="app_min_android">Követelmény</string>
+    <string name="download_notification_description">Letöltés</string>
+    <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
+    <string name="exit">Nyomd meg a VISSZA gombot a kilépéshez</string>
+    <string name="application_description_activity_title">Leírás</string>
+    <string name="menu_updates">Frissítések</string>
+    <string name="menu_settings">Beállítások</string>
+    <string name="games_categories_title">Játékok</string>
+    <string name="updates_splash_title">Az összes alkalmazás naprakész</string>
+    <plurals name="updates_notification_title">
+        <item quantity="one">%1$d alkalmazásfrissítés elérhető</item>
+        <item quantity="other">%1$d alkalmazásfrissítés elérhető</item>
+    </plurals>
+</resources>
