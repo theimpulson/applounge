@@ -115,8 +115,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
         if (isTosAccepted) {
             view?.findNavController()
                 ?.navigate(R.id.action_homeFragment_to_signInFragment)
-        } else {
-            view?.findNavController()?.navigate(R.id.action_homeFragment_to_TOSFragment)
         }
     }
 }
