@@ -316,18 +316,11 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
             // Privacy widgets
             binding.privacyInclude.apply {
-                var permission =
-                    applicationViewModel.transformPermsToString(it.perms.toMutableList())
-                if (permission.isEmpty()) {
-                    permission = getString(
-                        R.string.no_permission_found
-                    )
-                }
                 appPermissions.setOnClickListener { _ ->
                     ApplicationDialogFragment(
                         R.drawable.ic_perm,
                         getString(R.string.permissions),
-                        permission
+                        getPermissionListString()
                     ).show(childFragmentManager, TAG)
                 }
                 appTrackers.setOnClickListener {
@@ -354,8 +347,24 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         }
     }
 
+    private fun getPermissionListString(): String {
+        var permission =
+            applicationViewModel.transformPermsToString()
+        if (permission.isEmpty()) {
+            permission = getString(
+                R.string.no_permission_found
+            )
+        } else {
+            permission += "<br />" + getString(
+                R.string.privacy_computed_using_text,
+                EXODUS_URL
+            )
+        }
+        return permission
+    }
+
     private fun fetchAppTracker() {
-        applicationViewModel.fetchTrackerData().observe(viewLifecycleOwner) {
+        applicationViewModel.fetchAppPrivacyInfo().observe(viewLifecycleOwner) {
             updatePrivacyScore()
             binding.applicationLayout.visibility = View.VISIBLE
             binding.progressBar.visibility = View.GONE

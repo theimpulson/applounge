@@ -20,6 +20,8 @@ package foundation.e.apps.api.cleanapk
 
 import android.os.Build
 import android.util.Log
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -47,24 +49,32 @@ object RetrofitModule {
      */
     @Singleton
     @Provides
-    fun provideCleanAPKInterface(okHttpClient: OkHttpClient): CleanAPKInterface {
+    fun provideCleanAPKInterface(okHttpClient: OkHttpClient, moshi: Moshi): CleanAPKInterface {
         return Retrofit.Builder()
             .baseUrl(CleanAPKInterface.BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(CleanAPKInterface::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideExodusApi(okHttpClient: OkHttpClient): ExodusTrackerApi {
+    fun provideExodusApi(okHttpClient: OkHttpClient, moshi: Moshi): ExodusTrackerApi {
         return Retrofit.Builder()
             .baseUrl(ExodusTrackerApi.BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(ExodusTrackerApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun getMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
     }
 
     @Singleton
