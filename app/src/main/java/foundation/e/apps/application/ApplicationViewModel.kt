@@ -27,8 +27,8 @@ import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.Result
-import foundation.e.apps.api.exodus.Tracker
-import foundation.e.apps.api.exodus.repositories.ITrackerRepository
+import foundation.e.apps.api.exodus.models.AppPrivacyInfo
+import foundation.e.apps.api.exodus.repositories.IAppPrivacyInfoRepository
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.download.data.DownloadProgressLD
@@ -44,7 +44,7 @@ import kotlin.math.round
 class ApplicationViewModel @Inject constructor(
     downloadProgressLD: DownloadProgressLD,
     private val fusedAPIRepository: FusedAPIRepository,
-    private val trackerRepository: ITrackerRepository
+    private val appPrivacyInfoRepository: IAppPrivacyInfoRepository
 ) : ViewModel() {
 
     val fusedApp: MutableLiveData<FusedApp> = MutableLiveData()
@@ -64,17 +64,21 @@ class ApplicationViewModel @Inject constructor(
         }
     }
 
-    fun transformPermsToString(permissions: MutableList<String>): String {
-        // Filter list to only keep platform permissions
-        val filteredList = permissions.filter {
-            it.startsWith("android.permission.")
+    fun transformPermsToString(): String {
+        var permissionString = ""
+        fusedApp.value?.let {
+            // Filter list to only keep platform permissions
+            val filteredList = it.perms.filter {
+                it.startsWith("android.permission.")
+            }
+            // Remove prefix as we only have platform permissions remaining
+            val list = filteredList.map {
+                it.replace("[^>]*permission\\.".toRegex(), "")
+            }
+            // Make it a dialog-friendly string and return it
+            permissionString = list.joinToString(separator = "") { "$it<br />" }
         }
-        // Remove prefix as we only have platform permissions remaining
-        val list = filteredList.map {
-            it.replace("[^>]*permission\\.".toRegex(), "")
-        }
-        // Make it a dialog-friendly string and return it
-        return list.joinToString(separator = "") { "$it<br />" }
+        return permissionString
     }
 
     fun handleRatingFormat(rating: Double): String {
@@ -85,30 +89,40 @@ class ApplicationViewModel @Inject constructor(
         }
     }
 
-    fun fetchTrackerData(): LiveData<Result<List<String>>> {
+    fun fetchAppPrivacyInfo(): LiveData<Result<AppPrivacyInfo>> {
         return liveData {
             fusedApp.value?.let {
                 if (it.trackers.isNotEmpty()) {
-                    emit(Result.success(it.trackers))
+                    val appInfo = AppPrivacyInfo(it.trackers, it.perms)
+                    emit(Result.success(appInfo))
                     return@liveData
                 }
-                val trackerResultOfAnApp = trackerRepository.getTrackersOfAnApp(it.package_name)
+                val trackerResultOfAnApp = appPrivacyInfoRepository.getAppPrivacyInfo(it.package_name)
                 handleAppTrackerResult(trackerResultOfAnApp, it)
             }
         }
     }
 
-    private suspend fun LiveDataScope<Result<List<String>>>.handleAppTrackerResult(
-        trackerResultOfAnApp: Result<List<Tracker>>,
+    private suspend fun LiveDataScope<Result<AppPrivacyInfo>>.handleAppTrackerResult(
+        appPrivacyPrivacyInfoResult: Result<AppPrivacyInfo>,
         fusedApp: FusedApp
     ) {
-        if (trackerResultOfAnApp.isSuccess()) {
-            val trackerList = trackerResultOfAnApp.data ?: listOf()
-            fusedApp.trackers = trackerList.map { tracker -> tracker.name }
-            emit(Result.success(fusedApp.trackers))
+        if (appPrivacyPrivacyInfoResult.isSuccess()) {
+            handleAppPrivacyInfoSuccess(appPrivacyPrivacyInfoResult, fusedApp)
         } else {
-            emit(Result.error("Tracker not found!", fusedApp.trackers))
+            emit(Result.error("Tracker not found!"))
         }
+    }
+
+    private suspend fun LiveDataScope<Result<AppPrivacyInfo>>.handleAppPrivacyInfoSuccess(
+        appPrivacyPrivacyInfoResult: Result<AppPrivacyInfo>,
+        fusedApp: FusedApp
+    ) {
+        fusedApp.trackers = appPrivacyPrivacyInfoResult.data?.trackerList ?: listOf()
+        if (fusedApp.perms.isEmpty()) {
+            fusedApp.perms = appPrivacyPrivacyInfoResult.data?.permissionList ?: listOf()
+        }
+        emit(appPrivacyPrivacyInfoResult)
     }
 
     fun getTrackerListText(): String {
