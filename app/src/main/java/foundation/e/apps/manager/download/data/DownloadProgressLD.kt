@@ -71,7 +71,7 @@ class DownloadProgressLD @Inject constructor(
     }
 
     companion object {
-        private var downloadId = mutableListOf<Long>()
+        var downloadId = mutableListOf<Long>()
 
         fun setDownloadId(id: Long) {
             if (id == -1L) {

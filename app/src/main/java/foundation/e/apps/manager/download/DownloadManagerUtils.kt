@@ -19,42 +19,23 @@
 package foundation.e.apps.manager.download
 
 import android.app.DownloadManager
-import android.util.Log
+import foundation.e.apps.manager.download.data.DownloadProgressLD
 import foundation.e.apps.manager.fused.FusedManagerRepository
+import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.File
 import javax.inject.Inject
 
 class DownloadManagerUtils @Inject constructor(
     private val downloadManager: DownloadManager,
     private val downloadManagerQuery: DownloadManager.Query,
-    private val fusedManagerRepository: FusedManagerRepository
+    private val fusedManagerRepository: FusedManagerRepository,
+    private val pkgManagerModule: PkgManagerModule,
 ) {
     private val TAG = DownloadManagerUtils::class.java.simpleName
-
-    fun downloadStatus(id: Long): Int {
-        downloadManager.query(downloadManagerQuery.setFilterById(id)).use { cursor ->
-            if (cursor.moveToFirst()) {
-                val statusIndex = cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)
-                return cursor.getInt(statusIndex)
-            }
-            return DownloadManager.STATUS_FAILED
-        }
-    }
-
-    @DelicateCoroutinesApi
-    fun checkAndUpdateStatus(downloadId: Long) {
-        val file = File(downloadedFile(downloadId))
-        if (file.exists()) {
-            updateDownloadStatus(downloadId)
-        } else {
-            Log.d(TAG, "Given file doesn't exists, exiting!")
-        }
-    }
 
     @DelicateCoroutinesApi
     fun cancelDownload(downloadId: Long) {
@@ -64,23 +45,26 @@ class DownloadManagerUtils @Inject constructor(
         }
     }
 
-    private fun downloadedFile(id: Long): String {
-        downloadManager.query(downloadManagerQuery.setFilterById(id)).use { cursor ->
-            var fileUri = ""
-            if (cursor.moveToFirst()) {
-                val index = cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_URI)
-                fileUri = cursor.getString(index)
-            }
-            return fileUri.removePrefix("file://")
-        }
-    }
-
     @DelicateCoroutinesApi
-    private fun updateDownloadStatus(downloadId: Long) {
-        GlobalScope.launch {
-            delay(100)
-            val fusedDownload = fusedManagerRepository.getFusedDownload(downloadId)
-            fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLING, downloadId)
+    fun updateDownloadStatus(downloadId: Long) {
+        var downloaded = false
+        DownloadProgressLD.downloadId.forEach {
+            downloadManager.query(downloadManagerQuery.setFilterById(it)).use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
+                    downloaded = status == DownloadManager.STATUS_SUCCESSFUL
+                }
+            }
+        }
+
+        if (downloaded) {
+            GlobalScope.launch {
+                delay(100)
+                val fusedDownload = fusedManagerRepository.getFusedDownload(downloadId)
+                if (!pkgManagerModule.isInstalled(fusedDownload.package_name)) {
+                    fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLING)
+                }
+            }
         }
     }
 }

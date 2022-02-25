@@ -45,9 +45,7 @@ class DownloadManagerBR : BroadcastReceiver() {
             Log.d(TAG, "onReceive: $action")
             when (action) {
                 DownloadManager.ACTION_DOWNLOAD_COMPLETE -> {
-                    if (downloadManagerUtils.downloadStatus(id) == DownloadManager.STATUS_SUCCESSFUL) {
-                        downloadManagerUtils.checkAndUpdateStatus(id)
-                    }
+                    downloadManagerUtils.updateDownloadStatus(id)
                 }
                 DownloadManager.ACTION_NOTIFICATION_CLICKED -> {
                     if (id != 0L) downloadManagerUtils.cancelDownload(id)

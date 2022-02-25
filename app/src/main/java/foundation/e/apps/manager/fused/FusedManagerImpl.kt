@@ -54,21 +54,7 @@ class FusedManagerImpl @Inject constructor(
         return databaseRepository.getDownloadLiveList()
     }
 
-    suspend fun updateDownloadStatus(
-        fusedDownload: FusedDownload,
-        status: Status,
-        downloadId: Long = 0
-    ) {
-        if (fusedDownload.id.isNotBlank()) {
-            if (downloadId != 0L && fusedDownload.downloadIdMap.containsKey(downloadId)) {
-                fusedDownload.downloadIdMap[downloadId] = true
-                databaseRepository.updateDownload(fusedDownload)
-                delay(100)
-            }
-        } else {
-            Log.d(TAG, "Unable to update download status!")
-        }
-
+    suspend fun updateDownloadStatus(fusedDownload: FusedDownload, status: Status) {
         if (status == Status.INSTALLED) {
             fusedDownload.status = status
             databaseRepository.updateDownload(fusedDownload)
@@ -76,12 +62,11 @@ class FusedManagerImpl @Inject constructor(
             flushOldDownload(fusedDownload.package_name)
             databaseRepository.deleteDownload(fusedDownload)
         } else if (status == Status.INSTALLING) {
-            if (fusedDownload.downloadIdMap.all { it.value }) {
-                fusedDownload.status = status
-                databaseRepository.updateDownload(fusedDownload)
-                delay(100)
-                installApp(fusedDownload)
-            }
+            fusedDownload.downloadIdMap.all { true }
+            fusedDownload.status = status
+            databaseRepository.updateDownload(fusedDownload)
+            delay(100)
+            installApp(fusedDownload)
         }
     }
 

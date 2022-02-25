@@ -48,8 +48,8 @@ class FusedManagerRepository @Inject constructor(
         return fusedManagerImpl.getFusedDownload(downloadId, packageName)
     }
 
-    suspend fun updateDownloadStatus(fusedDownload: FusedDownload, status: Status, downloadId: Long = 0) {
-        return fusedManagerImpl.updateDownloadStatus(fusedDownload, status, downloadId)
+    suspend fun updateDownloadStatus(fusedDownload: FusedDownload, status: Status) {
+        return fusedManagerImpl.updateDownloadStatus(fusedDownload, status)
     }
 
     suspend fun cancelDownload(fusedDownload: FusedDownload) {

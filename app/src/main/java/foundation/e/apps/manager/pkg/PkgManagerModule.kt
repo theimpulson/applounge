@@ -41,7 +41,7 @@ class PkgManagerModule @Inject constructor(
 ) {
     private val packageManager = context.packageManager
 
-    private fun isInstalled(packageName: String): Boolean {
+    fun isInstalled(packageName: String): Boolean {
         return try {
             packageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA)
             true
@@ -104,12 +104,14 @@ class PkgManagerModule @Inject constructor(
 
         // Install the package using the provided stream
         list.forEach {
-            val inputStream = it.inputStream()
-            val outputStream = session.openWrite(it.nameWithoutExtension, 0, -1)
-            inputStream.copyTo(outputStream)
-            session.fsync(outputStream)
-            inputStream.close()
-            outputStream.close()
+            if (it.isFile) {
+                val inputStream = it.inputStream()
+                val outputStream = session.openWrite(it.nameWithoutExtension, 0, -1)
+                inputStream.copyTo(outputStream)
+                session.fsync(outputStream)
+                inputStream.close()
+                outputStream.close()
+            }
         }
         val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE else
