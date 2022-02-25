@@ -70,6 +70,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
     private var applicationIcon: ImageView? = null
 
     companion object {
+        private const val PRIVACY_SCORE_SOURCE_CODE_URL = "https://gitlab.e.foundation/e/apps/apps/-/blob/main/app/src/main/java/foundation/e/apps/application/ApplicationViewModel.kt#L131"
         private const val EXODUS_URL = "https://exodus-privacy.eu.org"
         private const val PRIVACY_GUIDELINE_URL = "https://doc.e.foundation/privacy_score"
     }
@@ -266,6 +267,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                         getString(R.string.privacy_score),
                         getString(
                             R.string.privacy_description,
+                            PRIVACY_SCORE_SOURCE_CODE_URL,
                             EXODUS_URL,
                             PRIVACY_GUIDELINE_URL
                         )
