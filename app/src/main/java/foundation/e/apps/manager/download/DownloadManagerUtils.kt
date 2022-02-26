@@ -18,10 +18,7 @@
 
 package foundation.e.apps.manager.download
 
-import android.app.DownloadManager
-import foundation.e.apps.manager.download.data.DownloadProgressLD
 import foundation.e.apps.manager.fused.FusedManagerRepository
-import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -30,10 +27,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class DownloadManagerUtils @Inject constructor(
-    private val downloadManager: DownloadManager,
-    private val downloadManagerQuery: DownloadManager.Query,
-    private val fusedManagerRepository: FusedManagerRepository,
-    private val pkgManagerModule: PkgManagerModule,
+    private val fusedManagerRepository: FusedManagerRepository
 ) {
     private val TAG = DownloadManagerUtils::class.java.simpleName
 
@@ -47,23 +41,11 @@ class DownloadManagerUtils @Inject constructor(
 
     @DelicateCoroutinesApi
     fun updateDownloadStatus(downloadId: Long) {
-        var downloaded = false
-        DownloadProgressLD.downloadId.forEach {
-            downloadManager.query(downloadManagerQuery.setFilterById(it)).use { cursor ->
-                if (cursor.moveToFirst()) {
-                    val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
-                    downloaded = status == DownloadManager.STATUS_SUCCESSFUL
-                }
-            }
-        }
-
-        if (downloaded) {
-            GlobalScope.launch {
-                delay(100)
-                val fusedDownload = fusedManagerRepository.getFusedDownload(downloadId)
-                if (!pkgManagerModule.isInstalled(fusedDownload.package_name)) {
-                    fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLING)
-                }
+        GlobalScope.launch {
+            val fusedDownload = fusedManagerRepository.getFusedDownload(downloadId)
+            delay(100)
+            if (DownloadManagerBR.downloadedList.size == fusedDownload.downloadIdMap.size) {
+                fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLING)
             }
         }
     }

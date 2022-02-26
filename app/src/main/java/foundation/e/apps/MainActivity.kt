@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity() {
         // Observe and handle downloads
         viewModel.downloadList.observe(this) { list ->
             val shouldDownload = list.any {
-                it.status == Status.INSTALLING || it.status == Status.DOWNLOADING
+                it.status == Status.INSTALLING || it.status == Status.DOWNLOADING || it.status == Status.INSTALLED
             }
             if (!shouldDownload && list.isNotEmpty()) {
                 for (item in list) {

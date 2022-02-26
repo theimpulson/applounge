@@ -28,6 +28,10 @@ class FusedManagerRepository @Inject constructor(
         return fusedManagerImpl.addDownload(fusedDownload)
     }
 
+    suspend fun clearInstallationIssue(fusedDownload: FusedDownload) {
+        return fusedManagerImpl.clearInstallationIssue(fusedDownload)
+    }
+
     suspend fun getDownloadList(): List<FusedDownload> {
         return fusedManagerImpl.getDownloadList()
     }
@@ -40,7 +44,7 @@ class FusedManagerRepository @Inject constructor(
         return fusedManagerImpl.getDownloadLiveList().asFlow()
     }
 
-    fun installApp(fusedDownload: FusedDownload) {
+    suspend fun installApp(fusedDownload: FusedDownload) {
         return fusedManagerImpl.installApp(fusedDownload)
     }
 

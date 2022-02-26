@@ -10,11 +10,13 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import foundation.e.apps.manager.database.DatabaseRepository
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
+import foundation.e.apps.manager.download.DownloadManagerBR
 import foundation.e.apps.manager.download.data.DownloadProgressLD
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.modules.PWAManagerModule
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.delay
 import java.io.File
 import javax.inject.Inject
@@ -54,10 +56,17 @@ class FusedManagerImpl @Inject constructor(
         return databaseRepository.getDownloadLiveList()
     }
 
+    suspend fun clearInstallationIssue(fusedDownload: FusedDownload) {
+        flushOldDownload(fusedDownload.package_name)
+        databaseRepository.deleteDownload(fusedDownload)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
     suspend fun updateDownloadStatus(fusedDownload: FusedDownload, status: Status) {
         if (status == Status.INSTALLED) {
             fusedDownload.status = status
             databaseRepository.updateDownload(fusedDownload)
+            DownloadManagerBR.downloadedList.clear()
             delay(100)
             flushOldDownload(fusedDownload.package_name)
             databaseRepository.deleteDownload(fusedDownload)
@@ -67,6 +76,7 @@ class FusedManagerImpl @Inject constructor(
             databaseRepository.updateDownload(fusedDownload)
             delay(100)
             installApp(fusedDownload)
+            delay(100)
         }
     }
 
@@ -77,27 +87,34 @@ class FusedManagerImpl @Inject constructor(
         }
     }
 
-    fun installApp(fusedDownload: FusedDownload) {
+    suspend fun installApp(fusedDownload: FusedDownload) {
         val list = mutableListOf<File>()
         when (fusedDownload.type) {
             Type.NATIVE -> {
                 val parentPathFile = File("$cacheDir/${fusedDownload.package_name}")
                 parentPathFile.listFiles()?.let { list.addAll(it) }
                 list.sort()
-                if (list.size != 0) pkgManagerModule.installApplication(
-                    list,
-                    fusedDownload.package_name
-                )
+                if (list.size != 0) {
+                    pkgManagerModule.installApplication(list, fusedDownload.package_name)
+                }
             }
-            else -> Log.d(TAG, "Unsupported application type!")
+            else -> {
+                Log.d(TAG, "Unsupported application type!")
+                fusedDownload.status = Status.INSTALLATION_ISSUE
+                databaseRepository.updateDownload(fusedDownload)
+                delay(100)
+            }
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     suspend fun cancelDownload(fusedDownload: FusedDownload) {
         if (fusedDownload.id.isNotBlank()) {
             fusedDownload.downloadIdMap.forEach { (key, _) ->
                 downloadManager.remove(key)
             }
+            DownloadProgressLD.setDownloadId(-1)
+            DownloadManagerBR.downloadedList.clear()
 
             // Reset the status before deleting download
             updateDownloadStatus(fusedDownload, fusedDownload.orgStatus)
@@ -138,10 +155,12 @@ class FusedManagerImpl @Inject constructor(
 
         // Clean old downloads and re-create download dir
         flushOldDownload(fusedDownload.package_name)
-        File(parentPath).mkdir()
-        DownloadProgressLD.setDownloadId(-1L)
+        File(parentPath).mkdirs()
 
         fusedDownload.status = Status.DOWNLOADING
+        databaseRepository.updateDownload(fusedDownload)
+        DownloadProgressLD.setDownloadId(-1)
+        delay(100)
 
         fusedDownload.downloadURLList.forEach {
             count += 1
