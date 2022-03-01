@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -62,7 +61,6 @@ class DownloadProgressLD @Inject constructor(
                             }
                         }
                     }
-                delay(500)
             }
         }
     }
@@ -73,7 +71,7 @@ class DownloadProgressLD @Inject constructor(
     }
 
     companion object {
-        private var downloadId = mutableListOf<Long>()
+        var downloadId = mutableListOf<Long>()
 
         fun setDownloadId(id: Long) {
             if (id == -1L) {

@@ -37,6 +37,7 @@ import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
+import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.modules.DataStoreModule
 import kotlinx.coroutines.Dispatchers
@@ -117,10 +118,6 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    fun installApp(fusedDownload: FusedDownload) {
-        fusedManagerRepository.installApp(fusedDownload)
-    }
-
     fun getApplication(app: FusedApp, imageView: ImageView?) {
         viewModelScope.launch {
             val appIcon = imageView?.let { getImageBase64(it) } ?: ""
@@ -138,6 +135,9 @@ class MainActivityViewModel @Inject constructor(
                 app.type,
                 appIcon
             )
+            if (fusedDownload.status == Status.INSTALLATION_ISSUE) {
+                fusedManagerRepository.clearInstallationIssue(fusedDownload)
+            }
             fusedManagerRepository.addDownload(fusedDownload)
         }
     }

@@ -36,6 +36,7 @@ class DownloadManagerBR : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "DownloadManagerBR"
+        val downloadedList = mutableListOf<Long>()
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -45,9 +46,8 @@ class DownloadManagerBR : BroadcastReceiver() {
             Log.d(TAG, "onReceive: $action")
             when (action) {
                 DownloadManager.ACTION_DOWNLOAD_COMPLETE -> {
-                    if (downloadManagerUtils.downloadStatus(id) == DownloadManager.STATUS_SUCCESSFUL) {
-                        downloadManagerUtils.checkAndUpdateStatus(id)
-                    }
+                    downloadedList.add(id)
+                    downloadManagerUtils.updateDownloadStatus(id)
                 }
                 DownloadManager.ACTION_NOTIFICATION_CLICKED -> {
                     if (id != 0L) downloadManagerUtils.cancelDownload(id)

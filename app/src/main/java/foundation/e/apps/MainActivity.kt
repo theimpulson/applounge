@@ -31,7 +31,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.databinding.ActivityMainBinding
 import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.enums.Status
-import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.enums.User
 import foundation.e.apps.utils.modules.CommonUtilsModule
 
@@ -144,25 +143,13 @@ class MainActivity : AppCompatActivity() {
         // Observe and handle downloads
         viewModel.downloadList.observe(this) { list ->
             val shouldDownload = list.any {
-                it.status == Status.INSTALLING || it.status == Status.DOWNLOADING
+                it.status == Status.INSTALLING || it.status == Status.DOWNLOADING || it.status == Status.INSTALLED
             }
             if (!shouldDownload && list.isNotEmpty()) {
                 for (item in list) {
                     if (item.status == Status.QUEUED) {
                         viewModel.downloadApp(item)
                         break
-                    }
-                }
-            }
-            list.forEach { app ->
-                if (app.type == Type.NATIVE) {
-                    if (app.status == Status.INSTALLING && !viewModel.installInProgress) {
-                        if (app.downloadIdMap.all { it.value }) {
-                            viewModel.installInProgress = true
-                            viewModel.installApp(app)
-                        }
-                    } else if (app.status == Status.INSTALLED) {
-                        viewModel.installInProgress = false
                     }
                 }
             }

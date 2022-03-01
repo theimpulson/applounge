@@ -140,7 +140,7 @@ class UpdatesWorker @AssistedInject constructor(
         }
     }
 
-    private fun checkForInstall(fusedDownload: FusedDownload) {
+    private suspend fun checkForInstall(fusedDownload: FusedDownload) {
         if (fusedDownload.type == Type.NATIVE && fusedDownload.status == Status.INSTALLING && fusedDownload.downloadIdMap.all { it.value }) {
             Log.d(TAG, "doWork: triggering update for: ${fusedDownload.name} installing...")
             fusedManagerRepository.installApp(fusedDownload)
