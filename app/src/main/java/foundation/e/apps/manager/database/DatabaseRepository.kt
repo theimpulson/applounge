@@ -1,8 +1,10 @@
 package foundation.e.apps.manager.database
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asFlow
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.database.fusedDownload.FusedDownloadDAO
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class DatabaseRepository @Inject constructor(
@@ -27,5 +29,13 @@ class DatabaseRepository @Inject constructor(
 
     suspend fun deleteDownload(fusedDownload: FusedDownload) {
         return fusedDownloadDAO.deleteDownload(fusedDownload)
+    }
+
+    suspend fun getDownloadById(id: String): FusedDownload? {
+        return fusedDownloadDAO.getDownloadById(id)
+    }
+
+    suspend fun getDownloadFlowById(id: String): Flow<FusedDownload> {
+        return fusedDownloadDAO.getDownloadFlowById(id).asFlow()
     }
 }

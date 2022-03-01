@@ -27,5 +27,6 @@ enum class Status {
     UNINSTALLING,
     QUEUED,
     BLOCKED,
-    INSTALLATION_ISSUE
+    INSTALLATION_ISSUE,
+    AWAITING
 }
