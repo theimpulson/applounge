@@ -27,6 +27,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.core.content.pm.PackageInfoCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.utils.enums.Status
@@ -39,6 +40,10 @@ import javax.inject.Singleton
 class PkgManagerModule @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
+    companion object {
+        const val ERROR_PACKAGE_INSTALL = "ERROR_PACKAGE_INSTALL"
+        private const val TAG = "PkgManagerModule"
+    }
     private val packageManager = context.packageManager
 
     fun isInstalled(packageName: String): Boolean {
@@ -88,9 +93,11 @@ class PkgManagerModule @Inject constructor(
      */
     @OptIn(DelicateCoroutinesApi::class)
     fun installApplication(list: List<File>, packageName: String) {
+
         val packageInstaller = packageManager.packageInstaller
         val params = PackageInstaller
-            .SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL).apply {
+            .SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
+            .apply {
                 setAppPackageName(packageName)
                 setOriginatingUid(android.os.Process.myUid())
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -101,10 +108,9 @@ class PkgManagerModule @Inject constructor(
         // Open a new specific session
         val sessionId = packageInstaller.createSession(params)
         val session = packageInstaller.openSession(sessionId)
-
-        // Install the package using the provided stream
-        list.forEach {
-            if (it.isFile) {
+        try {
+            // Install the package using the provided stream
+            list.forEach {
                 val inputStream = it.inputStream()
                 val outputStream = session.openWrite(it.nameWithoutExtension, 0, -1)
                 inputStream.copyTo(outputStream)
@@ -112,20 +118,38 @@ class PkgManagerModule @Inject constructor(
                 inputStream.close()
                 outputStream.close()
             }
-        }
-        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE else
-            PendingIntent.FLAG_UPDATE_CURRENT
+//        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+//            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE else
+//            PendingIntent.FLAG_UPDATE_CURRENT
 
-        // We are done, close everything
-        val pendingIntent = PendingIntent.getService(
-            context,
-            sessionId,
-            Intent(context, PackageInstallerService::class.java),
-            flags
-        )
-        session.commit(pendingIntent.intentSender)
-        session.close()
+            // We are done, close everything
+//        val pendingIntent = PendingIntent.getService(
+//            context,
+//            sessionId,
+//            Intent(context, PackageInstallerService::class.java),
+//            flags
+//        )
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                sessionId,
+                Intent(Intent.ACTION_PACKAGE_ADDED),
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+            session.commit(pendingIntent.intentSender)
+            session.close()
+        } catch (e: Exception) {
+            Log.e(TAG, "$packageName: \n${e.stackTraceToString()}")
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                sessionId,
+                Intent(ERROR_PACKAGE_INSTALL),
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+            session.commit(pendingIntent.intentSender)
+            session.close()
+        }
     }
 
     /**
@@ -152,6 +176,8 @@ class PkgManagerModule @Inject constructor(
         val filter = IntentFilter()
         filter.addDataScheme("package")
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED)
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED)
+        filter.addAction(ERROR_PACKAGE_INSTALL)
         return filter
     }
 

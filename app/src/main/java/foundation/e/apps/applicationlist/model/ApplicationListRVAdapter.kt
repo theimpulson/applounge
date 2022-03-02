@@ -174,7 +174,7 @@ class ApplicationListRVAdapter(
                         }
                     }
                 }
-                Status.QUEUED, Status.DOWNLOADING -> {
+                Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
                     installButton.apply {
                         text = context.getString(R.string.cancel)
                         setOnClickListener {

@@ -51,7 +51,7 @@ class MainActivityViewModel @Inject constructor(
     private val gson: Gson,
     private val dataStoreModule: DataStoreModule,
     private val fusedAPIRepository: FusedAPIRepository,
-    private val fusedManagerRepository: FusedManagerRepository
+    private val fusedManagerRepository: FusedManagerRepository,
 ) : ViewModel() {
 
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
@@ -140,6 +140,10 @@ class MainActivityViewModel @Inject constructor(
             }
             fusedManagerRepository.addDownload(fusedDownload)
         }
+    }
+
+    suspend fun updateAwaiting(fusedDownload: FusedDownload) {
+        fusedManagerRepository.updateAwaiting(fusedDownload)
     }
 
     fun cancelDownload(app: FusedApp) {

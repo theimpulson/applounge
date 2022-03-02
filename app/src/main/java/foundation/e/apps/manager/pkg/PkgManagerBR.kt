@@ -21,8 +21,11 @@ package foundation.e.apps.manager.pkg
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInstaller
+import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.manager.fused.FusedManagerRepository
+import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -31,6 +34,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 @DelicateCoroutinesApi
 open class PkgManagerBR : BroadcastReceiver() {
+
+    companion object {
+        private const val TAG = "PkgManagerBR"
+    }
 
     @Inject
     lateinit var fusedManagerRepository: FusedManagerRepository
@@ -41,12 +48,23 @@ open class PkgManagerBR : BroadcastReceiver() {
             val packageUid = intent.getIntExtra(Intent.EXTRA_UID, 0)
             val isUpdating = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)
             val packages = context.packageManager.getPackagesForUid(packageUid)
+            val extra = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE)
+            val status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, -69)
+            val packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME)
 
+            Log.d(TAG, "onReceive: $packageName $action $extra $status")
             packages?.let { pkgList ->
                 pkgList.forEach { pkgName ->
                     when (action) {
+                        Intent.ACTION_PACKAGE_ADDED -> {
+                            updateDownloadStatus(pkgName)
+                        }
                         Intent.ACTION_PACKAGE_REMOVED -> {
                             if (!isUpdating) deleteDownload(pkgName)
+                        }
+                        PkgManagerModule.ERROR_PACKAGE_INSTALL -> {
+                            Log.e(TAG, "Installation failed due to error: $extra")
+                            updateInstallationIssue(pkgName)
                         }
                     }
                 }
@@ -58,6 +76,24 @@ open class PkgManagerBR : BroadcastReceiver() {
         GlobalScope.launch {
             val fusedDownload = fusedManagerRepository.getFusedDownload(packageName = pkgName)
             fusedManagerRepository.cancelDownload(fusedDownload)
+        }
+    }
+
+    // TODO: FIND A BETTER WAY TO DO THIS
+    private fun updateDownloadStatus(pkgName: String) {
+        if (pkgName.isEmpty()) {
+            Log.d("PkgManagerBR", "updateDownloadStatus: package name should not be empty!")
+        }
+        GlobalScope.launch {
+            val fusedDownload = fusedManagerRepository.getFusedDownload(packageName = pkgName)
+            fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLED)
+        }
+    }
+
+    private fun updateInstallationIssue(pkgName: String) {
+        GlobalScope.launch {
+            val fusedDownload = fusedManagerRepository.getFusedDownload(packageName = pkgName)
+            fusedManagerRepository.installationIssue(fusedDownload)
         }
     }
 }

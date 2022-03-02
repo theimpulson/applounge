@@ -18,18 +18,23 @@
 
 package foundation.e.apps.manager.download
 
+import android.util.Log
 import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class DownloadManagerUtils @Inject constructor(
     private val fusedManagerRepository: FusedManagerRepository
 ) {
     private val TAG = DownloadManagerUtils::class.java.simpleName
+    private val mutex = Mutex()
 
     @DelicateCoroutinesApi
     fun cancelDownload(downloadId: Long) {
@@ -42,10 +47,18 @@ class DownloadManagerUtils @Inject constructor(
     @DelicateCoroutinesApi
     fun updateDownloadStatus(downloadId: Long) {
         GlobalScope.launch {
-            val fusedDownload = fusedManagerRepository.getFusedDownload(downloadId)
-            delay(100)
-            if (DownloadManagerBR.downloadedList.size == fusedDownload.downloadIdMap.size) {
-                fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLING)
+            mutex.withLock {
+                val fusedDownload = fusedManagerRepository.getFusedDownload(downloadId)
+                fusedDownload.downloadIdMap[downloadId] = true
+                fusedManagerRepository.updateFusedDownload(fusedDownload)
+                val downloaded = fusedDownload.downloadIdMap.values.filter { it }.size
+                Log.d(
+                    TAG,
+                    "===> updateDownloadStatus: ${fusedDownload.name}: $downloadId: $downloaded/${fusedDownload.downloadIdMap.size} "
+                )
+                if (downloaded == fusedDownload.downloadIdMap.size) {
+                    fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLING)
+                }
             }
         }
     }
