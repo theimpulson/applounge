@@ -14,6 +14,6 @@ interface ExodusTrackerApi {
     @GET("trackers?v=$VERSION")
     suspend fun getTrackerList(): Response<Trackers>
 
-    @GET("search/{appHandle}")
-    suspend fun getTrackerInfoOfApp(@Path("appHandle") appHandle: String): Response<Map<String, TrackerInfo>>
+    @GET("search/{appHandle}/details?v=$VERSION")
+    suspend fun getTrackerInfoOfApp(@Path("appHandle") appHandle: String): Response<List<Report>>
 }
