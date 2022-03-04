@@ -28,6 +28,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.aurora.gplayapi.exceptions.ApiException
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.databinding.ActivityMainBinding
 import foundation.e.apps.manager.workmanager.InstallWorkManager
@@ -167,9 +169,20 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.errorMessage.observe(this) {
+            when (it) {
+                is ApiException.AppNotPurchased -> showSnackbarMessage(getString(R.string.message_app_available_later))
+                else -> showSnackbarMessage(it.localizedMessage ?: getString(R.string.unknown_error))
+            }
+        }
+
         if (!CommonUtilsModule.isNetworkAvailable(this)) {
             showNoInternet()
         }
+    }
+
+    private fun showSnackbarMessage(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showNoInternet() {

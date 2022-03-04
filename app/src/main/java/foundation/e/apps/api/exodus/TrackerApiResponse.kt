@@ -1,5 +1,7 @@
 package foundation.e.apps.api.exodus
 
+import com.squareup.moshi.Json
+
 data class TrackerInfo(
     val name: String,
     val creator: String,
@@ -7,10 +9,10 @@ data class TrackerInfo(
 )
 
 data class Report(
-    val id: Long,
-    val creationDate: String,
-    val updatedAt: String,
-    val version: String,
-    val versionCode: String,
-    val trackers: List<Long>
+    val id: Long = System.currentTimeMillis(),
+    @Json(name = "updated") val updatedAt: String,
+    @Json(name = "version_name") val version: String,
+    @Json(name = "version_code") val versionCode: String,
+    val trackers: List<Long>,
+    val permissions: List<String> = listOf()
 )

@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import foundation.e.apps.api.exodus.repositories.ITrackerRepository
-import foundation.e.apps.api.exodus.repositories.TrackerRepositoryImpl
+import foundation.e.apps.api.exodus.repositories.AppPrivacyInfoRepositoryImpl
+import foundation.e.apps.api.exodus.repositories.IAppPrivacyInfoRepository
 import javax.inject.Singleton
 
 @Module
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 interface RepositoryModule {
     @Singleton
     @Binds
-    fun getRepositoryModule(trackerRepositoryImpl: TrackerRepositoryImpl): ITrackerRepository
+    fun getRepositoryModule(trackerRepositoryImpl: AppPrivacyInfoRepositoryImpl): IAppPrivacyInfoRepository
 }
