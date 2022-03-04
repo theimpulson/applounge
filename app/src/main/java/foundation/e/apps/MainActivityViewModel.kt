@@ -66,7 +66,8 @@ class MainActivityViewModel @Inject constructor(
     // Downloads
     val downloadList = fusedManagerRepository.getDownloadLiveList()
     var installInProgress = false
-
+    private val _errorMessage = MutableLiveData<Exception>()
+    val errorMessage: LiveData<Exception> = _errorMessage
     /*
      * Authentication related functions
      */
@@ -120,21 +121,29 @@ class MainActivityViewModel @Inject constructor(
 
     fun getApplication(app: FusedApp, imageView: ImageView?) {
         viewModelScope.launch {
-            val appIcon = imageView?.let { getImageBase64(it) } ?: ""
-            val downloadList = getAppDownloadLink(app).toMutableList()
+            val fusedDownload: FusedDownload
+            try {
+                val appIcon = imageView?.let { getImageBase64(it) } ?: ""
+                val downloadList: List<String>
+                downloadList = getAppDownloadLink(app).toMutableList()
 
-            val fusedDownload = FusedDownload(
-                app._id,
-                app.origin,
-                app.status,
-                app.name,
-                app.package_name,
-                downloadList,
-                mutableMapOf(),
-                app.status,
-                app.type,
-                appIcon
-            )
+                fusedDownload = FusedDownload(
+                    app._id,
+                    app.origin,
+                    app.status,
+                    app.name,
+                    app.package_name,
+                    downloadList,
+                    mutableMapOf(),
+                    app.status,
+                    app.type,
+                    appIcon
+                )
+            } catch (e: Exception) {
+                _errorMessage.value = e
+                return@launch
+            }
+
             if (fusedDownload.status == Status.INSTALLATION_ISSUE) {
                 fusedManagerRepository.clearInstallationIssue(fusedDownload)
             }
