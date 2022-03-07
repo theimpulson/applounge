@@ -23,9 +23,9 @@ import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
+import foundation.e.apps.manager.workmanager.InstallWorkManager
 import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.enums.Origin
-import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.modules.DataStoreModule
 import java.io.ByteArrayOutputStream
@@ -33,7 +33,7 @@ import java.net.URL
 
 @HiltWorker
 class UpdatesWorker @AssistedInject constructor(
-    @Assisted context: Context,
+    @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
     private val updatesManagerRepository: UpdatesManagerRepository,
     private val fusedAPIRepository: FusedAPIRepository,
@@ -124,27 +124,10 @@ class UpdatesWorker @AssistedInject constructor(
                 fusedApp.type,
                 iconBase64
             )
-
             fusedManagerRepository.addDownload(fusedDownload)
-            Log.d(TAG, "doWork: triggering update for: ${fusedApp.name} downloading...")
-            fusedManagerRepository.downloadApp(fusedDownload)
-        }
-        observeFusedDownload()
-    }
-
-    private suspend fun observeFusedDownload() {
-        fusedManagerRepository.getDownloadListFlow().collect {
-            it.forEach { fusedDownload ->
-                checkForInstall(fusedDownload)
-            }
-        }
-    }
-
-    private suspend fun checkForInstall(fusedDownload: FusedDownload) {
-        if (fusedDownload.type == Type.NATIVE && fusedDownload.status == Status.INSTALLING && fusedDownload.downloadIdMap.all { it.value }) {
-            Log.d(TAG, "doWork: triggering update for: ${fusedDownload.name} installing...")
-            fusedManagerRepository.installApp(fusedDownload)
-            Log.d(TAG, "doWork: triggering update for: ${fusedDownload.name} installed")
+            fusedManagerRepository.updateAwaiting(fusedDownload)
+            Log.d(TAG, "startUpdateProcess: Enqueued for update: ${fusedDownload.name} ${fusedDownload.id} ${fusedDownload.status}")
+            InstallWorkManager.enqueueWork(context, fusedDownload)
         }
     }
 
