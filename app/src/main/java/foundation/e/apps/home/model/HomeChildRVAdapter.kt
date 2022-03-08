@@ -127,7 +127,7 @@ class HomeChildRVAdapter(
                         }
                     }
                 }
-                Status.QUEUED, Status.DOWNLOADING -> {
+                Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
                     installButton.apply {
                         text = context.getString(R.string.cancel)
                         setTextColor(context.getColor(R.color.colorAccent))

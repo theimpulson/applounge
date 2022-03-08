@@ -20,6 +20,12 @@ interface FusedDownloadDAO {
     @Query("SELECT * FROM fuseddownload")
     suspend fun getDownloadList(): List<FusedDownload>
 
+    @Query("SELECT * FROM fuseddownload where id = :id")
+    suspend fun getDownloadById(id: String): FusedDownload?
+
+    @Query("SELECT * FROM fuseddownload where id = :id")
+    fun getDownloadFlowById(id: String): LiveData<FusedDownload>
+
     @Update
     suspend fun updateDownload(fusedDownload: FusedDownload)
 

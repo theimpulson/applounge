@@ -24,15 +24,20 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.aurora.gplayapi.exceptions.ApiException
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.databinding.ActivityMainBinding
+import foundation.e.apps.manager.workmanager.InstallWorkManager
 import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
 import foundation.e.apps.utils.modules.CommonUtilsModule
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -142,22 +147,42 @@ class MainActivity : AppCompatActivity() {
 
         // Observe and handle downloads
         viewModel.downloadList.observe(this) { list ->
-            val shouldDownload = list.any {
-                it.status == Status.INSTALLING || it.status == Status.DOWNLOADING || it.status == Status.INSTALLED
-            }
-            if (!shouldDownload && list.isNotEmpty()) {
-                for (item in list) {
-                    if (item.status == Status.QUEUED) {
-                        viewModel.downloadApp(item)
-                        break
+//            val shouldDownload = list.any {
+//                it.status == Status.INSTALLING || it.status == Status.DOWNLOADING || it.status == Status.INSTALLED
+//            }
+//            if (!shouldDownload && list.isNotEmpty()) {
+//                for (item in list) {
+//                    if (item.status == Status.QUEUED) {
+//                        viewModel.downloadApp(item)
+//                        break
+//                    }
+//                }
+//            }
+            list.forEach {
+                if (it.status == Status.QUEUED) {
+                    lifecycleScope.launch {
+                        viewModel.updateAwaiting(it)
+                        InstallWorkManager.enqueueWork(applicationContext, it)
+                        Log.d(TAG, "===> onCreate: AWAITING ${it.name}")
                     }
                 }
+            }
+        }
+
+        viewModel.errorMessage.observe(this) {
+            when (it) {
+                is ApiException.AppNotPurchased -> showSnackbarMessage(getString(R.string.message_app_available_later))
+                else -> showSnackbarMessage(it.localizedMessage ?: getString(R.string.unknown_error))
             }
         }
 
         if (!CommonUtilsModule.isNetworkAvailable(this)) {
             showNoInternet()
         }
+    }
+
+    private fun showSnackbarMessage(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showNoInternet() {

@@ -71,6 +71,7 @@ class FusedManagerImpl @Inject constructor(
             flushOldDownload(fusedDownload.package_name)
             databaseRepository.deleteDownload(fusedDownload)
         } else if (status == Status.INSTALLING) {
+            Log.d(TAG, "updateDownloadStatus: Downloaded ===> ${fusedDownload.name} INSTALLING")
             fusedDownload.downloadIdMap.all { true }
             fusedDownload.status = status
             databaseRepository.updateDownload(fusedDownload)
@@ -95,7 +96,9 @@ class FusedManagerImpl @Inject constructor(
                 parentPathFile.listFiles()?.let { list.addAll(it) }
                 list.sort()
                 if (list.size != 0) {
+                    Log.d(TAG, "installApp: STARTED ${fusedDownload.name} ${list.size}")
                     pkgManagerModule.installApplication(list, fusedDownload.package_name)
+                    Log.d(TAG, "installApp: ENDED ${fusedDownload.name} ${list.size}")
                 }
             }
             else -> {
@@ -141,6 +144,7 @@ class FusedManagerImpl @Inject constructor(
                 }
             }
         }
+        Log.d(TAG, "getFusedDownload: $fusedDownload")
         return fusedDownload
     }
 
@@ -161,7 +165,7 @@ class FusedManagerImpl @Inject constructor(
         databaseRepository.updateDownload(fusedDownload)
         DownloadProgressLD.setDownloadId(-1)
         delay(100)
-
+        Log.d(TAG, "downloadNativeApp: ${fusedDownload.name} ${fusedDownload.downloadURLList.size}")
         fusedDownload.downloadURLList.forEach {
             count += 1
             val packagePath = File(parentPath, "${fusedDownload.package_name}_$count.apk")
@@ -179,6 +183,15 @@ class FusedManagerImpl @Inject constructor(
     suspend fun installationIssue(fusedDownload: FusedDownload) {
         flushOldDownload(fusedDownload.package_name)
         fusedDownload.status = Status.INSTALLATION_ISSUE
+        databaseRepository.updateDownload(fusedDownload)
+    }
+
+    suspend fun updateAwaiting(fusedDownload: FusedDownload) {
+        fusedDownload.status = Status.AWAITING
+        databaseRepository.updateDownload(fusedDownload)
+    }
+
+    suspend fun updateFusedDownload(fusedDownload: FusedDownload) {
         databaseRepository.updateDownload(fusedDownload)
     }
 }

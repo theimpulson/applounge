@@ -63,4 +63,12 @@ class FusedManagerRepository @Inject constructor(
     suspend fun installationIssue(fusedDownload: FusedDownload) {
         return fusedManagerImpl.installationIssue(fusedDownload)
     }
+
+    suspend fun updateAwaiting(fusedDownload: FusedDownload) {
+        fusedManagerImpl.updateAwaiting(fusedDownload)
+    }
+
+    suspend fun updateFusedDownload(fusedDownload: FusedDownload) {
+        fusedManagerImpl.updateFusedDownload(fusedDownload)
+    }
 }

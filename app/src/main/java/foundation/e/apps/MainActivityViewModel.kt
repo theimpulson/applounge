@@ -51,7 +51,7 @@ class MainActivityViewModel @Inject constructor(
     private val gson: Gson,
     private val dataStoreModule: DataStoreModule,
     private val fusedAPIRepository: FusedAPIRepository,
-    private val fusedManagerRepository: FusedManagerRepository
+    private val fusedManagerRepository: FusedManagerRepository,
 ) : ViewModel() {
 
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
@@ -66,7 +66,8 @@ class MainActivityViewModel @Inject constructor(
     // Downloads
     val downloadList = fusedManagerRepository.getDownloadLiveList()
     var installInProgress = false
-
+    private val _errorMessage = MutableLiveData<Exception>()
+    val errorMessage: LiveData<Exception> = _errorMessage
     /*
      * Authentication related functions
      */
@@ -120,26 +121,38 @@ class MainActivityViewModel @Inject constructor(
 
     fun getApplication(app: FusedApp, imageView: ImageView?) {
         viewModelScope.launch {
-            val appIcon = imageView?.let { getImageBase64(it) } ?: ""
-            val downloadList = getAppDownloadLink(app).toMutableList()
+            val fusedDownload: FusedDownload
+            try {
+                val appIcon = imageView?.let { getImageBase64(it) } ?: ""
+                val downloadList: List<String>
+                downloadList = getAppDownloadLink(app).toMutableList()
 
-            val fusedDownload = FusedDownload(
-                app._id,
-                app.origin,
-                app.status,
-                app.name,
-                app.package_name,
-                downloadList,
-                mutableMapOf(),
-                app.status,
-                app.type,
-                appIcon
-            )
+                fusedDownload = FusedDownload(
+                    app._id,
+                    app.origin,
+                    app.status,
+                    app.name,
+                    app.package_name,
+                    downloadList,
+                    mutableMapOf(),
+                    app.status,
+                    app.type,
+                    appIcon
+                )
+            } catch (e: Exception) {
+                _errorMessage.value = e
+                return@launch
+            }
+
             if (fusedDownload.status == Status.INSTALLATION_ISSUE) {
                 fusedManagerRepository.clearInstallationIssue(fusedDownload)
             }
             fusedManagerRepository.addDownload(fusedDownload)
         }
+    }
+
+    suspend fun updateAwaiting(fusedDownload: FusedDownload) {
+        fusedManagerRepository.updateAwaiting(fusedDownload)
     }
 
     fun cancelDownload(app: FusedApp) {

@@ -28,6 +28,7 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import foundation.e.apps.R
+import foundation.e.apps.manager.pkg.PackageInstallerService
 import java.util.concurrent.TimeUnit
 
 class UpdatesManager : BroadcastReceiver() {
@@ -46,7 +47,9 @@ class UpdatesManager : BroadcastReceiver() {
                     context.getString(R.string.update_check_intervals),
                     context.getString(R.string.preference_update_interval_default)
                 )!!.toLong()
-            enqueueWork(context, interval, ExistingPeriodicWorkPolicy.KEEP)
+//            enqueueWork(context, interval, ExistingPeriodicWorkPolicy.KEEP)
+
+            context.startService(Intent(context, PackageInstallerService::class.java))
         }
     }
 
