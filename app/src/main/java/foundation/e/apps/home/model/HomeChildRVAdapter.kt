@@ -99,6 +99,7 @@ class HomeChildRVAdapter(
                         text = context.getString(R.string.open)
                         setTextColor(Color.WHITE)
                         backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             context.startActivity(pkgManagerModule.getLaunchIntent(homeApp.package_name))
                         }
@@ -109,6 +110,7 @@ class HomeChildRVAdapter(
                         text = context.getString(R.string.update)
                         setTextColor(Color.WHITE)
                         backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             installApplication(homeApp, appIcon)
                         }
@@ -117,6 +119,9 @@ class HomeChildRVAdapter(
                 Status.UNAVAILABLE -> {
                     installButton.apply {
                         text = context.getString(R.string.install)
+                        setTextColor(context.getColor(R.color.colorAccent))
+                        backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
+                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             installApplication(homeApp, appIcon)
                         }
@@ -125,13 +130,21 @@ class HomeChildRVAdapter(
                 Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
                     installButton.apply {
                         text = context.getString(R.string.cancel)
+                        setTextColor(context.getColor(R.color.colorAccent))
+                        backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
+                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             cancelDownload(homeApp)
                         }
                     }
                 }
                 Status.INSTALLING, Status.UNINSTALLING -> {
-                    installButton.isEnabled = false
+                    installButton.apply {
+                        isEnabled = false
+                        setTextColor(context.getColor(R.color.light_grey))
+                        backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
+                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.light_grey)
+                    }
                 }
                 Status.BLOCKED -> {
                     installButton.setOnClickListener {
@@ -148,6 +161,9 @@ class HomeChildRVAdapter(
                 Status.INSTALLATION_ISSUE -> {
                     installButton.apply {
                         text = view.context.getString(R.string.retry)
+                        setTextColor(context.getColor(R.color.colorAccent))
+                        backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
+                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             installApplication(homeApp, appIcon)
                         }

@@ -118,17 +118,6 @@ class PkgManagerModule @Inject constructor(
                 inputStream.close()
                 outputStream.close()
             }
-//        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-//            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE else
-//            PendingIntent.FLAG_UPDATE_CURRENT
-
-            // We are done, close everything
-//        val pendingIntent = PendingIntent.getService(
-//            context,
-//            sessionId,
-//            Intent(context, PackageInstallerService::class.java),
-//            flags
-//        )
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 sessionId,
