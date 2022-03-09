@@ -16,23 +16,55 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
     android:gravity="end"
     android:orientation="horizontal">
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/appInstallPB"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/progressLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:visibility="gone" />
+        app:layout_constraintBottom_toBottomOf="@id/installButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/installButton">
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/downloadedSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/app_info_text_color_grey"
+            android:textSize="15sp"
+            tools:text="18/23 mib"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/app_info_text_color_grey"
+            android:textSize="15sp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/downloadedSize"
+            tools:text="75%"/>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/appInstallPB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:layout_gravity="center"
+            android:paddingEnd="10dp"
+            android:visibility="visible"
+            android:layout_below="@+id/downloadedSize"
+
+            />
+    </RelativeLayout>
+
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/appSize"
@@ -40,10 +72,16 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:textColor="@color/app_info_text_color_grey"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        app:layout_constraintRight_toLeftOf="@+id/installButton"
+        app:layout_constraintTop_toTopOf="@+id/installButton"
+        app:layout_constraintBottom_toBottomOf="@+id/installButton"
+        />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/installButton"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         style="@style/InstallButtonStyle"
         android:layout_width="120dp"
         android:layout_height="43dp"
@@ -51,6 +89,7 @@
         android:textAllCaps="false"
         android:textSize="18sp"
         app:autoSizeTextType="uniform"
-        app:cornerRadius="4dp" />
+        app:cornerRadius="4dp"
+        />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
