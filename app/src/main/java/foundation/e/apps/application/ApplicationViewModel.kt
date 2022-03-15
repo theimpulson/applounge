@@ -18,17 +18,11 @@
 
 package foundation.e.apps.application
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataScope
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import foundation.e.apps.api.Result
-import foundation.e.apps.api.exodus.models.AppPrivacyInfo
-import foundation.e.apps.api.exodus.repositories.IAppPrivacyInfoRepository
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.download.data.DownloadProgressLD
@@ -37,14 +31,11 @@ import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.ceil
-import kotlin.math.round
 
 @HiltViewModel
 class ApplicationViewModel @Inject constructor(
     downloadProgressLD: DownloadProgressLD,
     private val fusedAPIRepository: FusedAPIRepository,
-    private val appPrivacyInfoRepository: IAppPrivacyInfoRepository
 ) : ViewModel() {
 
     val fusedApp: MutableLiveData<FusedApp> = MutableLiveData()
@@ -87,74 +78,5 @@ class ApplicationViewModel @Inject constructor(
         } else {
             rating.toString()
         }
-    }
-
-    fun fetchAppPrivacyInfo(): LiveData<Result<AppPrivacyInfo>> {
-        return liveData {
-            fusedApp.value?.let {
-                if (it.trackers.isNotEmpty()) {
-                    val appInfo = AppPrivacyInfo(it.trackers, it.perms)
-                    emit(Result.success(appInfo))
-                    return@liveData
-                }
-                val trackerResultOfAnApp = appPrivacyInfoRepository.getAppPrivacyInfo(it.package_name)
-                handleAppTrackerResult(trackerResultOfAnApp, it)
-            }
-        }
-    }
-
-    private suspend fun LiveDataScope<Result<AppPrivacyInfo>>.handleAppTrackerResult(
-        appPrivacyPrivacyInfoResult: Result<AppPrivacyInfo>,
-        fusedApp: FusedApp
-    ) {
-        if (appPrivacyPrivacyInfoResult.isSuccess()) {
-            handleAppPrivacyInfoSuccess(appPrivacyPrivacyInfoResult, fusedApp)
-        } else {
-            emit(Result.error("Tracker not found!"))
-        }
-    }
-
-    private suspend fun LiveDataScope<Result<AppPrivacyInfo>>.handleAppPrivacyInfoSuccess(
-        appPrivacyPrivacyInfoResult: Result<AppPrivacyInfo>,
-        fusedApp: FusedApp
-    ) {
-        fusedApp.trackers = appPrivacyPrivacyInfoResult.data?.trackerList ?: listOf()
-        if (fusedApp.perms.isEmpty()) {
-            fusedApp.perms = appPrivacyPrivacyInfoResult.data?.permissionList ?: listOf()
-        }
-        emit(appPrivacyPrivacyInfoResult)
-    }
-
-    fun getTrackerListText(): String {
-        fusedApp.value?.let {
-            if (it.trackers.isNotEmpty()) {
-                return it.trackers.joinToString(separator = "") { tracker -> "$tracker<br />" }
-            }
-        }
-        return ""
-    }
-
-    fun getPrivacyScore(): Int {
-        fusedApp.value?.let {
-            return calculatePrivacyScore(it)
-        }
-        return -1
-    }
-
-    private fun calculatePrivacyScore(fusedApp: FusedApp): Int {
-        return calculateTrackersScore(fusedApp.trackers.size) + calculatePermissionsScore(
-            countAndroidPermissions(fusedApp)
-        )
-    }
-
-    private fun countAndroidPermissions(fusedApp: FusedApp) =
-        fusedApp.perms.filter { it.contains("android.permission") }.size
-
-    private fun calculateTrackersScore(numberOfTrackers: Int): Int {
-        return if (numberOfTrackers > 5) 0 else 9 - numberOfTrackers
-    }
-
-    private fun calculatePermissionsScore(numberOfPermission: Int): Int {
-        return if (numberOfPermission > 9) 0 else round(0.2 * ceil((10 - numberOfPermission) / 2.0)).toInt()
     }
 }

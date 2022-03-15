@@ -40,6 +40,7 @@ import coil.load
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
+import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.data.FusedApp
@@ -65,6 +66,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
     lateinit var pkgManagerModule: PkgManagerModule
 
     private val applicationViewModel: ApplicationViewModel by viewModels()
+    private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
     private var applicationIcon: ImageView? = null
@@ -324,7 +326,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     ).show(childFragmentManager, TAG)
                 }
                 appTrackers.setOnClickListener {
-                    var trackers = applicationViewModel.getTrackerListText()
+                    var trackers = privacyInfoViewModel.getTrackerListText(applicationViewModel.fusedApp.value)
 
                     if (trackers.isNotEmpty()) {
                         trackers += "<br /> <br />" + getString(
@@ -343,7 +345,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 }
             }
 
-            fetchAppTracker()
+            fetchAppTracker(it)
         }
     }
 
@@ -363,8 +365,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         return permission
     }
 
-    private fun fetchAppTracker() {
-        applicationViewModel.fetchAppPrivacyInfo().observe(viewLifecycleOwner) {
+    private fun fetchAppTracker(fusedApp: FusedApp) {
+        privacyInfoViewModel.getAppPrivacyInfoLiveData(fusedApp).observe(viewLifecycleOwner) {
             updatePrivacyScore()
             binding.applicationLayout.visibility = View.VISIBLE
             binding.progressBar.visibility = View.GONE
@@ -372,7 +374,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
     }
 
     private fun updatePrivacyScore() {
-        val privacyScore = applicationViewModel.getPrivacyScore()
+        val privacyScore = privacyInfoViewModel.getPrivacyScore(applicationViewModel.fusedApp.value)
         if (privacyScore != -1) {
             val appPrivacyScore = binding.ratingsInclude.appPrivacyScore
             appPrivacyScore.text = getString(

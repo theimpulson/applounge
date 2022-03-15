@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
+import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
@@ -47,6 +48,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
     lateinit var pkgManagerModule: PkgManagerModule
 
     private val updatesViewModel: UpdatesViewModel by viewModels()
+    private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,9 +74,11 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
         val listAdapter = findNavController().currentDestination?.id?.let {
             ApplicationListRVAdapter(
                 this,
+                privacyInfoViewModel,
                 it,
                 pkgManagerModule,
-                User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name)
+                User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
+                viewLifecycleOwner
             )
         }
 

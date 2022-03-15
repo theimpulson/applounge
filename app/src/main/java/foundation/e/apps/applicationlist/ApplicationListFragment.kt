@@ -30,6 +30,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
+import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
@@ -48,16 +49,15 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
     lateinit var pkgManagerModule: PkgManagerModule
 
     private val viewModel: ApplicationListViewModel by viewModels()
+    private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
     private var _binding: FragmentApplicationListBinding? = null
     private val binding get() = _binding!!
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentApplicationListBinding.bind(view)
-
-        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { isInternetConnection ->
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mainActivityViewModel.internetConnection.observe(this) { isInternetConnection ->
             mainActivityViewModel.authData.value?.let { authData ->
                 if (isInternetConnection) {
                     viewModel.getList(
@@ -69,6 +69,11 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                 }
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentApplicationListBinding.bind(view)
 
         binding.toolbarTitleTV.text = args.translation
         binding.toolbar.apply {
@@ -82,9 +87,11 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             findNavController().currentDestination?.id?.let {
                 ApplicationListRVAdapter(
                     this,
+                    privacyInfoViewModel,
                     it,
                     pkgManagerModule,
-                    User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name)
+                    User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
+                    viewLifecycleOwner
                 )
             }
         recyclerView.apply {

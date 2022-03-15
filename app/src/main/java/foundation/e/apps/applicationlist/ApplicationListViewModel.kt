@@ -18,6 +18,7 @@
 
 package foundation.e.apps.applicationlist
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,6 +26,7 @@ import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.utils.enums.Origin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,15 +39,26 @@ class ApplicationListViewModel @Inject constructor(
     val appListLiveData: MutableLiveData<List<FusedApp>> = MutableLiveData()
 
     fun getList(category: String, browseUrl: String, authData: AuthData, source: String) {
+        if (appListLiveData.value?.isNotEmpty() == true) {
+            Log.d("ApplicationListViewModel", "getList: ")
+            return
+        }
         viewModelScope.launch(Dispatchers.IO) {
-            appListLiveData.postValue(
-                fusedAPIRepository.getAppsListBasedOnCategory(
-                    category,
-                    browseUrl,
-                    authData,
-                    source
-                )
+            val packageNames = fusedAPIRepository.getAppsListBasedOnCategory(
+                category,
+                browseUrl,
+                authData,
+                source
+            ).map { it.package_name }
+
+            val applicationDetails = fusedAPIRepository.getApplicationDetails(
+                packageNames, authData,
+                getOrigin(source)
             )
+            appListLiveData.postValue(applicationDetails)
         }
     }
+
+    private fun getOrigin(source: String) =
+        if (source.contentEquals("Open Source")) Origin.CLEANAPK else Origin.GPLAY
 }

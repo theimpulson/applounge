@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +34,7 @@ import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.Shimmer.Direction.LEFT_TO_RIGHT
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.snackbar.Snackbar
+import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
@@ -50,9 +52,11 @@ import javax.inject.Singleton
 @Singleton
 class ApplicationListRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
+    private val privacyInfoViewModel: PrivacyInfoViewModel,
     private val currentDestinationId: Int,
     private val pkgManagerModule: PkgManagerModule,
-    private val user: User
+    private val user: User,
+    private val lifecycleOwner: LifecycleOwner
 ) : ListAdapter<FusedApp, ApplicationListRVAdapter.ViewHolder>(ApplicationDiffUtil()) {
 
     private val TAG = ApplicationListRVAdapter::class.java.simpleName
@@ -84,6 +88,9 @@ class ApplicationListRVAdapter(
         val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
 
         holder.binding.apply {
+            if (searchApp.privacyScore == -1) {
+                hidePrivacyScore()
+            }
             applicationList.setOnClickListener {
                 val action = when (currentDestinationId) {
                     R.id.applicationListFragment -> {
@@ -150,7 +157,8 @@ class ApplicationListRVAdapter(
                         isEnabled = true
                         text = context.getString(R.string.open)
                         setTextColor(Color.WHITE)
-                        backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        backgroundTintList =
+                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
                         }
@@ -160,7 +168,8 @@ class ApplicationListRVAdapter(
                     installButton.apply {
                         text = context.getString(R.string.update)
                         setTextColor(Color.WHITE)
-                        backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        backgroundTintList =
+                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             installApplication(searchApp, appIcon)
                         }
@@ -206,11 +215,63 @@ class ApplicationListRVAdapter(
                     }
                 }
             }
+
+            showCalculatedPrivacyScoreData(searchApp, view)
         }
     }
 
+    private fun ApplicationListItemBinding.showCalculatedPrivacyScoreData(
+        searchApp: FusedApp,
+        view: View
+    ) {
+        if (searchApp.privacyScore > -1) {
+            showPrivacyScoreOnAvailableData(searchApp, view)
+        } else {
+            showPrivacyScoreAfterFetching(searchApp, view)
+        }
+    }
+
+    private fun ApplicationListItemBinding.showPrivacyScoreOnAvailableData(
+        searchApp: FusedApp,
+        view: View
+    ) {
+        showPrivacyScore()
+        appPrivacyScore.text = view.context.getString(
+            R.string.privacy_rating_out_of,
+            searchApp.privacyScore.toString()
+        )
+    }
+
+    private fun ApplicationListItemBinding.showPrivacyScoreAfterFetching(
+        searchApp: FusedApp,
+        view: View
+    ) {
+        privacyInfoViewModel.getAppPrivacyInfoLiveData(searchApp).observe(lifecycleOwner) {
+            showPrivacyScore()
+            if (it.isSuccess()) {
+                searchApp.privacyScore = privacyInfoViewModel.calculatePrivacyScore(searchApp)
+                appPrivacyScore.text = view.context.getString(
+                    R.string.privacy_rating_out_of,
+                    searchApp.privacyScore.toString()
+                )
+            } else {
+                appPrivacyScore.text = view.context.getString(R.string.not_available)
+            }
+        }
+    }
+
+    private fun ApplicationListItemBinding.hidePrivacyScore() {
+        progressBar.visibility = View.VISIBLE
+        appPrivacyScore.visibility = View.GONE
+    }
+
+    private fun ApplicationListItemBinding.showPrivacyScore() {
+        progressBar.visibility = View.GONE
+        appPrivacyScore.visibility = View.VISIBLE
+    }
+
     fun setData(newList: List<FusedApp>) {
-        this.submitList(newList.map { it.copy() })
+        this.submitList(newList)
     }
 
     private fun installApplication(searchApp: FusedApp, appIcon: ImageView) {
