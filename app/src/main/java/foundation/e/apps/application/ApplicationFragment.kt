@@ -23,21 +23,26 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Html
+import android.text.format.Formatter
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
@@ -46,10 +51,13 @@ import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.application.model.ApplicationScreenshotsRVAdapter
 import foundation.e.apps.application.subFrags.ApplicationDialogFragment
 import foundation.e.apps.databinding.FragmentApplicationBinding
+import foundation.e.apps.manager.download.data.DownloadProgress
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -70,7 +78,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
     private var applicationIcon: ImageView? = null
 
     companion object {
-        private const val PRIVACY_SCORE_SOURCE_CODE_URL = "https://gitlab.e.foundation/e/apps/apps/-/blob/main/app/src/main/java/foundation/e/apps/application/ApplicationViewModel.kt#L131"
+        private const val PRIVACY_SCORE_SOURCE_CODE_URL =
+            "https://gitlab.e.foundation/e/apps/apps/-/blob/main/app/src/main/java/foundation/e/apps/application/ApplicationViewModel.kt#L131"
         private const val EXODUS_URL = "https://exodus-privacy.eu.org"
         private const val PRIVACY_GUIDELINE_URL = "https://doc.e.foundation/privacy_score"
     }
@@ -118,113 +127,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             list.forEach {
                 if (it.origin == args.origin && (it.package_name == args.packageName || it.id == args.id)) {
                     applicationViewModel.appStatus.value = it.status
-                }
-            }
-        }
-
-        applicationViewModel.appStatus.observe(viewLifecycleOwner) { status ->
-            val installButton = binding.downloadInclude.installButton
-            val downloadPB = binding.downloadInclude.appInstallPB
-            val appSize = binding.downloadInclude.appSize
-            val fusedApp = applicationViewModel.fusedApp.value ?: FusedApp()
-
-            when (status) {
-                Status.INSTALLED -> {
-                    installButton.apply {
-                        isEnabled = true
-                        text = getString(R.string.open)
-                        setTextColor(Color.WHITE)
-                        backgroundTintList =
-                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
-                        setOnClickListener {
-                            startActivity(pkgManagerModule.getLaunchIntent(fusedApp.package_name))
-                        }
-                    }
-                }
-                Status.UPDATABLE -> {
-                    installButton.apply {
-                        text = getString(R.string.update)
-                        setTextColor(Color.WHITE)
-                        backgroundTintList =
-                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
-                        setOnClickListener {
-                            applicationIcon?.let {
-                                mainActivityViewModel.getApplication(fusedApp, it)
-                            }
-                        }
-                    }
-                    downloadPB.visibility = View.GONE
-                    appSize.visibility = View.VISIBLE
-                }
-                Status.UNAVAILABLE -> {
-                    installButton.apply {
-                        text = getString(R.string.install)
-                        setOnClickListener {
-                            applicationIcon?.let {
-                                mainActivityViewModel.getApplication(fusedApp, it)
-                            }
-                        }
-                    }
-                    downloadPB.visibility = View.GONE
-                    appSize.visibility = View.VISIBLE
-                }
-                Status.QUEUED -> {
-                    installButton.apply {
-                        text = getString(R.string.cancel)
-                        setOnClickListener {
-                            mainActivityViewModel.cancelDownload(fusedApp)
-                        }
-                    }
-                }
-                Status.DOWNLOADING -> {
-                    installButton.apply {
-                        text = getString(R.string.cancel)
-                        setOnClickListener {
-                            mainActivityViewModel.cancelDownload(fusedApp)
-                        }
-                    }
-                    downloadPB.visibility = View.VISIBLE
-                    appSize.visibility = View.GONE
-                    applicationViewModel.downloadProgress.observe(viewLifecycleOwner) {
-                        downloadPB.max = it.totalSizeBytes.values.sum().toInt()
-                        downloadPB.progress = it.bytesDownloadedSoFar.values.sum().toInt()
-                    }
-                }
-                Status.INSTALLING, Status.UNINSTALLING -> {
-                    installButton.isEnabled = false
-                    downloadPB.visibility = View.GONE
-                    appSize.visibility = View.VISIBLE
-                }
-                Status.BLOCKED -> {
-                    installButton.setOnClickListener {
-                        val errorMsg = when (
-                            User.valueOf(
-                                mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name
-                            )
-                        ) {
-                            User.ANONYMOUS,
-                            User.UNAVAILABLE -> getString(R.string.install_blocked_anonymous)
-                            User.GOOGLE -> getString(R.string.install_blocked_google)
-                        }
-                        if (errorMsg.isNotBlank()) {
-                            Snackbar.make(view, errorMsg, Snackbar.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-                Status.INSTALLATION_ISSUE -> {
-                    installButton.apply {
-                        text = getString(R.string.retry)
-                        setOnClickListener {
-                            applicationIcon?.let {
-                                mainActivityViewModel.getApplication(fusedApp, it)
-                            }
-                        }
-                    }
-                    downloadPB.visibility = View.GONE
-                    appSize.visibility = View.VISIBLE
-                }
-                else -> {
-                    Log.d(TAG, "Unknown status: $status")
                 }
             }
         }
@@ -342,9 +244,207 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     ).show(childFragmentManager, TAG)
                 }
             }
-
+            observeDownloadStatus(view)
             fetchAppTracker()
         }
+    }
+
+    private fun observeDownloadStatus(view: View) {
+        applicationViewModel.appStatus.observe(viewLifecycleOwner) { status ->
+            val installButton = binding.downloadInclude.installButton
+            val downloadPB = binding.downloadInclude.progressLayout
+            val appSize = binding.downloadInclude.appSize
+            val fusedApp = applicationViewModel.fusedApp.value ?: FusedApp()
+
+            when (status) {
+                Status.INSTALLED -> handleInstalled(installButton, view, fusedApp)
+                Status.UPDATABLE -> handleUpdatable(
+                    installButton,
+                    view,
+                    fusedApp,
+                    downloadPB,
+                    appSize
+                )
+                Status.UNAVAILABLE -> handleUnavaiable(installButton, fusedApp, downloadPB, appSize)
+                Status.QUEUED -> handleQueued(installButton, fusedApp)
+                Status.DOWNLOADING -> handleDownloading(
+                    installButton,
+                    fusedApp,
+                    downloadPB,
+                    appSize
+                )
+                Status.INSTALLING, Status.UNINSTALLING -> handleInstallingUninstalling(
+                    installButton,
+                    downloadPB,
+                    appSize
+                )
+                Status.BLOCKED -> handleBlocked(installButton, view)
+                Status.INSTALLATION_ISSUE -> handleInstallingIssue(
+                    installButton,
+                    fusedApp,
+                    downloadPB,
+                    appSize
+                )
+                else -> {
+                    Log.d(TAG, "Unknown status: $status")
+                }
+            }
+        }
+    }
+
+    private fun handleInstallingIssue(
+        installButton: MaterialButton,
+        fusedApp: FusedApp,
+        downloadPB: RelativeLayout,
+        appSize: MaterialTextView
+    ) {
+        installButton.apply {
+            text = getString(R.string.retry)
+            setOnClickListener {
+                applicationIcon?.let {
+                    mainActivityViewModel.getApplication(fusedApp, it)
+                }
+            }
+        }
+        downloadPB.visibility = View.GONE
+        appSize.visibility = View.VISIBLE
+    }
+
+    private fun handleBlocked(
+        installButton: MaterialButton,
+        view: View
+    ) {
+        installButton.setOnClickListener {
+            val errorMsg = when (
+                User.valueOf(
+                    mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name
+                )
+            ) {
+                User.ANONYMOUS,
+                User.UNAVAILABLE -> getString(R.string.install_blocked_anonymous)
+                User.GOOGLE -> getString(R.string.install_blocked_google)
+            }
+            if (errorMsg.isNotBlank()) {
+                Snackbar.make(view, errorMsg, Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun handleInstallingUninstalling(
+        installButton: MaterialButton,
+        downloadPB: RelativeLayout,
+        appSize: MaterialTextView
+    ) {
+        installButton.isEnabled = false
+        downloadPB.visibility = View.GONE
+        appSize.visibility = View.VISIBLE
+    }
+
+    private fun handleDownloading(
+        installButton: MaterialButton,
+        fusedApp: FusedApp,
+        downloadPB: RelativeLayout,
+        appSize: MaterialTextView
+    ) {
+        installButton.apply {
+            text = getString(R.string.cancel)
+            setOnClickListener {
+                mainActivityViewModel.cancelDownload(fusedApp)
+            }
+        }
+        downloadPB.visibility = View.VISIBLE
+        appSize.visibility = View.GONE
+        applicationViewModel.downloadProgress.observe(viewLifecycleOwner) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                updateProgress(it)
+            }
+        }
+    }
+
+    private fun handleQueued(
+        installButton: MaterialButton,
+        fusedApp: FusedApp
+    ) {
+        installButton.apply {
+            text = getString(R.string.cancel)
+            setOnClickListener {
+                mainActivityViewModel.cancelDownload(fusedApp)
+            }
+        }
+    }
+
+    private fun handleUnavaiable(
+        installButton: MaterialButton,
+        fusedApp: FusedApp,
+        downloadPB: RelativeLayout,
+        appSize: MaterialTextView
+    ) {
+        installButton.apply {
+            text = getString(R.string.install)
+            setOnClickListener {
+                applicationIcon?.let {
+                    mainActivityViewModel.getApplication(fusedApp, it)
+                }
+            }
+        }
+        downloadPB.visibility = View.GONE
+        appSize.visibility = View.VISIBLE
+    }
+
+    private fun handleUpdatable(
+        installButton: MaterialButton,
+        view: View,
+        fusedApp: FusedApp,
+        downloadPB: RelativeLayout,
+        appSize: MaterialTextView
+    ) {
+        installButton.apply {
+            text = getString(R.string.update)
+            setTextColor(Color.WHITE)
+            backgroundTintList =
+                ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            setOnClickListener {
+                applicationIcon?.let {
+                    mainActivityViewModel.getApplication(fusedApp, it)
+                }
+            }
+        }
+        downloadPB.visibility = View.GONE
+        appSize.visibility = View.VISIBLE
+    }
+
+    private fun handleInstalled(
+        installButton: MaterialButton,
+        view: View,
+        fusedApp: FusedApp
+    ) {
+        installButton.apply {
+            isEnabled = true
+            text = getString(R.string.open)
+            setTextColor(Color.WHITE)
+            backgroundTintList =
+                ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            setOnClickListener {
+                startActivity(pkgManagerModule.getLaunchIntent(fusedApp.package_name))
+            }
+        }
+    }
+
+    private suspend fun updateProgress(
+        downloadProgress: DownloadProgress,
+    ) {
+        val progressResult = applicationViewModel.calculateProgress(downloadProgress)
+        if (progressResult.first < 1) {
+            return
+        }
+        val downloadedSize = "${
+        Formatter.formatFileSize(requireContext(), progressResult.second).substringBefore(" MB")
+        }/${Formatter.formatFileSize(requireContext(), progressResult.first)}"
+        val progressPercentage =
+            ((progressResult.second / progressResult.first.toDouble()) * 100f).toInt()
+        binding.downloadInclude.appInstallPB.progress = progressPercentage
+        binding.downloadInclude.percentage.text = "$progressPercentage%"
+        binding.downloadInclude.downloadedSize.text = downloadedSize
     }
 
     private fun getPermissionListString(): String {
