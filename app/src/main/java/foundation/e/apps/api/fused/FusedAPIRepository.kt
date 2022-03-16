@@ -87,7 +87,7 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.fetchAuthData()
     }
 
-    suspend fun fetchAuthData(email: String, aasToken: String) {
+    suspend fun fetchAuthData(email: String, aasToken: String): AuthData {
         return fusedAPIImpl.fetchAuthData(email, aasToken)
     }
 

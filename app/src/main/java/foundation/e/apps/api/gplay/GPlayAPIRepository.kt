@@ -34,7 +34,7 @@ class GPlayAPIRepository @Inject constructor(
         return gPlayAPIImpl.fetchAuthData()
     }
 
-    suspend fun fetchAuthData(email: String, aasToken: String) {
+    suspend fun fetchAuthData(email: String, aasToken: String): AuthData {
         return gPlayAPIImpl.fetchAuthData(email, aasToken)
     }
 

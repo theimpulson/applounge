@@ -81,6 +81,10 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
+    fun updateAuthData(authData: AuthData) {
+        _authData.value = authData
+    }
+
     fun destroyCredentials() {
         viewModelScope.launch {
             dataStoreModule.destroyCredentials()

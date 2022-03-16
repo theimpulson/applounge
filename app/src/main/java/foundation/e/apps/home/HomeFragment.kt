@@ -64,7 +64,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
         mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { hasInternet ->
             mainActivityViewModel.authData.observe(viewLifecycleOwner) { authData ->
                 if (hasInternet) {
-                    homeViewModel.getHomeScreenData(authData)
+                    authData?.let {
+                        homeViewModel.getHomeScreenData(authData)
+                    }
                 }
             }
         }

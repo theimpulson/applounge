@@ -92,7 +92,7 @@ class GoogleSignInFragment :
                     val oauthToken = cookieMap[AUTH_TOKEN] ?: ""
                     binding.webview.evaluateJavascript("(function() { return document.getElementById('profileIdentifier').innerHTML; })();") {
                         val email = it.replace("\"".toRegex(), "")
-                        viewModel.fetchAuthData(email, oauthToken)
+                        viewModel.saveEmailToken(email, oauthToken)
                         viewModel.saveUserType(User.GOOGLE)
                     }
                 }
