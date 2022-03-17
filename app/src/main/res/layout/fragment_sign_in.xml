@@ -62,26 +62,27 @@
             android:id="@+id/materialTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
             android:text="@string/sign_in_title"
             android:textAlignment="center"
             android:textColor="?android:textColorPrimary"
             android:textSize="25sp"
+            app:layout_constraintBottom_toTopOf="@+id/signinMessage"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/signinMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:paddingHorizontal="70dp"
             android:text="@string/sign_in_desc"
             android:textAlignment="center"
             android:textSize="15sp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/googleBT"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/materialTextView" />
 
@@ -93,10 +94,10 @@
             android:layout_marginHorizontal="15dp"
             android:text="@string/sign_in_google"
             app:cornerRadius="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/anonymousBT"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/anonymousBT"
@@ -104,12 +105,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="50dp"
             android:text="@string/sign_in_anonymous"
             android:textColor="@color/colorAccent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/googleBT"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
