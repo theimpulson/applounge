@@ -1,2 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="open">Apri</string>
+    <string name="retry">Ritenta</string>
+    <string name="update">Aggiorna</string>
+    <string name="ratings">Rating</string>
+    <string name="rating">Rating</string>
+    <string name="privacy">Privacy</string>
+    <string name="privacy_score">Punteggio Privacy</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_categories">Categorie</string>
+    <string name="menu_search">Cerca</string>
+    <string name="menu_updates">Aggiornamenti</string>
+    <string name="menu_settings">Impostazioni</string>
+    <string name="search_hint">Cerca una App</string>
+    <string name="no_apps_found">Non ho trovato App…</string>
+    <string name="apps">App</string>
+    <string name="games">Giochi</string>
+    <string name="category_icon">Icone Categorie</string>
+    <string name="open_source">Open Source</string>
+    <string name="pwa">PWA</string>
+    <string name="sign_in_title">Accedi</string>
+    <string name="sign_in_desc">Usa un account Google o la Modalità Anonima per accedere privatamente.</string>
+    <string name="sign_in_google">Login Google</string>
+    <string name="sign_in_anonymous">Anonimo</string>
+    <string name="tos_agree">Accetta</string>
+    <string name="tos_disagree">Rifiuta</string>
+    <string name="tos_agree_date">Accettato</string>
+    <string name="tos_warning">Prima di poter procedere devi leggere e accettare il Regolamento.</string>
+    <string name="preference_updates_title">Aggiornamenti</string>
+    <string name="preference_update_interval_default">24</string>
+    <string name="preference_update_interval_title">Intervallo verifica aggiornamenti</string>
+    <string name="preference_update_wifi_only_title">Solo con WiFi</string>
+    <string name="preference_update_wifi_only_description">Aggiorna le App solo con WiFi</string>
+    <string name="preference_update_install_automatically_title">Installa gli aggiornamenti Automaticamente</string>
+    <string name="preference_update_install_automatically_description">Scarica ed installa gli aggiornamenti App in background</string>
+    <string name="preference_update_notify_available_title">Mostra gli aggiornamenti disponibili</string>
+    <string name="Show_applications">Mostra App:</string>
+    <string name="Show_all_apps">Mostra tutte le App</string>
+    <string name="show_only_open_source_apps">Mostra solo le App open-source</string>
+    <string name="show_only_pwa_apps">Mostra solo le PWA</string>
+    <string name="account">Account</string>
+    <string name="terms_services">Regolamento</string>
+    <string name="user_anonymous">Anonimo</string>
+    <string name="logout">Esci</string>
+    <string name="description">Descrizione</string>
+    <string name="ok">OK</string>
+    <string name="app_name">App Lounge</string>
+    <string name="privacy_analyses">Analisi Privacy</string>
+    <string name="permissions">Permessi</string>
+    <string name="trackers_title">Tracker</string>
+    <string name="information">Informazioni</string>
+    <string name="version">Versione: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="updated_on">Aggiornato a: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="min_android_version">Richiede: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="license">Licenza: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="package_name">Nome pacchetto: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="install_blocked_anonymous">Le App a pagamento non possono essere installate in modalità anonima. Per farlo devi accedere all\'account Google.</string>
+    <string name="message_app_available_later">Questa App sarà disponibile prossimamente!</string>
+    <string name="unknown_error">Errore sconosciuto!</string>
+    <string name="update_all">Aggiorna tutto</string>
+    <string name="auto_updates_notification">Gli aggiornamenti App verranno installati automaticamente</string>
+    <string name="manual_updates_notification">Gli aggiornamenti App non verranno installati automaticamente</string>
+    <string name="discover">Scopri</string>
+    <string name="popular_apps_in_last_24_hours">App più richieste nelle ultime 24 ore</string>
+    <string name="popular_games_in_last_24_hours">Giochi più richiesti nelle ultime 24 ore</string>
+    <string name="popular_apps">App più richieste</string>
+    <string name="popular_games">Giochi più richiesti</string>
+    <string name="top_updated_apps">Migliori App aggiornate</string>
+    <string name="top_updated_games">Migliori Giochi aggiornati</string>
+    <string name="topselling_free_apps">Migliori App Free</string>
+    <string name="topselling_free_games">Migliori Giochi Free</string>
+    <string name="topgrossing_apps">Migliori App di successo</string>
+    <string name="topgrossing_games">Migliori Giochi di successo</string>
+    <string name="movers_shakers_games">Migliori Giochi di tendenza</string>
+    <string name="downloads">Downloads</string>
+    <string name="updates">Aggiornamenti</string>
+    <string name="manually_install_updates_notification_text">Gli aggiornamenti App non verranno installati automaticamente</string>
+    <string name="updates_notification_unmetered_network_warning">Attesa connessione WiFi</string>
+    <string name="no_permission_found">Permessi di runtime per android non rilevati!</string>
+    <string name="no_tracker_found">Nessun Tracker rilevato!</string>
+    <string name="install_blocked_google">Le App a pagamento non sono ancora supportate da App Lounge. Un pò di oazienza e lo saranno.</string>
+    <string name="no_internet_message">Non riesco a connettermi! verifica la connessione internet e ritenta</string>
+    <string name="preference_update_notify_available_description">Mostra una notifica quando sono disponibili aggiornamenti App</string>
+    <string name="share_intent">Verifica \"<xliff:g id="rating">%1$s</xliff:g>\"
+\n<xliff:g id="rating">%2$s</xliff:g></string>
+    <string name="install">Installa</string>
+    <string name="cancel">Cancella</string>
+    <string name="app_icon">Icona App</string>
+    <string name="more">Altro</string>
+    <string name="rating_description">Punteggio su scala di 5. Calcolato utilizzando i rating degli utenti dell\'App.</string>
+    <string name="privacy_description">Il Punteggio Privacy viene calcolato automaticamente a seconda dei permessi richiesti e dei tracker trovati nelle App. Ti da un\'idea di quanto finemente una App sia in grado di profilare i propri utenti.&lt;br /&gt;&lt;br /&gt;Il codice sorgente dell\'algoritmo di calcolo si &lt;a href=<xliff:g id="source_code">%1$s</xliff:g>&gt;trova qui&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;Il rilevamento dei tracker viene eseguito usando &lt;a href=<xliff:g id="exodus">%2$s</xliff:g>&gt;Exodus Privacy&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;Punteggio su scala di 10.&lt;br /&gt;&lt;br /&gt;Altre informazioni sul metodo di calcolo del Punteggio Privacy, i suoi limiti e su come puoi difenderti dalla profilatura li trovi &lt;a href=<xliff:g id="e_doc">%3$s</xliff:g>&gt;in questa pagina&lt;/a&gt;.</string>
+    <plurals name="updates_notification_title">
+        <item quantity="one">Disponibile <xliff:g id="version_code">%1$d</xliff:g> aggiornamento App</item>
+        <item quantity="other">Disponibili <xliff:g id="version_code">%1$d</xliff:g> aggiornamenti App</item>
+    </plurals>
+    <string name="movers_shakers_apps">Migliori App di tendenza</string>
+    <string name="automatically_install_updates_notification_text">Gli aggiornamenti App verranno installati automaticamente</string>
+    <string name="privacy_computed_using_text">Calcolato usando &lt;a href=<xliff:g id="exodus">%1$s</xliff:g>&gt; Exodus Privacy Analysis</string>
+</resources>
