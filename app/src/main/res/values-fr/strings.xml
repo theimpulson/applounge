@@ -1,2 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="cancel">Annuler</string>
+    <string name="open">Ouvrir</string>
+    <string name="retry">Réessayer</string>
+    <string name="ratings">Notes</string>
+    <string name="rating">Note</string>
+    <string name="sign_in_anonymous">Anonyme</string>
+    <string name="tos_agree">Accepter</string>
+    <string name="tos_agree_date">Accepté</string>
+    <string name="preference_updates_title">Mises à jour</string>
+    <string name="preference_update_interval_default">24</string>
+    <string name="preference_update_interval_title">Intervalle de vérification de mise à jour</string>
+    <string name="preference_update_wifi_only_title">Seulement sur les réseaux illimités</string>
+    <string name="preference_update_install_automatically_title">Installer automatiquement les mises à jour</string>
+    <string name="preference_update_install_automatically_description">Télécharger et installer les mises à jour d\'application en arrière-plan</string>
+    <string name="preference_update_notify_available_title">Afficher les mises à jour disponibles</string>
+    <string name="preference_update_notify_available_description">Afficher une notification lorsque des mises à jour d\'application sont disponibles</string>
+    <string name="Show_applications">Afficher les applications :</string>
+    <string name="Show_all_apps">Afficher toutes les applications</string>
+    <string name="show_only_pwa_apps">Afficher les PWA uniquement</string>
+    <string name="account">Compte</string>
+    <string name="terms_services">Conditions de Service</string>
+    <string name="user_anonymous">Anonyme</string>
+    <string name="logout">Se déconnecter</string>
+    <string name="description">Description</string>
+    <string name="ok">Ok</string>
+    <string name="install">Installer</string>
+    <string name="menu_categories">Catégories</string>
+    <string name="menu_search">Rechercher</string>
+    <string name="menu_updates">Mises à jour</string>
+    <string name="menu_settings">Paramètres</string>
+    <string name="search_hint">Rechercher une application</string>
+    <string name="apps">Applications</string>
+    <string name="games">Jeux</string>
+    <string name="open_source">Open Source</string>
+    <string name="pwa">PWA</string>
+    <string name="sign_in_title">Connexion</string>
+    <string name="privacy">Confidentialité</string>
+    <string name="privacy_score">Score de Confidentialité</string>
+    <string name="privacy_analyses">Analyses de confidentialité</string>
+    <string name="permissions">Permissions</string>
+    <string name="trackers_title">Pisteurs</string>
+    <string name="information">Information</string>
+    <string name="updated_on">Mise à jour le <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="version">Version <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="min_android_version">Nécessite <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="license">Licence <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="package_name">Package name <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="install_blocked_anonymous">Les applications payantes ne peuvent pas être installées en mode anonyme. Veuillez vous connecter à votre compte Google pour installer les applications payantes.</string>
+    <string name="install_blocked_google">Les applications payantes ne sont pas encore supportées dans App Lounge. Un peu de patience, cela sera bientôt le cas.</string>
+    <string name="message_app_available_later">Cette application sera disponible plus tard !</string>
+    <string name="unknown_error">Erreur inconnue !</string>
+    <string name="update_all">Tout mettre à jour</string>
+    <string name="auto_updates_notification">Les mises à jour d\'application seront installées automatiquement</string>
+    <string name="manual_updates_notification">Les mises à jour d\'application ne seront pas installées automatiquement</string>
+    <string name="discover">Découvrir</string>
+    <string name="top_updated_apps">Top des applications mises à jour</string>
+    <string name="top_updated_games">Top des jeux mis à jour</string>
+    <string name="popular_games_in_last_24_hours">Jeux populaires dans les dernières 24 h</string>
+    <string name="popular_apps_in_last_24_hours">Applications populaires dans les dernières 24 h</string>
+    <string name="popular_apps">Applications populaires</string>
+    <string name="popular_games">Jeux populaires</string>
+    <string name="topselling_free_apps">Top des applications gratuites</string>
+    <string name="topselling_free_games">Top des jeux gratuits</string>
+    <string name="movers_shakers_apps">Applications les plus en vogue</string>
+    <string name="movers_shakers_games">Jeux les plus en vogue</string>
+    <string name="downloads">Téléchargements</string>
+    <string name="updates">Mises à jour</string>
+    <string name="manually_install_updates_notification_text">Les mises à jour d\'application ne seront pas installées automatiquement</string>
+    <string name="no_permission_found">Aucune permission d\'exécution Android trouvée !</string>
+    <string name="no_tracker_found">Aucun pisteur trouvé !</string>
+    <string name="no_internet_message">Connexion impossible ! Merci de vérifier votre connexion internet puis réessayer</string>
+    <string name="app_name">App Lounge</string>
+    <string name="menu_home">Accueil</string>
+    <string name="no_apps_found">Aucune application trouvée…</string>
+    <string name="sign_in_google">Connexion Google</string>
+    <string name="tos_disagree">Refuser</string>
+    <string name="tos_warning">Avant de poursuivre, vous devez lire et approuver les Conditions de Service.</string>
+    <string name="preference_update_wifi_only_description">Mettre à jour automatiquement les applications uniquement sur les réseaux illimités, tel que le Wi-Fi</string>
+    <string name="show_only_open_source_apps">Aff. applis Open Source uniquement</string>
+    <string name="app_icon">Icône de l\'application</string>
+    <string name="more">Plus</string>
+    <string name="update">Mettre à jour</string>
+    <string name="rating_description">Score sur 5. Calculé à partir des notes utilisateurs de l\'application.</string>
+    <string name="privacy_description">Le Score de Confidentialité est calculé automatiquement à partir des permissions et pisteurs qui sont détectés dans l\'application. Il donne un aperçu de la capacité d\'une application à micro-cibler ses utilisateurs.&lt;br /&gt;&lt;br /&gt;Le code source de son algorithme est disponible &lt;a href=<xliff:g id="source_code">%1$s</xliff:g>&gt;ici&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;La détection des pisteurs est effectuée en utilisant &lt;a href=<xliff:g id="exodus">%2$s</xliff:g>&gt;les outils Exodus Privacy&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;Score sur 10.&lt;br /&gt;&lt;br /&gt;En savoir plus sur comment est calculé le Score de Confidentialité, ces limites et comment il peut vous protéger du micro-ciblage &lt;a href=<xliff:g id="e_doc">%3$s</xliff:g>&gt;on this page&lt;/a&gt;.</string>
+    <plurals name="updates_notification_title">
+        <item quantity="one"><xliff:g id="version_code">%1$d</xliff:g> mise à jour disponible</item>
+        <item quantity="other"><xliff:g id="version_code">%1$d</xliff:g> mises à jour disponibles</item>
+    </plurals>
+    <string name="automatically_install_updates_notification_text">Les mises à jour d\'application seront installées automatiquement</string>
+    <string name="updates_notification_unmetered_network_warning">En attente d\'un réseau illimité</string>
+    <string name="privacy_computed_using_text">Calculé à partir des &lt;a href=<xliff:g id="exodus">%1$s</xliff:g>&gt; analyses d\'Exodus Privacy</string>
+</resources>
