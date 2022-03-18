@@ -47,16 +47,16 @@
     <string name="pref_update_install_automatically_key">pref_update_install_automatically</string>
     <string name="pref_update_wifi_only_key">pref_update_wifi_only</string>
     <string name="pref_update_interval_key">pref_update_interval</string>
-    <string name="preference_update_notify_available_description">Mostra una notifica quando sono presenti aggiornamenti delle app</string>
-    <string name="preference_update_notify_available_title">Mostra aggiornamenti disponibili</string>
-    <string name="preference_update_install_automatically_description">Scarica ed installa gli aggiornamenti app in background</string>
-    <string name="preference_update_install_automatically_title">Installa aggiornamenti in automatico</string>
-    <string name="preference_update_wifi_only_description">Aggiorna le app automaticamente solo in presenza di WiFi</string>
-    <string name="preference_update_wifi_only_title">Solo tramite WiFi</string>
-    <string name="preference_update_interval_title">Intervallo di verifica aggiornamenti</string>
+    <string name="preference_update_notify_available_description">Mostra una notifica quando sono disponibili aggiornamenti App</string>
+    <string name="preference_update_notify_available_title">Mostra gli aggiornamenti disponibili</string>
+    <string name="preference_update_install_automatically_description">Scarica ed installa gli aggiornamenti App in background</string>
+    <string name="preference_update_install_automatically_title">Installa gli aggiornamenti Automaticamente</string>
+    <string name="preference_update_wifi_only_description">Aggiorna le App solo con WiFi</string>
+    <string name="preference_update_wifi_only_title">Solo con WiFi</string>
+    <string name="preference_update_interval_title">Intervallo verifica aggiornamenti</string>
     <string name="preference_update_interval_default">24</string>
     <string name="preference_updates_title">Aggiornamenti</string>
-    <string name="updates_notification_unmetered_network_warning">In attesa di collegamento WiFi</string>
+    <string name="updates_notification_unmetered_network_warning">Attesa connessione WiFi</string>
     <string name="AUTOMATICALLY_INSTALL_updates_notification_text">Gli aggiornamenti app verranno installati automaticamente</string>
     <string name="MANUALLY_INSTALL_updates_notification_text">Gli aggiornamenti app non verranno installati automaticamente</string>
     <plurals name="updates_notification_title">
@@ -88,9 +88,9 @@
     <string name="app_privacy_description">Voto su scala di 10. Calcolato utilizzando <a href="https://exodus-privacy.eu.org">Exodus Privacy analyses</a>, che si basa su permessi e trackers usati nell\'app.</string>
     <string name="pwa_icon">PWA</string>
     <string name="show_only_pwa_apps">Mostra solo le PWA</string>
-    <string name="show_only_open_source_apps">Mostra solo le app open-source</string>
-    <string name="Show_all_apps">Mostra tutte le app</string>
-    <string name="Show_applications">Mostra app:</string>
+    <string name="show_only_open_source_apps">Mostra solo le App open-source</string>
+    <string name="Show_all_apps">Mostra tutte le App</string>
+    <string name="Show_applications">Mostra App:</string>
     <string name="more">altro</string>
     <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
     <string name="featured">In Evidenza</string>
