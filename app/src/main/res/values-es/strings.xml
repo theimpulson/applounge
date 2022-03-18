@@ -1,2 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="ratings">Calificaciones</string>
+    <string name="rating">Calificación</string>
+    <string name="privacy">Privacidad</string>
+    <string name="privacy_score">Puntuación de privacidad</string>
+    <string name="privacy_analyses">Análisis de la privacidad</string>
+    <string name="permissions">Permisos</string>
+    <string name="trackers_title">Rastreadores</string>
+    <string name="information">Información</string>
+    <string name="version">Versión: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="updated_on">Actualizado en: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="min_android_version">Requiere: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="license">Licencia: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="package_name">Nombre del paquete: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="menu_categories">Categorías</string>
+    <string name="menu_search">Búsqueda</string>
+    <string name="menu_updates">Actualizaciones</string>
+    <string name="menu_settings">Ajustes</string>
+    <string name="search_hint">Buscar una aplicación</string>
+    <string name="no_apps_found">No se han encontrado aplicaciones…</string>
+    <string name="games">Juegos</string>
+    <string name="open_source">Código abierto</string>
+    <string name="pwa">PWA</string>
+    <string name="sign_in_title">Acceder</string>
+    <string name="sign_in_google">Inicio de sesión de Google</string>
+    <string name="sign_in_anonymous">Anónimo</string>
+    <string name="tos_agree">Aceptar</string>
+    <string name="tos_disagree">Rechazar</string>
+    <string name="tos_agree_date">Aceptado</string>
+    <string name="tos_warning">Antes de continuar debes leer y aceptar las Condiciones de Servicio.</string>
+    <string name="preference_updates_title">Actualizaciones</string>
+    <string name="preference_update_interval_default">24</string>
+    <string name="preference_update_interval_title">Intervalo de comprobación de la actualización</string>
+    <string name="preference_update_install_automatically_title">Instalar actualizaciones automáticamente</string>
+    <string name="preference_update_install_automatically_description">Descargar e instalar actualizaciones de aplicaciones en segundo plano</string>
+    <string name="preference_update_notify_available_title">Mostrar aplicaciones disponibles</string>
+    <string name="Show_applications">Mostrar aplicaciones:</string>
+    <string name="Show_all_apps">Mostrar todas las aplicaciones</string>
+    <string name="show_only_open_source_apps">Mostrar solo aplicaciones de código abierto</string>
+    <string name="show_only_pwa_apps">Mostrar solo las PWA</string>
+    <string name="account">Cuenta</string>
+    <string name="terms_services">Condiciones de Servicio</string>
+    <string name="user_anonymous">Anónimo</string>
+    <string name="logout">Cerrar la sesión</string>
+    <string name="description">Descripción</string>
+    <string name="ok">Bien</string>
+    <string name="install">Instalar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="app_icon">Icono de la aplicación</string>
+    <string name="open">Abrir</string>
+    <string name="retry">Reintentar</string>
+    <string name="more">Más</string>
+    <string name="category_icon">Icono de categoría</string>
+    <string name="preference_update_wifi_only_title">Sólo en redes sin datos móviles</string>
+    <string name="install_blocked_google">Las aplicaciones de pago aún no son compatibles con la tienda de aplicaciones. Con un poco más de paciencia, pronto será así.</string>
+    <string name="message_app_available_later">¡Esta aplicación estará disponible más adelante!</string>
+    <string name="unknown_error">¡Error desconocido!</string>
+    <string name="update_all">Actualizar todo</string>
+    <string name="auto_updates_notification">Las actualizaciones de la aplicación se instalarán automáticamente</string>
+    <string name="manual_updates_notification">Las actualizaciones de la aplicación no se instalarán automáticamente</string>
+    <string name="discover">Explorar</string>
+    <string name="top_updated_apps">Aplicaciones más actualizadas</string>
+    <string name="top_updated_games">Juegos más actualizados</string>
+    <string name="popular_games_in_last_24_hours">Juegos populares en las últimas 24 horas</string>
+    <string name="popular_apps_in_last_24_hours">Aplicaciones populares en las últimas 24 horas</string>
+    <string name="popular_apps">Aplicaciones populares</string>
+    <string name="popular_games">Juegos populares</string>
+    <string name="topselling_free_apps">Las mejores aplicaciones gratuitas</string>
+    <string name="topselling_free_games">Los mejores juegos gratuitos</string>
+    <string name="topgrossing_apps">Aplicaciones más taquilleras</string>
+    <string name="movers_shakers_apps">Aplicaciones más populares</string>
+    <string name="movers_shakers_games">Juegos más populares</string>
+    <string name="downloads">Descargas</string>
+    <string name="updates">Actualizaciones</string>
+    <string name="manually_install_updates_notification_text">Las actualizaciones de la aplicación no se instalarán automáticamente</string>
+    <string name="no_permission_found">¡No se ha encontrado ningún permiso de ejecución de Android!</string>
+    <string name="no_tracker_found">¡No se han encontrado rastreadores!</string>
+    <string name="no_internet_message">No se puede conectar. Por favor, compruebe su conexión a internet e inténtelo de nuevo</string>
+    <string name="updates_notification_unmetered_network_warning">Esperando una red sin datos móviles</string>
+    <string name="app_name">Tienda de aplicaciones</string>
+    <string name="menu_home">Inicio</string>
+    <string name="apps">Aplicaciones</string>
+    <string name="sign_in_desc">Usar una cuenta de Google o el modo anónimo para acceder de forma privada.</string>
+    <string name="preference_update_notify_available_description">Mostrar una notificación cuando las actualizaciones de la aplicación estén disponibles</string>
+    <string name="share_intent">Comprueba \"<xliff:g id="rating">%1$s</xliff:g>\"
+\n<xliff:g id="rating">%2$s</xliff:g></string>
+    <string name="preference_update_wifi_only_description">Actualizar las aplicaciones solo en redes sin datos móviles como el WI-FI</string>
+    <string name="update">Actualizar</string>
+    <string name="rating_description">Puntuación sobre 5. Calculada a partir de las valoraciones de los usuarios de la aplicación.</string>
+    <string name="privacy_description">La puntuación de privacidad se calcula automáticamente a partir de los permisos y rastreadores que se detectan en las aplicaciones. Ofrece una idea sobre el grado de probabilidad de que una aplicación se dirija a sus usuarios.&lt;br /&gt;&lt;br /&gt;El código fuente de su algoritmo de cálculo puede ser &lt;a href=<xliff:g id="source_code">%1$s</xliff:g>&gt;se encuentra aquí&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;La detección de rastreadores se realiza mediante &lt;a href=<xliff:g id="exodus">%2$s</xliff:g>&gt;Exodus Privacy tools&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;Puntuación sobre 10.&lt;br /&gt;&lt;br /&gt;Aprende más sobre cómo se calcula la Puntuación de Privacidad, sus limitaciones y cómo puedes protegerte del micro-targeting &lt;a href=<xliff:g id="e_doc">%3$s</xliff:g>&gt;on this page&lt;/a&gt;.</string>
+    <string name="install_blocked_anonymous">Las aplicaciones de pago no se pueden instalar en modo anónimo. Inicia sesión en tu cuenta de Google para instalar aplicaciones de pago.</string>
+    <plurals name="updates_notification_title">
+        <item quantity="one"><xliff:g id="version_code">%1$d</xliff:g> la actualización de la aplicación está disponible</item>
+        <item quantity="other"><xliff:g id="version_code">%1$d</xliff:g> las actualizaciones de la aplicación están disponibles</item>
+    </plurals>
+    <string name="topgrossing_games">Juegos más taquilleros</string>
+    <string name="automatically_install_updates_notification_text">Las actualizaciones de la aplicación se instalarán automáticamente</string>
+    <string name="privacy_computed_using_text">Calculado con &lt;a href=<xliff:g id="exodus">%1$s</xliff:g>&gt; Análisis de Privacidad Exodus</string>
+</resources>
