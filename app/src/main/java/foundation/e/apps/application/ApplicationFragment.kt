@@ -442,7 +442,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             return
         }
         val downloadedSize = "${
-            Formatter.formatFileSize(requireContext(), progressResult.second).substringBefore(" MB")
+        Formatter.formatFileSize(requireContext(), progressResult.second).substringBefore(" MB")
         }/${Formatter.formatFileSize(requireContext(), progressResult.first)}"
         val progressPercentage =
             ((progressResult.second / progressResult.first.toDouble()) * 100f).toInt()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="cancel">Annuler</string>
     <string name="open">Ouvrir</string>
     <string name="retry">Réessayer</string>
@@ -84,7 +84,7 @@
     <string name="update">Mettre à jour</string>
     <string name="rating_description">Score sur 5. Calculé à partir des notes utilisateurs de l\'application.</string>
     <string name="privacy_description">Le Score de Confidentialité est calculé automatiquement à partir des permissions et pisteurs qui sont détectés dans l\'application. Il donne un aperçu de la capacité d\'une application à micro-cibler ses utilisateurs.&lt;br /&gt;&lt;br /&gt;Le code source de son algorithme est disponible &lt;a href=<xliff:g id="source_code">%1$s</xliff:g>&gt;ici&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;La détection des pisteurs est effectuée en utilisant &lt;a href=<xliff:g id="exodus">%2$s</xliff:g>&gt;les outils Exodus Privacy&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;Score sur 10.&lt;br /&gt;&lt;br /&gt;En savoir plus sur comment est calculé le Score de Confidentialité, ces limites et comment il peut vous protéger du micro-ciblage &lt;a href=<xliff:g id="e_doc">%3$s</xliff:g>&gt;on this page&lt;/a&gt;.</string>
-    <plurals name="updates_notification_title">
+    <plurals name="updates_notification_title" tools:ignore="MissingQuantity">
         <item quantity="one"><xliff:g id="version_code">%1$d</xliff:g> mise à jour disponible</item>
         <item quantity="other"><xliff:g id="version_code">%1$d</xliff:g> mises à jour disponibles</item>
     </plurals>
