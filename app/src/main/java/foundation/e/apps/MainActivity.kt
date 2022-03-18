@@ -33,6 +33,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.databinding.ActivityMainBinding
 import foundation.e.apps.manager.workmanager.InstallWorkManager
+import foundation.e.apps.setup.signin.SignInViewModel
 import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         var hasInternet = true
 
         val viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
+        val signInViewModel = ViewModelProvider(this)[SignInViewModel::class.java]
 
         // navOptions and activityNavController for TOS and SignIn Fragments
         val navOptions = NavOptions.Builder()
@@ -91,9 +93,17 @@ class MainActivity : AppCompatActivity() {
                                 navController.navigate(R.id.signInFragment, null, navOptions)
                             }
                             User.GOOGLE -> {
+                                if (viewModel.authData.value == null && !viewModel.authRequestRunning) {
+                                    Log.d(TAG, "Fetching new authentication data")
+                                    signInViewModel.fetchAuthData()
+                                }
                             }
                         }
                     }
+                }
+
+                signInViewModel.authLiveData.observe(this) {
+                    viewModel.updateAuthData(it)
                 }
 
                 // Watch and refresh authentication data

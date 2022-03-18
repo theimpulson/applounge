@@ -36,7 +36,12 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
                         view.findNavController()
                             .navigate(R.id.action_signInFragment_to_homeFragment)
                     }
-                    else -> {}
+                    User.GOOGLE -> {
+                        view.findNavController()
+                            .navigate(R.id.action_signInFragment_to_homeFragment)
+                    }
+                    else -> {
+                    }
                 }
             }
         }

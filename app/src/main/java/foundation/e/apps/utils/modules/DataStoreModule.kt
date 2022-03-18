@@ -44,10 +44,14 @@ class DataStoreModule @Inject constructor(
     private val Context.dataStore by preferencesDataStore(preferenceDataStoreName)
 
     private val AUTHDATA = stringPreferencesKey("authData")
+    private val EMAIL = stringPreferencesKey("email")
+    private val OAUTHTOKEN = stringPreferencesKey("oauthtoken")
     private val USERTYPE = stringPreferencesKey("userType")
     private val TOCSTATUS = booleanPreferencesKey("tocStatus")
 
     val authData = context.dataStore.data.map { it[AUTHDATA] ?: "" }
+    val emailData = context.dataStore.data.map { it[EMAIL] ?: "" }
+    val aasToken = context.dataStore.data.map { it[OAUTHTOKEN] ?: "" }
     val userType = context.dataStore.data.map { it[USERTYPE] ?: "" }
     val tocStatus = context.dataStore.data.map { it[TOCSTATUS] ?: false }
 
@@ -88,5 +92,20 @@ class DataStoreModule @Inject constructor(
         return runBlocking {
             authData.first()
         }
+    }
+
+    suspend fun saveEmail(email: String, token: String) {
+        context.dataStore.edit {
+            it[EMAIL] = email
+            it[OAUTHTOKEN] = token
+        }
+    }
+
+    suspend fun getEmail(): String {
+        return emailData.first()
+    }
+
+    suspend fun getAASToken(): String {
+        return aasToken.first()
     }
 }
