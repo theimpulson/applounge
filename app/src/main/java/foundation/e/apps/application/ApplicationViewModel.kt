@@ -163,12 +163,12 @@ class ApplicationViewModel @Inject constructor(
 
     suspend fun calculateProgress(progress: DownloadProgress): Pair<Long, Long> {
         fusedApp.value?.let { app ->
-            val appDownload = fusedManagerRepository.getDownloadList().single { it.id.contentEquals(app._id) }
+            val appDownload = fusedManagerRepository.getDownloadList().singleOrNull { it.id.contentEquals(app._id) }
             val downloadingMap = progress.totalSizeBytes.filter { item ->
-                appDownload.downloadIdMap.keys.contains(item.key)
+                appDownload?.downloadIdMap?.keys?.contains(item.key) == true
             }
             val totalSizeBytes = downloadingMap.values.sum()
-            val downloadedSoFar = progress.bytesDownloadedSoFar.filter { item -> appDownload.downloadIdMap.keys.contains(item.key) }.values.sum()
+            val downloadedSoFar = progress.bytesDownloadedSoFar.filter { item -> appDownload?.downloadIdMap?.keys?.contains(item.key) == true }.values.sum()
 
             return Pair(totalSizeBytes, downloadedSoFar)
         }
