@@ -1,2 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="menu_categories">Kategorien</string>
+    <string name="menu_search">Suche</string>
+    <string name="menu_updates">Aktualisierungen</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="no_apps_found">Keine Apps gefunden …</string>
+    <string name="apps">Anwendungen</string>
+    <string name="games">Spiele</string>
+    <string name="category_icon">Kategorien-Symbol</string>
+    <string name="open_source">Quelloffen</string>
+    <string name="pwa">PWA</string>
+    <string name="sign_in_title">Anmelden</string>
+    <string name="sign_in_google">Google Anmeldung</string>
+    <string name="sign_in_anonymous">Anonym</string>
+    <string name="tos_agree">Annehmen</string>
+    <string name="tos_disagree">Verwerfen</string>
+    <string name="tos_agree_date">Angenommen</string>
+    <string name="tos_warning">Bevor es weitergeht, musst du die Nutzungsbedingungen lesen und ihnen zustimmen.</string>
+    <string name="preference_updates_title">Aktualisierungen</string>
+    <string name="preference_update_interval_default">24</string>
+    <string name="preference_update_install_automatically_title">Aktualisierungen automatisch installieren</string>
+    <string name="preference_update_notify_available_title">Zeige verfügbare Aktualisierungen</string>
+    <string name="preference_update_notify_available_description">Benachrichtige, wenn App-Aktualisierungen verfügbar sind</string>
+    <string name="Show_applications">Zeige Anwendungen:</string>
+    <string name="show_only_open_source_apps">Zeige nur quelloffene Apps an</string>
+    <string name="Show_all_apps">Zeige alle Apps an</string>
+    <string name="show_only_pwa_apps">Zeige nur PWAs an</string>
+    <string name="account">Konto</string>
+    <string name="terms_services">Nutzungsbedingungen</string>
+    <string name="user_anonymous">Anonym</string>
+    <string name="logout">Abmelden</string>
+    <string name="description">Beschreibung</string>
+    <string name="ok">OK</string>
+    <string name="install">Installieren</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="app_icon">App-Symbol</string>
+    <string name="open">Öffnen</string>
+    <string name="retry">Nochmals versuchen</string>
+    <string name="more">Mehr</string>
+    <string name="update">Aktualisierung</string>
+    <string name="ratings">Bewertungen</string>
+    <string name="rating">Bewertung</string>
+    <string name="rating_description">Bewertung zwischen 1 und 5 Punkten. Berechnet aus den Benutzerbewertungen dieser App.</string>
+    <string name="privacy">Datenschutz</string>
+    <string name="preference_update_wifi_only_title">Nur in unlimitierten Netzwerken</string>
+    <string name="permissions">Berechtigungen</string>
+    <string name="information">Information</string>
+    <string name="updated_on">Aktualisiert auf: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="min_android_version">Erfordert: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="package_name">Paketname: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="install_blocked_google">Kostenpflichtige Apps werden derzeit noch nicht in der App Lounge unterstützt. Bitte habe etwas Geduld, dies wird bald möglich sein.</string>
+    <string name="message_app_available_later">Diese App wird bald verfügbar sein!</string>
+    <string name="unknown_error">Unbekannter Fehler!</string>
+    <string name="update_all">Alle aktualisieren</string>
+    <string name="auto_updates_notification">App-Aktualisierungen werden automatisch installiert</string>
+    <string name="manual_updates_notification">App-Aktualisierungen werden nicht automatisch installiert</string>
+    <string name="discover">Entdecke</string>
+    <string name="top_updated_apps">Top aktualisierte Apps</string>
+    <string name="top_updated_games">Top aktualisierte Spiele</string>
+    <string name="popular_apps_in_last_24_hours">Beliebteste Apps in den letzten 24 Stunden</string>
+    <string name="popular_games_in_last_24_hours">Beliebteste Spiele in den letzten 24 Stunden</string>
+    <string name="popular_apps">Beliebteste Apps</string>
+    <string name="popular_games">Beliebteste Spiele</string>
+    <string name="topselling_free_apps">Top kostenlose Apps</string>
+    <string name="topselling_free_games">Top kostenlose Spiele</string>
+    <string name="topgrossing_apps">Am häufigsten heruntergeladene Apps</string>
+    <string name="topgrossing_games">Am häufigsten heruntergeladene Spiele</string>
+    <string name="movers_shakers_apps">Aufstrebende Apps</string>
+    <string name="movers_shakers_games">Aufstrebende Spiele</string>
+    <string name="downloads">Herunterladen</string>
+    <string name="updates">Aktualisierungen</string>
+    <string name="manually_install_updates_notification_text">App-Aktualisierungen werden nicht automatisch installiert</string>
+    <string name="updates_notification_unmetered_network_warning">Auf ein unlimitiertes Netzwerk warten</string>
+    <string name="no_permission_found">Keine runtime android Berechtigung gefunden!</string>
+    <string name="no_tracker_found">Keine Tracker/Verfolger gefunden!</string>
+    <string name="no_internet_message">Keine Verbindung möglich. Bitte überprüfe die Internetverbindung und versuche es erneut</string>
+    <string name="menu_home">Start</string>
+    <string name="search_hint">App-Suche</string>
+    <string name="sign_in_desc">Benutze ein Google-Konto, oder den anonymen Modus, um dich geheim anzumelden.</string>
+    <string name="preference_update_interval_title">Überprüfungsintervall für Aktualisierungen</string>
+    <string name="preference_update_install_automatically_description">App-Aktualisierungen und -Installationen im Hintergrund ausführen</string>
+    <string name="share_intent">Siehe auch \"<xliff:g id="rating">%1$s</xliff:g>\"
+\n<xliff:g id="rating">%2$s</xliff:g></string>
+    <string name="privacy_score">Datenschutz-Bewertung</string>
+    <string name="privacy_analyses">Datenschutz-Analysen</string>
+    <string name="trackers_title">Tracker (Verfolger)</string>
+    <string name="version">Version: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="license">Lizenz: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="install_blocked_anonymous">Kostenpflichtige Apps können nicht im anonymen Modus installiert werden. Bitte melde dich mit deinem Google-Konto an, um kostenpflichtige Apps zu installieren.</string>
+    <plurals name="updates_notification_title">
+        <item quantity="one"><xliff:g id="version_code">%1$d</xliff:g> App-Aktualisierung ist verfügbar</item>
+        <item quantity="other"><xliff:g id="version_code">%1$d</xliff:g> App-Aktualisierungen sind verfügbar</item>
+    </plurals>
+    <string name="automatically_install_updates_notification_text">App-Aktualisierungen werden automatisch installiert</string>
+    <string name="preference_update_wifi_only_description">Aktualisierungen von Apps nur in unlimitierten Netzwerken wie WLAN</string>
+    <string name="app_name">App Lounge</string>
+    <string name="privacy_computed_using_text">Berechnet aus &lt;a href=<xliff:g id="exodus">%1$s</xliff:g>&gt; Exodus Datenschutz-Analyse</string>
+    <string name="privacy_description">Die Datenschutz-Bewertung wird automatisch berechnet aus den Berechtigungen und den Trackern, die in den Anwendungen gefunden werden. Es gibt einen Überblick darüber, wie sehr die App Benutzer ausspioniert.</string>
+</resources>
