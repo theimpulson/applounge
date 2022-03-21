@@ -153,70 +153,62 @@ class ApplicationListRVAdapter(
             }
             when (searchApp.status) {
                 Status.INSTALLED -> {
-                    installButton.apply {
-                        isEnabled = true
-                        text = context.getString(R.string.open)
-                        setTextColor(Color.WHITE)
-                        backgroundTintList =
-                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
-                        setOnClickListener {
-                            context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
-                        }
-                    }
+                    handleInstalled(view, searchApp)
                 }
                 Status.UPDATABLE -> {
-                    installButton.apply {
-                        text = context.getString(R.string.update)
-                        setTextColor(Color.WHITE)
-                        backgroundTintList =
-                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
-                        setOnClickListener {
-                            installApplication(searchApp, appIcon)
-                        }
-                    }
+                    handleUpdatable(view, searchApp)
                 }
                 Status.UNAVAILABLE -> {
-                    installButton.apply {
-                        text = context.getString(R.string.install)
-                        setOnClickListener {
-                            installApplication(searchApp, appIcon)
-                        }
-                    }
+                    handleUnavailable(view, searchApp)
                 }
                 Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
-                    installButton.apply {
-                        text = context.getString(R.string.cancel)
-                        setOnClickListener {
-                            cancelDownload(searchApp)
-                        }
-                    }
+                    handleDownloading(view, searchApp)
                 }
                 Status.INSTALLING, Status.UNINSTALLING -> {
-                    installButton.isEnabled = false
+                    handleInstalling(view)
                 }
                 Status.BLOCKED -> {
-                    installButton.setOnClickListener {
-                        val errorMsg = when (user) {
-                            User.ANONYMOUS,
-                            User.UNAVAILABLE -> view.context.getString(R.string.install_blocked_anonymous)
-                            User.GOOGLE -> view.context.getString(R.string.install_blocked_google)
-                        }
-                        if (errorMsg.isNotBlank()) {
-                            Snackbar.make(view, errorMsg, Snackbar.LENGTH_SHORT).show()
-                        }
-                    }
+                    handleBlocked(view)
                 }
                 Status.INSTALLATION_ISSUE -> {
-                    installButton.apply {
-                        text = view.context.getString(R.string.retry)
-                        setOnClickListener {
-                            installApplication(searchApp, appIcon)
-                        }
-                    }
+                    handleInstallationIssue(view, searchApp)
                 }
             }
 
             showCalculatedPrivacyScoreData(searchApp, view)
+        }
+    }
+
+    private fun ApplicationListItemBinding.handleInstallationIssue(
+        view: View,
+        searchApp: FusedApp
+    ) {
+        installButton.apply {
+            isEnabled = true
+            text = view.context.getString(R.string.retry)
+            setTextColor(context.getColor(R.color.colorAccent))
+            backgroundTintList =
+                ContextCompat.getColorStateList(view.context, android.R.color.transparent)
+            strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            setOnClickListener {
+                installApplication(searchApp, appIcon)
+            }
+        }
+    }
+
+    private fun ApplicationListItemBinding.handleBlocked(view: View) {
+        installButton.apply {
+            isEnabled = true
+            setOnClickListener {
+                val errorMsg = when (user) {
+                    User.ANONYMOUS,
+                    User.UNAVAILABLE -> view.context.getString(R.string.install_blocked_anonymous)
+                    User.GOOGLE -> view.context.getString(R.string.install_blocked_google)
+                }
+                if (errorMsg.isNotBlank()) {
+                    Snackbar.make(view, errorMsg, Snackbar.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -270,8 +262,83 @@ class ApplicationListRVAdapter(
         appPrivacyScore.visibility = View.VISIBLE
     }
 
+    private fun ApplicationListItemBinding.handleInstalling(view: View) {
+        installButton.apply {
+            isEnabled = false
+            setTextColor(context.getColor(R.color.light_grey))
+            backgroundTintList =
+                ContextCompat.getColorStateList(view.context, android.R.color.transparent)
+            strokeColor = ContextCompat.getColorStateList(view.context, R.color.light_grey)
+        }
+    }
+
+    private fun ApplicationListItemBinding.handleDownloading(view: View, searchApp: FusedApp) {
+        installButton.apply {
+            isEnabled = true
+            text = context.getString(R.string.cancel)
+            setTextColor(context.getColor(R.color.colorAccent))
+            backgroundTintList =
+                ContextCompat.getColorStateList(view.context, android.R.color.transparent)
+            strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            setOnClickListener {
+                cancelDownload(searchApp)
+            }
+        }
+    }
+
+    private fun ApplicationListItemBinding.handleUnavailable(view: View, searchApp: FusedApp) {
+        installButton.apply {
+            isEnabled = true
+            text = context.getString(R.string.install)
+            setTextColor(context.getColor(R.color.colorAccent))
+            backgroundTintList =
+                ContextCompat.getColorStateList(view.context, android.R.color.transparent)
+            strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            setOnClickListener {
+                installApplication(searchApp, appIcon)
+            }
+        }
+    }
+
+    private fun ApplicationListItemBinding.handleUpdatable(
+        view: View,
+        searchApp: FusedApp
+    ) {
+        installButton.apply {
+            isEnabled = true
+            text = context.getString(R.string.update)
+            setTextColor(Color.WHITE)
+            backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            setOnClickListener {
+                installApplication(searchApp, appIcon)
+            }
+        }
+    }
+
+    private fun ApplicationListItemBinding.handleInstalled(
+        view: View,
+        searchApp: FusedApp
+    ) {
+        installButton.apply {
+            isEnabled = true
+            text = context.getString(R.string.open)
+            setTextColor(Color.WHITE)
+            backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            setOnClickListener {
+                context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
+            }
+        }
+    }
+
     fun setData(newList: List<FusedApp>) {
-        this.submitList(newList)
+        currentList.forEach {
+            newList.find { item -> item._id == it._id }?.let { foundItem ->
+                foundItem.privacyScore = it.privacyScore
+            }
+        }
+        this.submitList(newList.map { it.copy() })
     }
 
     private fun installApplication(searchApp: FusedApp, appIcon: ImageView) {
