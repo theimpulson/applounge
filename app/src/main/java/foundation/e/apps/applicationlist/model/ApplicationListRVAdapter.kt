@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -34,11 +35,13 @@ import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.Shimmer.Direction.LEFT_TO_RIGHT
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.snackbar.Snackbar
+import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.application.ApplicationViewModel
 import foundation.e.apps.applicationlist.ApplicationListFragmentDirections
 import foundation.e.apps.databinding.ApplicationListItemBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
@@ -47,6 +50,7 @@ import foundation.e.apps.updates.UpdatesFragmentDirections
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import kotlinx.coroutines.launch
 import javax.inject.Singleton
 
 @Singleton
@@ -56,7 +60,8 @@ class ApplicationListRVAdapter(
     private val currentDestinationId: Int,
     private val pkgManagerModule: PkgManagerModule,
     private val user: User,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val appProgressViewModel: AppProgressViewModel
 ) : ListAdapter<FusedApp, ApplicationListRVAdapter.ViewHolder>(ApplicationDiffUtil()) {
 
     private val TAG = ApplicationListRVAdapter::class.java.simpleName
@@ -151,6 +156,7 @@ class ApplicationListRVAdapter(
                 }
                 else -> Log.wtf(TAG, "${searchApp.package_name} is from an unknown origin")
             }
+            Log.d(TAG, "onBindViewHolder: ${searchApp.name} : ${searchApp.status}")
             when (searchApp.status) {
                 Status.INSTALLED -> {
                     handleInstalled(view, searchApp)
@@ -280,6 +286,15 @@ class ApplicationListRVAdapter(
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, android.R.color.transparent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            appProgressViewModel.downloadProgress.observe(lifecycleOwner) {
+                appProgressViewModel.viewModelScope.launch {
+                    val progress = appProgressViewModel.calculateProgress(searchApp, it)
+                    Log.d(TAG, "app Progress: $progress")
+                    if(progress.second > 0) {
+                        text = "${((progress.second / progress.first.toDouble()) * 100).toInt()}%"
+                    }
+                }
+            }
             setOnClickListener {
                 cancelDownload(searchApp)
             }

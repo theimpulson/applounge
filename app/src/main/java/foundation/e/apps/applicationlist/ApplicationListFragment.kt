@@ -29,6 +29,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
@@ -51,6 +52,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
     private val viewModel: ApplicationListViewModel by viewModels()
     private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
+    private val appProgressViewModel: AppProgressViewModel by viewModels()
 
     private var _binding: FragmentApplicationListBinding? = null
     private val binding get() = _binding!!
@@ -91,7 +93,8 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                     it,
                     pkgManagerModule,
                     User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
-                    viewLifecycleOwner
+                    viewLifecycleOwner,
+                    appProgressViewModel
                 )
             }
         recyclerView.apply {
@@ -99,6 +102,17 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             layoutManager = LinearLayoutManager(view.context)
         }
 
+        observeDownloadList()
+
+        viewModel.appListLiveData.observe(viewLifecycleOwner) {
+            listAdapter?.setData(it)
+
+            binding.shimmerLayout.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
+    }
+
+    private fun observeDownloadList() {
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
             val categoryList = viewModel.appListLiveData.value?.toMutableList()
             if (!categoryList.isNullOrEmpty()) {
@@ -109,12 +123,6 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                 }
                 viewModel.appListLiveData.value = categoryList
             }
-        }
-
-        viewModel.appListLiveData.observe(viewLifecycleOwner) {
-            listAdapter?.setData(it)
-            binding.shimmerLayout.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
         }
     }
 
