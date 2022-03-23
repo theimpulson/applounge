@@ -97,4 +97,5 @@
     <string name="sign_in_desc">Utilisez un compte Google ou le Mode Anonyme pour vous connecter en privé.</string>
     <string name="topgrossing_apps">Apps les mieux classées</string>
     <string name="topgrossing_games">Jeux les mieux classés</string>
+    <string name="all_apps_updated">Toutes les applications sont à jour</string>
 </resources>
