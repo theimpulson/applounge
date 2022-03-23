@@ -97,4 +97,5 @@
     <string name="movers_shakers_apps">Migliori App di tendenza</string>
     <string name="automatically_install_updates_notification_text">Gli aggiornamenti App verranno installati automaticamente</string>
     <string name="privacy_computed_using_text">Calcolato usando &lt;a href=<xliff:g id="exodus">%1$s</xliff:g>&gt; Exodus Privacy Analysis</string>
+    <string name="all_apps_updated">Tutte le app sono aggiornate</string>
 </resources>
