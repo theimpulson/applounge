@@ -51,10 +51,15 @@ class ApplicationListViewModel @Inject constructor(
                 source
             ).map { it.package_name }
 
-            val applicationDetails = fusedAPIRepository.getApplicationDetails(
-                packageNames, authData,
-                getOrigin(source)
-            )
+            val applicationDetails = if (!source.contentEquals("PWA")) {
+                fusedAPIRepository.getApplicationDetails(
+                    packageNames, authData,
+                    getOrigin(source)
+                )
+            } else {
+                fusedAPIRepository.getAppsListBasedOnCategory(category, browseUrl, authData, source)
+            }
+
             appListLiveData.postValue(applicationDetails)
         }
     }

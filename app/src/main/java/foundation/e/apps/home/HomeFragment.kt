@@ -27,6 +27,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
@@ -45,6 +46,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
 
     private val homeViewModel: HomeViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
+    private val appProgressViewModel: AppProgressViewModel by viewModels()
 
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
@@ -75,7 +77,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             this,
             pkgManagerModule,
             User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
-            mainActivityViewModel, viewLifecycleOwner
+            mainActivityViewModel, viewLifecycleOwner, appProgressViewModel
         )
 
         binding.parentRV.apply {

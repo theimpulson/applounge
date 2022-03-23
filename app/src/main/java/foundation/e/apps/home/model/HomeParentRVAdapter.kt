@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
@@ -38,7 +39,8 @@ class HomeParentRVAdapter(
     private val pkgManagerModule: PkgManagerModule,
     private val user: User,
     private val mainActivityViewModel: MainActivityViewModel,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val appProgressViewModel: AppProgressViewModel
 ) : ListAdapter<FusedHome, HomeParentRVAdapter.ViewHolder>(FusedHomeDiffUtil()) {
 
     private val viewPool = RecyclerView.RecycledViewPool()
@@ -54,11 +56,12 @@ class HomeParentRVAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val fusedHome = getItem(position)
-        val homeChildRVAdapter = HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, user)
+        val homeChildRVAdapter = HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, user, appProgressViewModel)
         homeChildRVAdapter.setData(fusedHome.list)
 
         holder.binding.titleTV.text = fusedHome.title
         holder.binding.childRV.apply {
+            recycledViewPool.setMaxRecycledViews(0, 0)
             adapter = homeChildRVAdapter
             layoutManager =
                 LinearLayoutManager(

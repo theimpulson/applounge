@@ -261,7 +261,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             val fusedApp = applicationViewModel.fusedApp.value ?: FusedApp()
 
             when (status) {
-                Status.INSTALLED -> handleInstalled(installButton, view, fusedApp)
+                Status.INSTALLED -> handleInstalled(installButton, view, fusedApp, downloadPB, appSize)
                 Status.UPDATABLE -> handleUpdatable(
                     installButton,
                     view,
@@ -270,7 +270,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     appSize
                 )
                 Status.UNAVAILABLE -> handleUnavaiable(installButton, fusedApp, downloadPB, appSize)
-                Status.QUEUED -> handleQueued(installButton, fusedApp)
+                Status.QUEUED, Status.AWAITING -> handleQueued(installButton, fusedApp, downloadPB, appSize)
                 Status.DOWNLOADING -> handleDownloading(
                     installButton,
                     fusedApp,
@@ -367,8 +367,12 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
     private fun handleQueued(
         installButton: MaterialButton,
-        fusedApp: FusedApp
+        fusedApp: FusedApp,
+        downloadPB: RelativeLayout,
+        appSize: MaterialTextView
     ) {
+        downloadPB.visibility = View.GONE
+        appSize.visibility = View.VISIBLE
         installButton.apply {
             text = getString(R.string.cancel)
             setOnClickListener {
@@ -420,8 +424,12 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
     private fun handleInstalled(
         installButton: MaterialButton,
         view: View,
-        fusedApp: FusedApp
+        fusedApp: FusedApp,
+        downloadPB: RelativeLayout,
+        appSize: MaterialTextView
     ) {
+        downloadPB.visibility = View.GONE
+        appSize.visibility = View.VISIBLE
         installButton.apply {
             isEnabled = true
             text = getString(R.string.open)

@@ -56,21 +56,10 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
 
     private var _binding: FragmentApplicationListBinding? = null
     private val binding get() = _binding!!
+    private var isDownloadObserverAdded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivityViewModel.internetConnection.observe(this) { isInternetConnection ->
-            mainActivityViewModel.authData.value?.let { authData ->
-                if (isInternetConnection) {
-                    viewModel.getList(
-                        args.category,
-                        args.browseUrl,
-                        authData,
-                        args.source
-                    )
-                }
-            }
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,33 +71,6 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             setNavigationOnClickListener {
                 view.findNavController().navigate(R.id.categoriesFragment)
             }
-        }
-
-        val recyclerView = binding.recyclerView
-        val listAdapter =
-            findNavController().currentDestination?.id?.let {
-                ApplicationListRVAdapter(
-                    this,
-                    privacyInfoViewModel,
-                    it,
-                    pkgManagerModule,
-                    User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
-                    viewLifecycleOwner,
-                    appProgressViewModel
-                )
-            }
-        recyclerView.apply {
-            adapter = listAdapter
-            layoutManager = LinearLayoutManager(view.context)
-        }
-
-        observeDownloadList()
-
-        viewModel.appListLiveData.observe(viewLifecycleOwner) {
-            listAdapter?.setData(it)
-
-            binding.shimmerLayout.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
         }
     }
 
@@ -134,9 +96,53 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
     override fun onResume() {
         super.onResume()
         binding.shimmerLayout.startShimmer()
+
+        val recyclerView = binding.recyclerView
+        recyclerView.recycledViewPool.setMaxRecycledViews(0, 0)
+        val listAdapter =
+            findNavController().currentDestination?.id?.let {
+                ApplicationListRVAdapter(
+                    this,
+                    privacyInfoViewModel,
+                    it,
+                    pkgManagerModule,
+                    User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
+                    viewLifecycleOwner,
+                    appProgressViewModel
+                )
+            }
+
+        recyclerView.apply {
+            adapter = listAdapter
+            layoutManager = LinearLayoutManager(view?.context)
+        }
+
+        viewModel.appListLiveData.observe(viewLifecycleOwner) {
+            listAdapter?.setData(it)
+            if (!isDownloadObserverAdded) {
+                observeDownloadList()
+                isDownloadObserverAdded = true
+            }
+            binding.shimmerLayout.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
+
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { isInternetConnection ->
+            mainActivityViewModel.authData.value?.let { authData ->
+                if (isInternetConnection) {
+                    viewModel.getList(
+                        args.category,
+                        args.browseUrl,
+                        authData,
+                        args.source
+                    )
+                }
+            }
+        }
     }
 
     override fun onPause() {
+        isDownloadObserverAdded = false
         binding.shimmerLayout.stopShimmer()
         super.onPause()
     }

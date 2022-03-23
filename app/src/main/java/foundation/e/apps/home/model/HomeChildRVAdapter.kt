@@ -23,6 +23,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +34,7 @@ import coil.load
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.snackbar.Snackbar
+import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
@@ -40,11 +45,13 @@ import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import kotlinx.coroutines.launch
 
 class HomeChildRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val pkgManagerModule: PkgManagerModule,
-    private val user: User
+    private val user: User,
+    private val appProgressViewModel: AppProgressViewModel
 ) : ListAdapter<FusedApp, HomeChildRVAdapter.ViewHolder>(HomeChildFusedAppDiffUtil()) {
 
     private val shimmer = Shimmer.ColorHighlightBuilder()
@@ -56,7 +63,49 @@ class HomeChildRVAdapter(
         .build()
 
     inner class ViewHolder(val binding: HomeChildListItemBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root), LifecycleOwner {
+        private val lifecycleRegistry = LifecycleRegistry(this)
+
+        init {
+            lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
+        }
+
+        fun onAppear() {
+            lifecycleRegistry.currentState = Lifecycle.State.RESUMED
+        }
+
+        fun onDisappear() {
+            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
+        }
+
+        override fun getLifecycle(): Lifecycle {
+            return lifecycleRegistry
+        }
+    }
+
+    override fun onViewAttachedToWindow(holder: HomeChildRVAdapter.ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.onAppear()
+    }
+
+    override fun onViewDetachedFromWindow(holder: HomeChildRVAdapter.ViewHolder) {
+        holder.onDisappear()
+        super.onViewDetachedFromWindow(holder)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        for (i in 0..recyclerView.childCount) {
+            val view = recyclerView.getChildAt(i)
+            if (view != null) {
+                val holder = recyclerView.getChildViewHolder(view)
+                holder?.let {
+                    appProgressViewModel.downloadProgress.removeObservers(holder as LifecycleOwner)
+                    (holder as HomeChildRVAdapter.ViewHolder).onDisappear()
+                }
+            }
+        }
+        super.onDetachedFromRecyclerView(recyclerView)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -94,34 +143,45 @@ class HomeChildRVAdapter(
             }
             when (homeApp.status) {
                 Status.INSTALLED -> {
+                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.apply {
                         isEnabled = true
                         text = context.getString(R.string.open)
                         setTextColor(Color.WHITE)
-                        backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
-                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        backgroundTintList =
+                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        strokeColor =
+                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             context.startActivity(pkgManagerModule.getLaunchIntent(homeApp.package_name))
                         }
                     }
                 }
                 Status.UPDATABLE -> {
+                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.apply {
                         text = context.getString(R.string.update)
                         setTextColor(Color.WHITE)
-                        backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
-                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        backgroundTintList =
+                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        strokeColor =
+                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             installApplication(homeApp, appIcon)
                         }
                     }
                 }
                 Status.UNAVAILABLE -> {
+                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.apply {
                         text = context.getString(R.string.install)
                         setTextColor(context.getColor(R.color.colorAccent))
-                        backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
-                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        backgroundTintList = ContextCompat.getColorStateList(
+                            view.context,
+                            android.R.color.transparent
+                        )
+                        strokeColor =
+                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             installApplication(homeApp, appIcon)
                         }
@@ -131,22 +191,42 @@ class HomeChildRVAdapter(
                     installButton.apply {
                         text = context.getString(R.string.cancel)
                         setTextColor(context.getColor(R.color.colorAccent))
-                        backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
-                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        backgroundTintList = ContextCompat.getColorStateList(
+                            view.context,
+                            android.R.color.transparent
+                        )
+                        strokeColor =
+                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+
+                        appProgressViewModel.downloadProgress.observe(holder) {
+                            appProgressViewModel.viewModelScope.launch {
+                                val progress = appProgressViewModel.calculateProgress(homeApp, it)
+                                if (progress.second > 0 && progress.second <= progress.first) {
+                                    text = "${((progress.second / progress.first.toDouble()) * 100).toInt()}%"
+                                }
+                            }
+                        }
+
                         setOnClickListener {
                             cancelDownload(homeApp)
                         }
                     }
                 }
                 Status.INSTALLING, Status.UNINSTALLING -> {
+                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.apply {
                         isEnabled = false
                         setTextColor(context.getColor(R.color.light_grey))
-                        backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
-                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.light_grey)
+                        backgroundTintList = ContextCompat.getColorStateList(
+                            view.context,
+                            android.R.color.transparent
+                        )
+                        strokeColor =
+                            ContextCompat.getColorStateList(view.context, R.color.light_grey)
                     }
                 }
                 Status.BLOCKED -> {
+                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.setOnClickListener {
                         val errorMsg = when (user) {
                             User.ANONYMOUS,
@@ -159,11 +239,16 @@ class HomeChildRVAdapter(
                     }
                 }
                 Status.INSTALLATION_ISSUE -> {
+                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.apply {
                         text = view.context.getString(R.string.retry)
                         setTextColor(context.getColor(R.color.colorAccent))
-                        backgroundTintList = ContextCompat.getColorStateList(view.context, android.R.color.transparent)
-                        strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+                        backgroundTintList = ContextCompat.getColorStateList(
+                            view.context,
+                            android.R.color.transparent
+                        )
+                        strokeColor =
+                            ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
                             installApplication(homeApp, appIcon)
                         }
