@@ -97,4 +97,5 @@
     <string name="topgrossing_games">Juegos más taquilleros</string>
     <string name="automatically_install_updates_notification_text">Las actualizaciones de la aplicación se instalarán automáticamente</string>
     <string name="privacy_computed_using_text">Calculado con &lt;a href=<xliff:g id="exodus">%1$s</xliff:g>&gt; Análisis de Privacidad Exodus</string>
+    <string name="all_apps_updated">Todas las aplicaciones están actualizadas</string>
 </resources>
