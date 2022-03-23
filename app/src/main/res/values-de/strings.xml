@@ -96,4 +96,5 @@
     <string name="preference_update_wifi_only_description">Aktualisierungen von Apps nur in unlimitierten Netzwerken wie WLAN</string>
     <string name="app_name">App Lounge</string>
     <string name="privacy_computed_using_text">Berechnet aus &lt;a href=<xliff:g id="exodus">%1$s</xliff:g>&gt; Exodus Datenschutz-Analyse</string>
+    <string name="all_apps_updated">Alle Apps sind aktuell</string>
 </resources>
