@@ -107,7 +107,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         binding.accountType.text = view.context.getString(R.string.user_anonymous)
                     }
                     User.GOOGLE.name -> {
-                        if (authData.userProfile != null) {
+                        if (authData != null) {
                             binding.accountType.text = authData.userProfile?.name
                             binding.email.text = authData.userProfile?.email
                             binding.avatar.load(authData.userProfile?.artwork?.url)
@@ -123,6 +123,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         binding.logout.setOnClickListener {
             viewModel.saveUserType(User.UNAVAILABLE)
+            backToMainActivity()
         }
     }
 

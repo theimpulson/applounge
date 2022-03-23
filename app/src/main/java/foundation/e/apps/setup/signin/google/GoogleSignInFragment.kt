@@ -30,26 +30,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.gplay.utils.AC2DMUtil
 import foundation.e.apps.databinding.FragmentGoogleSigninBinding
 import foundation.e.apps.setup.signin.SignInViewModel
 import foundation.e.apps.utils.enums.User
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 
 @AndroidEntryPoint
-class GoogleSignInFragment :
-    Fragment(R.layout.fragment_google_signin),
-    CoroutineScope by CoroutineScope(Dispatchers.IO) {
+class GoogleSignInFragment : Fragment(R.layout.fragment_google_signin) {
     private var _binding: FragmentGoogleSigninBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: SignInViewModel by viewModels()
-    private val mainActivityViewModel: MainActivityViewModel by viewModels()
-
-    private val cookieManager = CookieManager.getInstance()
 
     companion object {
         private const val EMBEDDED_SETUP_URL =
@@ -66,7 +58,8 @@ class GoogleSignInFragment :
             if (it.isNotBlank()) {
                 when (User.valueOf(it)) {
                     User.GOOGLE -> {
-                        view.findNavController().navigate(R.id.action_googleSignInFragment_to_homeFragment)
+                        view.findNavController()
+                            .navigate(R.id.action_googleSignInFragment_to_homeFragment)
                     }
                     else -> {}
                 }
@@ -76,6 +69,7 @@ class GoogleSignInFragment :
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
+        val cookieManager = CookieManager.getInstance()
         cookieManager.removeAllCookies(null)
         cookieManager.acceptThirdPartyCookies(binding.webview)
         cookieManager.setAcceptThirdPartyCookies(binding.webview, true)
@@ -90,7 +84,7 @@ class GoogleSignInFragment :
                 val cookieMap = AC2DMUtil.parseCookieString(cookies)
                 if (cookieMap.isNotEmpty() && cookieMap[AUTH_TOKEN] != null) {
                     val oauthToken = cookieMap[AUTH_TOKEN] ?: ""
-                    binding.webview.evaluateJavascript("(function() { return document.getElementById('profileIdentifier').innerHTML; })();") {
+                    view.evaluateJavascript("(function() { return document.getElementById('profileIdentifier').innerHTML; })();") {
                         val email = it.replace("\"".toRegex(), "")
                         viewModel.saveEmailToken(email, oauthToken)
                         viewModel.saveUserType(User.GOOGLE)
@@ -115,8 +109,10 @@ class GoogleSignInFragment :
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        binding.root.removeAllViews()
+        binding.webview.destroy()
+        super.onDestroyView()
         _binding = null
     }
 }

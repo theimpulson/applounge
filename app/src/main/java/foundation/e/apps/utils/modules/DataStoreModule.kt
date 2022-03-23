@@ -66,7 +66,10 @@ class DataStoreModule @Inject constructor(
 
     suspend fun destroyCredentials() {
         context.dataStore.edit {
-            it[AUTHDATA] = ""
+            it.remove(AUTHDATA)
+            it.remove(EMAIL)
+            it.remove(OAUTHTOKEN)
+            it.remove(USERTYPE)
         }
     }
 
