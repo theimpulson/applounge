@@ -90,7 +90,6 @@ class MainActivity : AppCompatActivity() {
                             }
                             User.UNAVAILABLE -> {
                                 viewModel.destroyCredentials()
-                                navController.navigate(R.id.signInFragment, null, navOptions)
                             }
                             User.GOOGLE -> {
                                 if (viewModel.authData.value == null && !viewModel.authRequestRunning) {
