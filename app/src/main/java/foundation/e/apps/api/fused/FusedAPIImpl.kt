@@ -631,7 +631,8 @@ class FusedAPIImpl @Inject constructor(
             other_images_path = this.screenshots.transformToList(),
             package_name = this.packageName,
             ratings = Ratings(
-                usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDouble() else -1.0
+                usageQualityScore = if (this.labeledRating.isNotEmpty()) this.labeledRating.toDoubleOrNull()
+                    ?: -1.0 else -1.0
             ),
             offer_type = this.offerType,
             origin = Origin.GPLAY,
