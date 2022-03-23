@@ -103,7 +103,13 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
             listAdapter?.setData(it)
             binding.progressBar.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
-            if (!it.isNullOrEmpty()) binding.button.isEnabled = true
+            if (!it.isNullOrEmpty()) {
+                binding.button.isEnabled = true
+                binding.noUpdates.visibility = View.GONE
+            } else {
+                binding.noUpdates.visibility = View.VISIBLE
+                binding.button.isEnabled = false
+            }
         }
     }
 
