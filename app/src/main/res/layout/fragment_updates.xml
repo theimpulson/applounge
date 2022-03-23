@@ -85,4 +85,18 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/noUpdates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/ic_all_apps_updated"
+        android:text="@string/all_apps_updated"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline" />
 </androidx.constraintlayout.widget.ConstraintLayout>

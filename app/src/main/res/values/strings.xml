@@ -110,6 +110,7 @@
     </plurals>
     <string name="auto_updates_notification">App updates will be installed automatically</string>
     <string name="manual_updates_notification">App updates will not be installed automatically</string>
+    <string name="all_apps_updated">All apps are up-to-date</string>
 
     <!-- Home Fragment -->
     <string name="discover">Discover</string>
