@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
@@ -65,6 +66,7 @@ class SearchFragment :
     private val searchViewModel: SearchViewModel by viewModels()
     private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
+    private val appProgressViewModel: AppProgressViewModel by viewModels()
 
     private val SUGGESTION_KEY = "suggestion"
 
@@ -111,7 +113,8 @@ class SearchFragment :
                 it,
                 pkgManagerModule,
                 User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
-                viewLifecycleOwner
+                viewLifecycleOwner,
+                appProgressViewModel
             )
         }
 

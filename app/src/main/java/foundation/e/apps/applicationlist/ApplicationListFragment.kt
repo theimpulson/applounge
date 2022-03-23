@@ -29,6 +29,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
@@ -51,13 +52,82 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
     private val viewModel: ApplicationListViewModel by viewModels()
     private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
+    private val appProgressViewModel: AppProgressViewModel by viewModels()
 
     private var _binding: FragmentApplicationListBinding? = null
     private val binding get() = _binding!!
+    private var isDownloadObserverAdded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivityViewModel.internetConnection.observe(this) { isInternetConnection ->
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentApplicationListBinding.bind(view)
+
+        binding.toolbarTitleTV.text = args.translation
+        binding.toolbar.apply {
+            setNavigationOnClickListener {
+                view.findNavController().navigate(R.id.categoriesFragment)
+            }
+        }
+    }
+
+    private fun observeDownloadList() {
+        mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
+            val categoryList = viewModel.appListLiveData.value?.toMutableList()
+            if (!categoryList.isNullOrEmpty()) {
+                list.forEach {
+                    categoryList.find { app ->
+                        app.origin == it.origin && (app.package_name == it.package_name || app._id == it.id)
+                    }?.status = it.status
+                }
+                viewModel.appListLiveData.value = categoryList
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.shimmerLayout.startShimmer()
+
+        val recyclerView = binding.recyclerView
+        recyclerView.recycledViewPool.setMaxRecycledViews(0, 0)
+        val listAdapter =
+            findNavController().currentDestination?.id?.let {
+                ApplicationListRVAdapter(
+                    this,
+                    privacyInfoViewModel,
+                    it,
+                    pkgManagerModule,
+                    User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
+                    viewLifecycleOwner,
+                    appProgressViewModel
+                )
+            }
+
+        recyclerView.apply {
+            adapter = listAdapter
+            layoutManager = LinearLayoutManager(view?.context)
+        }
+
+        viewModel.appListLiveData.observe(viewLifecycleOwner) {
+            listAdapter?.setData(it)
+            if (!isDownloadObserverAdded) {
+                observeDownloadList()
+                isDownloadObserverAdded = true
+            }
+            binding.shimmerLayout.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
+
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { isInternetConnection ->
             mainActivityViewModel.authData.value?.let { authData ->
                 if (isInternetConnection) {
                     viewModel.getList(
@@ -71,64 +141,8 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentApplicationListBinding.bind(view)
-
-        binding.toolbarTitleTV.text = args.translation
-        binding.toolbar.apply {
-            setNavigationOnClickListener {
-                view.findNavController().navigate(R.id.categoriesFragment)
-            }
-        }
-
-        val recyclerView = binding.recyclerView
-        val listAdapter =
-            findNavController().currentDestination?.id?.let {
-                ApplicationListRVAdapter(
-                    this,
-                    privacyInfoViewModel,
-                    it,
-                    pkgManagerModule,
-                    User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
-                    viewLifecycleOwner
-                )
-            }
-        recyclerView.apply {
-            adapter = listAdapter
-            layoutManager = LinearLayoutManager(view.context)
-        }
-
-        mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
-            val categoryList = viewModel.appListLiveData.value?.toMutableList()
-            if (!categoryList.isNullOrEmpty()) {
-                list.forEach {
-                    categoryList.find { app ->
-                        app.origin == it.origin && (app.package_name == it.package_name || app._id == it.id)
-                    }?.status = it.status
-                }
-                viewModel.appListLiveData.value = categoryList
-            }
-        }
-
-        viewModel.appListLiveData.observe(viewLifecycleOwner) {
-            listAdapter?.setData(it)
-            binding.shimmerLayout.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.shimmerLayout.startShimmer()
-    }
-
     override fun onPause() {
+        isDownloadObserverAdded = false
         binding.shimmerLayout.stopShimmer()
         super.onPause()
     }

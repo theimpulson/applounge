@@ -25,7 +25,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +37,7 @@ import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.Shimmer.Direction.LEFT_TO_RIGHT
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.snackbar.Snackbar
+import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
@@ -47,6 +51,7 @@ import foundation.e.apps.updates.UpdatesFragmentDirections
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import kotlinx.coroutines.launch
 import javax.inject.Singleton
 
 @Singleton
@@ -56,7 +61,8 @@ class ApplicationListRVAdapter(
     private val currentDestinationId: Int,
     private val pkgManagerModule: PkgManagerModule,
     private val user: User,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val appProgressViewModel: AppProgressViewModel
 ) : ListAdapter<FusedApp, ApplicationListRVAdapter.ViewHolder>(ApplicationDiffUtil()) {
 
     private val TAG = ApplicationListRVAdapter::class.java.simpleName
@@ -70,7 +76,54 @@ class ApplicationListRVAdapter(
         .build()
 
     inner class ViewHolder(val binding: ApplicationListItemBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root), LifecycleOwner {
+
+        private val lifecycleRegistry = LifecycleRegistry(this)
+
+        init {
+            lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
+        }
+
+        fun onAppear() {
+            lifecycleRegistry.currentState = Lifecycle.State.RESUMED
+        }
+
+        fun onDisappear() {
+            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
+        }
+
+        override fun getLifecycle(): Lifecycle {
+            return lifecycleRegistry
+        }
+    }
+
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        Log.d(TAG, "onViewAttachedToWindow: Appeared: ${holder.absoluteAdapterPosition}")
+        holder.onAppear()
+    }
+
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        holder.onDisappear()
+        Log.d(TAG, "onViewAttachedToWindow: Disappeared: ${holder.absoluteAdapterPosition}")
+        super.onViewDetachedFromWindow(holder)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        Log.d(TAG, "onDetachedFromRecyclerView: ")
+        for (i in 0..recyclerView.childCount) {
+            val view = recyclerView.getChildAt(i)
+            if (view != null) {
+                val holder =
+                    recyclerView.getChildViewHolder(view)
+                holder?.let {
+                    appProgressViewModel.downloadProgress.removeObservers(holder as LifecycleOwner)
+                    (holder as ViewHolder).onDisappear()
+                }
+            }
+        }
+        super.onDetachedFromRecyclerView(recyclerView)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -153,25 +206,25 @@ class ApplicationListRVAdapter(
             }
             when (searchApp.status) {
                 Status.INSTALLED -> {
-                    handleInstalled(view, searchApp)
+                    handleInstalled(view, searchApp, holder)
                 }
                 Status.UPDATABLE -> {
                     handleUpdatable(view, searchApp)
                 }
                 Status.UNAVAILABLE -> {
-                    handleUnavailable(view, searchApp)
+                    handleUnavailable(view, searchApp, holder)
                 }
                 Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
-                    handleDownloading(view, searchApp)
+                    handleDownloading(view, searchApp, holder)
                 }
                 Status.INSTALLING, Status.UNINSTALLING -> {
-                    handleInstalling(view)
+                    handleInstalling(view, holder)
                 }
                 Status.BLOCKED -> {
                     handleBlocked(view)
                 }
                 Status.INSTALLATION_ISSUE -> {
-                    handleInstallationIssue(view, searchApp)
+                    handleInstallationIssue(view, searchApp, holder)
                 }
             }
 
@@ -181,8 +234,10 @@ class ApplicationListRVAdapter(
 
     private fun ApplicationListItemBinding.handleInstallationIssue(
         view: View,
-        searchApp: FusedApp
+        searchApp: FusedApp,
+        holder: ViewHolder
     ) {
+        appProgressViewModel.downloadProgress.removeObservers(holder)
         installButton.apply {
             isEnabled = true
             text = view.context.getString(R.string.retry)
@@ -262,7 +317,8 @@ class ApplicationListRVAdapter(
         appPrivacyScore.visibility = View.VISIBLE
     }
 
-    private fun ApplicationListItemBinding.handleInstalling(view: View) {
+    private fun ApplicationListItemBinding.handleInstalling(view: View, holder: ViewHolder) {
+        appProgressViewModel.downloadProgress.removeObservers(holder)
         installButton.apply {
             isEnabled = false
             setTextColor(context.getColor(R.color.light_grey))
@@ -272,7 +328,11 @@ class ApplicationListRVAdapter(
         }
     }
 
-    private fun ApplicationListItemBinding.handleDownloading(view: View, searchApp: FusedApp) {
+    private fun ApplicationListItemBinding.handleDownloading(
+        view: View,
+        searchApp: FusedApp,
+        holder: ViewHolder
+    ) {
         installButton.apply {
             isEnabled = true
             text = context.getString(R.string.cancel)
@@ -280,13 +340,25 @@ class ApplicationListRVAdapter(
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, android.R.color.transparent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            appProgressViewModel.downloadProgress.observe(holder) {
+                appProgressViewModel.viewModelScope.launch {
+                    val progress = appProgressViewModel.calculateProgress(searchApp, it)
+                    if (progress.second > 0 && progress.second <= progress.first) {
+                        text = "${((progress.second / progress.first.toDouble()) * 100).toInt()}%"
+                    }
+                }
+            }
             setOnClickListener {
                 cancelDownload(searchApp)
             }
         }
     }
 
-    private fun ApplicationListItemBinding.handleUnavailable(view: View, searchApp: FusedApp) {
+    private fun ApplicationListItemBinding.handleUnavailable(
+        view: View,
+        searchApp: FusedApp,
+        holder: ViewHolder
+    ) {
         installButton.apply {
             isEnabled = true
             text = context.getString(R.string.install)
@@ -294,6 +366,7 @@ class ApplicationListRVAdapter(
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, android.R.color.transparent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            appProgressViewModel.downloadProgress.removeObservers(holder)
             setOnClickListener {
                 installApplication(searchApp, appIcon)
             }
@@ -318,7 +391,8 @@ class ApplicationListRVAdapter(
 
     private fun ApplicationListItemBinding.handleInstalled(
         view: View,
-        searchApp: FusedApp
+        searchApp: FusedApp,
+        holder: ViewHolder
     ) {
         installButton.apply {
             isEnabled = true
@@ -326,6 +400,7 @@ class ApplicationListRVAdapter(
             setTextColor(Color.WHITE)
             backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
+            appProgressViewModel.downloadProgress.removeObservers(holder)
             setOnClickListener {
                 context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
             }

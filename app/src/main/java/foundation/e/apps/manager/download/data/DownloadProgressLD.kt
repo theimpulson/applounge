@@ -11,8 +11,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
+@Singleton
 class DownloadProgressLD @Inject constructor(
     private val downloadManager: DownloadManager,
     private val downloadManagerQuery: DownloadManager.Query,
@@ -77,7 +79,7 @@ class DownloadProgressLD @Inject constructor(
                             cursor.moveToNext()
                         }
                     }
-                delay(1000)
+                delay(20)
             }
         }
     }

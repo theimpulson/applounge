@@ -27,6 +27,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
@@ -50,6 +51,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
     private val updatesViewModel: UpdatesViewModel by viewModels()
     private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
+    private val appProgressViewModel: AppProgressViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -78,7 +80,8 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
                 it,
                 pkgManagerModule,
                 User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
-                viewLifecycleOwner
+                viewLifecycleOwner,
+                appProgressViewModel
             )
         }
 
