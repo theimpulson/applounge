@@ -23,6 +23,7 @@ import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -48,6 +49,7 @@ class DownloadManagerUtils @Inject constructor(
     fun updateDownloadStatus(downloadId: Long) {
         GlobalScope.launch {
             mutex.withLock {
+                delay(1500) // Waiting for downloadmanager to publish the progress of last bytes
                 val fusedDownload = fusedManagerRepository.getFusedDownload(downloadId)
                 fusedDownload.downloadIdMap[downloadId] = true
                 fusedManagerRepository.updateFusedDownload(fusedDownload)
