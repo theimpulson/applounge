@@ -14,7 +14,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
-@Singleton
 class DownloadProgressLD @Inject constructor(
     private val downloadManager: DownloadManager,
     private val downloadManagerQuery: DownloadManager.Query,
