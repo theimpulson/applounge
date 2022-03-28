@@ -19,13 +19,16 @@
 package foundation.e.apps.updates
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.MainActivityViewModel
@@ -35,8 +38,12 @@ import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentUpdatesBinding
+import foundation.e.apps.home.model.HomeChildRVAdapter
+import foundation.e.apps.manager.download.data.DownloadProgress
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -81,13 +88,17 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
                 pkgManagerModule,
                 User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
                 viewLifecycleOwner,
-                appProgressViewModel
             )
         }
 
         recyclerView.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)
+        }
+
+        appProgressViewModel.downloadProgress.observe(viewLifecycleOwner) {
+            updateProgressOfDownloadingItems(recyclerView, it)
+
         }
 
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
@@ -112,6 +123,30 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
             } else {
                 binding.noUpdates.visibility = View.VISIBLE
                 binding.button.isEnabled = false
+            }
+        }
+    }
+
+    private fun updateProgressOfDownloadingItems(
+        recyclerView: RecyclerView,
+        downloadProgress: DownloadProgress
+    ) {
+        val adapter = recyclerView.adapter as ApplicationListRVAdapter
+        lifecycleScope.launch {
+            adapter.currentList.forEach { fusedApp ->
+                if (fusedApp.status == Status.DOWNLOADING) {
+                    val progress =
+                        appProgressViewModel.calculateProgress(fusedApp, downloadProgress)
+                    val downloadProgress =
+                        ((progress.second / progress.first.toDouble()) * 100).toInt()
+                    val viewHolder = recyclerView.findViewHolderForAdapterPosition(
+                        adapter.currentList.indexOf(fusedApp)
+                    )
+                    viewHolder?.let {
+                        (viewHolder as ApplicationListRVAdapter.ViewHolder).binding.installButton.text =
+                            "$downloadProgress%"
+                    }
+                }
             }
         }
     }

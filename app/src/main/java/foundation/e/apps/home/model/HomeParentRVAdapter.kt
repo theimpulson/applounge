@@ -18,7 +18,6 @@
 
 package foundation.e.apps.home.model
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
@@ -43,8 +42,7 @@ class HomeParentRVAdapter(
     private val pkgManagerModule: PkgManagerModule,
     private val user: User,
     private val mainActivityViewModel: MainActivityViewModel,
-    private val lifecycleOwner: LifecycleOwner,
-    private val appProgressViewModel: AppProgressViewModel
+    private val lifecycleOwner: LifecycleOwner
 ) : ListAdapter<FusedHome, HomeParentRVAdapter.ViewHolder>(FusedHomeDiffUtil()) {
 
     private val viewPool = RecyclerView.RecycledViewPool()
@@ -61,7 +59,7 @@ class HomeParentRVAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val fusedHome = getItem(position)
         val homeChildRVAdapter =
-            HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, user, appProgressViewModel)
+            HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, user)
         homeChildRVAdapter.setData(fusedHome.list)
 
         holder.binding.titleTV.text = fusedHome.title
@@ -75,26 +73,6 @@ class HomeParentRVAdapter(
                     false
                 )
             setRecycledViewPool(viewPool)
-        }
-
-        appProgressViewModel.downloadProgress.observe(lifecycleOwner) {
-            val childRV = holder.binding.childRV
-            val adapter = childRV.adapter as HomeChildRVAdapter
-            appProgressViewModel.viewModelScope.launch {
-                adapter.currentList.forEach { fusedApp ->
-                    if(fusedApp.status == Status.DOWNLOADING) {
-                        val progress = appProgressViewModel.calculateProgress(fusedApp, it)
-                        val downloadProgress =
-                            ((progress.second / progress.first.toDouble()) * 100).toInt()
-                        Log.d("HomeParentAdapter", "download progress of ===> ${fusedApp.name} : $downloadProgress")
-                        val viewHolder = childRV.findViewHolderForAdapterPosition(adapter.currentList.indexOf(fusedApp))
-                        viewHolder?.let {
-                            (viewHolder as HomeChildRVAdapter.ViewHolder).binding.installButton.text = "$downloadProgress%"
-                        }
-                    }
-                }
-
-            }
         }
         observeAppInstall(fusedHome, homeChildRVAdapter)
     }

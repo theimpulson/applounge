@@ -51,8 +51,7 @@ import kotlinx.coroutines.launch
 class HomeChildRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val pkgManagerModule: PkgManagerModule,
-    private val user: User,
-    private val appProgressViewModel: AppProgressViewModel
+    private val user: User
 ) : ListAdapter<FusedApp, HomeChildRVAdapter.ViewHolder>(HomeChildFusedAppDiffUtil()) {
 
     private val shimmer = Shimmer.ColorHighlightBuilder()
@@ -64,30 +63,7 @@ class HomeChildRVAdapter(
         .build()
 
     inner class ViewHolder(val binding: HomeChildListItemBinding) :
-        RecyclerView.ViewHolder(binding.root), LifecycleOwner {
-        private val lifecycleRegistry = LifecycleRegistry(this)
-
-        init {
-            lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
-        }
-
-        fun onCreated() {
-            lifecycleRegistry.currentState = Lifecycle.State.CREATED
-        }
-
-        fun onAppear() {
-            lifecycleRegistry.currentState = Lifecycle.State.STARTED
-            lifecycleRegistry.currentState = Lifecycle.State.RESUMED
-        }
-
-        fun onDisappear() {
-            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        }
-
-        override fun getLifecycle(): Lifecycle {
-            return lifecycleRegistry
-        }
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewHolder = ViewHolder(

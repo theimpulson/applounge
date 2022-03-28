@@ -62,7 +62,6 @@ class ApplicationListRVAdapter(
     private val pkgManagerModule: PkgManagerModule,
     private val user: User,
     private val lifecycleOwner: LifecycleOwner,
-    private val appProgressViewModel: AppProgressViewModel
 ) : ListAdapter<FusedApp, ApplicationListRVAdapter.ViewHolder>(ApplicationDiffUtil()) {
 
     private val TAG = ApplicationListRVAdapter::class.java.simpleName
@@ -76,54 +75,7 @@ class ApplicationListRVAdapter(
         .build()
 
     inner class ViewHolder(val binding: ApplicationListItemBinding) :
-        RecyclerView.ViewHolder(binding.root), LifecycleOwner {
-
-        private val lifecycleRegistry = LifecycleRegistry(this)
-
-        init {
-            lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
-        }
-
-        fun onAppear() {
-            lifecycleRegistry.currentState = Lifecycle.State.RESUMED
-        }
-
-        fun onDisappear() {
-            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        }
-
-        override fun getLifecycle(): Lifecycle {
-            return lifecycleRegistry
-        }
-    }
-
-    override fun onViewAttachedToWindow(holder: ViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        Log.d(TAG, "onViewAttachedToWindow: Appeared: ${holder.absoluteAdapterPosition}")
-        holder.onAppear()
-    }
-
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        holder.onDisappear()
-        Log.d(TAG, "onViewAttachedToWindow: Disappeared: ${holder.absoluteAdapterPosition}")
-        super.onViewDetachedFromWindow(holder)
-    }
-
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        Log.d(TAG, "onDetachedFromRecyclerView: ")
-        for (i in 0..recyclerView.childCount) {
-            val view = recyclerView.getChildAt(i)
-            if (view != null) {
-                val holder =
-                    recyclerView.getChildViewHolder(view)
-                holder?.let {
-                    appProgressViewModel.downloadProgress.removeObservers(holder as LifecycleOwner)
-                    (holder as ViewHolder).onDisappear()
-                }
-            }
-        }
-        super.onDetachedFromRecyclerView(recyclerView)
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -206,16 +158,16 @@ class ApplicationListRVAdapter(
             }
             when (searchApp.status) {
                 Status.INSTALLED -> {
-                    handleInstalled(view, searchApp, holder)
+                    handleInstalled(view, searchApp)
                 }
                 Status.UPDATABLE -> {
                     handleUpdatable(view, searchApp)
                 }
                 Status.UNAVAILABLE -> {
-                    handleUnavailable(view, searchApp, holder)
+                    handleUnavailable(view, searchApp)
                 }
                 Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
-                    handleDownloading(view, searchApp, holder)
+                    handleDownloading(view, searchApp)
                 }
                 Status.INSTALLING, Status.UNINSTALLING -> {
                     handleInstalling(view, holder)
@@ -224,7 +176,7 @@ class ApplicationListRVAdapter(
                     handleBlocked(view)
                 }
                 Status.INSTALLATION_ISSUE -> {
-                    handleInstallationIssue(view, searchApp, holder)
+                    handleInstallationIssue(view, searchApp)
                 }
             }
 
@@ -235,9 +187,7 @@ class ApplicationListRVAdapter(
     private fun ApplicationListItemBinding.handleInstallationIssue(
         view: View,
         searchApp: FusedApp,
-        holder: ViewHolder
     ) {
-        appProgressViewModel.downloadProgress.removeObservers(holder)
         installButton.apply {
             isEnabled = true
             text = view.context.getString(R.string.retry)
@@ -318,7 +268,6 @@ class ApplicationListRVAdapter(
     }
 
     private fun ApplicationListItemBinding.handleInstalling(view: View, holder: ViewHolder) {
-        appProgressViewModel.downloadProgress.removeObservers(holder)
         installButton.apply {
             isEnabled = false
             setTextColor(context.getColor(R.color.light_grey))
@@ -331,7 +280,6 @@ class ApplicationListRVAdapter(
     private fun ApplicationListItemBinding.handleDownloading(
         view: View,
         searchApp: FusedApp,
-        holder: ViewHolder
     ) {
         installButton.apply {
             isEnabled = true
@@ -340,14 +288,6 @@ class ApplicationListRVAdapter(
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, android.R.color.transparent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
-            appProgressViewModel.downloadProgress.observe(holder) {
-                appProgressViewModel.viewModelScope.launch {
-                    val progress = appProgressViewModel.calculateProgress(searchApp, it)
-                    if (progress.second > 0 && progress.second <= progress.first) {
-                        text = "${((progress.second / progress.first.toDouble()) * 100).toInt()}%"
-                    }
-                }
-            }
             setOnClickListener {
                 cancelDownload(searchApp)
             }
@@ -357,7 +297,6 @@ class ApplicationListRVAdapter(
     private fun ApplicationListItemBinding.handleUnavailable(
         view: View,
         searchApp: FusedApp,
-        holder: ViewHolder
     ) {
         installButton.apply {
             isEnabled = true
@@ -366,7 +305,6 @@ class ApplicationListRVAdapter(
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, android.R.color.transparent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
-            appProgressViewModel.downloadProgress.removeObservers(holder)
             setOnClickListener {
                 installApplication(searchApp, appIcon)
             }
@@ -392,7 +330,6 @@ class ApplicationListRVAdapter(
     private fun ApplicationListItemBinding.handleInstalled(
         view: View,
         searchApp: FusedApp,
-        holder: ViewHolder
     ) {
         installButton.apply {
             isEnabled = true
@@ -400,7 +337,6 @@ class ApplicationListRVAdapter(
             setTextColor(Color.WHITE)
             backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
-            appProgressViewModel.downloadProgress.removeObservers(holder)
             setOnClickListener {
                 context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
             }
