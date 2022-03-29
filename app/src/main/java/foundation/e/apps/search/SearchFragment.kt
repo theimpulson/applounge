@@ -48,7 +48,6 @@ import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentSearchBinding
-import foundation.e.apps.home.model.HomeChildRVAdapter
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
@@ -131,7 +130,7 @@ class SearchFragment :
             val adapter = recyclerView?.adapter as ApplicationListRVAdapter
             lifecycleScope.launch {
                 adapter.currentList.forEach { fusedApp ->
-                    if(fusedApp.status == Status.DOWNLOADING) {
+                    if (fusedApp.status == Status.DOWNLOADING) {
                         val progress = appProgressViewModel.calculateProgress(fusedApp, it)
                         val downloadProgress =
                             ((progress.second / progress.first.toDouble()) * 100).toInt()

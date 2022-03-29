@@ -19,7 +19,6 @@
 package foundation.e.apps.updates
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
@@ -38,7 +37,6 @@ import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentUpdatesBinding
-import foundation.e.apps.home.model.HomeChildRVAdapter
 import foundation.e.apps.manager.download.data.DownloadProgress
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
@@ -98,7 +96,6 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
 
         appProgressViewModel.downloadProgress.observe(viewLifecycleOwner) {
             updateProgressOfDownloadingItems(recyclerView, it)
-
         }
 
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
