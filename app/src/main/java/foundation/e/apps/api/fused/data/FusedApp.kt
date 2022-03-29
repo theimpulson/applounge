@@ -44,6 +44,7 @@ data class FusedApp(
     val shareUrl: String = String(),
     val appSize: String = String(),
     var source: String = String(),
+    val price: String = String(),
     val isFree: Boolean = true,
     val is_pwa: Boolean = false,
     val url: String = String(),

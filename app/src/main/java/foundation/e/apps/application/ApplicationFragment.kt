@@ -261,7 +261,13 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             val fusedApp = applicationViewModel.fusedApp.value ?: FusedApp()
 
             when (status) {
-                Status.INSTALLED -> handleInstalled(installButton, view, fusedApp, downloadPB, appSize)
+                Status.INSTALLED -> handleInstalled(
+                    installButton,
+                    view,
+                    fusedApp,
+                    downloadPB,
+                    appSize
+                )
                 Status.UPDATABLE -> handleUpdatable(
                     installButton,
                     view,
@@ -270,7 +276,12 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     appSize
                 )
                 Status.UNAVAILABLE -> handleUnavaiable(installButton, fusedApp, downloadPB, appSize)
-                Status.QUEUED, Status.AWAITING -> handleQueued(installButton, fusedApp, downloadPB, appSize)
+                Status.QUEUED, Status.AWAITING -> handleQueued(
+                    installButton,
+                    fusedApp,
+                    downloadPB,
+                    appSize
+                )
                 Status.DOWNLOADING -> handleDownloading(
                     installButton,
                     fusedApp,
@@ -388,10 +399,21 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         appSize: MaterialTextView
     ) {
         installButton.apply {
-            text = getString(R.string.install)
+            text = if (fusedApp.isFree) getString(R.string.install) else fusedApp.price
             setOnClickListener {
                 applicationIcon?.let {
-                    mainActivityViewModel.getApplication(fusedApp, it)
+                    if (fusedApp.isFree) {
+                        mainActivityViewModel.getApplication(fusedApp, it)
+                    } else {
+                        ApplicationDialogFragment(
+                            title = getString(R.string.dialog_title_paid_app, fusedApp.name),
+                            message = getString(R.string.dialog_paidapp_message, fusedApp.name, fusedApp.price),
+                            positiveButtonText = getString(R.string.dialog_confirm),
+                            positiveButtonAction = {
+                            },
+                            cancelButtonText = getString(R.string.dialog_cancel),
+                        ).show(childFragmentManager, "ApplicationFragment")
+                    }
                 }
             }
         }

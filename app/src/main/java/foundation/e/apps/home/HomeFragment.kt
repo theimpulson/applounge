@@ -34,6 +34,7 @@ import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.application.subFrags.ApplicationDialogFragment
 import foundation.e.apps.databinding.FragmentHomeBinding
 import foundation.e.apps.home.model.HomeChildRVAdapter
 import foundation.e.apps.home.model.HomeParentRVAdapter
@@ -84,7 +85,16 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             pkgManagerModule,
             User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
             mainActivityViewModel, viewLifecycleOwner
-        )
+        ) { fusedApp ->
+            ApplicationDialogFragment(
+                title = getString(R.string.dialog_title_paid_app, fusedApp.name),
+                message = getString(R.string.dialog_paidapp_message, fusedApp.name, fusedApp.price),
+                positiveButtonText = getString(R.string.dialog_confirm),
+                positiveButtonAction = {
+                },
+                cancelButtonText = getString(R.string.dialog_cancel),
+            ).show(childFragmentManager, "HomeFragment")
+        }
 
         binding.parentRV.apply {
             adapter = homeParentRVAdapter

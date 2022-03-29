@@ -38,7 +38,8 @@ class HomeParentRVAdapter(
     private val pkgManagerModule: PkgManagerModule,
     private val user: User,
     private val mainActivityViewModel: MainActivityViewModel,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val paidAppHandler: ((FusedApp) -> Unit)? = null
 ) : ListAdapter<FusedHome, HomeParentRVAdapter.ViewHolder>(FusedHomeDiffUtil()) {
 
     private val viewPool = RecyclerView.RecycledViewPool()
@@ -55,7 +56,7 @@ class HomeParentRVAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val fusedHome = getItem(position)
         val homeChildRVAdapter =
-            HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, user)
+            HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, user, paidAppHandler)
         homeChildRVAdapter.setData(fusedHome.list)
 
         holder.binding.titleTV.text = fusedHome.title

@@ -57,6 +57,7 @@ class ApplicationListRVAdapter(
     private val pkgManagerModule: PkgManagerModule,
     private val user: User,
     private val lifecycleOwner: LifecycleOwner,
+    private val paidAppHandler: ((FusedApp) -> Unit)? = null
 ) : ListAdapter<FusedApp, ApplicationListRVAdapter.ViewHolder>(ApplicationDiffUtil()) {
 
     private val TAG = ApplicationListRVAdapter::class.java.simpleName
@@ -295,13 +296,17 @@ class ApplicationListRVAdapter(
     ) {
         installButton.apply {
             isEnabled = true
-            text = context.getString(R.string.install)
+            text = if (searchApp.isFree) context.getString(R.string.install) else searchApp.price
             setTextColor(context.getColor(R.color.colorAccent))
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, android.R.color.transparent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             setOnClickListener {
-                installApplication(searchApp, appIcon)
+                if (searchApp.isFree) {
+                    installApplication(searchApp, appIcon)
+                } else {
+                    paidAppHandler?.invoke(searchApp)
+                }
             }
         }
     }
