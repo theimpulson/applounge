@@ -24,8 +24,10 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.MainActivityViewModel
@@ -33,9 +35,13 @@ import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.databinding.FragmentHomeBinding
+import foundation.e.apps.home.model.HomeChildRVAdapter
 import foundation.e.apps.home.model.HomeParentRVAdapter
+import foundation.e.apps.manager.download.data.DownloadProgress
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -77,7 +83,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             this,
             pkgManagerModule,
             User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
-            mainActivityViewModel, viewLifecycleOwner, appProgressViewModel
+            mainActivityViewModel, viewLifecycleOwner
         )
 
         binding.parentRV.apply {
@@ -89,6 +95,51 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             homeParentRVAdapter.setData(it)
             binding.shimmerLayout.visibility = View.GONE
             binding.parentRV.visibility = View.VISIBLE
+        }
+
+        appProgressViewModel.downloadProgress.observe(viewLifecycleOwner) {
+            updateProgressOfDownloadingAppItemViews(homeParentRVAdapter, it)
+        }
+    }
+
+    private fun updateProgressOfDownloadingAppItemViews(
+        homeParentRVAdapter: HomeParentRVAdapter,
+        downloadProgress: DownloadProgress
+    ) {
+        homeParentRVAdapter.currentList.forEach { fusedHome ->
+            val viewHolder = binding.parentRV.findViewHolderForAdapterPosition(
+                homeParentRVAdapter.currentList.indexOf(fusedHome)
+            )
+            viewHolder?.let { parentViewHolder ->
+                val childRV =
+                    (parentViewHolder as HomeParentRVAdapter.ViewHolder).binding.childRV
+                val adapter = childRV.adapter as HomeChildRVAdapter
+                findDownloadingItemsToShowProgress(adapter, downloadProgress, childRV)
+            }
+        }
+    }
+
+    private fun findDownloadingItemsToShowProgress(
+        adapter: HomeChildRVAdapter,
+        downloadProgress: DownloadProgress,
+        childRV: RecyclerView
+    ) {
+        lifecycleScope.launch {
+            adapter.currentList.forEach { fusedApp ->
+                if (fusedApp.status == Status.DOWNLOADING) {
+                    val progress =
+                        appProgressViewModel.calculateProgress(fusedApp, downloadProgress)
+                    val downloadProgress =
+                        ((progress.second / progress.first.toDouble()) * 100).toInt()
+                    val childViewHolder = childRV.findViewHolderForAdapterPosition(
+                        adapter.currentList.indexOf(fusedApp)
+                    )
+                    childViewHolder?.let {
+                        (childViewHolder as HomeChildRVAdapter.ViewHolder).binding.installButton.text =
+                            "$downloadProgress%"
+                    }
+                }
+            }
         }
     }
 

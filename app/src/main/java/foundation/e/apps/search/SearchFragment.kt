@@ -22,6 +22,7 @@ import android.app.Activity
 import android.database.MatrixCursor
 import android.os.Bundle
 import android.provider.BaseColumns
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -32,6 +33,7 @@ import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,8 +48,11 @@ import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentSearchBinding
+import foundation.e.apps.home.model.HomeChildRVAdapter
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -113,14 +118,31 @@ class SearchFragment :
                 it,
                 pkgManagerModule,
                 User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
-                viewLifecycleOwner,
-                appProgressViewModel
+                viewLifecycleOwner
             )
         }
 
         recyclerView?.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(view.context)
+        }
+
+        appProgressViewModel.downloadProgress.observe(viewLifecycleOwner) {
+            val adapter = recyclerView?.adapter as ApplicationListRVAdapter
+            lifecycleScope.launch {
+                adapter.currentList.forEach { fusedApp ->
+                    if(fusedApp.status == Status.DOWNLOADING) {
+                        val progress = appProgressViewModel.calculateProgress(fusedApp, it)
+                        val downloadProgress =
+                            ((progress.second / progress.first.toDouble()) * 100).toInt()
+                        Log.d("HomeParentAdapter", "download progress of ===> ${fusedApp.name} : $downloadProgress")
+                        val viewHolder = recyclerView?.findViewHolderForAdapterPosition(adapter.currentList.indexOf(fusedApp))
+                        viewHolder?.let {
+                            (viewHolder as ApplicationListRVAdapter.ViewHolder).binding.installButton.text = "$downloadProgress%"
+                        }
+                    }
+                }
+            }
         }
 
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->

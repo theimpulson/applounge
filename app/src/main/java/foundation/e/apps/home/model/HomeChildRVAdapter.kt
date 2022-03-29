@@ -19,6 +19,7 @@
 package foundation.e.apps.home.model
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -50,8 +51,7 @@ import kotlinx.coroutines.launch
 class HomeChildRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val pkgManagerModule: PkgManagerModule,
-    private val user: User,
-    private val appProgressViewModel: AppProgressViewModel
+    private val user: User
 ) : ListAdapter<FusedApp, HomeChildRVAdapter.ViewHolder>(HomeChildFusedAppDiffUtil()) {
 
     private val shimmer = Shimmer.ColorHighlightBuilder()
@@ -63,58 +63,17 @@ class HomeChildRVAdapter(
         .build()
 
     inner class ViewHolder(val binding: HomeChildListItemBinding) :
-        RecyclerView.ViewHolder(binding.root), LifecycleOwner {
-        private val lifecycleRegistry = LifecycleRegistry(this)
-
-        init {
-            lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
-        }
-
-        fun onAppear() {
-            lifecycleRegistry.currentState = Lifecycle.State.RESUMED
-        }
-
-        fun onDisappear() {
-            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        }
-
-        override fun getLifecycle(): Lifecycle {
-            return lifecycleRegistry
-        }
-    }
-
-    override fun onViewAttachedToWindow(holder: HomeChildRVAdapter.ViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        holder.onAppear()
-    }
-
-    override fun onViewDetachedFromWindow(holder: HomeChildRVAdapter.ViewHolder) {
-        holder.onDisappear()
-        super.onViewDetachedFromWindow(holder)
-    }
-
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        for (i in 0..recyclerView.childCount) {
-            val view = recyclerView.getChildAt(i)
-            if (view != null) {
-                val holder = recyclerView.getChildViewHolder(view)
-                holder?.let {
-                    appProgressViewModel.downloadProgress.removeObservers(holder as LifecycleOwner)
-                    (holder as HomeChildRVAdapter.ViewHolder).onDisappear()
-                }
-            }
-        }
-        super.onDetachedFromRecyclerView(recyclerView)
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
+        val viewHolder = ViewHolder(
             HomeChildListItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
         )
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -141,9 +100,9 @@ class HomeChildRVAdapter(
                 )
                 holder.itemView.findNavController().navigate(action)
             }
+
             when (homeApp.status) {
                 Status.INSTALLED -> {
-                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.apply {
                         isEnabled = true
                         text = context.getString(R.string.open)
@@ -158,7 +117,6 @@ class HomeChildRVAdapter(
                     }
                 }
                 Status.UPDATABLE -> {
-                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.apply {
                         text = context.getString(R.string.update)
                         setTextColor(Color.WHITE)
@@ -172,7 +130,6 @@ class HomeChildRVAdapter(
                     }
                 }
                 Status.UNAVAILABLE -> {
-                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.apply {
                         text = context.getString(R.string.install)
                         setTextColor(context.getColor(R.color.colorAccent))
@@ -198,22 +155,12 @@ class HomeChildRVAdapter(
                         strokeColor =
                             ContextCompat.getColorStateList(view.context, R.color.colorAccent)
 
-                        appProgressViewModel.downloadProgress.observe(holder) {
-                            appProgressViewModel.viewModelScope.launch {
-                                val progress = appProgressViewModel.calculateProgress(homeApp, it)
-                                if (progress.second > 0 && progress.second <= progress.first) {
-                                    text = "${((progress.second / progress.first.toDouble()) * 100).toInt()}%"
-                                }
-                            }
-                        }
-
                         setOnClickListener {
                             cancelDownload(homeApp)
                         }
                     }
                 }
                 Status.INSTALLING, Status.UNINSTALLING -> {
-                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.apply {
                         isEnabled = false
                         setTextColor(context.getColor(R.color.light_grey))
@@ -226,7 +173,6 @@ class HomeChildRVAdapter(
                     }
                 }
                 Status.BLOCKED -> {
-                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.setOnClickListener {
                         val errorMsg = when (user) {
                             User.ANONYMOUS,
@@ -239,7 +185,6 @@ class HomeChildRVAdapter(
                     }
                 }
                 Status.INSTALLATION_ISSUE -> {
-                    appProgressViewModel.downloadProgress.removeObservers(holder)
                     installButton.apply {
                         text = view.context.getString(R.string.retry)
                         setTextColor(context.getColor(R.color.colorAccent))
