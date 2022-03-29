@@ -38,6 +38,7 @@ import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.application.subFrags.ApplicationDialogFragment
 import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentApplicationListBinding
 import foundation.e.apps.manager.download.data.DownloadProgress
@@ -114,7 +115,16 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                     pkgManagerModule,
                     User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
                     viewLifecycleOwner
-                )
+                ) { fusedApp ->
+                    ApplicationDialogFragment(
+                        title = getString(R.string.dialog_title_paid_app, fusedApp.name),
+                        message = getString(R.string.dialog_paidapp_message, fusedApp.name, fusedApp.price),
+                        positiveButtonText = getString(R.string.dialog_confirm),
+                        positiveButtonAction = {
+                        },
+                        cancelButtonText = getString(R.string.dialog_cancel),
+                    ).show(childFragmentManager, "HomeFragment")
+                }
             }
 
         recyclerView.apply {
