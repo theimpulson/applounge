@@ -76,11 +76,11 @@
             android:id="@+id/signinMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:paddingHorizontal="70dp"
             android:text="@string/sign_in_desc"
             android:textAlignment="center"
             android:textSize="15sp"
-            android:layout_marginTop="5dp"
             app:layout_constraintBottom_toTopOf="@+id/googleBT"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,28 +88,48 @@
 
         <Button
             android:id="@+id/googleBT"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
             android:text="@string/sign_in_google"
+            android:textColor="@color/colorAccent"
             app:cornerRadius="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/or"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/googleBT" />
 
         <Button
             android:id="@+id/anonymousBT"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="5dp"
             android:text="@string/sign_in_anonymous"
             android:textColor="@color/colorAccent"
-            app:layout_constraintTop_toBottomOf="@+id/googleBT"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/ic_incognito"
+            app:iconGravity="textStart"
+            app:iconPadding="15dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.551"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:strokeColor="@color/colorAccent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

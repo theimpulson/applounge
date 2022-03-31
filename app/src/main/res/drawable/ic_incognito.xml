@@ -1,0 +1,27 @@
+<!--
+  ~ Apps  Quickly and easily install Android apps onto your device!
+  ~ Copyright (C) 2021  E FOUNDATION
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M12,3C9.3083,3.003 7.4063,4.2188 7.4063,4.2188L6,9H18L16.5938,4.2188C16.5938,4.2188 14.6917,3.0025 12,3ZM12,11C9.2722,11 5.3878,11.536 5.125,11.5938C4.0922,11.8713 3.2464,12.1547 2.5938,12.4062C1.5764,12.754 1,13 1,13H23C23,13 22.4236,12.754 21.4062,12.4062C20.7468,12.1521 19.8911,11.8738 18.8438,11.5938C18.8438,11.5938 14.8244,11 12,11ZM7.5,14C5.567,14 4,15.567 4,17.5C4,19.433 5.567,21 7.5,21C9.433,21 11,19.433 11,17.5C11,17.3427 10.9889,17.1831 10.9688,17.0312C11.2878,16.961 11.6332,16.9049 12,16.9062C12.3668,16.9075 12.7122,16.9612 13.0312,17.0312C13.0111,17.1831 13,17.3427 13,17.5C13,19.433 14.567,21 16.5,21C18.433,21 20,19.433 20,17.5C20,15.567 18.433,14 16.5,14C15.0261,14 13.7659,14.8978 13.25,16.1875C12.9313,16.0911 12.5491,16 12,16C11.4509,16 11.0687,16.0911 10.75,16.1875C10.2341,14.8978 8.9739,14 7.5,14ZM7.5,15C8.8807,15 10,16.1193 10,17.5C10,18.8807 8.8807,20 7.5,20C6.1193,20 5,18.8807 5,17.5C5,16.1193 6.1193,15 7.5,15ZM16.5,15C17.8807,15 19,16.1193 19,17.5C19,18.8807 17.8807,20 16.5,20C15.1193,20 14,18.8807 14,17.5C14,16.1193 15.1193,15 16.5,15Z"
+      android:fillColor="#0086FF"/>
+</vector>

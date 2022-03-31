@@ -38,10 +38,11 @@
     <string name="pwa">PWA</string>
 
     <!-- SignIn Fragment -->
-    <string name="sign_in_title">Sign in</string>
-    <string name="sign_in_desc">Use a Google account or Anonymous Mode to sign in privately.</string>
-    <string name="sign_in_google">Google Login</string>
-    <string name="sign_in_anonymous">Anonymous</string>
+    <string name="sign_in_title">Welcome</string>
+    <string name="sign_in_desc">Sign in to App Lounge using your Google account, or select the Anonymous mode to sign in privately.</string>
+    <string name="sign_in_google">Sign in with Google</string>
+    <string name="sign_in_anonymous">Anonymous mode</string>
+    <string name="or">or</string>
 
     <!-- TOS Fragment -->
     <string name="tos_agree">Accept</string>
