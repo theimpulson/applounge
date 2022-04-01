@@ -22,7 +22,6 @@ import android.app.Activity
 import android.database.MatrixCursor
 import android.os.Bundle
 import android.provider.BaseColumns
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -122,9 +121,14 @@ class SearchFragment :
             ) { fusedApp ->
                 ApplicationDialogFragment(
                     title = getString(R.string.dialog_title_paid_app, fusedApp.name),
-                    message = getString(R.string.dialog_paidapp_message, fusedApp.name, fusedApp.price),
+                    message = getString(
+                        R.string.dialog_paidapp_message,
+                        fusedApp.name,
+                        fusedApp.price
+                    ),
                     positiveButtonText = getString(R.string.dialog_confirm),
                     positiveButtonAction = {
+                        getApplication(fusedApp)
                     },
                     cancelButtonText = getString(R.string.dialog_cancel),
                 ).show(childFragmentManager, "SearchFragment")
@@ -144,10 +148,12 @@ class SearchFragment :
                         val progress = appProgressViewModel.calculateProgress(fusedApp, it)
                         val downloadProgress =
                             ((progress.second / progress.first.toDouble()) * 100).toInt()
-                        Log.d("HomeParentAdapter", "download progress of ===> ${fusedApp.name} : $downloadProgress")
-                        val viewHolder = recyclerView?.findViewHolderForAdapterPosition(adapter.currentList.indexOf(fusedApp))
+                        val viewHolder = recyclerView?.findViewHolderForAdapterPosition(
+                            adapter.currentList.indexOf(fusedApp)
+                        )
                         viewHolder?.let {
-                            (viewHolder as ApplicationListRVAdapter.ViewHolder).binding.installButton.text = "$downloadProgress%"
+                            (viewHolder as ApplicationListRVAdapter.ViewHolder).binding.installButton.text =
+                                "$downloadProgress%"
                         }
                     }
                 }

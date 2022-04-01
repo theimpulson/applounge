@@ -13,9 +13,12 @@ data class FusedDownload(
     var status: Status = Status.UNAVAILABLE,
     val name: String = String(),
     val package_name: String = String(),
-    val downloadURLList: MutableList<String> = mutableListOf(),
+    var downloadURLList: MutableList<String> = mutableListOf(),
     var downloadIdMap: MutableMap<Long, Boolean> = mutableMapOf(),
     val orgStatus: Status = Status.UNAVAILABLE,
     val type: Type = Type.NATIVE,
-    val iconByteArray: String = String()
+    val iconByteArray: String = String(),
+    val versionCode: Int = 1,
+    val offerType: Int = -1,
+    val isFree: Boolean = true
 )

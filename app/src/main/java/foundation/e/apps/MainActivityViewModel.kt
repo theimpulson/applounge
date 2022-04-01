@@ -21,6 +21,7 @@ package foundation.e.apps
 import android.graphics.Bitmap
 import android.os.Build
 import android.util.Base64
+import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.graphics.drawable.toBitmap
@@ -31,12 +32,14 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.exceptions.ApiException
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
+import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.modules.DataStoreModule
@@ -61,6 +64,10 @@ class MainActivityViewModel @Inject constructor(
     private var _authData: MutableLiveData<AuthData> = MutableLiveData()
     val authData: LiveData<AuthData> = _authData
     val authValidity: MutableLiveData<Boolean> = MutableLiveData()
+    private val _purchaseAppLiveData: MutableLiveData<FusedDownload> = MutableLiveData()
+    val purchaseAppLiveData: LiveData<FusedDownload> = _purchaseAppLiveData
+    val isAppPurchased: MutableLiveData<String> = MutableLiveData()
+    val purchaseDeclined: MutableLiveData<String> = MutableLiveData()
     var authRequestRunning = false
 
     // Downloads
@@ -68,9 +75,16 @@ class MainActivityViewModel @Inject constructor(
     var installInProgress = false
     private val _errorMessage = MutableLiveData<Exception>()
     val errorMessage: LiveData<Exception> = _errorMessage
+
+    private val _errorMessageStringResource = MutableLiveData<Int>()
+    val errorMessageStringResource: LiveData<Int> = _errorMessageStringResource
     /*
      * Authentication related functions
      */
+
+    companion object {
+        private const val TAG = "MainActivityViewModel"
+    }
 
     fun getAuthData() {
         if (!authRequestRunning) {
@@ -124,6 +138,10 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun getApplication(app: FusedApp, imageView: ImageView?) {
+        if (!app.isFree && authData.value?.isAnonymous == true) {
+            _errorMessageStringResource.value = R.string.paid_app_anonymous_message
+            return
+        }
         viewModelScope.launch {
             val fusedDownload: FusedDownload
             try {
@@ -141,9 +159,16 @@ class MainActivityViewModel @Inject constructor(
                     mutableMapOf(),
                     app.status,
                     app.type,
-                    appIcon
+                    appIcon,
+                    app.latest_version_code,
+                    app.offer_type,
+                    app.isFree
                 )
             } catch (e: Exception) {
+                if (e is ApiException.AppNotPurchased) {
+                    handleAppNotPurchased(imageView, app)
+                    return@launch
+                }
                 _errorMessage.value = e
                 return@launch
             }
@@ -155,8 +180,64 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
+    private fun handleAppNotPurchased(
+        imageView: ImageView?,
+        app: FusedApp
+    ) {
+        val appIcon = imageView?.let { getImageBase64(it) } ?: ""
+        val fusedDownload = FusedDownload(
+            app._id,
+            app.origin,
+            Status.PURCHASE_NEEDED,
+            app.name,
+            app.package_name,
+            mutableListOf(),
+            mutableMapOf(),
+            app.status,
+            app.type,
+            appIcon,
+            app.latest_version_code,
+            app.offer_type,
+            app.isFree
+        )
+        viewModelScope.launch {
+            fusedManagerRepository.addFusedDownloadPurchaseNeeded(fusedDownload)
+            _purchaseAppLiveData.postValue(fusedDownload)
+        }
+    }
+
     suspend fun updateAwaiting(fusedDownload: FusedDownload) {
         fusedManagerRepository.updateAwaiting(fusedDownload)
+    }
+
+    suspend fun updateAwaitingForPurchasedApp(packageName: String): FusedDownload? {
+        val fusedDownload = fusedManagerRepository.getFusedDownload(packageName = packageName)
+        authData.value?.let {
+            if (!it.isAnonymous) {
+                try {
+                    fusedDownload.downloadURLList = fusedAPIRepository.getDownloadLink(
+                        fusedDownload.id,
+                        fusedDownload.package_name,
+                        fusedDownload.versionCode,
+                        fusedDownload.offerType,
+                        it,
+                        Origin.GPLAY
+                    ).toMutableList()
+                } catch (e: Exception) {
+                    Log.e(TAG, e.stackTraceToString())
+                    _errorMessage.value = e
+                    return null
+                }
+                updateAwaiting(fusedDownload)
+                return fusedDownload
+            }
+        }
+        return null
+    }
+
+    suspend fun updateUnavailableForPurchaseDeclined(packageName: String) {
+        val fusedDownload = fusedManagerRepository.getFusedDownload(packageName = packageName)
+        fusedManagerRepository.updateUnavailable(fusedDownload)
     }
 
     fun cancelDownload(app: FusedApp) {

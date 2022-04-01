@@ -19,7 +19,6 @@
 package foundation.e.apps.applicationlist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
@@ -121,6 +120,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                         message = getString(R.string.dialog_paidapp_message, fusedApp.name, fusedApp.price),
                         positiveButtonText = getString(R.string.dialog_confirm),
                         positiveButtonAction = {
+                            getApplication(fusedApp)
                         },
                         cancelButtonText = getString(R.string.dialog_cancel),
                     ).show(childFragmentManager, "HomeFragment")
@@ -171,10 +171,6 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                     val progress = appProgressViewModel.calculateProgress(fusedApp, it)
                     val downloadProgress =
                         ((progress.second / progress.first.toDouble()) * 100).toInt()
-                    Log.d(
-                        "HomeParentAdapter",
-                        "download progress of ===> ${fusedApp.name} : $downloadProgress"
-                    )
                     val viewHolder = recyclerView.findViewHolderForAdapterPosition(
                         adapter.currentList.indexOf(fusedApp)
                     )

@@ -52,10 +52,12 @@ class ApplicationDialogFragment(
                 positiveButtonAction?.invoke()
                 this.dismiss()
             }
-            .setNegativeButton(cancelButtonText) { _, _ ->
+        if (cancelButtonText.isNotEmpty()) {
+            materialAlertDialogBuilder.setNegativeButton(cancelButtonText) { _, _ ->
                 cancelButtonAction?.invoke()
                 this.dismiss()
             }
+        }
         if (drawable != -1) {
             materialAlertDialogBuilder.setIcon(drawable)
         }

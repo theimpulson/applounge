@@ -149,10 +149,11 @@
     <!-- No Internet Fragment -->
     <string name="no_internet_message">Can\'t connect! Please check your internet connection and try again</string>
 
-<!--    paid app message-->
+    <!--    paid app message-->
     <string name="dialog_title_paid_app"><![CDATA[Purchase <b>%1$s</b>]]></string>
     <string name="dialog_paidapp_message">When clicked confirm, it will take you to Google Play page for the app to complete the purchase using your browser. Click confirm to purchase %1$s for %2$s.</string>
     <string name="dialog_confirm">CONFIRM</string>
     <string name="dialog_cancel">CANCEL</string>
+    <string name="paid_app_anonymous_message">Paid apps cannot be installed in anonymous mode. Please log into your Google account to install paid apps.</string>
 
 </resources>

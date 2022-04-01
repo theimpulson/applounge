@@ -40,18 +40,23 @@ class InstallAppWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
-        val fusedDownloadString = params.inputData.getString(INPUT_DATA_FUSED_DOWNLOAD) ?: ""
-        Log.d(TAG, "Fused download name $fusedDownloadString")
+        try {
+            val fusedDownloadString = params.inputData.getString(INPUT_DATA_FUSED_DOWNLOAD) ?: ""
+            Log.d(TAG, "Fused download name $fusedDownloadString")
 
-        val fusedDownload = databaseRepository.getDownloadById(fusedDownloadString)
-        fusedDownload?.let {
-            if (fusedDownload.status != Status.AWAITING) {
-                return@let
+            val fusedDownload = databaseRepository.getDownloadById(fusedDownloadString)
+            fusedDownload?.let {
+                if (fusedDownload.status != Status.AWAITING) {
+                    return@let
+                }
+                startAppInstallationProcess(it)
             }
-            startAppInstallationProcess(it)
-        }
 
-        return Result.success()
+            return Result.success()
+        } catch (e: Exception) {
+            Log.e(TAG, "doWork: Failed: ${e.stackTraceToString()}")
+            return Result.failure()
+        }
     }
 
     private suspend fun startAppInstallationProcess(
