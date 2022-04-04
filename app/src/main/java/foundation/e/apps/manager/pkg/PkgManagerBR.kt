@@ -42,6 +42,9 @@ open class PkgManagerBR : BroadcastReceiver() {
     @Inject
     lateinit var fusedManagerRepository: FusedManagerRepository
 
+    @Inject
+    lateinit var pkgManagerModule: PkgManagerModule
+
     override fun onReceive(context: Context?, intent: Intent?) {
         val action = intent?.action
         if (context != null && action != null) {
@@ -86,6 +89,7 @@ open class PkgManagerBR : BroadcastReceiver() {
         }
         GlobalScope.launch {
             val fusedDownload = fusedManagerRepository.getFusedDownload(packageName = pkgName)
+            pkgManagerModule.setFakeStoreAsInstallerIfNeeded(fusedDownload)
             fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLED)
         }
     }
