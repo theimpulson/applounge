@@ -20,6 +20,7 @@ package foundation.e.apps.api.fused
 
 import android.content.Context
 import android.text.format.Formatter
+import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
@@ -638,19 +639,17 @@ class FusedAPIImpl @Inject constructor(
             origin = Origin.GPLAY,
             shareUrl = this.shareUrl,
             appSize = Formatter.formatFileSize(context, this.size),
-            isFree = this.isFree
+            isFree = this.isFree,
+            price = this.price
         )
         app.updateStatus()
         return app
     }
 
     private fun FusedApp.updateStatus() {
-        this.status = if (this.isFree) {
-            pkgManagerModule.getPackageStatus(this.package_name, this.latest_version_code)
-        } else if (this.status == Status.INSTALLATION_ISSUE) {
-            this.status
-        } else {
-            Status.BLOCKED
+        if (this.status != Status.INSTALLATION_ISSUE) {
+            this.status =
+                pkgManagerModule.getPackageStatus(this.package_name, this.latest_version_code)
         }
     }
 

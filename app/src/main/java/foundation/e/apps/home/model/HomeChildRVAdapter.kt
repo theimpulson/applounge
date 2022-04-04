@@ -44,7 +44,8 @@ import foundation.e.apps.utils.enums.User
 class HomeChildRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val pkgManagerModule: PkgManagerModule,
-    private val user: User
+    private val user: User,
+    private val paidAppHandler: ((FusedApp) -> Unit)? = null
 ) : ListAdapter<FusedApp, HomeChildRVAdapter.ViewHolder>(HomeChildFusedAppDiffUtil()) {
 
     private val shimmer = Shimmer.ColorHighlightBuilder()
@@ -124,7 +125,8 @@ class HomeChildRVAdapter(
                 }
                 Status.UNAVAILABLE -> {
                     installButton.apply {
-                        text = context.getString(R.string.install)
+                        text =
+                            if (homeApp.isFree) context.getString(R.string.install) else homeApp.price
                         setTextColor(context.getColor(R.color.colorAccent))
                         backgroundTintList = ContextCompat.getColorStateList(
                             view.context,
@@ -133,7 +135,11 @@ class HomeChildRVAdapter(
                         strokeColor =
                             ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
-                            installApplication(homeApp, appIcon)
+                            if (homeApp.isFree) {
+                                installApplication(homeApp, appIcon)
+                            } else {
+                                paidAppHandler?.invoke(homeApp)
+                            }
                         }
                     }
                 }
