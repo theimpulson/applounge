@@ -28,5 +28,6 @@ enum class Status {
     QUEUED,
     BLOCKED,
     INSTALLATION_ISSUE,
-    AWAITING
+    AWAITING,
+    PURCHASE_NEEDED
 }

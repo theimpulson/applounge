@@ -191,7 +191,17 @@ class FusedManagerImpl @Inject constructor(
         databaseRepository.updateDownload(fusedDownload)
     }
 
+    suspend fun updateUnavailable(fusedDownload: FusedDownload) {
+        fusedDownload.status = Status.UNAVAILABLE
+        databaseRepository.updateDownload(fusedDownload)
+    }
+
     suspend fun updateFusedDownload(fusedDownload: FusedDownload) {
         databaseRepository.updateDownload(fusedDownload)
+    }
+
+    suspend fun insertFusedDownloadPurchaseNeeded(fusedDownload: FusedDownload) {
+        fusedDownload.status = Status.PURCHASE_NEEDED
+        databaseRepository.addDownload(fusedDownload)
     }
 }

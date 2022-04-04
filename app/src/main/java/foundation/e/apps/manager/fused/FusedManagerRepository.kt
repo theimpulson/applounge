@@ -28,6 +28,10 @@ class FusedManagerRepository @Inject constructor(
         return fusedManagerImpl.addDownload(fusedDownload)
     }
 
+    suspend fun addFusedDownloadPurchaseNeeded(fusedDownload: FusedDownload) {
+        fusedManagerImpl.insertFusedDownloadPurchaseNeeded(fusedDownload)
+    }
+
     suspend fun clearInstallationIssue(fusedDownload: FusedDownload) {
         return fusedManagerImpl.clearInstallationIssue(fusedDownload)
     }
@@ -66,6 +70,10 @@ class FusedManagerRepository @Inject constructor(
 
     suspend fun updateAwaiting(fusedDownload: FusedDownload) {
         fusedManagerImpl.updateAwaiting(fusedDownload)
+    }
+
+    suspend fun updateUnavailable(fusedDownload: FusedDownload) {
+        fusedManagerImpl.updateUnavailable(fusedDownload)
     }
 
     suspend fun updateFusedDownload(fusedDownload: FusedDownload) {

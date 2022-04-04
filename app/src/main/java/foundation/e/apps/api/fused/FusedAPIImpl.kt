@@ -20,7 +20,6 @@ package foundation.e.apps.api.fused
 
 import android.content.Context
 import android.text.format.Formatter
-import android.util.Log
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
@@ -202,7 +201,8 @@ class FusedAPIImpl @Inject constructor(
             }
             return response?.apps
         } else {
-            return gPlayAPIRepository.listApps(browseUrl, authData).map { app ->
+            val listApps = gPlayAPIRepository.listApps(browseUrl, authData)
+            return listApps.map { app ->
                 app.transformToFusedApp()
             }
         }
@@ -496,7 +496,8 @@ class FusedAPIImpl @Inject constructor(
     }
 
     private suspend fun getGplaySearchResults(query: String, authData: AuthData): List<FusedApp> {
-        return gPlayAPIRepository.getSearchResults(query, authData).map { app ->
+        val searchResults = gPlayAPIRepository.getSearchResults(query, authData)
+        return searchResults.map { app ->
             app.transformToFusedApp()
         }
     }

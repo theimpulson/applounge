@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.helpers.PurchaseHelper
 import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -59,6 +60,7 @@ class UpdatesWorker @AssistedInject constructor(
         loadSettings()
         val authData = getAuthData()
         val appsNeededToUpdate = updatesManagerRepository.getUpdates(authData)
+            .filter { !(!it.isFree && authData.isAnonymous) }
         val isConnectedToUnmeteredNetwork = isConnectedToUnmeteredNetwork(applicationContext)
         handleNotification(appsNeededToUpdate, isConnectedToUnmeteredNetwork)
         triggerUpdateProcessOnSettings(
@@ -109,6 +111,14 @@ class UpdatesWorker @AssistedInject constructor(
         authData: AuthData
     ) {
         appsNeededToUpdate.forEach { fusedApp ->
+            if (!fusedApp.isFree) {
+                val purchaseHelper = PurchaseHelper(authData)
+                purchaseHelper.purchase(
+                    fusedApp.package_name,
+                    fusedApp.latest_version_code,
+                    fusedApp.offer_type
+                )
+            }
             val downloadList = getAppDownloadLink(fusedApp, authData).toMutableList()
             val iconBase64 = getIconImageToBase64(fusedApp)
 
@@ -122,11 +132,17 @@ class UpdatesWorker @AssistedInject constructor(
                 mutableMapOf(),
                 fusedApp.status,
                 fusedApp.type,
-                iconBase64
+                iconBase64,
+                fusedApp.latest_version_code,
+                fusedApp.offer_type,
+                fusedApp.isFree
             )
             fusedManagerRepository.addDownload(fusedDownload)
             fusedManagerRepository.updateAwaiting(fusedDownload)
-            Log.d(TAG, "startUpdateProcess: Enqueued for update: ${fusedDownload.name} ${fusedDownload.id} ${fusedDownload.status}")
+            Log.d(
+                TAG,
+                "startUpdateProcess: Enqueued for update: ${fusedDownload.name} ${fusedDownload.id} ${fusedDownload.status}"
+            )
             InstallWorkManager.enqueueWork(context, fusedDownload)
         }
     }

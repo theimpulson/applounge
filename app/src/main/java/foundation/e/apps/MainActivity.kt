@@ -26,13 +26,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.aurora.gplayapi.exceptions.ApiException
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.application.subFrags.ApplicationDialogFragment
 import foundation.e.apps.databinding.ActivityMainBinding
 import foundation.e.apps.manager.workmanager.InstallWorkManager
+import foundation.e.apps.purchase.AppPurchaseFragmentDirections
 import foundation.e.apps.setup.signin.SignInViewModel
 import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.enums.Status
@@ -156,17 +159,6 @@ class MainActivity : AppCompatActivity() {
 
         // Observe and handle downloads
         viewModel.downloadList.observe(this) { list ->
-//            val shouldDownload = list.any {
-//                it.status == Status.INSTALLING || it.status == Status.DOWNLOADING || it.status == Status.INSTALLED
-//            }
-//            if (!shouldDownload && list.isNotEmpty()) {
-//                for (item in list) {
-//                    if (item.status == Status.QUEUED) {
-//                        viewModel.downloadApp(item)
-//                        break
-//                    }
-//                }
-//            }
             list.forEach {
                 if (it.status == Status.QUEUED) {
                     lifecycleScope.launch {
@@ -178,15 +170,60 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.purchaseAppLiveData.observe(this) {
+            val action =
+                AppPurchaseFragmentDirections.actionGlobalAppPurchaseFragment(it.package_name)
+            findNavController(R.id.fragment).navigate(action)
+        }
+
         viewModel.errorMessage.observe(this) {
             when (it) {
                 is ApiException.AppNotPurchased -> showSnackbarMessage(getString(R.string.message_app_available_later))
-                else -> showSnackbarMessage(it.localizedMessage ?: getString(R.string.unknown_error))
+                else -> showSnackbarMessage(
+                    it.localizedMessage ?: getString(R.string.unknown_error)
+                )
+            }
+        }
+
+        viewModel.errorMessageStringResource.observe(this) {
+            showSnackbarMessage(getString(it))
+        }
+
+        viewModel.isAppPurchased.observe(this) {
+            if (it.isNotEmpty()) {
+                startInstallationOfPurchasedApp(viewModel, it)
+                ApplicationDialogFragment(
+                    title = "Purchase complete!",
+                    message = "Your app will automatically be downloaded in this device",
+                    positiveButtonText = "OK"
+                ).show(supportFragmentManager, TAG)
+            }
+        }
+
+        viewModel.purchaseDeclined.observe(this) {
+            if (it.isNotEmpty()) {
+                lifecycleScope.launch {
+                    viewModel.updateUnavailableForPurchaseDeclined(it)
+                }
             }
         }
 
         if (!CommonUtilsModule.isNetworkAvailable(this)) {
             showNoInternet()
+        }
+    }
+
+    private fun startInstallationOfPurchasedApp(
+        viewModel: MainActivityViewModel,
+        it: String
+    ) {
+        lifecycleScope.launch {
+            val fusedDownload = viewModel.updateAwaitingForPurchasedApp(it)
+            if (fusedDownload != null) {
+                InstallWorkManager.enqueueWork(applicationContext, fusedDownload)
+            } else {
+                showSnackbarMessage(getString(R.string.paid_app_anonymous_message))
+            }
         }
     }
 

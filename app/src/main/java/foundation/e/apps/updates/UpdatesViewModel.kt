@@ -37,7 +37,10 @@ class UpdatesViewModel @Inject constructor(
 
     fun getUpdates(authData: AuthData) {
         viewModelScope.launch {
-            updatesList.postValue(updatesManagerRepository.getUpdates(authData))
+            updatesList.postValue(
+                updatesManagerRepository.getUpdates(authData)
+                    .filter { !(!it.isFree && authData.isAnonymous) }
+            )
         }
     }
 }
