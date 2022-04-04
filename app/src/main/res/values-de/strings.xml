@@ -10,9 +10,9 @@
     <string name="category_icon">Kategorien-Symbol</string>
     <string name="open_source">Quelloffen</string>
     <string name="pwa">PWA</string>
-    <string name="sign_in_title">Anmelden</string>
-    <string name="sign_in_google">Google Anmeldung</string>
-    <string name="sign_in_anonymous">Anonym</string>
+    <string name="sign_in_title">Willkommen</string>
+    <string name="sign_in_google">Anmeldung mit Google</string>
+    <string name="sign_in_anonymous">Anonymer Modus</string>
     <string name="tos_agree">Annehmen</string>
     <string name="tos_disagree">Verwerfen</string>
     <string name="tos_agree_date">Angenommen</string>
@@ -77,7 +77,7 @@
     <string name="no_internet_message">Keine Verbindung möglich. Bitte überprüfe die Internetverbindung und versuche es erneut</string>
     <string name="menu_home">Start</string>
     <string name="search_hint">App-Suche</string>
-    <string name="sign_in_desc">Benutze ein Google-Konto, oder den anonymen Modus, um dich geheim anzumelden.</string>
+    <string name="sign_in_desc">Melde dich bei der App Lounge mit einem Google-Konto an, oder wähle den anonymen Modus aus, um dich geheim anzumelden.</string>
     <string name="preference_update_interval_title">Überprüfungsintervall für Aktualisierungen</string>
     <string name="preference_update_install_automatically_description">App-Aktualisierungen und -Installationen im Hintergrund ausführen</string>
     <string name="share_intent">Siehe auch \"<xliff:g id="rating">%1$s</xliff:g>\"
@@ -97,4 +97,9 @@
     <string name="app_name">App Lounge</string>
     <string name="privacy_computed_using_text">Berechnet aus &lt;a href=<xliff:g id="exodus">%1$s</xliff:g>&gt; Exodus Datenschutz-Analyse</string>
     <string name="all_apps_updated">Alle Apps sind aktuell</string>
+    <string name="or">oder</string>
+    <string name="dialog_title_paid_app"><b>%1$s</b> kaufen</string>
+    <string name="dialog_paidapp_message">Wenn du auf die Bestätigung tippst, wirst du zur Google Play Seite weitergeleitet, um den Bezahlvorgang für die App im Browser abzuschließen. Tippe zur Bestätigung des Kaufes von %1$s für %2$s.</string>
+    <string name="dialog_confirm">BESTÄTIGUNG</string>
+    <string name="dialog_cancel">ABBRECHEN</string>
 </resources>
