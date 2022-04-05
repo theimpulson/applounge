@@ -18,5 +18,4 @@ interface FdroidDao {
 
     @Query("SELECT * FROM FdroidEntity where packageName is :packageName")
     suspend fun getFdroidEntityFromPackageName(packageName: String): FdroidEntity?
-
 }

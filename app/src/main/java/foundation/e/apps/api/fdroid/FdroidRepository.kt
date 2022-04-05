@@ -24,5 +24,4 @@ class FdroidRepository @Inject constructor(
                 }
             }
     }
-
 }

@@ -48,7 +48,7 @@ import foundation.e.apps.utils.enums.User
 import foundation.e.apps.utils.modules.CommonUtilsModule
 import kotlinx.coroutines.launch
 import java.io.File
-import java.util.*
+import java.util.UUID
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

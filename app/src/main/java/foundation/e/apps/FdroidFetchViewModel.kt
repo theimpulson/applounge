@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FdroidFetchViewModel @Inject constructor(
     private val fdroidRepository: FdroidRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val fdroidEntries = mutableMapOf<String, FdroidEntity?>()
 
@@ -45,8 +45,7 @@ class FdroidFetchViewModel @Inject constructor(
                                 authorNameToDisplay = it
                             }
                         }
-                    }
-                    catch (e: Exception) {
+                    } catch (e: Exception) {
                         e.printStackTrace()
                     }
                 }
@@ -56,5 +55,4 @@ class FdroidFetchViewModel @Inject constructor(
             }
         }
     }
-
 }

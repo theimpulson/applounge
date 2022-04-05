@@ -40,9 +40,9 @@ import com.aurora.gplayapi.SearchSuggestEntry
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.AppProgressViewModel
+import foundation.e.apps.FdroidFetchViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
-import foundation.e.apps.FdroidFetchViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
