@@ -3,11 +3,14 @@ package foundation.e.apps.manager.fused
 import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
+import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.manager.database.DatabaseRepository
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.download.DownloadManagerBR
@@ -21,6 +24,7 @@ import kotlinx.coroutines.delay
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
+import com.aurora.gplayapi.data.models.File as AuroraFile
 
 class FusedManagerImpl @Inject constructor(
     @Named("cacheDir") private val cacheDir: String,
@@ -30,7 +34,8 @@ class FusedManagerImpl @Inject constructor(
     private val pwaManagerModule: PWAManagerModule,
     private val pkgManagerModule: PkgManagerModule,
     @Named("download") private val downloadNotificationChannel: NotificationChannel,
-    @Named("update") private val updateNotificationChannel: NotificationChannel
+    @Named("update") private val updateNotificationChannel: NotificationChannel,
+    @ApplicationContext private val context: Context
 ) {
 
     private val TAG = FusedManagerImpl::class.java.simpleName
@@ -57,7 +62,7 @@ class FusedManagerImpl @Inject constructor(
     }
 
     suspend fun clearInstallationIssue(fusedDownload: FusedDownload) {
-        flushOldDownload(fusedDownload.package_name)
+        flushOldDownload(fusedDownload.packageName)
         databaseRepository.deleteDownload(fusedDownload)
     }
 
@@ -68,7 +73,7 @@ class FusedManagerImpl @Inject constructor(
             databaseRepository.updateDownload(fusedDownload)
             DownloadManagerBR.downloadedList.clear()
             delay(100)
-            flushOldDownload(fusedDownload.package_name)
+            flushOldDownload(fusedDownload.packageName)
             databaseRepository.deleteDownload(fusedDownload)
         } else if (status == Status.INSTALLING) {
             Log.d(TAG, "updateDownloadStatus: Downloaded ===> ${fusedDownload.name} INSTALLING")
@@ -92,12 +97,12 @@ class FusedManagerImpl @Inject constructor(
         val list = mutableListOf<File>()
         when (fusedDownload.type) {
             Type.NATIVE -> {
-                val parentPathFile = File("$cacheDir/${fusedDownload.package_name}")
+                val parentPathFile = File("$cacheDir/${fusedDownload.packageName}")
                 parentPathFile.listFiles()?.let { list.addAll(it) }
                 list.sort()
                 if (list.size != 0) {
                     Log.d(TAG, "installApp: STARTED ${fusedDownload.name} ${list.size}")
-                    pkgManagerModule.installApplication(list, fusedDownload.package_name)
+                    pkgManagerModule.installApplication(list, fusedDownload.packageName)
                     Log.d(TAG, "installApp: ENDED ${fusedDownload.name} ${list.size}")
                 }
             }
@@ -124,7 +129,7 @@ class FusedManagerImpl @Inject constructor(
             delay(100)
 
             databaseRepository.deleteDownload(fusedDownload)
-            flushOldDownload(fusedDownload.package_name)
+            flushOldDownload(fusedDownload.packageName)
         } else {
             Log.d(TAG, "Unable to cancel download!")
         }
@@ -139,7 +144,7 @@ class FusedManagerImpl @Inject constructor(
                     fusedDownload = it
                 }
             } else if (packageName.isNotBlank()) {
-                if (it.package_name == packageName) {
+                if (it.packageName == packageName) {
                     fusedDownload = it
                 }
             }
@@ -155,10 +160,10 @@ class FusedManagerImpl @Inject constructor(
 
     private suspend fun downloadNativeApp(fusedDownload: FusedDownload) {
         var count = 0
-        val parentPath = "$cacheDir/${fusedDownload.package_name}"
+        var parentPath = "$cacheDir/${fusedDownload.packageName}"
 
         // Clean old downloads and re-create download dir
-        flushOldDownload(fusedDownload.package_name)
+        flushOldDownload(fusedDownload.packageName)
         File(parentPath).mkdirs()
 
         fusedDownload.status = Status.DOWNLOADING
@@ -168,8 +173,12 @@ class FusedManagerImpl @Inject constructor(
         Log.d(TAG, "downloadNativeApp: ${fusedDownload.name} ${fusedDownload.downloadURLList.size}")
         fusedDownload.downloadURLList.forEach {
             count += 1
-            val packagePath = File(parentPath, "${fusedDownload.package_name}_$count.apk")
-
+            val packagePath: File = if (fusedDownload.files.isNotEmpty()) {
+                getGplayInstallationPackagePath(fusedDownload, it, parentPath, count)
+            } else {
+                File(parentPath, "${fusedDownload.packageName}_$count.apk")
+            }
+            Log.d(TAG, "downloadNativeApp: destination path: $packagePath")
             val request = DownloadManager.Request(Uri.parse(it))
                 .setTitle(if (count == 1) fusedDownload.name else "Additional file for ${fusedDownload.name}")
                 .setDestinationUri(Uri.fromFile(packagePath))
@@ -180,8 +189,49 @@ class FusedManagerImpl @Inject constructor(
         databaseRepository.updateDownload(fusedDownload)
     }
 
+    private fun getGplayInstallationPackagePath(
+        fusedDownload: FusedDownload,
+        it: String,
+        parentPath: String,
+        count: Int
+    ): File {
+        val downloadingFile = fusedDownload.files[fusedDownload.downloadURLList.indexOf(it)]
+        return if (downloadingFile.type == AuroraFile.FileType.BASE || downloadingFile.type == AuroraFile.FileType.SPLIT) {
+            File(parentPath, "${fusedDownload.packageName}_$count.apk")
+        } else {
+            createObbFileForDownload(fusedDownload, it)
+        }
+    }
+
+    private fun createObbFileForDownload(
+        fusedDownload: FusedDownload,
+        url: String
+    ): File {
+        val parentPath =
+            context.getExternalFilesDir(null)?.absolutePath + "/Android/obb/" + fusedDownload.packageName
+        File(parentPath).mkdirs()
+        val obbFile = fusedDownload.files[fusedDownload.downloadURLList.indexOf(url)]
+        return File(parentPath, obbFile.name)
+    }
+
+    fun moveOBBFilesToOBBDirectory(fusedDownload: FusedDownload) {
+        fusedDownload.files.forEach {
+            val parentPath =
+                context.getExternalFilesDir(null)?.absolutePath + "/Android/obb/" + fusedDownload.packageName
+            Log.d(TAG, "updateDownloadStatus: source path: $parentPath filename: ${it.name}")
+            val file = File(parentPath, it.name)
+            if (file.exists()) {
+                val destinationDirectory = Environment.getExternalStorageDirectory()
+                    .toString() + "/Android/obb/" + fusedDownload.packageName
+                Log.d(TAG, "updateDownloadStatus: destination path: $destinationDirectory")
+                File(destinationDirectory).mkdirs()
+                FileManager.moveFile("$parentPath/", it.name, "$destinationDirectory/")
+            }
+        }
+    }
+
     suspend fun installationIssue(fusedDownload: FusedDownload) {
-        flushOldDownload(fusedDownload.package_name)
+        flushOldDownload(fusedDownload.packageName)
         fusedDownload.status = Status.INSTALLATION_ISSUE
         databaseRepository.updateDownload(fusedDownload)
     }

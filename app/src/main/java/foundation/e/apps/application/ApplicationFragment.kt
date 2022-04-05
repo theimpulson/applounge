@@ -127,7 +127,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
             list.forEach {
-                if (it.origin == args.origin && (it.package_name == args.packageName || it.id == args.id)) {
+                if (it.origin == args.origin && (it.packageName == args.packageName || it.id == args.id)) {
                     applicationViewModel.appStatus.value = it.status
                 }
             }

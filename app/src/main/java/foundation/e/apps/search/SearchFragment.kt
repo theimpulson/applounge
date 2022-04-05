@@ -165,7 +165,7 @@ class SearchFragment :
             if (!searchResult.isNullOrEmpty()) {
                 list.forEach {
                     searchResult.find { app ->
-                        app.origin == it.origin && (app.package_name == it.package_name || app._id == it.id)
+                        app.origin == it.origin && (app.package_name == it.packageName || app._id == it.id)
                     }?.status = it.status
                 }
                 searchViewModel.searchResult.value = searchResult

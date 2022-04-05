@@ -25,7 +25,6 @@ import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
 import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
-import com.aurora.gplayapi.data.models.File
 import com.aurora.gplayapi.helpers.TopChartsHelper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.R
@@ -40,6 +39,7 @@ import foundation.e.apps.api.fused.data.FusedHome
 import foundation.e.apps.api.fused.data.Ratings
 import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
+import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
@@ -152,38 +152,31 @@ class FusedAPIImpl @Inject constructor(
         return gPlayAPIRepository.validateAuthData(authData)
     }
 
-    suspend fun getDownloadLink(
-        id: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int,
+    suspend fun updateFusedDownloadWithDownloadingInfo(
         authData: AuthData,
-        origin: Origin
-    ): List<String> {
+        origin: Origin,
+        fusedDownload: FusedDownload
+    ) {
         val list = mutableListOf<String>()
         when (origin) {
             Origin.CLEANAPK -> {
-                val downloadInfo = cleanAPKRepository.getDownloadInfo(id).body()
+                val downloadInfo = cleanAPKRepository.getDownloadInfo(fusedDownload.id).body()
                 downloadInfo?.download_data?.download_link?.let { list.add(it) }
             }
             Origin.GPLAY -> {
                 val downloadList = gPlayAPIRepository.getDownloadInfo(
-                    packageName,
-                    versionCode,
-                    offerType,
+                    fusedDownload.packageName,
+                    fusedDownload.versionCode,
+                    fusedDownload.offerType,
                     authData
                 )
-                // TODO: DEAL WITH MULTIPLE PACKAGES
-                downloadList.forEach {
-                    if (it.type == File.FileType.BASE || it.type == File.FileType.SPLIT) {
-                        list.add(it.url)
-                    }
-                }
+                fusedDownload.files = downloadList
+                list.addAll(downloadList.map { it.url })
             }
             Origin.GITLAB -> {
             }
         }
-        return list
+        fusedDownload.downloadURLList = list
     }
 
     suspend fun listApps(category: String, browseUrl: String, authData: AuthData): List<FusedApp>? {

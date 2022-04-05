@@ -24,6 +24,10 @@ class FusedManagerRepository @Inject constructor(
         return fusedManagerImpl.downloadApp(fusedDownload)
     }
 
+    fun moveOBBFileToOBBDirectory(fusedDownload: FusedDownload) {
+        return fusedManagerImpl.moveOBBFilesToOBBDirectory(fusedDownload)
+    }
+
     suspend fun addDownload(fusedDownload: FusedDownload) {
         return fusedManagerImpl.addDownload(fusedDownload)
     }

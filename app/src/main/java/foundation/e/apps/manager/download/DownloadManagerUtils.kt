@@ -18,7 +18,9 @@
 
 package foundation.e.apps.manager.download
 
+import android.content.Context
 import android.util.Log
+import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.utils.enums.Status
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -32,7 +34,8 @@ import javax.inject.Singleton
 
 @Singleton
 class DownloadManagerUtils @Inject constructor(
-    private val fusedManagerRepository: FusedManagerRepository
+    private val fusedManagerRepository: FusedManagerRepository,
+    @ApplicationContext private val context: Context
 ) {
     private val TAG = DownloadManagerUtils::class.java.simpleName
     private val mutex = Mutex()
@@ -59,6 +62,7 @@ class DownloadManagerUtils @Inject constructor(
                     "===> updateDownloadStatus: ${fusedDownload.name}: $downloadId: $downloaded/${fusedDownload.downloadIdMap.size} "
                 )
                 if (downloaded == fusedDownload.downloadIdMap.size) {
+                    fusedManagerRepository.moveOBBFileToOBBDirectory(fusedDownload)
                     fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLING)
                 }
             }

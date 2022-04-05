@@ -146,16 +146,13 @@ class MainActivityViewModel @Inject constructor(
             val fusedDownload: FusedDownload
             try {
                 val appIcon = imageView?.let { getImageBase64(it) } ?: ""
-                val downloadList: List<String>
-                downloadList = getAppDownloadLink(app).toMutableList()
-
                 fusedDownload = FusedDownload(
                     app._id,
                     app.origin,
                     app.status,
                     app.name,
                     app.package_name,
-                    downloadList,
+                    mutableListOf(),
                     mutableMapOf(),
                     app.status,
                     app.type,
@@ -164,6 +161,7 @@ class MainActivityViewModel @Inject constructor(
                     app.offer_type,
                     app.isFree
                 )
+                updateFusedDownloadWithAppDownloadLink(app, fusedDownload)
             } catch (e: Exception) {
                 if (e is ApiException.AppNotPurchased) {
                     handleAppNotPurchased(imageView, app)
@@ -215,14 +213,11 @@ class MainActivityViewModel @Inject constructor(
         authData.value?.let {
             if (!it.isAnonymous) {
                 try {
-                    fusedDownload.downloadURLList = fusedAPIRepository.getDownloadLink(
-                        fusedDownload.id,
-                        fusedDownload.package_name,
-                        fusedDownload.versionCode,
-                        fusedDownload.offerType,
+                    fusedAPIRepository.updateFusedDownloadWithDownloadingInfo(
                         it,
-                        Origin.GPLAY
-                    ).toMutableList()
+                        Origin.GPLAY,
+                        fusedDownload
+                    )
                 } catch (e: Exception) {
                     Log.e(TAG, e.stackTraceToString())
                     _errorMessage.value = e
@@ -248,25 +243,23 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getAppDownloadLink(app: FusedApp): List<String> {
+    private suspend fun updateFusedDownloadWithAppDownloadLink(
+        app: FusedApp,
+        fusedDownload: FusedDownload
+    ) {
         val downloadList = mutableListOf<String>()
         authData.value?.let {
             if (app.type == Type.PWA) {
                 downloadList.add(app.url)
+                fusedDownload.downloadURLList = downloadList
             } else {
-                downloadList.addAll(
-                    fusedAPIRepository.getDownloadLink(
-                        app._id,
-                        app.package_name,
-                        app.latest_version_code,
-                        app.offer_type,
-                        it,
-                        app.origin
-                    )
+                fusedAPIRepository.updateFusedDownloadWithDownloadingInfo(
+                    it,
+                    app.origin,
+                    fusedDownload
                 )
             }
         }
-        return downloadList
     }
 
     private fun getImageBase64(imageView: ImageView): String {

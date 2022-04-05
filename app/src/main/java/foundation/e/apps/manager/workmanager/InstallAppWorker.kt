@@ -40,11 +40,12 @@ class InstallAppWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
+        var fusedDownload: FusedDownload? = null
         try {
             val fusedDownloadString = params.inputData.getString(INPUT_DATA_FUSED_DOWNLOAD) ?: ""
             Log.d(TAG, "Fused download name $fusedDownloadString")
 
-            val fusedDownload = databaseRepository.getDownloadById(fusedDownloadString)
+            fusedDownload = databaseRepository.getDownloadById(fusedDownloadString)
             fusedDownload?.let {
                 if (fusedDownload.status != Status.AWAITING) {
                     return@let
@@ -55,6 +56,9 @@ class InstallAppWorker @AssistedInject constructor(
             return Result.success()
         } catch (e: Exception) {
             Log.e(TAG, "doWork: Failed: ${e.stackTraceToString()}")
+            fusedDownload?.let {
+                fusedManagerRepository.installationIssue(it)
+            }
             return Result.failure()
         }
     }

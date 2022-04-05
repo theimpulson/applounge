@@ -9,7 +9,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION" />
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
@@ -24,12 +24,19 @@
     <uses-permission
         android:name="android.permission.DELETE_PACKAGES"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION" />
 
     <application
         android:name=".AppLoungeApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
+        android:killAfterRestore="false"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:restoreAnyVersion="true"
+        android:restoreNeedsApplication="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.Apps"
         android:usesCleartextTraffic="true">
@@ -57,7 +64,7 @@
 
         <receiver android:name=".updates.manager.UpdatesManager">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
@@ -65,10 +72,9 @@
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove">
-        </provider>
+            tools:node="remove" />
 
-        <service android:name=".manager.pkg.PackageInstallerService"/>
+        <service android:name=".manager.pkg.PackageInstallerService" />
     </application>
 
 </manifest>

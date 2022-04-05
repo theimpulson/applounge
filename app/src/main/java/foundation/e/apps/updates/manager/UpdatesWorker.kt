@@ -119,7 +119,6 @@ class UpdatesWorker @AssistedInject constructor(
                     fusedApp.offer_type
                 )
             }
-            val downloadList = getAppDownloadLink(fusedApp, authData).toMutableList()
             val iconBase64 = getIconImageToBase64(fusedApp)
 
             val fusedDownload = FusedDownload(
@@ -128,7 +127,7 @@ class UpdatesWorker @AssistedInject constructor(
                 fusedApp.status,
                 fusedApp.name,
                 fusedApp.package_name,
-                downloadList,
+                mutableListOf(),
                 mutableMapOf(),
                 fusedApp.status,
                 fusedApp.type,
@@ -137,6 +136,9 @@ class UpdatesWorker @AssistedInject constructor(
                 fusedApp.offer_type,
                 fusedApp.isFree
             )
+
+            updateFusedDownloadWithAppDownloadLink(fusedApp, authData, fusedDownload)
+
             fusedManagerRepository.addDownload(fusedDownload)
             fusedManagerRepository.updateAwaiting(fusedDownload)
             Log.d(
@@ -171,23 +173,22 @@ class UpdatesWorker @AssistedInject constructor(
         )
     }
 
-    private suspend fun getAppDownloadLink(app: FusedApp, authData: AuthData): List<String> {
+    private suspend fun updateFusedDownloadWithAppDownloadLink(
+        app: FusedApp,
+        authData: AuthData,
+        fusedDownload: FusedDownload
+    ) {
         val downloadList = mutableListOf<String>()
         if (app.type == Type.PWA) {
             downloadList.add(app.url)
+            fusedDownload.downloadURLList = downloadList
         } else {
-            downloadList.addAll(
-                fusedAPIRepository.getDownloadLink(
-                    app._id,
-                    app.package_name,
-                    app.latest_version_code,
-                    app.offer_type,
-                    authData,
-                    app.origin
-                )
+            fusedAPIRepository.updateFusedDownloadWithDownloadingInfo(
+                authData,
+                app.origin,
+                fusedDownload
             )
         }
-        return downloadList
     }
 
     private fun getIconImageToBase64(fusedApp: FusedApp): String {
