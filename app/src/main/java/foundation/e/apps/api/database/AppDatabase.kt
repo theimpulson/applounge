@@ -11,7 +11,7 @@ import foundation.e.apps.api.fdroid.models.FdroidEntity
 
 @Database(
     entities = [Tracker::class, FdroidEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
