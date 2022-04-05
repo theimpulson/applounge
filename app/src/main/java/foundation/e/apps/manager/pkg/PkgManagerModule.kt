@@ -30,7 +30,10 @@ import android.os.Build
 import android.util.Log
 import androidx.core.content.pm.PackageInfoCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import foundation.e.apps.manager.database.fusedDownload.FusedDownload
+import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
+import foundation.e.apps.utils.enums.Type
 import kotlinx.coroutines.DelicateCoroutinesApi
 import java.io.File
 import javax.inject.Inject
@@ -88,8 +91,35 @@ class PkgManagerModule @Inject constructor(
     }
 
     /**
+     * Sets an installed app's installer as FakeStore if its source / origin is from Google play.
+     * If the origin is not Google play, no operation is performed.
+     *
+     * [See issue 2237](https://gitlab.e.foundation/e/backlog/-/issues/2237)
+     *
+     * Surrounded by try-catch to prevent exception is case App Lounge and FakeStore's
+     * signing certificate is not the same.
+     */
+    fun setFakeStoreAsInstallerIfNeeded(fusedDownload: FusedDownload?) {
+        if (fusedDownload == null || fusedDownload.package_name.isBlank()) {
+            return
+        }
+        if (fusedDownload.origin == Origin.GPLAY) {
+            val fakeStorePackageName = "com.android.vending"
+            if (fusedDownload.type == Type.NATIVE && isInstalled(fakeStorePackageName)) {
+                val targetPackage = fusedDownload.package_name
+                try {
+                    packageManager.setInstallerPackageName(targetPackage, fakeStorePackageName)
+                    Log.d(TAG, "Changed installer to $fakeStorePackageName for $targetPackage")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    /**
      * Installs the given package using system API
-     * @param file An instance of [File]
+     * @param list List of [File] to be written to install session.
      */
     @OptIn(DelicateCoroutinesApi::class)
     fun installApplication(list: List<File>, packageName: String) {
