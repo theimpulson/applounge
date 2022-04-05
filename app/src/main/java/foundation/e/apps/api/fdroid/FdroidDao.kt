@@ -8,6 +8,7 @@ import foundation.e.apps.api.fdroid.models.FdroidEntity
 
 /**
  * Dao interface for storing Fdroid info in DB.
+ * Created from [foundation.e.apps.di.DaoModule.getFdroidDao]
  */
 @Dao
 interface FdroidDao {

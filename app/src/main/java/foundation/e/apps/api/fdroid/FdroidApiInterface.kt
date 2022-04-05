@@ -6,6 +6,7 @@ import retrofit2.http.Path
 
 /**
  * Interface for retrofit calls.
+ * Created from [foundation.e.apps.api.cleanapk.RetrofitModule.provideFdroidApi].
  */
 interface FdroidApiInterface {
 
