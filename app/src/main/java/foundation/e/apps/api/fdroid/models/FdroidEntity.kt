@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey
 class FdroidEntity(@PrimaryKey val packageName: String, authorName: String) {
 
     companion object {
-        val DEFAULT_FDROID_AUTHOR_NAME = "F-Droid"
+        const val DEFAULT_FDROID_AUTHOR_NAME = "F-Droid"
     }
 
     var authorName: String = DEFAULT_FDROID_AUTHOR_NAME
