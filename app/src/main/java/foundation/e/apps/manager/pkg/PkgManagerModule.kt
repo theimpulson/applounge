@@ -100,13 +100,13 @@ class PkgManagerModule @Inject constructor(
      * signing certificate is not the same.
      */
     fun setFakeStoreAsInstallerIfNeeded(fusedDownload: FusedDownload?) {
-        if (fusedDownload == null || fusedDownload.package_name.isBlank()) {
+        if (fusedDownload == null || fusedDownload.packageName.isBlank()) {
             return
         }
         if (fusedDownload.origin == Origin.GPLAY) {
             val fakeStorePackageName = "com.android.vending"
             if (fusedDownload.type == Type.NATIVE && isInstalled(fakeStorePackageName)) {
-                val targetPackage = fusedDownload.package_name
+                val targetPackage = fusedDownload.packageName
                 try {
                     packageManager.setInstallerPackageName(targetPackage, fakeStorePackageName)
                     Log.d(TAG, "Changed installer to $fakeStorePackageName for $targetPackage")
