@@ -221,7 +221,7 @@ class MainActivity : AppCompatActivity() {
         viewModel: MainActivityViewModel
     ) {
         lifecycleScope.launch {
-            if (!checkStorageAvailability(it)) {
+            if (!isStorageAvailable(it)) {
                 showSnackbarMessage(getString(R.string.not_enough_storage))
                 viewModel.updateUnAvailable(it)
                 return@launch
@@ -261,7 +261,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // TODO: move storage availability code to FileManager Class
-    private fun checkStorageAvailability(fusedDownload: FusedDownload): Boolean {
+    private fun isStorageAvailable(fusedDownload: FusedDownload): Boolean {
         var availableSpace = 0L
         availableSpace = calculateAvailableDiskSpace()
         return availableSpace > fusedDownload.appSize + (500 * (1000 * 1000))
