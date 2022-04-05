@@ -135,7 +135,8 @@ class UpdatesWorker @AssistedInject constructor(
                 iconBase64,
                 fusedApp.latest_version_code,
                 fusedApp.offer_type,
-                fusedApp.isFree
+                fusedApp.isFree,
+                fusedApp.originalSize
             )
             fusedManagerRepository.addDownload(fusedDownload)
             fusedManagerRepository.updateAwaiting(fusedDownload)

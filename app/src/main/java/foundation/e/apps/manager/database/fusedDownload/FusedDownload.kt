@@ -20,5 +20,6 @@ data class FusedDownload(
     val iconByteArray: String = String(),
     val versionCode: Int = 1,
     val offerType: Int = -1,
-    val isFree: Boolean = true
+    val isFree: Boolean = true,
+    val appSize: Long = 0
 )

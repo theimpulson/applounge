@@ -18,8 +18,12 @@
 
 package foundation.e.apps
 
+import android.app.usage.StorageStatsManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.os.StatFs
+import android.os.storage.StorageManager
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -34,6 +38,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.application.subFrags.ApplicationDialogFragment
 import foundation.e.apps.databinding.ActivityMainBinding
+import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.workmanager.InstallWorkManager
 import foundation.e.apps.purchase.AppPurchaseFragmentDirections
 import foundation.e.apps.setup.signin.SignInViewModel
@@ -42,6 +47,8 @@ import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
 import foundation.e.apps.utils.modules.CommonUtilsModule
 import kotlinx.coroutines.launch
+import java.io.File
+import java.util.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -161,11 +168,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.downloadList.observe(this) { list ->
             list.forEach {
                 if (it.status == Status.QUEUED) {
-                    lifecycleScope.launch {
-                        viewModel.updateAwaiting(it)
-                        InstallWorkManager.enqueueWork(applicationContext, it)
-                        Log.d(TAG, "===> onCreate: AWAITING ${it.name}")
-                    }
+                    handleFusedDownloadQueued(it, viewModel)
                 }
             }
         }
@@ -213,6 +216,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleFusedDownloadQueued(
+        it: FusedDownload,
+        viewModel: MainActivityViewModel
+    ) {
+        lifecycleScope.launch {
+            if (!checkStorageAvailability(it)) {
+                showSnackbarMessage(getString(R.string.not_enough_storage))
+                viewModel.updateUnAvailable(it)
+                return@launch
+            }
+            if (viewModel.internetConnection.value == false) {
+                showNoInternet()
+                viewModel.updateUnAvailable(it)
+                return@launch
+            }
+            viewModel.updateAwaiting(it)
+            InstallWorkManager.enqueueWork(applicationContext, it)
+            Log.d(TAG, "===> onCreate: AWAITING ${it.name}")
+        }
+    }
+
     private fun startInstallationOfPurchasedApp(
         viewModel: MainActivityViewModel,
         it: String
@@ -234,5 +258,40 @@ class MainActivity : AppCompatActivity() {
     private fun showNoInternet() {
         binding.noInternet.visibility = View.VISIBLE
         binding.fragment.visibility = View.GONE
+    }
+
+    // TODO: move storage availability code to FileManager Class
+    private fun checkStorageAvailability(fusedDownload: FusedDownload): Boolean {
+        var availableSpace = 0L
+        availableSpace = calculateAvailableDiskSpace()
+        return availableSpace > fusedDownload.appSize + (500 * (1000 * 1000))
+    }
+
+    private fun calculateAvailableDiskSpace(): Long {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val storageManager = getSystemService(STORAGE_SERVICE) as StorageManager
+            val statsManager = getSystemService(STORAGE_STATS_SERVICE) as StorageStatsManager
+            val uuid = storageManager.primaryStorageVolume.uuid
+            try {
+                if (uuid != null) {
+                    statsManager.getFreeBytes(UUID.fromString(uuid))
+                } else {
+                    statsManager.getFreeBytes(StorageManager.UUID_DEFAULT)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "calculateAvailableDiskSpace: ${e.stackTraceToString()}")
+                getAvailableInternalMemorySize()
+            }
+        } else {
+            getAvailableInternalMemorySize()
+        }
+    }
+
+    private fun getAvailableInternalMemorySize(): Long {
+        val path: File = Environment.getDataDirectory()
+        val stat = StatFs(path.path)
+        val blockSize = stat.blockSizeLong
+        val availableBlocks = stat.availableBlocksLong
+        return availableBlocks * blockSize
     }
 }

@@ -102,6 +102,7 @@
     <string name="install_blocked_google">Paid apps are not supported in App Lounge yet. Just a little more patience, it will soon be the case.</string>
     <string name="message_app_available_later">This app will be available later!</string>
     <string name="unknown_error">Unknown Error!</string>
+    <string name="not_enough_storage">There is not enough space available to download this application!</string>
 
     <!-- Updates Fragment -->
     <string name="update_all">Update All</string>

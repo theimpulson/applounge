@@ -639,6 +639,7 @@ class FusedAPIImpl @Inject constructor(
             offer_type = this.offerType,
             origin = Origin.GPLAY,
             shareUrl = this.shareUrl,
+            originalSize = this.size,
             appSize = Formatter.formatFileSize(context, this.size),
             isFree = this.isFree,
             price = this.price

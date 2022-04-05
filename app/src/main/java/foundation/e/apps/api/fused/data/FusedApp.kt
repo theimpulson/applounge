@@ -42,6 +42,7 @@ data class FusedApp(
     var status: Status = Status.UNAVAILABLE,
     var origin: Origin = Origin.CLEANAPK,
     val shareUrl: String = String(),
+    val originalSize: Long = 0,
     val appSize: String = String(),
     var source: String = String(),
     val price: String = String(),

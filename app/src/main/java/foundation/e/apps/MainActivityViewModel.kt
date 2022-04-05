@@ -162,7 +162,8 @@ class MainActivityViewModel @Inject constructor(
                     appIcon,
                     app.latest_version_code,
                     app.offer_type,
-                    app.isFree
+                    app.isFree,
+                    app.originalSize
                 )
             } catch (e: Exception) {
                 if (e is ApiException.AppNotPurchased) {
@@ -198,7 +199,8 @@ class MainActivityViewModel @Inject constructor(
             appIcon,
             app.latest_version_code,
             app.offer_type,
-            app.isFree
+            app.isFree,
+            app.originalSize
         )
         viewModelScope.launch {
             fusedManagerRepository.addFusedDownloadPurchaseNeeded(fusedDownload)
@@ -208,6 +210,10 @@ class MainActivityViewModel @Inject constructor(
 
     suspend fun updateAwaiting(fusedDownload: FusedDownload) {
         fusedManagerRepository.updateAwaiting(fusedDownload)
+    }
+
+    suspend fun updateUnAvailable(fusedDownload: FusedDownload) {
+        fusedManagerRepository.updateUnavailable(fusedDownload)
     }
 
     suspend fun updateAwaitingForPurchasedApp(packageName: String): FusedDownload? {
