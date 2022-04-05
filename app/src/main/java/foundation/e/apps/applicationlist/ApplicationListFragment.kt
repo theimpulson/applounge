@@ -86,7 +86,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             if (!categoryList.isNullOrEmpty()) {
                 list.forEach {
                     categoryList.find { app ->
-                        app.origin == it.origin && (app.package_name == it.package_name || app._id == it.id)
+                        app.origin == it.origin && (app.package_name == it.packageName || app._id == it.id)
                     }?.status = it.status
                 }
                 viewModel.appListLiveData.value = categoryList

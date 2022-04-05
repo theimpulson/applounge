@@ -24,6 +24,7 @@ import com.aurora.gplayapi.data.models.Category
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.FusedCategory
 import foundation.e.apps.api.fused.data.FusedHome
+import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.utils.enums.Origin
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -57,21 +58,15 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.getApplicationDetails(id, packageName, authData, origin)
     }
 
-    suspend fun getDownloadLink(
-        id: String,
-        packageName: String,
-        versionCode: Int,
-        offerType: Int,
+    suspend fun updateFusedDownloadWithDownloadingInfo(
         authData: AuthData,
-        origin: Origin
-    ): List<String> {
-        return fusedAPIImpl.getDownloadLink(
-            id,
-            packageName,
-            versionCode,
-            offerType,
+        origin: Origin,
+        fusedDownload: FusedDownload
+    ) {
+        fusedAPIImpl.updateFusedDownloadWithDownloadingInfo(
             authData,
-            origin
+            origin,
+            fusedDownload
         )
     }
 

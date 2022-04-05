@@ -1,6 +1,7 @@
 package foundation.e.apps.manager.database
 
 import androidx.room.TypeConverter
+import com.aurora.gplayapi.data.models.File
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -19,4 +20,11 @@ class FusedConverter {
     @TypeConverter
     fun jsonLongToList(value: String): MutableMap<Long, Boolean> =
         Gson().fromJson(value, object : TypeToken<MutableMap<Long, Boolean>>() {}.type)
+
+    @TypeConverter
+    fun filesToJsonString(value: List<File>): String = Gson().toJson(value)
+
+    @TypeConverter
+    fun jsonStringToFiles(value: String) =
+        Gson().fromJson(value, Array<File>::class.java).toMutableList()
 }

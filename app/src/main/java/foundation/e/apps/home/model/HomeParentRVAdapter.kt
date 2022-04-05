@@ -95,7 +95,7 @@ class HomeParentRVAdapter(
 
     private fun findInstallingApp(fusedHome: FusedHome, fusedDownload: FusedDownload): FusedApp? {
         return fusedHome.list.find { app ->
-            app.origin == fusedDownload.origin && (app.package_name == fusedDownload.package_name || app._id == fusedDownload.id)
+            app.origin == fusedDownload.origin && (app.package_name == fusedDownload.packageName || app._id == fusedDownload.id)
         }
     }
 
