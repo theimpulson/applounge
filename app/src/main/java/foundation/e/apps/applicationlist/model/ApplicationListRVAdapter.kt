@@ -34,6 +34,7 @@ import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.Shimmer.Direction.LEFT_TO_RIGHT
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.snackbar.Snackbar
+import foundation.e.apps.FdroidFetchViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
@@ -53,6 +54,7 @@ import javax.inject.Singleton
 class ApplicationListRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val privacyInfoViewModel: PrivacyInfoViewModel,
+    private val fdroidFetchViewModel: FdroidFetchViewModel,
     private val currentDestinationId: Int,
     private val pkgManagerModule: PkgManagerModule,
     private val user: User,
@@ -121,6 +123,7 @@ class ApplicationListRVAdapter(
             }
             appTitle.text = searchApp.name
             appAuthor.text = searchApp.author
+            fdroidFetchViewModel.setAuthorNameIfNeeded(appAuthor, searchApp)
             if (searchApp.ratings.usageQualityScore != -1.0) {
                 appRating.text = searchApp.ratings.usageQualityScore.toString()
                 appRatingBar.rating = searchApp.ratings.usageQualityScore.toFloat()

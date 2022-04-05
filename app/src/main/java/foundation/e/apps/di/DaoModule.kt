@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import foundation.e.apps.api.database.AppDatabase
 import foundation.e.apps.api.exodus.TrackerDao
+import foundation.e.apps.api.fdroid.FdroidDao
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -15,5 +16,10 @@ object DaoModule {
     @Provides
     fun getTrackerDao(@ApplicationContext context: Context): TrackerDao {
         return AppDatabase.getInstance(context).trackerDao()
+    }
+
+    @Provides
+    fun getFdroidDao(@ApplicationContext context: Context): FdroidDao {
+        return AppDatabase.getInstance(context).fdroidDao()
     }
 }

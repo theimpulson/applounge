@@ -42,6 +42,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
+import foundation.e.apps.FdroidFetchViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
@@ -69,6 +70,7 @@ class SearchFragment :
 
     private val searchViewModel: SearchViewModel by viewModels()
     private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
+    private val fdroidFetchViewModel: FdroidFetchViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
     private val appProgressViewModel: AppProgressViewModel by viewModels()
 
@@ -114,6 +116,7 @@ class SearchFragment :
             ApplicationListRVAdapter(
                 this,
                 privacyInfoViewModel,
+                fdroidFetchViewModel,
                 it,
                 pkgManagerModule,
                 User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),

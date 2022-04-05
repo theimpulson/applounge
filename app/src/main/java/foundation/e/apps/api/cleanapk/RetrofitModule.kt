@@ -20,6 +20,8 @@ package foundation.e.apps.api.cleanapk
 
 import android.os.Build
 import android.util.Log
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -27,6 +29,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import foundation.e.apps.api.exodus.ExodusTrackerApi
+import foundation.e.apps.api.fdroid.FdroidApiInterface
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -35,8 +38,10 @@ import okhttp3.Protocol
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Retrofit
+import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.net.ConnectException
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -69,12 +74,42 @@ object RetrofitModule {
             .create(ExodusTrackerApi::class.java)
     }
 
+    /**
+     * The fdroid api returns results in .yaml format.
+     * Hence we need a yaml convertor.
+     * Convertor is being provided by [getYamlFactory].
+     */
+    @Singleton
+    @Provides
+    fun provideFdroidApi(
+        okHttpClient: OkHttpClient,
+        @Named("yamlFactory") yamlFactory: JacksonConverterFactory
+    ): FdroidApiInterface {
+        return Retrofit.Builder()
+            .baseUrl(FdroidApiInterface.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(yamlFactory)
+            .build()
+            .create(FdroidApiInterface::class.java)
+    }
+
     @Singleton
     @Provides
     fun getMoshi(): Moshi {
         return Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
+    }
+
+    /**
+     * Used in above [provideFdroidApi].
+     * Reference: https://stackoverflow.com/a/69859687
+     */
+    @Singleton
+    @Provides
+    @Named("yamlFactory")
+    fun getYamlFactory(): JacksonConverterFactory {
+        return JacksonConverterFactory.create(ObjectMapper(YAMLFactory()))
     }
 
     @Singleton
