@@ -1,0 +1,21 @@
+package foundation.e.apps.api.fdroid
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import foundation.e.apps.api.fdroid.models.FdroidEntity
+
+/**
+ * Dao interface for storing Fdroid info in DB.
+ */
+@Dao
+interface FdroidDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveFdroidEntity(fdroidEntity: FdroidEntity)
+
+    @Query("SELECT * FROM FdroidEntity where packageName is :packageName")
+    suspend fun getFdroidEntityFromPackageName(packageName: String): FdroidEntity?
+
+}
