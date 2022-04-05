@@ -22,10 +22,10 @@ class AppProgressViewModel @Inject constructor(
     ): Pair<Long, Long> {
         fusedApp?.let { app ->
             val appDownload = fusedManagerRepository.getDownloadList()
-                .singleOrNull { it.id.contentEquals(app._id) && it.package_name.contentEquals(app.package_name) }
+                .singleOrNull { it.id.contentEquals(app._id) && it.packageName.contentEquals(app.package_name) }
                 ?: return Pair(1, 0)
 
-            if (!appDownload.id.contentEquals(app._id) || !appDownload.package_name.contentEquals(app.package_name)) {
+            if (!appDownload.id.contentEquals(app._id) || !appDownload.packageName.contentEquals(app.package_name)) {
                 return@let
             }
             val downloadingMap = progress.totalSizeBytes.filter { item ->

@@ -44,6 +44,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.FdroidFetchViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
@@ -75,6 +76,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
     private val applicationViewModel: ApplicationViewModel by viewModels()
     private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
+    private val fdroidFetchViewModel: FdroidFetchViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
     private var applicationIcon: ImageView? = null
@@ -127,7 +129,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
             list.forEach {
-                if (it.origin == args.origin && (it.package_name == args.packageName || it.id == args.id)) {
+                if (it.origin == args.origin && (it.packageName == args.packageName || it.id == args.id)) {
                     applicationViewModel.appStatus.value = it.status
                 }
             }
@@ -144,6 +146,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 applicationIcon = appIcon
                 appName.text = it.name
                 appAuthor.text = it.author
+                fdroidFetchViewModel.setAuthorNameIfNeeded(appAuthor, it)
                 categoryTitle.text = it.category
                 if (args.origin == Origin.CLEANAPK) {
                     appIcon.load(CleanAPKInterface.ASSET_URL + it.icon_image_path)

@@ -34,6 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
+import foundation.e.apps.FdroidFetchViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
@@ -57,6 +58,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
 
     private val viewModel: ApplicationListViewModel by viewModels()
     private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
+    private val fdroidFetchViewModel: FdroidFetchViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
     private val appProgressViewModel: AppProgressViewModel by viewModels()
 
@@ -86,7 +88,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             if (!categoryList.isNullOrEmpty()) {
                 list.forEach {
                     categoryList.find { app ->
-                        app.origin == it.origin && (app.package_name == it.package_name || app._id == it.id)
+                        app.origin == it.origin && (app.package_name == it.packageName || app._id == it.id)
                     }?.status = it.status
                 }
                 viewModel.appListLiveData.value = categoryList
@@ -110,6 +112,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                 ApplicationListRVAdapter(
                     this,
                     privacyInfoViewModel,
+                    fdroidFetchViewModel,
                     it,
                     pkgManagerModule,
                     User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
