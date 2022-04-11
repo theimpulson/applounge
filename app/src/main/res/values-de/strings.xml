@@ -102,4 +102,5 @@
     <string name="dialog_paidapp_message">Wenn du auf die Bestätigung tippst, wirst du zur Google Play Seite weitergeleitet, um den Bezahlvorgang für die App im Browser abzuschließen. Tippe zur Bestätigung des Kaufes von %1$s für %2$s.</string>
     <string name="dialog_confirm">BESTÄTIGUNG</string>
     <string name="dialog_cancel">ABBRECHEN</string>
+    <string name="privacy_description">Die Datenschutz-Bewertung wird automatisch berechnet aus den Berechtigungen und den Trackern, die in den Anwendungen gefunden werden. Es gibt einen Überblick darüber, wie sehr die App Benutzer ausspioniert.</string>
 </resources>
