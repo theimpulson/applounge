@@ -164,15 +164,11 @@ class SearchFragment :
         }
 
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
-            val searchResult = searchViewModel.searchResult.value?.toMutableList()
-            if (!searchResult.isNullOrEmpty()) {
-                list.forEach {
-                    searchResult.find { app ->
-                        app.origin == it.origin && (app.package_name == it.packageName || app._id == it.id)
-                    }?.status = it.status
-                }
-                searchViewModel.searchResult.value = searchResult
+            val searchList = searchViewModel.searchResult.value?.toMutableList()
+            searchList?.let {
+                mainActivityViewModel.updateStatusOfFusedApps(searchList, list)
             }
+            searchViewModel.searchResult.value = searchList
         }
 
         searchViewModel.searchResult.observe(viewLifecycleOwner) {

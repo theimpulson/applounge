@@ -61,6 +61,8 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
     private val appProgressViewModel: AppProgressViewModel by viewModels()
 
+    private var isDownloadObserverAdded = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentUpdatesBinding.bind(view)
@@ -93,7 +95,11 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
             ) { fusedApp ->
                 ApplicationDialogFragment(
                     title = getString(R.string.dialog_title_paid_app, fusedApp.name),
-                    message = getString(R.string.dialog_paidapp_message, fusedApp.name, fusedApp.price),
+                    message = getString(
+                        R.string.dialog_paidapp_message,
+                        fusedApp.name,
+                        fusedApp.price
+                    ),
                     positiveButtonText = getString(R.string.dialog_confirm),
                     positiveButtonAction = {
                     },
@@ -111,20 +117,12 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
             updateProgressOfDownloadingItems(recyclerView, it)
         }
 
-        mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
-            val updatesList = updatesViewModel.updatesList.value?.toMutableList()
-            if (!updatesList.isNullOrEmpty()) {
-                list.forEach {
-                    updatesList.find { app ->
-                        app.origin == it.origin && (app.package_name == it.packageName || app._id == it.id)
-                    }?.status = it.status
-                }
-                updatesViewModel.updatesList.value = updatesList
-            }
-        }
-
         updatesViewModel.updatesList.observe(viewLifecycleOwner) {
             listAdapter?.setData(it)
+            if (!isDownloadObserverAdded) {
+                observeDownloadList()
+                isDownloadObserverAdded = true
+            }
             binding.progressBar.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
             if (!it.isNullOrEmpty()) {
@@ -134,6 +132,16 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
                 binding.noUpdates.visibility = View.VISIBLE
                 binding.button.isEnabled = false
             }
+        }
+    }
+
+    private fun observeDownloadList() {
+        mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
+            val appList = updatesViewModel.updatesList.value?.toMutableList()
+            appList?.let {
+                mainActivityViewModel.updateStatusOfFusedApps(appList, list)
+            }
+            updatesViewModel.updatesList.value = appList
         }
     }
 

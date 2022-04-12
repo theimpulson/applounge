@@ -84,15 +84,11 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
 
     private fun observeDownloadList() {
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
-            val categoryList = viewModel.appListLiveData.value?.toMutableList()
-            if (!categoryList.isNullOrEmpty()) {
-                list.forEach {
-                    categoryList.find { app ->
-                        app.origin == it.origin && (app.package_name == it.packageName || app._id == it.id)
-                    }?.status = it.status
-                }
-                viewModel.appListLiveData.value = categoryList
+            val appList = viewModel.appListLiveData.value?.toMutableList()
+            appList?.let {
+                mainActivityViewModel.updateStatusOfFusedApps(it, list)
             }
+            viewModel.appListLiveData.value = appList
         }
     }
 
@@ -120,7 +116,11 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                 ) { fusedApp ->
                     ApplicationDialogFragment(
                         title = getString(R.string.dialog_title_paid_app, fusedApp.name),
-                        message = getString(R.string.dialog_paidapp_message, fusedApp.name, fusedApp.price),
+                        message = getString(
+                            R.string.dialog_paidapp_message,
+                            fusedApp.name,
+                            fusedApp.price
+                        ),
                         positiveButtonText = getString(R.string.dialog_confirm),
                         positiveButtonAction = {
                             getApplication(fusedApp)

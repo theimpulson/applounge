@@ -39,6 +39,7 @@ import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
+import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
@@ -55,6 +56,7 @@ class MainActivityViewModel @Inject constructor(
     private val dataStoreModule: DataStoreModule,
     private val fusedAPIRepository: FusedAPIRepository,
     private val fusedManagerRepository: FusedManagerRepository,
+    private val pkgManagerModule: PkgManagerModule
 ) : ViewModel() {
 
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
@@ -277,5 +279,14 @@ class MainActivityViewModel @Inject constructor(
 
     val internetConnection = liveData {
         emitSource(ReactiveNetwork().observeInternetConnectivity().asLiveData(Dispatchers.Default))
+    }
+
+    fun updateStatusOfFusedApps(fusedAppList: List<FusedApp>, fusedDownloadList: List<FusedDownload>) {
+        fusedAppList.forEach {
+            val downloadingItem = fusedDownloadList.find { fusedDownload ->
+                fusedDownload.origin == it.origin && (fusedDownload.packageName == it.package_name || fusedDownload.id == it._id)
+            }
+            it.status = downloadingItem?.status ?: pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+        }
     }
 }

@@ -119,13 +119,15 @@ class InstallAppWorker @AssistedInject constructor(
     ) {
         databaseRepository.getDownloadFlowById(it.id).takeWhile { isDownloading }
             .collect { fusedDownload ->
-                fusedDownload?.let {
-                    Log.d(
-                        TAG,
-                        "doWork: flow collect ===> ${fusedDownload.name} ${fusedDownload.status}"
-                    )
-                    handleFusedDownloadStatus(fusedDownload)
+                if (fusedDownload == null) {
+                    isDownloading = false
+                    return@collect
                 }
+                Log.d(
+                    TAG,
+                    "doWork: flow collect ===> ${fusedDownload.name} ${fusedDownload.status}"
+                )
+                handleFusedDownloadStatus(fusedDownload)
             }
     }
 
