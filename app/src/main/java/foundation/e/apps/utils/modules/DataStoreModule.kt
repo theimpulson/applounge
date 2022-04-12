@@ -69,13 +69,19 @@ class DataStoreModule @Inject constructor(
      *
      * Modification for issue: https://gitlab.e.foundation/e/backlog/-/issues/5168
      * Previously this method would also remove [USERTYPE].
-     * But now it is only to be done from [saveUserType] passing [User.UNAVAILABLE] when clicking logout.
+     * To clear this value, call [clearUserType].
      */
     suspend fun destroyCredentials() {
         context.dataStore.edit {
             it.remove(AUTHDATA)
             it.remove(EMAIL)
             it.remove(OAUTHTOKEN)
+        }
+    }
+
+    suspend fun clearUserType() {
+        context.dataStore.edit {
+            it.remove(USERTYPE)
         }
     }
 
