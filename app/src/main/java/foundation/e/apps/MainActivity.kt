@@ -46,14 +46,19 @@ import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
 import foundation.e.apps.utils.modules.CommonUtilsModule
+import foundation.e.apps.utils.modules.DataStoreModule
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.UUID
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val TAG = MainActivity::class.java.simpleName
+
+    @Inject
+    lateinit var dataStoreModule: DataStoreModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,11 +135,33 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.authValidity.observe(this) {
-            if (it != true) {
-                Log.d(TAG, "Authentication data validation failed!")
-                viewModel.destroyCredentials()
-            } else {
-                Log.d(TAG, "Authentication data is valid!")
+            lifecycleScope.launch {
+                if (it != true) {
+                    Log.d(TAG, "Authentication data validation failed!")
+                    /*
+                     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5168
+                     *
+                     * Previously we were using viewmodel.destroyCredentials(), without
+                     * a coroutine scope.
+                     *
+                     * If auth data is invalid, we need old credentials to be removed followed by
+                     * generation of new auth data. If we use via viewmodel, the two jobs do not
+                     * occur sequentially. Hence we run the suspend function directly
+                     * inside a coroutine scope.
+                     *
+                     * ALso now destroyCredentials() no longer removes the user type
+                     * (i.e. Google login or Anonymous). User type data is only removed on logout.
+                     * New auth data is generated without prompting the user to choose Google login
+                     * or Anonymous; which is the purpose of the issue filed above.
+                     */
+                    dataStoreModule.destroyCredentials()
+                    dataStoreModule.userType.collect { user ->
+                        Log.d(TAG, "Regenerating auth data for user type: $user")
+                        generateAuthDataBasedOnUserType(user)
+                    }
+                } else {
+                    Log.d(TAG, "Authentication data is valid!")
+                }
             }
         }
 
