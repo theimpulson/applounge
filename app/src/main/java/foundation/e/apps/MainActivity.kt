@@ -83,6 +83,28 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        fun generateAuthDataBasedOnUserType(user: String) {
+            if (user.isNotBlank() && viewModel.tocStatus.value == true) {
+                when (User.valueOf(user)) {
+                    User.ANONYMOUS -> {
+                        if (viewModel.authDataJson.value.isNullOrEmpty() && !viewModel.authRequestRunning) {
+                            Log.d(TAG, "Fetching new authentication data")
+                            viewModel.getAuthData()
+                        }
+                    }
+                    User.UNAVAILABLE -> {
+                        viewModel.destroyCredentials()
+                    }
+                    User.GOOGLE -> {
+                        if (viewModel.authData.value == null && !viewModel.authRequestRunning) {
+                            Log.d(TAG, "Fetching new authentication data")
+                            signInViewModel.fetchAuthData()
+                        }
+                    }
+                }
+            }
+        }
+
         viewModel.internetConnection.observe(this) { isInternetAvailable ->
             hasInternet = isInternetAvailable
             if (isInternetAvailable) {
@@ -90,25 +112,7 @@ class MainActivity : AppCompatActivity() {
                 binding.fragment.visibility = View.VISIBLE
 
                 viewModel.userType.observe(this) { user ->
-                    if (user.isNotBlank() && viewModel.tocStatus.value == true) {
-                        when (User.valueOf(user)) {
-                            User.ANONYMOUS -> {
-                                if (viewModel.authDataJson.value.isNullOrEmpty() && !viewModel.authRequestRunning) {
-                                    Log.d(TAG, "Fetching new authentication data")
-                                    viewModel.getAuthData()
-                                }
-                            }
-                            User.UNAVAILABLE -> {
-                                viewModel.destroyCredentials()
-                            }
-                            User.GOOGLE -> {
-                                if (viewModel.authData.value == null && !viewModel.authRequestRunning) {
-                                    Log.d(TAG, "Fetching new authentication data")
-                                    signInViewModel.fetchAuthData()
-                                }
-                            }
-                        }
-                    }
+                    generateAuthDataBasedOnUserType(user)
                 }
 
                 signInViewModel.authLiveData.observe(this) {
