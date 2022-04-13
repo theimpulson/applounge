@@ -46,7 +46,6 @@ import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
 import foundation.e.apps.utils.modules.CommonUtilsModule
-import foundation.e.apps.utils.modules.DataStoreModule
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.UUID
@@ -56,9 +55,6 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val TAG = MainActivity::class.java.simpleName
-
-    @Inject
-    lateinit var dataStoreModule: DataStoreModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     User.UNAVAILABLE -> {
-                        viewModel.destroyCredentials()
+                        viewModel.destroyCredentials(null)
                     }
                     User.GOOGLE -> {
                         if (viewModel.authData.value == null && !viewModel.authRequestRunning) {
@@ -135,41 +131,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.authValidity.observe(this) {
-            lifecycleScope.launch {
-                if (it != true) {
-                    Log.d(TAG, "Authentication data validation failed!")
-                    /*
-                     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5168
-                     *
-                     * Previously we were using viewmodel.destroyCredentials(), without
-                     * a coroutine scope.
-                     *
-                     * If auth data is invalid, we need old credentials to be removed followed by
-                     * generation of new auth data. If we use via viewmodel, the two jobs do not
-                     * occur sequentially. Hence we run the suspend function directly
-                     * inside a coroutine scope.
-                     *
-                     * Now destroyCredentials() no longer removes the user type from data store.
-                     * (i.e. Google login or Anonymous).
-                     * - If the type is User.ANONYMOUS then we do not prompt the user to login again,
-                     *   we directly generate new auth data; which is the main Gitlab issue described above.
-                     * - If not anonymous user, i.e. type is User.GOOGLE, in that case we clear
-                     *   the USERTYPE value. This causes HomeFragment.onTosAccepted() to open
-                     *   SignInFragment as we need fresh login from the user.
-                     */
-                    dataStoreModule.destroyCredentials()
-                    dataStoreModule.userType.collect { user ->
-                        if (!user.isBlank() && User.valueOf(user) == User.ANONYMOUS) {
-                            Log.d(TAG, "Regenerating auth data for Anonymous user")
-                            generateAuthDataBasedOnUserType(user)
-                        } else {
-                            Log.d(TAG, "Ask Google user to log in again")
-                            dataStoreModule.clearUserType()
-                        }
-                    }
-                } else {
-                    Log.d(TAG, "Authentication data is valid!")
+            if (it != true) {
+                Log.d(TAG, "Authentication data validation failed!")
+                viewModel.destroyCredentials { user ->
+                    generateAuthDataBasedOnUserType(user)
                 }
+            } else {
+                Log.d(TAG, "Authentication data is valid!")
             }
         }
 

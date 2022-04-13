@@ -42,6 +42,7 @@ import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
+import foundation.e.apps.utils.enums.User
 import foundation.e.apps.utils.modules.DataStoreModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -99,9 +100,31 @@ class MainActivityViewModel @Inject constructor(
         _authData.value = authData
     }
 
-    fun destroyCredentials() {
+    fun destroyCredentials(regenerateFunction: ((user: String) -> Unit)?) {
         viewModelScope.launch {
+            /*
+             * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5168
+             *
+             * Now destroyCredentials() no longer removes the user type from data store.
+             * (i.e. Google login or Anonymous).
+             * - If the type is User.ANONYMOUS then we do not prompt the user to login again,
+             *   we directly generate new auth data; which is the main Gitlab issue described above.
+             * - If not anonymous user, i.e. type is User.GOOGLE, in that case we clear
+             *   the USERTYPE value. This causes HomeFragment.onTosAccepted() to open
+             *   SignInFragment as we need fresh login from the user.
+             */
             dataStoreModule.destroyCredentials()
+            if (regenerateFunction != null) {
+                dataStoreModule.userType.collect { user ->
+                    if (!user.isBlank() && User.valueOf(user) == User.ANONYMOUS) {
+                        Log.d(TAG, "Regenerating auth data for Anonymous user")
+                        regenerateFunction(user)
+                    } else {
+                        Log.d(TAG, "Ask Google user to log in again")
+                        dataStoreModule.clearUserType()
+                    }
+                }
+            }
         }
     }
 
