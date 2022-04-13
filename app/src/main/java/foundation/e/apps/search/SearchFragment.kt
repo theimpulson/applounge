@@ -52,6 +52,7 @@ import foundation.e.apps.databinding.FragmentSearchBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -64,6 +65,9 @@ class SearchFragment :
 
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
+
+    @Inject
+    lateinit var pwaManagerModule: PWAManagerModule
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -119,6 +123,7 @@ class SearchFragment :
                 fdroidFetchViewModel,
                 it,
                 pkgManagerModule,
+                pwaManagerModule,
                 User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
                 viewLifecycleOwner
             ) { fusedApp ->

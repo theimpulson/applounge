@@ -43,6 +43,7 @@ import foundation.e.apps.manager.download.data.DownloadProgress
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -54,6 +55,9 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
 
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
+
+    @Inject
+    lateinit var pwaManagerModule: PWAManagerModule
 
     private val updatesViewModel: UpdatesViewModel by viewModels()
     private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
@@ -90,6 +94,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
                 fdroidFetchViewModel,
                 it,
                 pkgManagerModule,
+                pwaManagerModule,
                 User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
                 viewLifecycleOwner,
             ) { fusedApp ->

@@ -48,6 +48,7 @@ import foundation.e.apps.updates.UpdatesFragmentDirections
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.modules.PWAManagerModule
 import javax.inject.Singleton
 
 @Singleton
@@ -57,6 +58,7 @@ class ApplicationListRVAdapter(
     private val fdroidFetchViewModel: FdroidFetchViewModel,
     private val currentDestinationId: Int,
     private val pkgManagerModule: PkgManagerModule,
+    private val pwaManagerModule: PWAManagerModule,
     private val user: User,
     private val lifecycleOwner: LifecycleOwner,
     private val paidAppHandler: ((FusedApp) -> Unit)? = null
@@ -341,7 +343,11 @@ class ApplicationListRVAdapter(
             backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             setOnClickListener {
-                context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
+                if (searchApp.is_pwa) {
+                    pwaManagerModule.launchPwa(searchApp)
+                } else {
+                    context.startActivity(pkgManagerModule.getLaunchIntent(searchApp.package_name))
+                }
             }
         }
     }

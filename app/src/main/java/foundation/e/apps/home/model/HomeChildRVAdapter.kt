@@ -40,10 +40,12 @@ import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.modules.PWAManagerModule
 
 class HomeChildRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val pkgManagerModule: PkgManagerModule,
+    private val pwaManagerModule: PWAManagerModule,
     private val user: User,
     private val paidAppHandler: ((FusedApp) -> Unit)? = null
 ) : ListAdapter<FusedApp, HomeChildRVAdapter.ViewHolder>(HomeChildFusedAppDiffUtil()) {
@@ -106,7 +108,11 @@ class HomeChildRVAdapter(
                         strokeColor =
                             ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
-                            context.startActivity(pkgManagerModule.getLaunchIntent(homeApp.package_name))
+                            if (homeApp.is_pwa) {
+                                pwaManagerModule.launchPwa(homeApp)
+                            } else {
+                                context.startActivity(pkgManagerModule.getLaunchIntent(homeApp.package_name))
+                            }
                         }
                     }
                 }
