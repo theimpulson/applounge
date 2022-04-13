@@ -42,6 +42,7 @@ import foundation.e.apps.manager.download.data.DownloadProgress
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -57,6 +58,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
 
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
+
+    @Inject
+    lateinit var pwaManagerModule: PWAManagerModule
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -83,6 +87,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
         val homeParentRVAdapter = HomeParentRVAdapter(
             this,
             pkgManagerModule,
+            pwaManagerModule,
             User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
             mainActivityViewModel, viewLifecycleOwner
         ) { fusedApp ->

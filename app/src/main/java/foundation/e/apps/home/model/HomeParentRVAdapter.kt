@@ -31,10 +31,12 @@ import foundation.e.apps.api.fused.data.FusedHome
 import foundation.e.apps.databinding.HomeParentListItemBinding
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.modules.PWAManagerModule
 
 class HomeParentRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val pkgManagerModule: PkgManagerModule,
+    private val pwaManagerModule: PWAManagerModule,
     private val user: User,
     private val mainActivityViewModel: MainActivityViewModel,
     private val lifecycleOwner: LifecycleOwner,
@@ -56,7 +58,7 @@ class HomeParentRVAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val fusedHome = getItem(position)
         val homeChildRVAdapter =
-            HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, user, paidAppHandler)
+            HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, pwaManagerModule, user, paidAppHandler)
         homeChildRVAdapter.setData(fusedHome.list)
 
         holder.binding.titleTV.text = fusedHome.title
