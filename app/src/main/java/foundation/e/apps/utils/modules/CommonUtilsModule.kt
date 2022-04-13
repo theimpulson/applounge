@@ -22,8 +22,11 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.os.Bundle
 import android.os.Environment
 import android.os.StatFs
+import androidx.annotation.IdRes
+import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -126,5 +129,25 @@ object CommonUtilsModule {
             }
         }
         return false
+    }
+
+    /**
+     * Prevents calling a route if the navigation is already done, i.e. prevents duplicate calls.
+     * Source: https://nezspencer.medium.com/navigation-components-a-fix-for-navigation-action-cannot-be-found-in-the-current-destination-95b63e16152e
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5166
+     * Also related: https://gitlab.e.foundation/ecorp/apps/apps/-/merge_requests/28
+     */
+    fun NavController.safeNavigate(
+        @IdRes currentDestinationId: Int,
+        @IdRes id: Int,
+        args: Bundle? = null
+    ) {
+        try {
+            if (currentDestinationId == currentDestination?.id) {
+                navigate(id, args)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

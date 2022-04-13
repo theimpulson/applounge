@@ -42,6 +42,7 @@ import foundation.e.apps.manager.download.data.DownloadProgress
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.modules.CommonUtilsModule.safeNavigate
 import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -184,8 +185,15 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
 
     private fun onTosAccepted(isTosAccepted: Boolean) {
         if (isTosAccepted) {
+            /*
+             * "safeNavigate" is an extension function, to prevent calling this navigation multiple times.
+             * This is taken from:
+             * https://nezspencer.medium.com/navigation-components-a-fix-for-navigation-action-cannot-be-found-in-the-current-destination-95b63e16152e
+             * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5166
+             * Also related: https://gitlab.e.foundation/ecorp/apps/apps/-/merge_requests/28
+             */
             view?.findNavController()
-                ?.navigate(R.id.action_homeFragment_to_signInFragment)
+                ?.safeNavigate(R.id.homeFragment, R.id.action_homeFragment_to_signInFragment)
         }
     }
 }
