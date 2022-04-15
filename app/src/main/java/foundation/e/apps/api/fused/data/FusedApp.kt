@@ -48,6 +48,7 @@ data class FusedApp(
     val price: String = String(),
     val isFree: Boolean = true,
     val is_pwa: Boolean = false,
+    var pwaPlayerDbId: Long = -1,
     val url: String = String(),
     var type: Type = Type.NATIVE,
     var privacyScore: Int = -1

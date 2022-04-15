@@ -68,6 +68,19 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receiver.PWAPlayerStatusReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="foundation.e.pwaplayer.PWA_ADDED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="foundation.e.pwaplayer.PWA_CHANGED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="foundation.e.pwaplayer.PWA_REMOVED" />
+            </intent-filter>
+        </receiver>
+
         <!-- If you want to disable android.startup completely. -->
         <provider
             android:name="androidx.startup.InitializationProvider"

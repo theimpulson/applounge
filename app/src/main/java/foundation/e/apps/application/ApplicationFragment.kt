@@ -58,6 +58,7 @@ import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -73,6 +74,9 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
+
+    @Inject
+    lateinit var pwaManagerModule: PWAManagerModule
 
     private val applicationViewModel: ApplicationViewModel by viewModels()
     private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
@@ -462,7 +466,11 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             setOnClickListener {
-                startActivity(pkgManagerModule.getLaunchIntent(fusedApp.package_name))
+                if (fusedApp.is_pwa) {
+                    pwaManagerModule.launchPwa(fusedApp)
+                } else {
+                    startActivity(pkgManagerModule.getLaunchIntent(fusedApp.package_name))
+                }
             }
         }
     }

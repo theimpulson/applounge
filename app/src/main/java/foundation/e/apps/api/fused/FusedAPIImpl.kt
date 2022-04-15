@@ -44,6 +44,7 @@ import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
+import foundation.e.apps.utils.modules.PWAManagerModule
 import foundation.e.apps.utils.modules.PreferenceManagerModule
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -53,6 +54,7 @@ class FusedAPIImpl @Inject constructor(
     private val cleanAPKRepository: CleanAPKRepository,
     private val gPlayAPIRepository: GPlayAPIRepository,
     private val pkgManagerModule: PkgManagerModule,
+    private val pwaManagerModule: PWAManagerModule,
     private val preferenceManagerModule: PreferenceManagerModule,
     @ApplicationContext private val context: Context
 ) {
@@ -643,8 +645,12 @@ class FusedAPIImpl @Inject constructor(
 
     private fun FusedApp.updateStatus() {
         if (this.status != Status.INSTALLATION_ISSUE) {
-            this.status =
+            this.status = if (this.is_pwa) {
+                pwaManagerModule.getPwaStatus(this)
+            }
+            else {
                 pkgManagerModule.getPackageStatus(this.package_name, this.latest_version_code)
+            }
         }
     }
 
