@@ -49,7 +49,6 @@ import foundation.e.apps.utils.modules.CommonUtilsModule
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.UUID
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

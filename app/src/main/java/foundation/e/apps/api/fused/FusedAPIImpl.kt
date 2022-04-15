@@ -647,8 +647,7 @@ class FusedAPIImpl @Inject constructor(
         if (this.status != Status.INSTALLATION_ISSUE) {
             this.status = if (this.is_pwa) {
                 pwaManagerModule.getPwaStatus(this)
-            }
-            else {
+            } else {
                 pkgManagerModule.getPackageStatus(this.package_name, this.latest_version_code)
             }
         }

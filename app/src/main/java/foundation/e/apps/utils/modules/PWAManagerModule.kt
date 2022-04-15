@@ -53,8 +53,10 @@ class PWAManagerModule @Inject constructor(
      * As there is no concept of version, we cannot send [Status.UPDATABLE].
      */
     fun getPwaStatus(fusedApp: FusedApp): Status {
-        context.contentResolver.query(Uri.parse(PWA_PLAYER),
-            null, null, null, null)?.let { cursor ->
+        context.contentResolver.query(
+            Uri.parse(PWA_PLAYER),
+            null, null, null, null
+        )?.let { cursor ->
             if (cursor.count > 0) {
                 if (cursor.moveToFirst()) {
                     do {
@@ -65,8 +67,7 @@ class PWAManagerModule @Inject constructor(
                                 fusedApp.pwaPlayerDbId = pwaItemDbId
                                 return Status.INSTALLED
                             }
-                        }
-                        catch (e: Exception) {
+                        } catch (e: Exception) {
                             e.printStackTrace()
                         }
                     } while (cursor.moveToNext())

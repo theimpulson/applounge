@@ -132,11 +132,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         binding.applicationLayout.visibility = View.INVISIBLE
 
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
-            list.forEach {
-                if (it.origin == args.origin && (it.packageName == args.packageName || it.id == args.id)) {
-                    applicationViewModel.appStatus.value = it.status
-                }
-            }
+            applicationViewModel.updateApplicationStatus(list)
         }
 
         applicationViewModel.fusedApp.observe(viewLifecycleOwner) {

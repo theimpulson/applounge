@@ -23,7 +23,9 @@ import android.content.Intent
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.manager.database.DatabaseRepository
 import foundation.e.apps.utils.enums.Status
-import kotlinx.coroutines.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -37,7 +39,7 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 @DelicateCoroutinesApi
-class PWAPlayerStatusReceiver: BroadcastReceiver() {
+class PWAPlayerStatusReceiver : BroadcastReceiver() {
 
     companion object {
         const val ACTION_PWA_ADDED = "foundation.e.pwaplayer.PWA_ADDED"
@@ -53,7 +55,7 @@ class PWAPlayerStatusReceiver: BroadcastReceiver() {
                 intent?.getStringExtra("SHORTCUT_ID")?.let { shortcutId ->
                     databaseRepository.getDownloadById(shortcutId)?.let { fusedDownload ->
                         when (intent.action) {
-                             ACTION_PWA_ADDED -> {
+                            ACTION_PWA_ADDED -> {
                                 fusedDownload.status = Status.INSTALLED
                                 databaseRepository.updateDownload(fusedDownload)
                             }
