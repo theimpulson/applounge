@@ -227,6 +227,16 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
+    suspend fun getPlayStoreAppCategoryUrls(browseUrl: String, authData: AuthData): List<String> {
+        return gPlayAPIRepository.listAppCategoryUrls(browseUrl, authData)
+    }
+
+    suspend fun getAppsAndNextClusterUrl(browseUrl: String, authData: AuthData): Pair<List<FusedApp>, String> {
+        return gPlayAPIRepository.getAppsAndNextClusterUrl(browseUrl, authData).let {
+            Pair(it.first.map { app -> app.transformToFusedApp() }, it.second)
+        }
+    }
+
     suspend fun getApplicationDetails(
         packageNameList: List<String>,
         authData: AuthData,

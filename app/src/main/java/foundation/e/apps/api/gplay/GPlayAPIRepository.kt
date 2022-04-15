@@ -82,4 +82,12 @@ class GPlayAPIRepository @Inject constructor(
     suspend fun listApps(browseUrl: String, authData: AuthData): List<App> {
         return gPlayAPIImpl.listApps(browseUrl, authData)
     }
+
+    suspend fun listAppCategoryUrls(browseUrl: String, authData: AuthData): List<String> {
+        return gPlayAPIImpl.listAppCategoryUrls(browseUrl, authData)
+    }
+
+    suspend fun getAppsAndNextClusterUrl(browseUrl: String, authData: AuthData): Pair<List<App>, String> {
+        return gPlayAPIImpl.getAppsAndNextClusterUrl(browseUrl, authData)
+    }
 }
