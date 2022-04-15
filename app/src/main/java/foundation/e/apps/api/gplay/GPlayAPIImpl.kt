@@ -35,6 +35,7 @@ import foundation.e.apps.utils.modules.DataStoreModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import java.util.Locale
 import javax.inject.Inject
 
 class GPlayAPIImpl @Inject constructor(
@@ -46,7 +47,10 @@ class GPlayAPIImpl @Inject constructor(
     // TODO: DON'T HARDCODE DISPATCHERS IN ANY METHODS
     suspend fun fetchAuthData() = withContext(Dispatchers.IO) {
         val data = async { tokenRepository.getAuthData() }
-        data.await()?.let { dataStoreModule.saveCredentials(it) }
+        data.await()?.let {
+            it.locale = Locale.getDefault() // update locale with the default locale from settings
+            dataStoreModule.saveCredentials(it)
+        }
     }
 
     fun fetchAuthData(email: String, aasToken: String): AuthData {
