@@ -148,15 +148,18 @@ class PkgManagerModule @Inject constructor(
                 inputStream.close()
                 outputStream.close()
             }
-            val pendingIntent = PendingIntent.getBroadcast(
+
+            val callBackIntent = Intent(context, InstallerService::class.java)
+            val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE else
+                PendingIntent.FLAG_UPDATE_CURRENT
+            val servicePendingIntent = PendingIntent.getService(
                 context,
                 sessionId,
-                Intent(Intent.ACTION_PACKAGE_ADDED),
-                PendingIntent.FLAG_IMMUTABLE
+                callBackIntent,
+                flags
             )
-
-            session.commit(pendingIntent.intentSender)
-            session.close()
+            session.commit(servicePendingIntent.intentSender)
         } catch (e: Exception) {
             Log.e(TAG, "$packageName: \n${e.stackTraceToString()}")
             val pendingIntent = PendingIntent.getBroadcast(
@@ -165,8 +168,10 @@ class PkgManagerModule @Inject constructor(
                 Intent(ERROR_PACKAGE_INSTALL),
                 PendingIntent.FLAG_IMMUTABLE
             )
-
             session.commit(pendingIntent.intentSender)
+            session.abandon()
+            throw e
+        } finally {
             session.close()
         }
     }

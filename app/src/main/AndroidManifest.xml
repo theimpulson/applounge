@@ -50,6 +50,7 @@
             </intent-filter>
             <nav-graph android:value="@navigation/navigation_resource" />
         </activity>
+        <service android:name=".manager.pkg.InstallerService" />
 
         <receiver
             android:name="foundation.e.apps.manager.download.DownloadManagerBR"

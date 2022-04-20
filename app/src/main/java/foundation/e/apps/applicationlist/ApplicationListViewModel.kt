@@ -18,7 +18,6 @@
 
 package foundation.e.apps.applicationlist
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,7 +39,6 @@ class ApplicationListViewModel @Inject constructor(
 
     fun getList(category: String, browseUrl: String, authData: AuthData, source: String) {
         if (appListLiveData.value?.isNotEmpty() == true) {
-            Log.d("ApplicationListViewModel", "getList: ")
             return
         }
         viewModelScope.launch(Dispatchers.IO) {

@@ -21,11 +21,15 @@ import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 import com.aurora.gplayapi.data.models.File as AuroraFile
 
+@Singleton
 class FusedManagerImpl @Inject constructor(
     @Named("cacheDir") private val cacheDir: String,
     private val downloadManager: DownloadManager,
@@ -86,10 +90,14 @@ class FusedManagerImpl @Inject constructor(
         }
     }
 
+    private val mutex = Mutex()
+
     suspend fun downloadApp(fusedDownload: FusedDownload) {
-        when (fusedDownload.type) {
-            Type.NATIVE -> downloadNativeApp(fusedDownload)
-            Type.PWA -> pwaManagerModule.installPWAApp(fusedDownload)
+        mutex.withLock {
+            when (fusedDownload.type) {
+                Type.NATIVE -> downloadNativeApp(fusedDownload)
+                Type.PWA -> pwaManagerModule.installPWAApp(fusedDownload)
+            }
         }
     }
 
@@ -101,9 +109,13 @@ class FusedManagerImpl @Inject constructor(
                 parentPathFile.listFiles()?.let { list.addAll(it) }
                 list.sort()
                 if (list.size != 0) {
-                    Log.d(TAG, "installApp: STARTED ${fusedDownload.name} ${list.size}")
-                    pkgManagerModule.installApplication(list, fusedDownload.packageName)
-                    Log.d(TAG, "installApp: ENDED ${fusedDownload.name} ${list.size}")
+                    try {
+                        Log.d(TAG, "installApp: STARTED ${fusedDownload.name} ${list.size}")
+                        pkgManagerModule.installApplication(list, fusedDownload.packageName)
+                        Log.d(TAG, "installApp: ENDED ${fusedDownload.name} ${list.size}")
+                    } catch (e: Exception) {
+                        installationIssue(fusedDownload)
+                    }
                 }
             }
             else -> {

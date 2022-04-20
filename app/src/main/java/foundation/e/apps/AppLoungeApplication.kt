@@ -25,6 +25,7 @@ import dagger.hilt.android.HiltAndroidApp
 import foundation.e.apps.manager.pkg.PkgManagerBR
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import kotlinx.coroutines.DelicateCoroutinesApi
+import java.util.concurrent.Executors
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -47,5 +48,6 @@ class AppLoungeApplication : Application(), Configuration.Provider {
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
             .setWorkerFactory(workerFactory)
+            .setExecutor(Executors.newSingleThreadExecutor())
             .build()
 }

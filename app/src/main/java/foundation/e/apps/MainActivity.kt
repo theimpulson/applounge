@@ -54,6 +54,7 @@ import java.util.UUID
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val TAG = MainActivity::class.java.simpleName
+    private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
         var hasInternet = true
 
-        val viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
+        viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
         val signInViewModel = ViewModelProvider(this)[SignInViewModel::class.java]
 
         // navOptions and activityNavController for TOS and SignIn Fragments

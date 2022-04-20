@@ -142,7 +142,7 @@ class PWAManagerModule @Inject constructor(
         // Update status
         fusedDownload.status = Status.INSTALLED
         databaseRepository.updateDownload(fusedDownload)
-
+        delay(500)
         databaseRepository.deleteDownload(fusedDownload)
     }
 }
