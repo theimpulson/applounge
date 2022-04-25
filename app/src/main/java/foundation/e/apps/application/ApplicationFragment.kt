@@ -58,6 +58,7 @@ import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.modules.CommonUtilsModule.LIST_OF_NULL
 import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -231,10 +232,13 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     ).show(childFragmentManager, TAG)
                 }
                 appTrackers.setOnClickListener {
+                    val fusedApp = applicationViewModel.fusedApp.value
                     var trackers =
-                        privacyInfoViewModel.getTrackerListText(applicationViewModel.fusedApp.value)
+                        privacyInfoViewModel.getTrackerListText(fusedApp)
 
-                    if (trackers.isNotEmpty()) {
+                    if (fusedApp?.trackers == LIST_OF_NULL) {
+                        trackers = getString(R.string.tracker_information_not_found)
+                    } else if (trackers.isNotEmpty()) {
                         trackers += "<br /> <br />" + getString(
                             R.string.privacy_computed_using_text,
                             EXODUS_URL

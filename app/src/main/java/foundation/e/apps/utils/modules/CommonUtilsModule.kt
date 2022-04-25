@@ -43,6 +43,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object CommonUtilsModule {
 
+    val LIST_OF_NULL = listOf("null")
+
     /**
      * Check supported ABIs by device
      * @return An ordered list of ABIs supported by this device

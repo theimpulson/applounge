@@ -163,6 +163,21 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                         authData,
                         args.source
                     )
+
+                    if (args.source != "Open Source" && args.source != "PWA") {
+                        /*
+                         * For Play store apps we try to load more apps on reaching end of list.
+                         * Source: https://stackoverflow.com/a/46342525
+                         */
+                        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                                super.onScrollStateChanged(recyclerView, newState)
+                                if (!recyclerView.canScrollVertically(1)) {
+                                    viewModel.getPlayStoreAppsOnScroll(args.browseUrl, authData)
+                                }
+                            }
+                        })
+                    }
                 }
             }
         }

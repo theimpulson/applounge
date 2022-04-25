@@ -94,6 +94,14 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.listApps(category, browseUrl, authData)
     }
 
+    suspend fun getPlayStoreAppCategoryUrls(browseUrl: String, authData: AuthData): List<String> {
+        return fusedAPIImpl.getPlayStoreAppCategoryUrls(browseUrl, authData)
+    }
+
+    suspend fun getAppsAndNextClusterUrl(browseUrl: String, authData: AuthData): Pair<List<FusedApp>, String> {
+        return fusedAPIImpl.getAppsAndNextClusterUrl(browseUrl, authData)
+    }
+
     suspend fun getAppsListBasedOnCategory(
         category: String,
         browseUrl: String,
