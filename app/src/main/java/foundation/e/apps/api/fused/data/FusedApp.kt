@@ -21,6 +21,7 @@ package foundation.e.apps.api.fused.data
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
+import foundation.e.apps.utils.modules.CommonUtilsModule.LIST_OF_NULL
 
 data class FusedApp(
     val _id: String = String(),
@@ -51,5 +52,15 @@ data class FusedApp(
     var pwaPlayerDbId: Long = -1,
     val url: String = String(),
     var type: Type = Type.NATIVE,
-    var privacyScore: Int = -1
+    var privacyScore: Int = -1,
+
+    /*
+     * List of permissions from Exodus API.
+     * This list is now used to calculate the privacy score instead of perms variable above.
+     * If the value is LIST_OF_NULL - listOf("null"), it means no data is available in Exodus API for this package,
+     * hence display "N/A"
+     *
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5136
+     */
+    var permsFromExodus: List<String> = LIST_OF_NULL,
 )

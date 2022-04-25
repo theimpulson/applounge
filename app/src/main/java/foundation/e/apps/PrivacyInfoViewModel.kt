@@ -9,6 +9,7 @@ import foundation.e.apps.api.Result
 import foundation.e.apps.api.exodus.models.AppPrivacyInfo
 import foundation.e.apps.api.exodus.repositories.IAppPrivacyInfoRepository
 import foundation.e.apps.api.fused.data.FusedApp
+import foundation.e.apps.utils.modules.CommonUtilsModule.LIST_OF_NULL
 import javax.inject.Inject
 import kotlin.math.ceil
 import kotlin.math.round
@@ -27,8 +28,8 @@ class PrivacyInfoViewModel @Inject constructor(
     private suspend fun fetchEmitAppPrivacyInfo(
         fusedApp: FusedApp
     ): Result<AppPrivacyInfo> {
-        if (fusedApp.trackers.isNotEmpty() && fusedApp.perms.isNotEmpty()) {
-            val appInfo = AppPrivacyInfo(fusedApp.trackers, fusedApp.perms)
+        if (fusedApp.trackers.isNotEmpty() && fusedApp.permsFromExodus.isNotEmpty()) {
+            val appInfo = AppPrivacyInfo(fusedApp.trackers, fusedApp.permsFromExodus)
             return Result.success(appInfo)
         }
         val appPrivacyPrivacyInfoResult =
@@ -51,10 +52,14 @@ class PrivacyInfoViewModel @Inject constructor(
         appPrivacyPrivacyInfoResult: Result<AppPrivacyInfo>,
         fusedApp: FusedApp
     ): Result<AppPrivacyInfo> {
-        fusedApp.trackers = appPrivacyPrivacyInfoResult.data?.trackerList ?: listOf()
-        if (fusedApp.perms.isEmpty()) {
-
-            fusedApp.perms = appPrivacyPrivacyInfoResult.data?.permissionList ?: listOf()
+        fusedApp.trackers = appPrivacyPrivacyInfoResult.data?.trackerList ?: LIST_OF_NULL
+        fusedApp.permsFromExodus = appPrivacyPrivacyInfoResult.data?.permissionList ?: LIST_OF_NULL
+        if (fusedApp.perms.isEmpty() && fusedApp.permsFromExodus != LIST_OF_NULL) {
+            /*
+             * fusedApp.perms is generally populated from remote source like Play Store.
+             * If it is empty then set the value from permissions from exodus api.
+             */
+            fusedApp.perms = fusedApp.permsFromExodus
         }
         return appPrivacyPrivacyInfoResult
     }
@@ -76,6 +81,9 @@ class PrivacyInfoViewModel @Inject constructor(
     }
 
     fun calculatePrivacyScore(fusedApp: FusedApp): Int {
+        if (fusedApp.permsFromExodus == LIST_OF_NULL) {
+            return -1
+        }
         val calculateTrackersScore = calculateTrackersScore(fusedApp.trackers.size)
         val calculatePermissionsScore = calculatePermissionsScore(
             countAndroidPermissions(fusedApp)
@@ -88,7 +96,7 @@ class PrivacyInfoViewModel @Inject constructor(
     }
 
     private fun countAndroidPermissions(fusedApp: FusedApp) =
-        fusedApp.perms.filter { it.contains("android.permission") }.size
+        fusedApp.permsFromExodus.filter { it.contains("android.permission") }.size
 
     private fun calculateTrackersScore(numberOfTrackers: Int): Int {
         return if (numberOfTrackers > 5) 0 else 9 - numberOfTrackers
