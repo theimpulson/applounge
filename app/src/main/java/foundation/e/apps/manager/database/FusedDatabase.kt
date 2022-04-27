@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.database.fusedDownload.FusedDownloadDAO
 
-@Database(entities = [FusedDownload::class], version = 1, exportSchema = false)
+@Database(entities = [FusedDownload::class], version = 2, exportSchema = false)
 @TypeConverters(FusedConverter::class)
 abstract class FusedDatabase : RoomDatabase() {
 
