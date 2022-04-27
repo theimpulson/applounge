@@ -19,7 +19,13 @@
 package foundation.e.apps.api.gplay
 
 import com.aurora.gplayapi.SearchSuggestEntry
-import com.aurora.gplayapi.data.models.*
+import com.aurora.gplayapi.data.models.App
+import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.data.models.Category
+import com.aurora.gplayapi.data.models.File
+import com.aurora.gplayapi.data.models.SearchBundle
+import com.aurora.gplayapi.data.models.StreamBundle
+import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.helpers.AppDetailsHelper
 import com.aurora.gplayapi.helpers.AuthValidator
 import com.aurora.gplayapi.helpers.CategoryHelper
@@ -186,7 +192,6 @@ class GPlayAPIImpl @Inject constructor(
 
                     urlList.addAll(streamClusters.map { it.clusterBrowseUrl })
                     nextStreamBundleUrl = streamBundle.streamNextPageUrl
-
                 } while (nextStreamBundleUrl.isNotBlank())
             }
         }
@@ -251,7 +256,7 @@ class GPlayAPIImpl @Inject constructor(
                      * is not blank.
                      */
                     streamClusters.values.forEach { streamCluster ->
-                        list.addAll(streamCluster.clusterAppList)   // Add all apps for this StreamCluster
+                        list.addAll(streamCluster.clusterAppList) // Add all apps for this StreamCluster
 
                         // Loop over possible next StreamClusters
                         var currentStreamCluster = streamCluster
@@ -265,7 +270,6 @@ class GPlayAPIImpl @Inject constructor(
                     }
 
                     nextStreamBundleUrl = streamBundle.streamNextPageUrl
-
                 } while (streamBundle.hasNext())
 
                 // TODO: DEAL WITH DUPLICATE AND LESS ITEMS
