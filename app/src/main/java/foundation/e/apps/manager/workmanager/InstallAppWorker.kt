@@ -46,9 +46,18 @@ class InstallAppWorker @AssistedInject constructor(
     companion object {
         private const val TAG = "InstallWorker"
         const val INPUT_DATA_FUSED_DOWNLOAD = "input_data_fused_download"
-    }
 
-    private val atomicInteger = AtomicInteger()
+        /*
+         * If this is not "static" then each notification has the same ID.
+         * Making it static makes sure the id keeps increasing when atomicInteger.getAndIncrement()
+         * is called.
+         * This is possible cause for "Installing ..." notification to linger around
+         * after the app is installed.
+         *
+         * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5330
+         */
+        private val atomicInteger = AtomicInteger(100)
+    }
 
     override suspend fun doWork(): Result {
         var fusedDownload: FusedDownload? = null
