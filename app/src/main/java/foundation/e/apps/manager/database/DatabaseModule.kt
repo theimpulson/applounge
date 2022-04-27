@@ -23,7 +23,7 @@ object DatabaseModule {
             context,
             FusedDatabase::class.java,
             DATABASE_NAME
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Singleton
