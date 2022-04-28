@@ -41,6 +41,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.net.ConnectException
+import java.util.Locale
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -120,7 +121,7 @@ object RetrofitModule {
             builder.header(
                 "User-Agent",
                 "Dalvik/2.1.0 (Linux; U; Android ${Build.VERSION.RELEASE}; ${Build.FINGERPRINT})"
-            )
+            ).header("Accept-Language", Locale.getDefault().language)
             try {
                 return@Interceptor chain.proceed(builder.build())
             } catch (e: ConnectException) {

@@ -125,7 +125,7 @@ class ApplicationListViewModel @Inject constructor(
                     val existingPackageNames = newList.map { it.package_name }
                     newList.addAll(first.filter { it.package_name !in existingPackageNames })
                     appListLiveData.postValue(newList)
-                    nextClusterUrl = second         // set the next "clusterNextPageUrl"
+                    nextClusterUrl = second // set the next "clusterNextPageUrl"
                 }
             }
         }

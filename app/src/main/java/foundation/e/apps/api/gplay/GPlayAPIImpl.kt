@@ -18,8 +18,15 @@
 
 package foundation.e.apps.api.gplay
 
+import android.content.Context
 import com.aurora.gplayapi.SearchSuggestEntry
-import com.aurora.gplayapi.data.models.*
+import com.aurora.gplayapi.data.models.App
+import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.data.models.Category
+import com.aurora.gplayapi.data.models.File
+import com.aurora.gplayapi.data.models.SearchBundle
+import com.aurora.gplayapi.data.models.StreamBundle
+import com.aurora.gplayapi.data.models.StreamCluster
 import com.aurora.gplayapi.helpers.AppDetailsHelper
 import com.aurora.gplayapi.helpers.AuthValidator
 import com.aurora.gplayapi.helpers.CategoryHelper
@@ -27,6 +34,7 @@ import com.aurora.gplayapi.helpers.PurchaseHelper
 import com.aurora.gplayapi.helpers.SearchHelper
 import com.aurora.gplayapi.helpers.StreamHelper
 import com.aurora.gplayapi.helpers.TopChartsHelper
+import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.api.gplay.token.TokenRepository
 import foundation.e.apps.api.gplay.utils.GPlayHttpClient
 import foundation.e.apps.utils.modules.DataStoreModule
@@ -34,10 +42,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
-import java.util.Locale
 import javax.inject.Inject
 
 class GPlayAPIImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val tokenRepository: TokenRepository,
     private val dataStoreModule: DataStoreModule,
     private val gPlayHttpClient: GPlayHttpClient
@@ -47,7 +55,7 @@ class GPlayAPIImpl @Inject constructor(
     suspend fun fetchAuthData() = withContext(Dispatchers.IO) {
         val data = async { tokenRepository.getAuthData() }
         data.await()?.let {
-            it.locale = Locale.getDefault() // update locale with the default locale from settings
+            it.locale = context.resources.configuration.locales[0] // update locale with the default locale from settings
             dataStoreModule.saveCredentials(it)
         }
     }
@@ -186,7 +194,6 @@ class GPlayAPIImpl @Inject constructor(
 
                     urlList.addAll(streamClusters.map { it.clusterBrowseUrl })
                     nextStreamBundleUrl = streamBundle.streamNextPageUrl
-
                 } while (nextStreamBundleUrl.isNotBlank())
             }
         }
@@ -251,7 +258,7 @@ class GPlayAPIImpl @Inject constructor(
                      * is not blank.
                      */
                     streamClusters.values.forEach { streamCluster ->
-                        list.addAll(streamCluster.clusterAppList)   // Add all apps for this StreamCluster
+                        list.addAll(streamCluster.clusterAppList) // Add all apps for this StreamCluster
 
                         // Loop over possible next StreamClusters
                         var currentStreamCluster = streamCluster
@@ -265,7 +272,6 @@ class GPlayAPIImpl @Inject constructor(
                     }
 
                     nextStreamBundleUrl = streamBundle.streamNextPageUrl
-
                 } while (streamBundle.hasNext())
 
                 // TODO: DEAL WITH DUPLICATE AND LESS ITEMS
