@@ -82,6 +82,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".setup.signin.LocaleChangedBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCALE_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
         <!-- If you want to disable android.startup completely. -->
         <provider
             android:name="androidx.startup.InitializationProvider"

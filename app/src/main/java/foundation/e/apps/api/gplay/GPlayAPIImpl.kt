@@ -18,6 +18,7 @@
 
 package foundation.e.apps.api.gplay
 
+import android.content.Context
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.AuthData
@@ -33,6 +34,7 @@ import com.aurora.gplayapi.helpers.PurchaseHelper
 import com.aurora.gplayapi.helpers.SearchHelper
 import com.aurora.gplayapi.helpers.StreamHelper
 import com.aurora.gplayapi.helpers.TopChartsHelper
+import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.api.gplay.token.TokenRepository
 import foundation.e.apps.api.gplay.utils.GPlayHttpClient
 import foundation.e.apps.utils.modules.DataStoreModule
@@ -40,10 +42,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
-import java.util.Locale
 import javax.inject.Inject
 
 class GPlayAPIImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val tokenRepository: TokenRepository,
     private val dataStoreModule: DataStoreModule,
     private val gPlayHttpClient: GPlayHttpClient
@@ -53,7 +55,7 @@ class GPlayAPIImpl @Inject constructor(
     suspend fun fetchAuthData() = withContext(Dispatchers.IO) {
         val data = async { tokenRepository.getAuthData() }
         data.await()?.let {
-            it.locale = Locale.getDefault() // update locale with the default locale from settings
+            it.locale = context.resources.configuration.locales[0] // update locale with the default locale from settings
             dataStoreModule.saveCredentials(it)
         }
     }
