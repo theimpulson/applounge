@@ -24,7 +24,11 @@ import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import foundation.e.apps.manager.pkg.PkgManagerBR
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.setup.tos.TOS_VERSION
+import foundation.e.apps.utils.modules.DataStoreModule
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
@@ -34,8 +38,12 @@ class AppLoungeApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
+
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
+
+    @Inject
+    lateinit var dataStoreModule: DataStoreModule
 
     override fun onCreate() {
         super.onCreate()
@@ -43,6 +51,13 @@ class AppLoungeApplication : Application(), Configuration.Provider {
         // Register broadcast receiver for package manager
         val pkgManagerBR = object : PkgManagerBR() {}
         registerReceiver(pkgManagerBR, pkgManagerModule.getFilter())
+
+        val currentVersion = dataStoreModule.getTOSVersion()
+        if (!currentVersion.contentEquals(TOS_VERSION)) {
+            MainScope().launch {
+                dataStoreModule.saveTOCStatus(false, "")
+            }
+        }
     }
 
     override fun getWorkManagerConfiguration() =

@@ -18,7 +18,9 @@ class TOSViewModel @Inject constructor(
 
     fun saveTOCStatus(status: Boolean) {
         viewModelScope.launch {
-            dataStoreModule.saveTOCStatus(status)
+            dataStoreModule.saveTOCStatus(status, TOS_VERSION)
         }
     }
 }
+
+const val TOS_VERSION = "1.0.3"
