@@ -309,7 +309,7 @@ class MainActivityViewModel @Inject constructor(
             val downloadingItem = fusedDownloadList.find { fusedDownload ->
                 fusedDownload.origin == it.origin && (fusedDownload.packageName == it.package_name || fusedDownload.id == it._id)
             }
-            it.status = downloadingItem?.status ?: pkgManagerModule.getPackageStatus(it.package_name, it.latest_version_code)
+            it.status = downloadingItem?.status ?: fusedAPIRepository.getFusedAppInstallationStatus(it)
         }
     }
 }

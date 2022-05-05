@@ -653,13 +653,23 @@ class FusedAPIImpl @Inject constructor(
         return app
     }
 
+    /**
+     * Get fused app installation status.
+     * Applicable for both native apps and PWAs.
+     *
+     * Recommended to use this instead of [PkgManagerModule.getPackageStatus].
+     */
+    fun getFusedAppInstallationStatus(fusedApp: FusedApp): Status {
+        return if (fusedApp.is_pwa) {
+            pwaManagerModule.getPwaStatus(fusedApp)
+        } else {
+            pkgManagerModule.getPackageStatus(fusedApp.package_name, fusedApp.latest_version_code)
+        }
+    }
+
     private fun FusedApp.updateStatus() {
         if (this.status != Status.INSTALLATION_ISSUE) {
-            this.status = if (this.is_pwa) {
-                pwaManagerModule.getPwaStatus(this)
-            } else {
-                pkgManagerModule.getPackageStatus(this.package_name, this.latest_version_code)
-            }
+            this.status = getFusedAppInstallationStatus(this)
         }
     }
 

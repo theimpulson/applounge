@@ -30,6 +30,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.content.pm.PackageInfoCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import foundation.e.apps.api.fused.FusedAPIImpl
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
@@ -78,6 +79,12 @@ class PkgManagerModule @Inject constructor(
         return packageManager.getPackageInfo(packageName, 0)
     }
 
+    /**
+     * This method should be only used for native apps!
+     * If you are using for any FusedApp, please consider that it can be a PWA!
+     *
+     * Recommended to use: [FusedAPIImpl.getFusedAppInstallationStatus].
+     */
     fun getPackageStatus(packageName: String, versionCode: Int): Status {
         return if (isInstalled(packageName)) {
             if (isUpdatable(packageName, versionCode)) {
