@@ -162,9 +162,22 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    fun getApplication(app: FusedApp, imageView: ImageView?) {
+    /*
+     * Check and display a snack bar if app is paid and user is logged in in anonymous mode.
+     * Returns true if the snack bar was displayed, false otherwise.
+     *
+     * Issue: https://gitlab.e.foundation/e/os/backlog/-/issues/266
+     */
+    fun shouldShowPaidAppsSnackBar(app: FusedApp): Boolean {
         if (!app.isFree && authData.value?.isAnonymous == true) {
             _errorMessageStringResource.value = R.string.paid_app_anonymous_message
+            return true
+        }
+        return false
+    }
+
+    fun getApplication(app: FusedApp, imageView: ImageView?) {
+        if (shouldShowPaidAppsSnackBar(app)) {
             return
         }
         viewModelScope.launch {

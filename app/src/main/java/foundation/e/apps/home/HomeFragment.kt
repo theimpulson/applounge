@@ -92,15 +92,17 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             User.valueOf(mainActivityViewModel.userType.value ?: User.UNAVAILABLE.name),
             mainActivityViewModel, viewLifecycleOwner
         ) { fusedApp ->
-            ApplicationDialogFragment(
-                title = getString(R.string.dialog_title_paid_app, fusedApp.name),
-                message = getString(R.string.dialog_paidapp_message, fusedApp.name, fusedApp.price),
-                positiveButtonText = getString(R.string.dialog_confirm),
-                positiveButtonAction = {
-                    getApplication(fusedApp)
-                },
-                cancelButtonText = getString(R.string.dialog_cancel),
-            ).show(childFragmentManager, "HomeFragment")
+            if (!mainActivityViewModel.shouldShowPaidAppsSnackBar(fusedApp)) {
+                ApplicationDialogFragment(
+                    title = getString(R.string.dialog_title_paid_app, fusedApp.name),
+                    message = getString(R.string.dialog_paidapp_message, fusedApp.name, fusedApp.price),
+                    positiveButtonText = getString(R.string.dialog_confirm),
+                    positiveButtonAction = {
+                        getApplication(fusedApp)
+                    },
+                    cancelButtonText = getString(R.string.dialog_cancel),
+                ).show(childFragmentManager, "HomeFragment")
+            }
         }
 
         binding.parentRV.apply {
