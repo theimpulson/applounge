@@ -54,7 +54,7 @@ class CategoriesRVAdapter :
                     CategoriesFragmentDirections.actionCategoriesFragmentToApplicationListFragment(
                         oldList[position].id,
                         oldList[position].title,
-                        oldList[position].tag,
+                        oldList[position].tag.getOperationalTag(),
                         oldList[position].browseUrl
                     )
                 holder.itemView.findNavController().navigate(direction)
@@ -66,9 +66,9 @@ class CategoriesRVAdapter :
             }
             categoryTitle.text = oldList[position].title
             val tag = oldList[position].tag
-            if (tag.isNotEmpty()) {
+            if (tag.displayTag.isNotBlank()) {
                 categoryTag.visibility = View.VISIBLE
-                categoryTag.text = tag
+                categoryTag.text = tag.displayTag
             } else {
                 categoryTag.visibility = View.INVISIBLE
                 categoryTag.text = ""

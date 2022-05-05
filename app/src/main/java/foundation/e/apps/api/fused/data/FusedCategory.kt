@@ -18,6 +18,7 @@
 
 package foundation.e.apps.api.fused.data
 
+import foundation.e.apps.utils.enums.AppTag
 import java.util.UUID
 
 data class FusedCategory(
@@ -26,5 +27,9 @@ data class FusedCategory(
     val browseUrl: String = String(),
     val imageUrl: String = String(),
     var drawable: Int = -1,
-    var tag: String = String()
+    /*
+     * Change tag to standard AppTag class.
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5364
+     */
+    var tag: AppTag = AppTag.GPlay()
 )
