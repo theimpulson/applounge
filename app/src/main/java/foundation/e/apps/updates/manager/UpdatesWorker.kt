@@ -62,7 +62,13 @@ class UpdatesWorker @AssistedInject constructor(
         val appsNeededToUpdate = updatesManagerRepository.getUpdates(authData)
             .filter { !(!it.isFree && authData.isAnonymous) }
         val isConnectedToUnmeteredNetwork = isConnectedToUnmeteredNetwork(applicationContext)
-        handleNotification(appsNeededToUpdate, isConnectedToUnmeteredNetwork)
+        /*
+         * Show notification only if enabled.
+         * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5376
+         */
+        if (shouldShowNotification) {
+            handleNotification(appsNeededToUpdate, isConnectedToUnmeteredNetwork)
+        }
         triggerUpdateProcessOnSettings(
             isConnectedToUnmeteredNetwork,
             appsNeededToUpdate,
