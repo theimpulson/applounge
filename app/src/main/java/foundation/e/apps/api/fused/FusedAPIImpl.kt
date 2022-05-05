@@ -41,6 +41,7 @@ import foundation.e.apps.api.fused.utils.CategoryUtils
 import foundation.e.apps.api.gplay.GPlayAPIRepository
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.enums.AppTag
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
@@ -309,11 +310,11 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
-    private fun getCategoryTag(preferredApplicationType: String): String {
+    private fun getCategoryTag(preferredApplicationType: String): AppTag {
         return if (preferredApplicationType == APP_TYPE_OPEN) {
-            context.getString(R.string.open_source)
+            AppTag.OpenSource(context.getString(R.string.open_source))
         } else {
-            context.getString(R.string.pwa)
+            AppTag.PWA(context.getString(R.string.pwa))
         }
     }
 
@@ -336,7 +337,7 @@ class FusedAPIImpl @Inject constructor(
                 getFusedCategoryBasedOnCategoryType(
                     it,
                     type,
-                    context.getString(R.string.open_source)
+                    AppTag.OpenSource(context.getString(R.string.open_source))
                 )
             )
         }
@@ -344,7 +345,7 @@ class FusedAPIImpl @Inject constructor(
         data?.let {
             categoriesList.addAll(
                 getFusedCategoryBasedOnCategoryType(
-                    it, type, context.getString(R.string.pwa)
+                    it, type, AppTag.PWA(context.getString(R.string.pwa))
                 )
             )
         }
@@ -376,7 +377,7 @@ class FusedAPIImpl @Inject constructor(
     private fun getFusedCategoryBasedOnCategoryType(
         categories: Categories,
         categoryType: Category.Type,
-        tag: String
+        tag: AppTag
     ): List<FusedCategory> {
         return when (categoryType) {
             Category.Type.APPLICATION -> {
@@ -390,7 +391,7 @@ class FusedAPIImpl @Inject constructor(
 
     private fun getAppsCategoriesAsFusedCategory(
         categories: Categories,
-        tag: String
+        tag: AppTag
     ): List<FusedCategory> {
         return categories.apps.map { category ->
             createFusedCategoryFromCategory(category, categories, Category.Type.APPLICATION, tag)
@@ -399,7 +400,7 @@ class FusedAPIImpl @Inject constructor(
 
     private fun getGamesCategoriesAsFusedCategory(
         categories: Categories,
-        tag: String
+        tag: AppTag
     ): List<FusedCategory> {
         return categories.games.map { category ->
             createFusedCategoryFromCategory(category, categories, Category.Type.GAME, tag)
@@ -410,7 +411,7 @@ class FusedAPIImpl @Inject constructor(
         category: String,
         categories: Categories,
         appType: Category.Type,
-        tag: String
+        tag: AppTag
     ): FusedCategory {
         return FusedCategory(
             id = category,
