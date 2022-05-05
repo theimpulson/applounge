@@ -107,10 +107,7 @@ class ApplicationViewModel @Inject constructor(
         fusedApp.value?.let { app ->
             val downloadingItem =
                 downloadList.find { it.origin == app.origin && (it.packageName == app.package_name || it.id == app.package_name) }
-            appStatus.value = downloadingItem?.status ?: pkgManagerModule.getPackageStatus(
-                app.package_name,
-                app.latest_version_code
-            )
+            appStatus.value = downloadingItem?.status ?: fusedAPIRepository.getFusedAppInstallationStatus(app)
         }
     }
 }
