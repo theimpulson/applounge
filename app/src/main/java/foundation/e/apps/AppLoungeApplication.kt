@@ -24,6 +24,7 @@ import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import foundation.e.apps.manager.pkg.PkgManagerBR
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.manager.workmanager.InstallWorkManager
 import kotlinx.coroutines.DelicateCoroutinesApi
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -40,6 +41,7 @@ class AppLoungeApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
 
+        InstallWorkManager.context = this
         // Register broadcast receiver for package manager
         val pkgManagerBR = object : PkgManagerBR() {}
         registerReceiver(pkgManagerBR, pkgManagerModule.getFilter())
