@@ -26,9 +26,9 @@ package foundation.e.apps.utils.enums
  * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5364
  */
 sealed class AppTag(val displayTag: String) {
-    class OpenSource(displayTag: String): AppTag(displayTag)
-    class PWA(displayTag: String): AppTag(displayTag)
-    class GPlay(displayTag: String = ""): AppTag(displayTag)
+    class OpenSource(displayTag: String) : AppTag(displayTag)
+    class PWA(displayTag: String) : AppTag(displayTag)
+    class GPlay(displayTag: String = "") : AppTag(displayTag)
 
     /**
      * In many places in the code, checks are for hard coded string "Open Source".
@@ -38,5 +38,4 @@ sealed class AppTag(val displayTag: String) {
         return if (this is OpenSource) "Open Source"
         else this::class.java.simpleName
     }
-
 }

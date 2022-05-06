@@ -24,9 +24,9 @@ import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import foundation.e.apps.manager.pkg.PkgManagerBR
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.manager.workmanager.InstallWorkManager
 import foundation.e.apps.setup.tos.TOS_VERSION
 import foundation.e.apps.utils.modules.DataStoreModule
-import foundation.e.apps.manager.workmanager.InstallWorkManager
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

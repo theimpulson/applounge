@@ -167,9 +167,9 @@ object CategoryUtils {
                 R.drawable.ic_cat_travel
             "pwa_business" ->
                 R.drawable.ic_business
-            "watch_faces" ->
+            "watch_face" ->
                 R.drawable.ic_watchface
-            "watch_apps" ->
+            "android_wear" ->
                 R.drawable.ic_watch_apps
             else ->
                 R.drawable.ic_cat_default

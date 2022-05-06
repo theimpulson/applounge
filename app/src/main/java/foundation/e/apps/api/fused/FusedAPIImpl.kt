@@ -232,7 +232,10 @@ class FusedAPIImpl @Inject constructor(
         return gPlayAPIRepository.listAppCategoryUrls(browseUrl, authData)
     }
 
-    suspend fun getAppsAndNextClusterUrl(browseUrl: String, authData: AuthData): Pair<List<FusedApp>, String> {
+    suspend fun getAppsAndNextClusterUrl(
+        browseUrl: String,
+        authData: AuthData
+    ): Pair<List<FusedApp>, String> {
         return gPlayAPIRepository.getAppsAndNextClusterUrl(browseUrl, authData).let {
             Pair(it.first.map { app -> app.transformToFusedApp() }, it.second)
         }
@@ -366,7 +369,10 @@ class FusedAPIImpl @Inject constructor(
     }
 
     private fun getCategoryIconName(category: FusedCategory): String {
-        var categoryTitle = category.title
+        var categoryTitle = if (category.tag.getOperationalTag()
+            .contentEquals(AppTag.GPlay().getOperationalTag())
+        ) category.id else category.title
+
         if (categoryTitle.contains(CATEGORY_TITLE_REPLACEABLE_CONJUNCTION)) {
             categoryTitle = categoryTitle.replace(CATEGORY_TITLE_REPLACEABLE_CONJUNCTION, "and")
         }
@@ -468,7 +474,9 @@ class FusedAPIImpl @Inject constructor(
     }
 
     private fun Category.transformToFusedCategory(): FusedCategory {
+        val id = this.browseUrl.substringAfter("cat=").substringBefore("&c=")
         return FusedCategory(
+            id = id.lowercase(),
             title = this.title,
             browseUrl = this.browseUrl,
             imageUrl = this.imageUrl,
