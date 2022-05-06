@@ -48,12 +48,14 @@ class DataStoreModule @Inject constructor(
     private val OAUTHTOKEN = stringPreferencesKey("oauthtoken")
     private val USERTYPE = stringPreferencesKey("userType")
     private val TOCSTATUS = booleanPreferencesKey("tocStatus")
+    private val TOSVERSION = stringPreferencesKey("tosversion")
 
     val authData = context.dataStore.data.map { it[AUTHDATA] ?: "" }
     val emailData = context.dataStore.data.map { it[EMAIL] ?: "" }
     val aasToken = context.dataStore.data.map { it[OAUTHTOKEN] ?: "" }
     val userType = context.dataStore.data.map { it[USERTYPE] ?: "" }
     val tocStatus = context.dataStore.data.map { it[TOCSTATUS] ?: false }
+    val tosVersion = context.dataStore.data.map { it[TOSVERSION] ?: "" }
 
     /**
      * Allows to save gplay API token data into datastore
@@ -88,9 +90,16 @@ class DataStoreModule @Inject constructor(
     /**
      * TOC status
      */
-    suspend fun saveTOCStatus(status: Boolean) {
+    suspend fun saveTOCStatus(status: Boolean, tosVersion: String) {
         context.dataStore.edit {
             it[TOCSTATUS] = status
+            it[TOSVERSION] = tosVersion
+        }
+    }
+
+    fun getTOSVersion(): String {
+        return runBlocking {
+            tosVersion.first()
         }
     }
 
