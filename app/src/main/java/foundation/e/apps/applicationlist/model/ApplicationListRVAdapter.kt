@@ -35,6 +35,7 @@ import com.facebook.shimmer.Shimmer.Direction.LEFT_TO_RIGHT
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.FdroidFetchViewModel
+import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
@@ -56,6 +57,7 @@ class ApplicationListRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val privacyInfoViewModel: PrivacyInfoViewModel,
     private val fdroidFetchViewModel: FdroidFetchViewModel,
+    private val mainActivityViewModel: MainActivityViewModel,
     private val currentDestinationId: Int,
     private val pkgManagerModule: PkgManagerModule,
     private val pwaManagerModule: PWAManagerModule,
@@ -302,12 +304,20 @@ class ApplicationListRVAdapter(
     ) {
         installButton.apply {
             isEnabled = true
-            text = if (searchApp.isFree) context.getString(R.string.install) else searchApp.price
+            text = when {
+                mainActivityViewModel.checkUnsupportedApplication(searchApp) ->
+                    context.getString(R.string.not_available)
+                searchApp.isFree -> context.getString(R.string.install)
+                else -> searchApp.price
+            }
             setTextColor(context.getColor(R.color.colorAccent))
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, android.R.color.transparent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             setOnClickListener {
+                if (mainActivityViewModel.checkUnsupportedApplication(searchApp, context)) {
+                    return@setOnClickListener
+                }
                 if (searchApp.isFree) {
                     installApplication(searchApp, appIcon)
                 } else {
@@ -323,11 +333,16 @@ class ApplicationListRVAdapter(
     ) {
         installButton.apply {
             isEnabled = true
-            text = context.getString(R.string.update)
+            text = if (mainActivityViewModel.checkUnsupportedApplication(searchApp))
+                context.getString(R.string.not_available)
+            else context.getString(R.string.update)
             setTextColor(Color.WHITE)
             backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             setOnClickListener {
+                if (mainActivityViewModel.checkUnsupportedApplication(searchApp, context)) {
+                    return@setOnClickListener
+                }
                 installApplication(searchApp, appIcon)
             }
         }

@@ -30,6 +30,7 @@ import coil.load
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.snackbar.Snackbar
+import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
@@ -46,6 +47,7 @@ class HomeChildRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val pkgManagerModule: PkgManagerModule,
     private val pwaManagerModule: PWAManagerModule,
+    private val mainActivityViewModel: MainActivityViewModel,
     private val user: User,
     private val paidAppHandler: ((FusedApp) -> Unit)? = null
 ) : ListAdapter<FusedApp, HomeChildRVAdapter.ViewHolder>(HomeChildFusedAppDiffUtil()) {
@@ -118,21 +120,30 @@ class HomeChildRVAdapter(
                 }
                 Status.UPDATABLE -> {
                     installButton.apply {
-                        text = context.getString(R.string.update)
+                        text = if (mainActivityViewModel.checkUnsupportedApplication(homeApp))
+                            context.getString(R.string.not_available)
+                        else context.getString(R.string.update)
                         setTextColor(Color.WHITE)
                         backgroundTintList =
                             ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         strokeColor =
                             ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
+                            if (mainActivityViewModel.checkUnsupportedApplication(homeApp, context)) {
+                                return@setOnClickListener
+                            }
                             installApplication(homeApp, appIcon)
                         }
                     }
                 }
                 Status.UNAVAILABLE -> {
                     installButton.apply {
-                        text =
-                            if (homeApp.isFree) context.getString(R.string.install) else homeApp.price
+                        text = when {
+                            mainActivityViewModel.checkUnsupportedApplication(homeApp) ->
+                                context.getString(R.string.not_available)
+                            homeApp.isFree -> context.getString(R.string.install)
+                            else -> homeApp.price
+                        }
                         setTextColor(context.getColor(R.color.colorAccent))
                         backgroundTintList = ContextCompat.getColorStateList(
                             view.context,
@@ -141,6 +152,9 @@ class HomeChildRVAdapter(
                         strokeColor =
                             ContextCompat.getColorStateList(view.context, R.color.colorAccent)
                         setOnClickListener {
+                            if (mainActivityViewModel.checkUnsupportedApplication(homeApp, context)) {
+                                return@setOnClickListener
+                            }
                             if (homeApp.isFree) {
                                 installApplication(homeApp, appIcon)
                             } else {

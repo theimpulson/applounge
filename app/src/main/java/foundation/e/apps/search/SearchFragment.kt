@@ -121,6 +121,7 @@ class SearchFragment :
                 this,
                 privacyInfoViewModel,
                 fdroidFetchViewModel,
+                mainActivityViewModel,
                 it,
                 pkgManagerModule,
                 pwaManagerModule,

@@ -18,6 +18,8 @@
 
 package foundation.e.apps
 
+import android.app.AlertDialog
+import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import android.util.Base64
@@ -171,6 +173,29 @@ class MainActivityViewModel @Inject constructor(
     fun shouldShowPaidAppsSnackBar(app: FusedApp): Boolean {
         if (!app.isFree && authData.value?.isAnonymous == true) {
             _errorMessageStringResource.value = R.string.paid_app_anonymous_message
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Handle various cases of unsupported apps here.
+     * Returns true if the [fusedApp] is not supported by App Lounge.
+     *
+     * Pass [alertDialogContext] as null to prevent an alert dialog from being shown to the user.
+     * In that case, this method simply works as a validation.
+     *
+     * Issue: https://gitlab.e.foundation/e/os/backlog/-/issues/178
+     */
+    fun checkUnsupportedApplication(fusedApp: FusedApp, alertDialogContext: Context? = null): Boolean {
+        if (!fusedApp.isFree && fusedApp.price.isBlank()) {
+            alertDialogContext?.let { context ->
+                AlertDialog.Builder(context).apply {
+                    setTitle(R.string.unsupported_app_title)
+                    setMessage(context.getString(R.string.unsupported_app_unreleased, fusedApp.name))
+                    setPositiveButton(android.R.string.ok, null)
+                }.show()
+            }
             return true
         }
         return false
