@@ -58,7 +58,14 @@ class HomeParentRVAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val fusedHome = getItem(position)
         val homeChildRVAdapter =
-            HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, pwaManagerModule, user, paidAppHandler)
+            HomeChildRVAdapter(
+                fusedAPIInterface,
+                pkgManagerModule,
+                pwaManagerModule,
+                mainActivityViewModel,
+                user,
+                paidAppHandler
+            )
         homeChildRVAdapter.setData(fusedHome.list)
 
         holder.binding.titleTV.text = fusedHome.title
