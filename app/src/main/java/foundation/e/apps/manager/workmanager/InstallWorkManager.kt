@@ -1,6 +1,6 @@
 package foundation.e.apps.manager.workmanager
 
-import android.content.Context
+import android.app.Application
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -9,7 +9,9 @@ import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 
 object InstallWorkManager {
     const val INSTALL_WORK_NAME = "APP_LOUNGE_INSTALL_APP"
-    fun enqueueWork(context: Context, fusedDownload: FusedDownload) {
+    lateinit var context: Application
+
+    fun enqueueWork(fusedDownload: FusedDownload) {
         WorkManager.getInstance(context).enqueueUniqueWork(
             INSTALL_WORK_NAME,
             ExistingWorkPolicy.APPEND_OR_REPLACE,
@@ -20,5 +22,9 @@ object InstallWorkManager {
             ).addTag(fusedDownload.name)
                 .build()
         )
+    }
+
+    fun cancelWork(tag: String) {
+        WorkManager.getInstance(context).cancelAllWorkByTag(tag)
     }
 }

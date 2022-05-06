@@ -239,7 +239,7 @@ class MainActivity : AppCompatActivity() {
                 return@launch
             }
             viewModel.updateAwaiting(it)
-            InstallWorkManager.enqueueWork(applicationContext, it)
+            InstallWorkManager.enqueueWork(it)
             Log.d(TAG, "===> onCreate: AWAITING ${it.name}")
         }
     }
@@ -251,7 +251,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val fusedDownload = viewModel.updateAwaitingForPurchasedApp(it)
             if (fusedDownload != null) {
-                InstallWorkManager.enqueueWork(applicationContext, fusedDownload)
+                InstallWorkManager.enqueueWork(fusedDownload)
             } else {
                 showSnackbarMessage(getString(R.string.paid_app_anonymous_message))
             }

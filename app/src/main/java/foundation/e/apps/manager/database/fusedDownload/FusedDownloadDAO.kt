@@ -11,7 +11,7 @@ import androidx.room.Update
 @Dao
 interface FusedDownloadDAO {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addDownload(fusedDownload: FusedDownload)
 
     @Query("SELECT * FROM fuseddownload")
