@@ -32,7 +32,7 @@ class NotificationManagerUtils @Inject constructor(
 
     fun showDownloadNotification(title: String): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, NotificationManagerModule.DOWNLOADS)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.app_lounge_notification_icon)
             .setContentTitle(title)
             .setProgress(0, 0, true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -45,7 +45,7 @@ class NotificationManagerUtils @Inject constructor(
             context.getString(R.string.manual_updates_notification)
         }
         return NotificationCompat.Builder(context, NotificationManagerModule.UPDATES)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.app_lounge_notification_icon)
             .setContentTitle(
                 context.resources.getQuantityString(
                     R.plurals.updates_notification_title,
