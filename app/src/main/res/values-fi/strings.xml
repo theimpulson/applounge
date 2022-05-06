@@ -1,2 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="auto_updates_notification">Sovelluspäivitykset asennetaan automaattisesti</string>
+    <plurals name="updates_notification_title">
+        <item quantity="one"><xliff:g id="version_code">%1$d</xliff:g> sovelluspäivitys saatavilla</item>
+        <item quantity="other"><xliff:g id="version_code">%1$d</xliff:g> sovelluspäivitystä saatavilla</item>
+    </plurals>
+    <string name="update_all">Päivitä kaikki</string>
+    <string name="not_enough_storage">Tämän sovelluksen lataamiseen ei ole riittävästi tilaa!</string>
+    <string name="unknown_error">Tuntematon virhe!</string>
+    <string name="message_app_available_later">Tämä sovellus tulee saataville myöhemmin!</string>
+    <string name="install_blocked_google">App Lounge ei vielä tue maksullisia sovelluksia. Vielä vähän kärsivällisyyttä, niin pian se on totta.</string>
+    <string name="install_blocked_anonymous">Maksullisia sovelluksia ei voi asentaa anonyymissä tilassa. Kirjaudu Google-tilillesi asentaaksesi maksullisia sovelluksia.</string>
+    <string name="package_name">Paketin nimi: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="license">Lisenssi: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="min_android_version">Vaatii: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="updated_on">Päivitetty: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="version">Versio: <xliff:g id="version_code">%1$s</xliff:g></string>
+    <string name="information">Tiedot</string>
+    <string name="trackers_title">Seuraimet</string>
+    <string name="permissions">Käyttöoikeudet</string>
+    <string name="privacy_analyses">Yksityisyydensuojan analyysit</string>
+    <string name="privacy_description">Yksityisyyspisteet lasketaan automaattisesti sovelluksissa havaituista luvista ja seuraajista. Se antaa viitteitä siitä, kuinka paljon sovellus todennäköisesti kohdistaa mikrotarkkailua käyttäjiinsä.&lt;br /&gt;&lt;br /&gt;Sen laskenta-algoritmin lähdekoodin &lt;a href=<xliff:g id="source_code">%1$s</xliff:g>&gt;löydät täältä&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;Seuraimet havaitaan käyttämällä &lt;a href=<xliff:g id="exodus">%2$s</xliff:g>&gt;Exodus Privacy tools:ia&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;Pisteet 10:stä.&lt;br /&gt;&lt;br /&gt;Lue lisää yksityisyyspisteytyksen laskentatavasta, sen rajoituksista ja siitä, miten voit suojautua mikrotarkkailulta &lt;a href=<xliff:g id="e_doc">%3$s</xliff:g>&gt;tältä sivulta&lt;/a&gt;.</string>
+    <string name="privacy_score">Tietosuojapisteet</string>
+    <string name="privacy">Yksityisyys</string>
+    <string name="rating_description">Pistettä 5:stä. Laskettu käyttäen käyttäjien arvioita sovelluksesta.</string>
+    <string name="rating">Arvostelu</string>
+    <string name="ratings">Arvostelut</string>
+    <string name="update">Päivitä</string>
+    <string name="more">Lisää</string>
+    <string name="retry">Yritä uudelleen</string>
+    <string name="open">Avaa</string>
+    <string name="app_icon">Sovelluskuvake</string>
+    <string name="cancel">Peruuta</string>
+    <string name="install">Asenna</string>
+    <string name="ok">OK</string>
+    <string name="share_intent">Katso myös \"<xliff:g id="rating">%1$s</xliff:g>\"
+\n<xliff:g id="rating">%2$s</xliff:g></string>
+    <string name="description">Kuvaus</string>
+    <string name="logout">Kirjaudu ulos</string>
+    <string name="user_anonymous">Anonyymi</string>
+    <string name="terms_services">Käyttöehdot</string>
+    <string name="account">Tili</string>
+    <string name="show_only_pwa_apps">Näytä vain PWAt</string>
+    <string name="show_only_open_source_apps">Näytä vain avoimen lähdekoodin sovellukset</string>
+    <string name="Show_all_apps">Näytä kaikki sovellukset</string>
+    <string name="Show_applications">Näytä sovellukset:</string>
+    <string name="preference_update_notify_available_description">Näytä ilmoitus kun sovelluspäivityksiä on saatavilla</string>
+    <string name="preference_update_notify_available_title">Näytä saatavilla olevat päivitykset</string>
+    <string name="preference_update_install_automatically_description">Lataa ja asenna sovelluspäivityksiä taustalla</string>
+    <string name="preference_update_install_automatically_title">Asenna päivitykset automaattisesti</string>
+    <string name="preference_update_wifi_only_description">Päivitä sovellukset automaattisesti vain mittaamattomissa verkoissa, kuten Wi-Fi-verkossa</string>
+    <string name="preference_update_wifi_only_title">Vain mittaamattomissa verkoissa</string>
+    <string name="preference_update_interval_title">Päivitysten tarkistusväli</string>
+    <string name="preference_update_interval_default">24</string>
+    <string name="preference_updates_title">Päivitykset</string>
+    <string name="tos_warning">Ennen kuin voimme jatkaa, sinun on luettava ja hyväksyttävä käyttöehdot.</string>
+    <string name="tos_agree_date">Hyväksytty</string>
+    <string name="tos_disagree">Hylkää</string>
+    <string name="tos_agree">Hyväksy</string>
+    <string name="or">tai</string>
+    <string name="sign_in_anonymous">Anonyymi tila</string>
+    <string name="sign_in_google">Kirjaudu sisään Googlella</string>
+    <string name="sign_in_desc">Kirjaudu sisään App Loungeen Google-tililläsi tai valitse anonyymi tila kirjautuaksesi sisään yksityisesti.</string>
+    <string name="sign_in_title">Tervetuloa</string>
+    <string name="pwa">PWA</string>
+    <string name="open_source">Avoin lähdekoodi</string>
+    <string name="menu_categories">Luokat</string>
+    <string name="category_icon">Luokan kuvake</string>
+    <string name="games">Pelit</string>
+    <string name="apps">Sovellukset</string>
+    <string name="no_apps_found">Sovelluksia ei löytynyt…</string>
+    <string name="search_hint">Hae sovellusta</string>
+    <string name="menu_settings">Asetukset</string>
+    <string name="menu_updates">Päivitykset</string>
+    <string name="menu_search">Hae</string>
+    <string name="menu_home">Aloitus</string>
+    <string name="app_name">App Lounge</string>
+    <string name="paid_app_anonymous_message">Maksullisia sovelluksia ei voi asentaa anonyymissä tilassa. Kirjaudu Google-tilillesi asentaaksesi maksullisia sovelluksia.</string>
+    <string name="dialog_cancel">PERUUTA</string>
+    <string name="dialog_confirm">VAHVISTA</string>
+    <string name="dialog_paidapp_message">Kun klikkaat vahvista, pääset sovelluksen Google Play -sivulle ja voit suorittaa oston loppuun selaimellasi. Klikkaa vahvista ostaaksesi %1$s hintaan %2$s.</string>
+    <string name="dialog_title_paid_app">Osta <b>%1$s</b></string>
+    <string name="no_internet_message">Yhteyden muodostaminen ei onnistu! Tarkista internetyhteytesi ja yritä uudelleen</string>
+    <string name="tracker_information_not_found">Tästä sovelluksesta ei ole saatavilla seuraintietoja.</string>
+    <string name="no_tracker_found">Seuraimia ei löytynyt!</string>
+    <string name="privacy_computed_using_text">Laskettu käyttäen &lt;a href=<xliff:g id="exodus">%1$s</xliff:g>&gt; Exodus Privacy Analyysia</string>
+    <string name="no_permission_found">Android-käyttöoikeutta ei löytynyt!</string>
+    <string name="updates_notification_unmetered_network_warning">Odotetaan mittaamatonta verkkoa</string>
+    <string name="manually_install_updates_notification_text">Sovelluspäivityksiä ei asenneta automaattisesti</string>
+    <string name="automatically_install_updates_notification_text">Sovelluspäivitykset asennetaan automaattisesti</string>
+    <string name="updates">Päivitykset</string>
+    <string name="downloads">Ladatut</string>
+    <string name="movers_shakers_games">Top trendaavat pelit</string>
+    <string name="movers_shakers_apps">Top trendaavat sovellukset</string>
+    <string name="topgrossing_games">Top tuottavat pelit</string>
+    <string name="topgrossing_apps">Top tuottavat sovellukset</string>
+    <string name="topselling_free_games">Top ilmaiset pelit</string>
+    <string name="topselling_free_apps">Top ilmaiset sovellukset</string>
+    <string name="popular_games">Suositut pelit</string>
+    <string name="popular_apps">Suositut sovellukset</string>
+    <string name="popular_games_in_last_24_hours">Suosittuja pelejä viimeisen 24 tunnin aikana</string>
+    <string name="popular_apps_in_last_24_hours">Suosittuja sovelluksia viimeisen 24 tunnin aikana</string>
+    <string name="top_updated_games">Top päivitetyt pelit</string>
+    <string name="top_updated_apps">Top päivitetyt sovellukset</string>
+    <string name="discover">Tutustu</string>
+    <string name="all_apps_updated">Kaikki sovellukset ovat ajan tasalla</string>
+    <string name="manual_updates_notification">Sovelluspäivityksiä ei asenneta automaattisesti</string>
+</resources>
