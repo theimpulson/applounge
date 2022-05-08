@@ -107,4 +107,5 @@
     <string name="paid_app_anonymous_message">Bezahl-Apps können nicht im anonymen Modus installiert werden. Bitte melde dich mit deinem Google-Konto an.</string>
     <string name="tracker_information_not_found">Es ist keine Tracker-Information für diese App verfügbar.</string>
     <string name="unsupported_app_unreleased">Die %s App wird zur Zeit nicht unterstützt. Ein Grund könnte sein, dass die App noch nicht weithin Veröffentlicht ist oder ein anderer Fehler aufgetreten ist.</string>
+    <string name="unsupported_app_title">Nicht unterstütze App!</string>
 </resources>
