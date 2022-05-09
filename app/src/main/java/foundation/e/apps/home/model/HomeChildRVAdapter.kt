@@ -216,6 +216,9 @@ class HomeChildRVAdapter(
             strokeColor =
                 ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             setOnClickListener {
+                if (mainActivityViewModel.checkUnsupportedApplication(homeApp, context)) {
+                    return@setOnClickListener
+                }
                 if (homeApp.isFree) {
                     installApplication(homeApp, appIcon)
                 } else {

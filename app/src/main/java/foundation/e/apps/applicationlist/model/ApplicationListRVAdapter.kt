@@ -316,6 +316,9 @@ class ApplicationListRVAdapter(
                 ContextCompat.getColorStateList(view.context, android.R.color.transparent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             setOnClickListener {
+                if (mainActivityViewModel.checkUnsupportedApplication(searchApp, context)) {
+                    return@setOnClickListener
+                }
                 if (searchApp.isFree || searchApp.isPurchased) {
                     installApplication(searchApp, appIcon)
                 } else {
