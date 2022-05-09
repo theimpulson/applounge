@@ -230,7 +230,9 @@ class HomeChildRVAdapter(
         homeApp: FusedApp
     ) {
         installButton.apply {
-            text = context.getString(R.string.update)
+            text = if (mainActivityViewModel.checkUnsupportedApplication(homeApp))
+                context.getString(R.string.not_available)
+            else context.getString(R.string.update)
             setTextColor(Color.WHITE)
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, R.color.colorAccent)
@@ -273,7 +275,7 @@ class HomeChildRVAdapter(
     ) {
         when {
             mainActivityViewModel.checkUnsupportedApplication(homeApp) -> {
-                materialButton.isEnabled = false
+                materialButton.isEnabled = true
                 materialButton.text = materialButton.context.getString(R.string.not_available)
             }
             homeApp.isFree -> {

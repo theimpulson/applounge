@@ -332,7 +332,7 @@ class ApplicationListRVAdapter(
     ) {
         when {
             mainActivityViewModel.checkUnsupportedApplication(searchApp) -> {
-                materialButton.isEnabled = false
+                materialButton.isEnabled = true
                 materialButton.text = materialButton.context.getString(R.string.not_available)
             }
             searchApp.isFree -> {
