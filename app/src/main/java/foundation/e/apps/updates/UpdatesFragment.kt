@@ -92,6 +92,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
                 this,
                 privacyInfoViewModel,
                 appInfoFetchViewModel,
+                mainActivityViewModel,
                 it,
                 pkgManagerModule,
                 pwaManagerModule,

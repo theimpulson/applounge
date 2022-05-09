@@ -202,7 +202,7 @@ class InstallAppWorker @AssistedInject constructor(
             .setContentTitle(title)
             .setTicker(title)
             .setContentText(progress)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.app_lounge_notification_icon)
             .setOngoing(true)
             // Add the cancel action to the notification which can
             // be used to cancel the worker

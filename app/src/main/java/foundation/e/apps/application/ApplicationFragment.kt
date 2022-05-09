@@ -406,8 +406,16 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         appSize: MaterialTextView
     ) {
         installButton.apply {
-            text = if (fusedApp.isFree) getString(R.string.install) else fusedApp.price
+            text = when {
+                mainActivityViewModel.checkUnsupportedApplication(fusedApp) ->
+                    getString(R.string.not_available)
+                fusedApp.isFree -> getString(R.string.install)
+                else -> fusedApp.price
+            }
             setOnClickListener {
+                if (mainActivityViewModel.checkUnsupportedApplication(fusedApp, activity)) {
+                    return@setOnClickListener
+                }
                 applicationIcon?.let {
                     if (fusedApp.isFree) {
                         mainActivityViewModel.getApplication(fusedApp, it)
@@ -439,11 +447,16 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         appSize: MaterialTextView
     ) {
         installButton.apply {
-            text = getString(R.string.update)
+            text = if (mainActivityViewModel.checkUnsupportedApplication(fusedApp))
+                getString(R.string.not_available)
+            else getString(R.string.update)
             setTextColor(Color.WHITE)
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             setOnClickListener {
+                if (mainActivityViewModel.checkUnsupportedApplication(fusedApp, activity)) {
+                    return@setOnClickListener
+                }
                 applicationIcon?.let {
                     mainActivityViewModel.getApplication(fusedApp, it)
                 }

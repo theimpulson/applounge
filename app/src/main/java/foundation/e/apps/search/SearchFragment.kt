@@ -121,6 +121,7 @@ class SearchFragment :
                 this,
                 privacyInfoViewModel,
                 appInfoFetchViewModel,
+                mainActivityViewModel,
                 it,
                 pkgManagerModule,
                 pwaManagerModule,

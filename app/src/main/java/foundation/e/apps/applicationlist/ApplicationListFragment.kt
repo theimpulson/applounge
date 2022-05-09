@@ -113,6 +113,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                     this,
                     privacyInfoViewModel,
                     appInfoFetchViewModel,
+                    mainActivityViewModel,
                     it,
                     pkgManagerModule,
                     pwaManagerModule,

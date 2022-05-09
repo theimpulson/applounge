@@ -34,6 +34,7 @@ import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.AppInfoFetchViewModel
+import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
@@ -51,6 +52,7 @@ class HomeChildRVAdapter(
     private val pkgManagerModule: PkgManagerModule,
     private val pwaManagerModule: PWAManagerModule,
     private val appInfoFetchViewModel: AppInfoFetchViewModel,
+    private val mainActivityViewModel: MainActivityViewModel,
     private val user: User,
     private val lifecycleOwner: LifecycleOwner,
     private val paidAppHandler: ((FusedApp) -> Unit)? = null
@@ -269,19 +271,26 @@ class HomeChildRVAdapter(
         materialButton: MaterialButton,
         homeChildListItemBinding: HomeChildListItemBinding
     ) {
-        if (homeApp.isFree) {
-            materialButton.isEnabled = true
-            materialButton.text = materialButton.context.getString(R.string.install)
-            homeChildListItemBinding.progressBarInstall.visibility = View.GONE
-        } else {
-            materialButton.isEnabled = false
-            materialButton.text = ""
-            homeChildListItemBinding.progressBarInstall.visibility = View.VISIBLE
-            appInfoFetchViewModel.isAppPurchased(homeApp).observe(lifecycleOwner) {
+        when {
+            mainActivityViewModel.checkUnsupportedApplication(homeApp) -> {
+                materialButton.isEnabled = false
+                materialButton.text = materialButton.context.getString(R.string.not_available)
+            }
+            homeApp.isFree -> {
                 materialButton.isEnabled = true
+                materialButton.text = materialButton.context.getString(R.string.install)
                 homeChildListItemBinding.progressBarInstall.visibility = View.GONE
-                materialButton.text =
-                    if (it) materialButton.context.getString(R.string.install) else homeApp.price
+            }
+            else -> {
+                materialButton.isEnabled = false
+                materialButton.text = ""
+                homeChildListItemBinding.progressBarInstall.visibility = View.VISIBLE
+                appInfoFetchViewModel.isAppPurchased(homeApp).observe(lifecycleOwner) {
+                    materialButton.isEnabled = true
+                    homeChildListItemBinding.progressBarInstall.visibility = View.GONE
+                    materialButton.text =
+                        if (it) materialButton.context.getString(R.string.install) else homeApp.price
+                }
             }
         }
     }

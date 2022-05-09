@@ -36,6 +36,7 @@ import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import foundation.e.apps.AppInfoFetchViewModel
+import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
@@ -57,6 +58,7 @@ class ApplicationListRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val privacyInfoViewModel: PrivacyInfoViewModel,
     private val appInfoFetchViewModel: AppInfoFetchViewModel,
+    private val mainActivityViewModel: MainActivityViewModel,
     private val currentDestinationId: Int,
     private val pkgManagerModule: PkgManagerModule,
     private val pwaManagerModule: PWAManagerModule,
@@ -328,19 +330,26 @@ class ApplicationListRVAdapter(
         materialButton: MaterialButton,
         applicationListItemBinding: ApplicationListItemBinding
     ) {
-        if (searchApp.isFree) {
-            materialButton.isEnabled = true
-            materialButton.text = materialButton.context.getString(R.string.install)
-            applicationListItemBinding.progressBarInstall.visibility = View.GONE
-        } else {
-            materialButton.isEnabled = false
-            materialButton.text = ""
-            applicationListItemBinding.progressBarInstall.visibility = View.VISIBLE
-            appInfoFetchViewModel.isAppPurchased(searchApp).observe(lifecycleOwner) {
+        when {
+            mainActivityViewModel.checkUnsupportedApplication(searchApp) -> {
+                materialButton.isEnabled = false
+                materialButton.text = materialButton.context.getString(R.string.not_available)
+            }
+            searchApp.isFree -> {
                 materialButton.isEnabled = true
+                materialButton.text = materialButton.context.getString(R.string.install)
                 applicationListItemBinding.progressBarInstall.visibility = View.GONE
-                materialButton.text =
-                    if (it) materialButton.context.getString(R.string.install) else searchApp.price
+            }
+            else -> {
+                materialButton.isEnabled = false
+                materialButton.text = ""
+                applicationListItemBinding.progressBarInstall.visibility = View.VISIBLE
+                appInfoFetchViewModel.isAppPurchased(searchApp).observe(lifecycleOwner) {
+                    materialButton.isEnabled = true
+                    applicationListItemBinding.progressBarInstall.visibility = View.GONE
+                    materialButton.text =
+                        if (it) materialButton.context.getString(R.string.install) else searchApp.price
+                }
             }
         }
     }
@@ -351,11 +360,16 @@ class ApplicationListRVAdapter(
     ) {
         installButton.apply {
             isEnabled = true
-            text = context.getString(R.string.update)
+            text = if (mainActivityViewModel.checkUnsupportedApplication(searchApp))
+                context.getString(R.string.not_available)
+            else context.getString(R.string.update)
             setTextColor(Color.WHITE)
             backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             setOnClickListener {
+                if (mainActivityViewModel.checkUnsupportedApplication(searchApp, context)) {
+                    return@setOnClickListener
+                }
                 installApplication(searchApp, appIcon)
             }
         }

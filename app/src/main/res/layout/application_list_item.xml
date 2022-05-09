@@ -18,7 +18,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/applicationList"
@@ -29,83 +29,80 @@
     android:clickable="true"
     android:focusable="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/app_icon_card"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/app_icon_card"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_icon"
+            android:scaleType="fitXY" />
+    </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/app_icon"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/app_icon"
-                android:scaleType="fitXY" />
-        </androidx.cardview.widget.CardView>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/app_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="16sp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintLeft_toRightOf="@+id/app_icon_card"
+        app:layout_constraintRight_toLeftOf="@+id/installButton"
+        app:layout_constraintTop_toTopOf="@+id/app_icon_card"
+        tools:text="App title" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/app_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="2dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="16sp"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintLeft_toRightOf="@+id/app_icon_card"
-            app:layout_constraintRight_toLeftOf="@+id/installButton"
-            app:layout_constraintTop_toTopOf="@+id/app_icon_card"
-            tools:text="App title" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/app_author"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@+id/app_title"
+        app:layout_constraintRight_toLeftOf="@+id/installButton"
+        app:layout_constraintTop_toBottomOf="@+id/app_title"
+        app:layout_constraintBottom_toTopOf="@+id/app_rating_bar"
+        tools:text="App author" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/app_author"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="14sp"
-            app:layout_constraintLeft_toLeftOf="@+id/app_title"
-            app:layout_constraintRight_toLeftOf="@+id/installButton"
-            app:layout_constraintTop_toBottomOf="@+id/app_title"
-            app:layout_constraintBottom_toTopOf="@+id/app_rating_bar"
-            tools:text="App author" />
+    <RatingBar
+        android:id="@+id/app_rating_bar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:progressBackgroundTint="@color/colorAccent"
+        android:progressTint="@color/colorAccent"
+        android:stepSize="0.1"
+        app:layout_constraintBottom_toBottomOf="@id/app_icon_card"
+        app:layout_constraintLeft_toLeftOf="@+id/app_title" />
 
-        <RatingBar
-            android:id="@+id/app_rating_bar"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:isIndicator="true"
-            android:numStars="5"
-            android:progressBackgroundTint="@color/colorAccent"
-            android:progressTint="@color/colorAccent"
-            android:stepSize="0.1"
-            app:layout_constraintBottom_toBottomOf="@id/app_icon_card"
-            app:layout_constraintLeft_toLeftOf="@+id/app_title" />
+    <TextView
+        android:id="@+id/app_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/not_available"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="14sp"
+        app:layout_constraintTop_toTopOf="@+id/app_rating_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/app_rating_bar"
+        app:layout_constraintLeft_toRightOf="@+id/app_rating_bar" />
 
-        <TextView
-            android:id="@+id/app_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/not_available"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="14sp"
-            app:layout_constraintTop_toTopOf="@+id/app_rating_bar"
-            app:layout_constraintBottom_toBottomOf="@+id/app_rating_bar"
-            app:layout_constraintLeft_toRightOf="@+id/app_rating_bar" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/installButton"
@@ -193,6 +190,4 @@
             android:layout_marginTop="12dp"
             android:background="@color/colorGrey"
             app:layout_constraintTop_toBottomOf="@+id/app_rating_bar" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

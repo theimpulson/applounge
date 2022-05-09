@@ -65,6 +65,7 @@ class HomeParentRVAdapter(
                 pkgManagerModule,
                 pwaManagerModule,
                 appInfoFetchViewModel,
+                mainActivityViewModel,
                 user,
                 lifecycleOwner,
                 paidAppHandler
