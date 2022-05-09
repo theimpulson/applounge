@@ -20,6 +20,7 @@ package foundation.e.apps.api.fused
 
 import android.content.Context
 import android.text.format.Formatter
+import com.aurora.gplayapi.Constants
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
 import com.aurora.gplayapi.data.models.Artwork
@@ -261,13 +262,30 @@ class FusedAPIImpl @Inject constructor(
             pkgList
         } else {
             gPlayAPIRepository.getAppDetails(packageNameList, authData).map { app ->
-                app.transformToFusedApp()
+                /*
+                 * Some apps are restricted to locations. Example "com.skype.m2".
+                 * For restricted apps, check if it is possible to get their specific app info.
+                 *
+                 * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5174
+                 */
+                if (app.restriction != Constants.Restriction.NOT_RESTRICTED) {
+                    try {
+                        gPlayAPIRepository.getAppDetails(app.packageName, authData)
+                            ?.transformToFusedApp() ?: FusedApp()
+                    } catch (e: Exception) {
+                        FusedApp()
+                    }
+                } else {
+                    app.transformToFusedApp()
+                }
             }
         }
         response.forEach {
-            it.updateStatus()
-            it.updateType()
-            list.add(it)
+            if (it.package_name.isNotBlank()) {
+                it.updateStatus()
+                it.updateType()
+                list.add(it)
+            }
         }
         return list
     }
