@@ -57,16 +57,27 @@
         android:textColor="?android:textColorPrimary"
         android:textSize="12sp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/installButton"
-        style="@style/InstallButtonStyle"
-        android:layout_width="96dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="1dp"
-        android:text="@string/install"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        app:autoSizeTextType="uniform"
-        app:cornerRadius="4dp" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/installButton"
+            style="@style/InstallButtonStyle"
+            android:layout_width="96dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="1dp"
+            android:text="@string/install"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            app:autoSizeTextType="uniform"
+            app:cornerRadius="4dp" />
 
+        <ProgressBar
+            android:id="@+id/progressBarInstall"
+            style="?android:attr/progressBarStyle"
+            android:visibility="visible"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
 </LinearLayout>

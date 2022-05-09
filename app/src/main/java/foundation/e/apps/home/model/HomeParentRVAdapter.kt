@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import foundation.e.apps.AppInfoFetchViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
@@ -39,6 +40,7 @@ class HomeParentRVAdapter(
     private val pwaManagerModule: PWAManagerModule,
     private val user: User,
     private val mainActivityViewModel: MainActivityViewModel,
+    private val appInfoFetchViewModel: AppInfoFetchViewModel,
     private val lifecycleOwner: LifecycleOwner,
     private val paidAppHandler: ((FusedApp) -> Unit)? = null
 ) : ListAdapter<FusedHome, HomeParentRVAdapter.ViewHolder>(FusedHomeDiffUtil()) {
@@ -58,7 +60,15 @@ class HomeParentRVAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val fusedHome = getItem(position)
         val homeChildRVAdapter =
-            HomeChildRVAdapter(fusedAPIInterface, pkgManagerModule, pwaManagerModule, user, paidAppHandler)
+            HomeChildRVAdapter(
+                fusedAPIInterface,
+                pkgManagerModule,
+                pwaManagerModule,
+                appInfoFetchViewModel,
+                user,
+                lifecycleOwner,
+                paidAppHandler
+            )
         homeChildRVAdapter.setData(fusedHome.list)
 
         holder.binding.titleTV.text = fusedHome.title

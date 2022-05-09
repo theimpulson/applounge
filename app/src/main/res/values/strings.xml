@@ -74,6 +74,7 @@
     <string name="share_intent">Check out \"<xliff:g id="rating">%1$s</xliff:g>\"\n<xliff:g id="rating">%2$s</xliff:g></string>
     <string name="ok">OK</string>
     <string name="install">Install</string>
+    <string name="installing">Installing</string>
     <string name="cancel">Cancel</string>
     <string name="app_icon">App icon</string>
     <string name="not_available" translatable="false">N/A</string>

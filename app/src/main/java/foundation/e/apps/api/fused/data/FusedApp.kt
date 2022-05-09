@@ -53,6 +53,7 @@ data class FusedApp(
     val url: String = String(),
     var type: Type = Type.NATIVE,
     var privacyScore: Int = -1,
+    var isPurchased: Boolean = false,
 
     /*
      * List of permissions from Exodus API.

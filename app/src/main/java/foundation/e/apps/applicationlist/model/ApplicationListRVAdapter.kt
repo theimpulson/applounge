@@ -33,8 +33,9 @@ import coil.load
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.Shimmer.Direction.LEFT_TO_RIGHT
 import com.facebook.shimmer.ShimmerDrawable
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
-import foundation.e.apps.FdroidFetchViewModel
+import foundation.e.apps.AppInfoFetchViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
@@ -55,7 +56,7 @@ import javax.inject.Singleton
 class ApplicationListRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val privacyInfoViewModel: PrivacyInfoViewModel,
-    private val fdroidFetchViewModel: FdroidFetchViewModel,
+    private val appInfoFetchViewModel: AppInfoFetchViewModel,
     private val currentDestinationId: Int,
     private val pkgManagerModule: PkgManagerModule,
     private val pwaManagerModule: PWAManagerModule,
@@ -125,7 +126,7 @@ class ApplicationListRVAdapter(
             }
             appTitle.text = searchApp.name
             appAuthor.text = searchApp.author
-            fdroidFetchViewModel.setAuthorNameIfNeeded(appAuthor, searchApp)
+            appInfoFetchViewModel.setAuthorNameIfNeeded(appAuthor, searchApp)
             if (searchApp.ratings.usageQualityScore != -1.0) {
                 appRating.text = searchApp.ratings.usageQualityScore.toString()
                 appRatingBar.rating = searchApp.ratings.usageQualityScore.toFloat()
@@ -200,6 +201,7 @@ class ApplicationListRVAdapter(
                 installApplication(searchApp, appIcon)
             }
         }
+        progressBarInstall.visibility = View.GONE
     }
 
     private fun ApplicationListItemBinding.handleBlocked(view: View) {
@@ -216,6 +218,7 @@ class ApplicationListRVAdapter(
                 }
             }
         }
+        progressBarInstall.visibility = View.GONE
     }
 
     private fun ApplicationListItemBinding.showCalculatedPrivacyScoreData(
@@ -272,11 +275,13 @@ class ApplicationListRVAdapter(
     private fun ApplicationListItemBinding.handleInstalling(view: View, holder: ViewHolder) {
         installButton.apply {
             isEnabled = false
+            text = context.getString(R.string.installing)
             setTextColor(context.getColor(R.color.light_grey))
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, android.R.color.transparent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.light_grey)
         }
+        progressBarInstall.visibility = View.GONE
     }
 
     private fun ApplicationListItemBinding.handleDownloading(
@@ -293,7 +298,9 @@ class ApplicationListRVAdapter(
             setOnClickListener {
                 cancelDownload(searchApp)
             }
+            progressBarInstall.visibility = View.GONE
         }
+        progressBarInstall.visibility = View.GONE
     }
 
     private fun ApplicationListItemBinding.handleUnavailable(
@@ -301,18 +308,39 @@ class ApplicationListRVAdapter(
         searchApp: FusedApp,
     ) {
         installButton.apply {
-            isEnabled = true
-            text = if (searchApp.isFree) context.getString(R.string.install) else searchApp.price
+            updateUIByPaymentType(searchApp, this, this@handleUnavailable)
             setTextColor(context.getColor(R.color.colorAccent))
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, android.R.color.transparent)
             strokeColor = ContextCompat.getColorStateList(view.context, R.color.colorAccent)
             setOnClickListener {
-                if (searchApp.isFree) {
+                if (searchApp.isFree || searchApp.isPurchased) {
                     installApplication(searchApp, appIcon)
                 } else {
                     paidAppHandler?.invoke(searchApp)
                 }
+            }
+        }
+    }
+
+    private fun updateUIByPaymentType(
+        searchApp: FusedApp,
+        materialButton: MaterialButton,
+        applicationListItemBinding: ApplicationListItemBinding
+    ) {
+        if (searchApp.isFree) {
+            materialButton.isEnabled = true
+            materialButton.text = materialButton.context.getString(R.string.install)
+            applicationListItemBinding.progressBarInstall.visibility = View.GONE
+        } else {
+            materialButton.isEnabled = false
+            materialButton.text = ""
+            applicationListItemBinding.progressBarInstall.visibility = View.VISIBLE
+            appInfoFetchViewModel.isAppPurchased(searchApp).observe(lifecycleOwner) {
+                materialButton.isEnabled = true
+                applicationListItemBinding.progressBarInstall.visibility = View.GONE
+                materialButton.text =
+                    if (it) materialButton.context.getString(R.string.install) else searchApp.price
             }
         }
     }
@@ -331,6 +359,7 @@ class ApplicationListRVAdapter(
                 installApplication(searchApp, appIcon)
             }
         }
+        progressBarInstall.visibility = View.GONE
     }
 
     private fun ApplicationListItemBinding.handleInstalled(
@@ -351,6 +380,7 @@ class ApplicationListRVAdapter(
                 }
             }
         }
+        progressBarInstall.visibility = View.GONE
     }
 
     fun setData(newList: List<FusedApp>) {
