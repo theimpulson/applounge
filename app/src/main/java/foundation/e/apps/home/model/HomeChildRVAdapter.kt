@@ -20,9 +20,11 @@ package foundation.e.apps.home.model
 
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +32,7 @@ import coil.load
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.snackbar.Snackbar
+import foundation.e.apps.AppInfoFetchViewModel
 import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.FusedAPIInterface
@@ -46,7 +49,9 @@ class HomeChildRVAdapter(
     private val fusedAPIInterface: FusedAPIInterface,
     private val pkgManagerModule: PkgManagerModule,
     private val pwaManagerModule: PWAManagerModule,
+    private val appInfoFetchViewModel: AppInfoFetchViewModel,
     private val user: User,
+    private val lifecycleOwner: LifecycleOwner,
     private val paidAppHandler: ((FusedApp) -> Unit)? = null
 ) : ListAdapter<FusedApp, HomeChildRVAdapter.ViewHolder>(HomeChildFusedAppDiffUtil()) {
 
@@ -115,6 +120,7 @@ class HomeChildRVAdapter(
                             }
                         }
                     }
+                    progressBarInstall.visibility = View.GONE
                 }
                 Status.UPDATABLE -> {
                     installButton.apply {
@@ -128,11 +134,24 @@ class HomeChildRVAdapter(
                             installApplication(homeApp, appIcon)
                         }
                     }
+                    progressBarInstall.visibility = View.GONE
                 }
                 Status.UNAVAILABLE -> {
                     installButton.apply {
-                        text =
-                            if (homeApp.isFree) context.getString(R.string.install) else homeApp.price
+                        if (homeApp.isFree) {
+                            isEnabled = true
+                            text = context.getString(R.string.install)
+                            progressBarInstall.visibility = View.GONE
+                        } else {
+                            isEnabled = false
+                            text = ""
+                            progressBarInstall.visibility = View.VISIBLE
+                            appInfoFetchViewModel.isAppPurchased(homeApp).observe(lifecycleOwner) {
+                                isEnabled = true
+                                progressBarInstall.visibility = View.GONE
+                                text = if (it) context.getString(R.string.install) else homeApp.price
+                            }
+                        }
                         setTextColor(context.getColor(R.color.colorAccent))
                         backgroundTintList = ContextCompat.getColorStateList(
                             view.context,
@@ -164,11 +183,13 @@ class HomeChildRVAdapter(
                             cancelDownload(homeApp)
                         }
                     }
+                    progressBarInstall.visibility = View.GONE
                 }
                 Status.INSTALLING, Status.UNINSTALLING -> {
                     installButton.apply {
                         isEnabled = false
                         setTextColor(context.getColor(R.color.light_grey))
+                        text = context.getString(R.string.installing)
                         backgroundTintList = ContextCompat.getColorStateList(
                             view.context,
                             android.R.color.transparent
@@ -176,6 +197,7 @@ class HomeChildRVAdapter(
                         strokeColor =
                             ContextCompat.getColorStateList(view.context, R.color.light_grey)
                     }
+                    progressBarInstall.visibility = View.GONE
                 }
                 Status.BLOCKED -> {
                     installButton.setOnClickListener {
@@ -188,6 +210,7 @@ class HomeChildRVAdapter(
                             Snackbar.make(view, errorMsg, Snackbar.LENGTH_SHORT).show()
                         }
                     }
+                    progressBarInstall.visibility = View.GONE
                 }
                 Status.INSTALLATION_ISSUE -> {
                     installButton.apply {
@@ -203,6 +226,7 @@ class HomeChildRVAdapter(
                             installApplication(homeApp, appIcon)
                         }
                     }
+                    progressBarInstall.visibility = View.GONE
                 }
             }
         }

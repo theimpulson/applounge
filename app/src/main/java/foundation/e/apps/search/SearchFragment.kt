@@ -39,8 +39,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.AppInfoFetchViewModel
 import foundation.e.apps.AppProgressViewModel
-import foundation.e.apps.FdroidFetchViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
@@ -74,7 +74,7 @@ class SearchFragment :
 
     private val searchViewModel: SearchViewModel by viewModels()
     private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
-    private val fdroidFetchViewModel: FdroidFetchViewModel by viewModels()
+    private val appInfoFetchViewModel: AppInfoFetchViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
     private val appProgressViewModel: AppProgressViewModel by viewModels()
 
@@ -120,7 +120,7 @@ class SearchFragment :
             ApplicationListRVAdapter(
                 this,
                 privacyInfoViewModel,
-                fdroidFetchViewModel,
+                appInfoFetchViewModel,
                 it,
                 pkgManagerModule,
                 pwaManagerModule,

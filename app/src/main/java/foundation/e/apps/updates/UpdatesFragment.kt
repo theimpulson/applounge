@@ -29,8 +29,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.AppInfoFetchViewModel
 import foundation.e.apps.AppProgressViewModel
-import foundation.e.apps.FdroidFetchViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
@@ -61,7 +61,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
 
     private val updatesViewModel: UpdatesViewModel by viewModels()
     private val privacyInfoViewModel: PrivacyInfoViewModel by viewModels()
-    private val fdroidFetchViewModel: FdroidFetchViewModel by viewModels()
+    private val appInfoFetchViewModel: AppInfoFetchViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
     private val appProgressViewModel: AppProgressViewModel by viewModels()
 
@@ -91,7 +91,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
             ApplicationListRVAdapter(
                 this,
                 privacyInfoViewModel,
-                fdroidFetchViewModel,
+                appInfoFetchViewModel,
                 it,
                 pkgManagerModule,
                 pwaManagerModule,
