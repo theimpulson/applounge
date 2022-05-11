@@ -98,4 +98,5 @@
     <string name="ok"><font fgcolor="#FF0088ED">OK</font></string>
     <string name="action_installing">Installation</string>
     <string name="exit">Merci de cliquer sur RETOUR à nouveau pour quitter</string>
+    <string name="Signature_verification_failed">La vérification de la signature a échoué, abandon de l\'installation</string>
 </resources>
