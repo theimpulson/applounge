@@ -22,7 +22,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.data.models.AuthData
+import com.aurora.gplayapi.exceptions.ApiException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
@@ -47,17 +49,25 @@ class ApplicationViewModel @Inject constructor(
     val fusedApp: MutableLiveData<FusedApp> = MutableLiveData()
     val appStatus: MutableLiveData<Status?> = MutableLiveData()
     val downloadProgress = downloadProgressLD
+    private val _errorMessageLiveData: MutableLiveData<Int> = MutableLiveData()
+    val errorMessageLiveData: MutableLiveData<Int> = _errorMessageLiveData
 
     fun getApplicationDetails(id: String, packageName: String, authData: AuthData, origin: Origin) {
         viewModelScope.launch(Dispatchers.IO) {
-            fusedApp.postValue(
-                fusedAPIRepository.getApplicationDetails(
-                    id,
-                    packageName,
-                    authData,
-                    origin
+            try {
+                fusedApp.postValue(
+                    fusedAPIRepository.getApplicationDetails(
+                        id,
+                        packageName,
+                        authData,
+                        origin
+                    )
                 )
-            )
+            } catch (e: ApiException.AppNotFound) {
+                _errorMessageLiveData.postValue(R.string.app_not_found)
+            } catch (e: Exception) {
+                _errorMessageLiveData.postValue(R.string.unknown_error)
+            }
         }
     }
 
@@ -107,7 +117,8 @@ class ApplicationViewModel @Inject constructor(
         fusedApp.value?.let { app ->
             val downloadingItem =
                 downloadList.find { it.origin == app.origin && (it.packageName == app.package_name || it.id == app.package_name) }
-            appStatus.value = downloadingItem?.status ?: fusedAPIRepository.getFusedAppInstallationStatus(app)
+            appStatus.value =
+                downloadingItem?.status ?: fusedAPIRepository.getFusedAppInstallationStatus(app)
         }
     }
 }

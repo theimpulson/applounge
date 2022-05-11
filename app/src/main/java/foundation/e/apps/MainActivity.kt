@@ -258,7 +258,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSnackbarMessage(message: String) {
+    fun showSnackbarMessage(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 

@@ -45,6 +45,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.AppInfoFetchViewModel
+import foundation.e.apps.MainActivity
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.PrivacyInfoViewModel
 import foundation.e.apps.R
@@ -257,6 +258,10 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
             observeDownloadStatus(view)
             fetchAppTracker(it)
+        }
+
+        applicationViewModel.errorMessageLiveData.observe(viewLifecycleOwner) {
+            (requireActivity() as MainActivity).showSnackbarMessage(getString(it))
         }
     }
 

@@ -104,6 +104,7 @@
     <string name="message_app_available_later">This app will be available later!</string>
     <string name="unknown_error">Unknown Error!</string>
     <string name="not_enough_storage">There is not enough space available to download this application!</string>
+    <string name="app_not_found">Your application was not found.</string>
 
     <!-- Updates Fragment -->
     <string name="update_all">Update All</string>
