@@ -22,18 +22,11 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.preference.PreferenceManager
-import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
+import androidx.work.*
 import foundation.e.apps.R
-import java.util.concurrent.TimeUnit
 
-class UpdatesManager : BroadcastReceiver() {
-
+class UpdatesBroadcastReceiver : BroadcastReceiver() {
     companion object {
-        const val UPDATES_WORK_NAME = "updates_work"
         private const val TAG = "UpdatesManager"
     }
 
@@ -46,31 +39,7 @@ class UpdatesManager : BroadcastReceiver() {
                     context.getString(R.string.update_check_intervals),
                     context.getString(R.string.preference_update_interval_default)
                 )!!.toLong()
-            enqueueWork(context, interval, ExistingPeriodicWorkPolicy.KEEP)
+            UpdatesWorkManager.enqueueWork(context, interval, ExistingPeriodicWorkPolicy.KEEP)
         }
-    }
-
-    private fun buildWorkerConstraints() = Constraints.Builder().apply {
-        setRequiresBatteryNotLow(true)
-        setRequiredNetworkType(NetworkType.CONNECTED)
-    }.build()
-
-    private fun buildPeriodicWorkRequest(interval: Long): PeriodicWorkRequest {
-        return PeriodicWorkRequest.Builder(
-            UpdatesWorker::class.java,
-            interval,
-            TimeUnit.HOURS
-        ).apply {
-            setConstraints(buildWorkerConstraints())
-        }.build()
-    }
-
-    fun enqueueWork(context: Context, interval: Long, existingPeriodicWorkPolicy: ExistingPeriodicWorkPolicy) {
-        Log.i(TAG, "UpdatesWorker interval: $interval hours")
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            UPDATES_WORK_NAME,
-            existingPeriodicWorkPolicy, buildPeriodicWorkRequest(interval)
-        )
-        Log.i(TAG, "UpdatesWorker started")
     }
 }

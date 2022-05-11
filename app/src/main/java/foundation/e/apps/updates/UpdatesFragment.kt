@@ -41,6 +41,7 @@ import foundation.e.apps.applicationlist.model.ApplicationListRVAdapter
 import foundation.e.apps.databinding.FragmentUpdatesBinding
 import foundation.e.apps.manager.download.data.DownloadProgress
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.updates.manager.UpdatesWorkManager
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
 import foundation.e.apps.utils.modules.PWAManagerModule
@@ -78,9 +79,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface {
                 if (hasInternet) {
                     updatesViewModel.getUpdates(data)
                     binding.button.setOnClickListener {
-                        updatesViewModel.updatesList.value?.forEach { app ->
-                            getApplication(app)
-                        }
+                        UpdatesWorkManager.startUpdateAllWork(requireContext().applicationContext)
                     }
                 }
             }

@@ -63,7 +63,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".updates.manager.UpdatesManager">
+        <receiver android:name=".updates.manager.UpdatesBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

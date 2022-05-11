@@ -36,7 +36,7 @@ import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.databinding.CustomPreferenceBinding
 import foundation.e.apps.setup.signin.SignInViewModel
-import foundation.e.apps.updates.manager.UpdatesManager
+import foundation.e.apps.updates.manager.UpdatesWorkManager
 import foundation.e.apps.utils.enums.User
 import javax.inject.Inject
 
@@ -67,7 +67,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             preferenceManager.findPreference<Preference>(getString(R.string.update_check_intervals))
         updateCheckInterval?.setOnPreferenceChangeListener { _, newValue ->
             Log.d(TAG, "onCreatePreferences: updated Value: $newValue")
-            context?.let { UpdatesManager().enqueueWork(it, newValue.toString().toLong(), ExistingPeriodicWorkPolicy.REPLACE) }
+            context?.let { UpdatesWorkManager.enqueueWork(it, newValue.toString().toLong(), ExistingPeriodicWorkPolicy.REPLACE) }
             true
         }
 
