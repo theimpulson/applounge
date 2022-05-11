@@ -22,7 +22,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.preference.PreferenceManager
-import androidx.work.*
+import androidx.work.ExistingPeriodicWorkPolicy
 import foundation.e.apps.R
 
 class UpdatesBroadcastReceiver : BroadcastReceiver() {
