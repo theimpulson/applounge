@@ -34,8 +34,12 @@ import javax.inject.Singleton
 class FusedAPIRepository @Inject constructor(
     private val fusedAPIImpl: FusedAPIImpl
 ) {
-    suspend fun getHomeScreenData(authData: AuthData): List<FusedHome> {
+    suspend fun getHomeScreenData(authData: AuthData): Pair<List<FusedHome>, String> {
         return fusedAPIImpl.getHomeScreenData(authData)
+    }
+
+    fun isFusedHomesEmpty(fusedHomes: List<FusedHome>): Boolean {
+        return fusedAPIImpl.isFusedHomesEmpty(fusedHomes)
     }
 
     suspend fun validateAuthData(authData: AuthData): Boolean {

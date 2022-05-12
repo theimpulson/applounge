@@ -20,6 +20,7 @@ package foundation.e.apps.api.fused
 
 import android.content.Context
 import android.text.format.Formatter
+import android.util.Log
 import com.aurora.gplayapi.Constants
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.aurora.gplayapi.data.models.App
@@ -46,8 +47,11 @@ import foundation.e.apps.utils.enums.AppTag
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
+import foundation.e.apps.utils.modules.CommonUtilsModule.timeoutDurationInMillis
 import foundation.e.apps.utils.modules.PWAManagerModule
 import foundation.e.apps.utils.modules.PreferenceManagerModule
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -63,38 +67,96 @@ class FusedAPIImpl @Inject constructor(
 
     companion object {
         private const val CATEGORY_TITLE_REPLACEABLE_CONJUNCTION = "&"
-        private const val APP_TYPE_ANY = "any"
-        private const val APP_TYPE_OPEN = "open"
-        private const val APP_TYPE_PWA = "pwa"
+        /*
+         * Removing "private" access specifier to allow access in
+         * MainActivityViewModel.timeoutAlertDialog
+         *
+         * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
+         */
+        const val APP_TYPE_ANY = "any"
+        const val APP_TYPE_OPEN = "open"
+        const val APP_TYPE_PWA = "pwa"
         private const val CATEGORY_OPEN_GAMES_ID = "game_open_games"
         private const val CATEGORY_OPEN_GAMES_TITLE = "Open games"
     }
 
     private var TAG = FusedAPIImpl::class.java.simpleName
 
-    suspend fun getHomeScreenData(authData: AuthData): List<FusedHome> {
-        val list = mutableListOf<FusedHome>()
+    /**
+     * Pass application source type along with list of apps.
+     * Application source type may change in case of timeout of GPlay/cleanapk api.
+     *
+     * The second item of the Pair can be one of [APP_TYPE_ANY], [APP_TYPE_OPEN], [APP_TYPE_PWA].
+     *
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
+     */
+    suspend fun getHomeScreenData(authData: AuthData): Pair<List<FusedHome>, String> {
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
-
-        if (preferredApplicationType != APP_TYPE_ANY) {
-            val response = if (preferredApplicationType == APP_TYPE_OPEN) {
-                cleanAPKRepository.getHomeScreenData(
-                    CleanAPKInterface.APP_TYPE_ANY,
-                    CleanAPKInterface.APP_SOURCE_FOSS
-                ).body()
-            } else {
-                cleanAPKRepository.getHomeScreenData(
-                    CleanAPKInterface.APP_TYPE_PWA,
-                    CleanAPKInterface.APP_SOURCE_ANY
-                ).body()
-            }
-            response?.home?.let {
-                list.addAll(generateCleanAPKHome(it, preferredApplicationType))
-            }
-        } else {
-            list.addAll(fetchGPlayHome(authData))
+        val initialData = getHomeScreenDataBasedOnApplicationType(authData, preferredApplicationType)
+        if (isFusedHomesEmpty(initialData.first)) {
+            Log.d(TAG, "Received empty home data.")
         }
-        return list
+        return initialData
+    }
+
+    /**
+     * Check if list in all the FusedHome is empty.
+     * If any list is not empty, send false.
+     * Else (if all lists are empty) send true.
+     */
+    fun isFusedHomesEmpty(fusedHomes: List<FusedHome>): Boolean {
+        fusedHomes.forEach {
+            if (it.list.isNotEmpty()) return false
+        }
+        return true
+    }
+
+    /*
+     * Offload fetching application to a different method to dynamically fallback to a different
+     * app source if the user selected app source times out.
+     *
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
+     */
+    private suspend fun getHomeScreenDataBasedOnApplicationType(
+        authData: AuthData,
+        applicationType: String
+    ): Pair<List<FusedHome>, String> {
+        val list = mutableListOf<FusedHome>()
+        try {
+            /*
+             * Each category of home apps (example "Top Free Apps") will have its own timeout.
+             * Fetching 6 such categories will have a total timeout to 2 mins 30 seconds
+             * (considering each category having 25 seconds timeout).
+             *
+             * To prevent waiting so long and fail early, use withTimeout{}.
+             */
+            withTimeout(timeoutDurationInMillis) {
+                if (applicationType != APP_TYPE_ANY) {
+                    val response = if (applicationType == APP_TYPE_OPEN) {
+                        cleanAPKRepository.getHomeScreenData(
+                            CleanAPKInterface.APP_TYPE_ANY,
+                            CleanAPKInterface.APP_SOURCE_FOSS
+                        ).body()
+                    } else {
+                        cleanAPKRepository.getHomeScreenData(
+                            CleanAPKInterface.APP_TYPE_PWA,
+                            CleanAPKInterface.APP_SOURCE_ANY
+                        ).body()
+                    }
+                    response?.home?.let {
+                        list.addAll(generateCleanAPKHome(it, applicationType))
+                    }
+                } else {
+                    list.addAll(fetchGPlayHome(authData))
+                }
+            }
+        } catch (e: TimeoutCancellationException) {
+            e.printStackTrace()
+            Log.d(TAG, "Timed out fetching home data for type: $applicationType")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return Pair(list, applicationType)
     }
 
     suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<FusedCategory> {
