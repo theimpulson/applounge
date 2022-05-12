@@ -77,13 +77,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             }
         }
 
-        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { hasInternet ->
-            mainActivityViewModel.authData.observe(viewLifecycleOwner) { authData ->
-                if (hasInternet) {
-                    authData?.let {
-                        homeViewModel.getHomeScreenData(authData)
-                    }
-                }
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) {
+            mainActivityViewModel.authData.observe(viewLifecycleOwner) {
+                refreshHomeData()
             }
         }
 
@@ -113,14 +109,40 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
         }
 
         homeViewModel.homeScreenData.observe(viewLifecycleOwner) {
-            homeParentRVAdapter.setData(it)
             binding.shimmerLayout.visibility = View.GONE
             binding.parentRV.visibility = View.VISIBLE
+            if (!homeViewModel.isFusedHomesEmpty(it.first)) {
+                homeParentRVAdapter.setData(it.first)
+            } else if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
+                mainActivityViewModel.displayTimeoutAlertDialog(requireActivity(), {
+                    showLoadingShimmer()
+                    mainActivityViewModel.retryFetchingTokenAfterTimeout()
+                }, {
+                    openSettings()
+                }, it.second)
+            }
         }
 
         appProgressViewModel.downloadProgress.observe(viewLifecycleOwner) {
             updateProgressOfDownloadingAppItemViews(homeParentRVAdapter, it)
         }
+    }
+
+    /*
+     * Offload loading home data to a different function, to allow retrying mechanism.
+     */
+    private fun refreshHomeData() {
+        if (mainActivityViewModel.internetConnection.value == true) {
+            mainActivityViewModel.authData.value?.let { authData ->
+                mainActivityViewModel.dismissTimeoutDialog()
+                homeViewModel.getHomeScreenData(authData)
+            }
+        }
+    }
+
+    private fun showLoadingShimmer() {
+        binding.shimmerLayout.visibility = View.VISIBLE
+        binding.parentRV.visibility = View.GONE
     }
 
     private fun updateProgressOfDownloadingAppItemViews(
@@ -199,5 +221,10 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             view?.findNavController()
                 ?.safeNavigate(R.id.homeFragment, R.id.action_homeFragment_to_signInFragment)
         }
+    }
+
+    private fun openSettings() {
+        view?.findNavController()
+            ?.safeNavigate(R.id.homeFragment, R.id.action_homeFragment_to_SettingsFragment)
     }
 }

@@ -23,6 +23,7 @@ import android.util.Log
 import com.aurora.gplayapi.data.models.PlayResponse
 import com.aurora.gplayapi.network.IHttpClient
 import foundation.e.apps.BuildConfig
+import foundation.e.apps.utils.modules.CommonUtilsModule.timeoutDurationInMillis
 import okhttp3.Cache
 import okhttp3.Headers.Companion.toHeaders
 import okhttp3.HttpUrl
@@ -51,10 +52,11 @@ class GPlayHttpClient @Inject constructor(
     }
 
     private val okHttpClient = OkHttpClient().newBuilder()
-        .connectTimeout(25, TimeUnit.SECONDS)
-        .readTimeout(25, TimeUnit.SECONDS)
-        .writeTimeout(25, TimeUnit.SECONDS)
-        .retryOnConnectionFailure(true)
+        .connectTimeout(timeoutDurationInMillis, TimeUnit.MILLISECONDS)
+        .readTimeout(timeoutDurationInMillis, TimeUnit.MILLISECONDS)
+        .writeTimeout(timeoutDurationInMillis, TimeUnit.MILLISECONDS)
+        .callTimeout(timeoutDurationInMillis, TimeUnit.MILLISECONDS)
+        .retryOnConnectionFailure(false)
         .followRedirects(true)
         .followSslRedirects(true)
         .cache(cache)

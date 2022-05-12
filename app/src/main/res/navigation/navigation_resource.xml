@@ -42,6 +42,12 @@
             app:launchSingleTop="true"
             app:popUpTo="@+id/navigation_resource"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_SettingsFragment"
+            app:destination="@id/settingsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/navigation_resource"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/categoriesFragment"
