@@ -115,6 +115,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
             binding.shimmerLayout.visibility = View.GONE
             binding.parentRV.visibility = View.VISIBLE
             if (it.second == ResultStatus.OK) {
+                mainActivityViewModel.dismissTimeoutDialog()
                 homeParentRVAdapter.setData(it.first)
             } else {
                 onTimeout()
@@ -127,7 +128,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
     }
 
     override fun onTimeout() {
-        if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
+        if (homeViewModel.isFusedHomesEmpty() && !mainActivityViewModel.isTimeoutDialogDisplayed()) {
             mainActivityViewModel.displayTimeoutAlertDialog(
                 activity = requireActivity(),
                 message = if (homeViewModel.getApplicationCategoryPreference() == FusedAPIImpl.APP_TYPE_ANY) {

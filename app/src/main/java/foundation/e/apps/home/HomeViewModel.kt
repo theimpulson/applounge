@@ -52,7 +52,9 @@ class HomeViewModel @Inject constructor(
         return fusedAPIRepository.getApplicationCategoryPreference()
     }
 
-    fun isFusedHomesEmpty(fusedHomes: List<FusedHome>): Boolean {
-        return fusedAPIRepository.isFusedHomesEmpty(fusedHomes)
+    fun isFusedHomesEmpty(): Boolean {
+        return homeScreenData.value?.first?.let {
+            fusedAPIRepository.isFusedHomesEmpty(it)
+        } ?: true
     }
 }
