@@ -43,4 +43,8 @@ class CategoriesViewModel @Inject constructor(
             categoriesList.postValue(fusedAPIRepository.getCategoriesList(type, authData))
         }
     }
+
+    fun isCategoriesEmpty(): Boolean {
+        return categoriesList.value?.first?.isEmpty() ?: true
+    }
 }

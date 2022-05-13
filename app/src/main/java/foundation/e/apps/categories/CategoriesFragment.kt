@@ -26,9 +26,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
 import foundation.e.apps.categories.model.CategoriesVPAdapter
 import foundation.e.apps.databinding.FragmentCategoriesBinding
+import foundation.e.apps.utils.interfaces.TimeoutFragment
 
 @AndroidEntryPoint
-class CategoriesFragment : Fragment(R.layout.fragment_categories) {
+class CategoriesFragment : Fragment(R.layout.fragment_categories), TimeoutFragment {
     private var _binding: FragmentCategoriesBinding? = null
     private val binding get() = _binding!!
 
@@ -52,5 +53,11 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onTimeout() {
+        childFragmentManager.fragments[0]?.let {
+            if (it is TimeoutFragment) it.onTimeout()
+        }
     }
 }

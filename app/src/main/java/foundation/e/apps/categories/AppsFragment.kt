@@ -30,9 +30,11 @@ import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
 import foundation.e.apps.categories.model.CategoriesRVAdapter
 import foundation.e.apps.databinding.FragmentAppsBinding
+import foundation.e.apps.utils.enums.ResultStatus
+import foundation.e.apps.utils.interfaces.TimeoutFragment
 
 @AndroidEntryPoint
-class AppsFragment : Fragment(R.layout.fragment_apps) {
+class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragment {
     private var _binding: FragmentAppsBinding? = null
     private val binding get() = _binding!!
 
@@ -63,11 +65,43 @@ class AppsFragment : Fragment(R.layout.fragment_apps) {
             }
 
             categoriesViewModel.categoriesList.observe(viewLifecycleOwner) {
-                categoriesRVAdapter.setData(it)
+                categoriesRVAdapter.setData(it.first)
                 binding.shimmerLayout.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
+                if (it.third != ResultStatus.OK) {
+                    onTimeout()
+                }
             }
         }
+    }
+
+    override fun onTimeout() {
+        if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
+            mainActivityViewModel.displayTimeoutAlertDialog(
+                activity = requireActivity(),
+                message = getString(R.string.timeout_desc_cleanapk),
+                positiveButtonText = if (!categoriesViewModel.isCategoriesEmpty()) {
+                    /*
+                     * It may happen that both GPlay and cleanapk is unreachable.
+                     * In that case of user presses OK to dismiss the dialog,
+                     * only blank screen will be shown.
+                     */
+                    getString(android.R.string.ok)
+                } else null,
+                positiveButtonBlock = {},
+                negativeButtonText = getString(R.string.retry),
+                negativeButtonBlock = {
+                    showLoadingShimmer()
+                    mainActivityViewModel.retryFetchingTokenAfterTimeout()
+                },
+                allowCancel = !categoriesViewModel.isCategoriesEmpty(),
+            )
+        }
+    }
+
+    private fun showLoadingShimmer() {
+        binding.shimmerLayout.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.GONE
     }
 
     override fun onResume() {
