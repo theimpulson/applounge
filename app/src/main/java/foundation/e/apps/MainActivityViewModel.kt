@@ -102,67 +102,67 @@ class MainActivityViewModel @Inject constructor(
      * Display timeout alert dialog.
      *
      * @param activity Activity class. Basically the MainActivity.
-     * @param positiveButtonBlock Code block when "Retry" is pressed.
-     * @param openSettings Code block when "Open Settings" button is pressed.
-     * This should open the [SettingsFragment] fragment.
-     * @param applicationTypeFromPreferences Application type string, can be one of
-     * [FusedAPIImpl.APP_TYPE_ANY], [FusedAPIImpl.APP_TYPE_OPEN], [FusedAPIImpl.APP_TYPE_PWA]
+     * @param message Alert dialog body.
+     * @param positiveButtonText Positive button text. Example "Retry"
+     * @param positiveButtonBlock Code block when [positiveButtonText] is pressed.
+     * @param negativeButtonText Negative button text. Example "Retry"
+     * @param negativeButtonBlock Code block when [negativeButtonText] is pressed.
+     * @param positiveButtonText Positive button text. Example "Retry"
+     * @param positiveButtonBlock Code block when [positiveButtonText] is pressed.
+     *
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
      */
     fun displayTimeoutAlertDialog(
         activity: Activity,
-        positiveButtonBlock: () -> Unit,
-        openSettings: () -> Unit,
-        applicationTypeFromPreferences: String,
+        message: String,
+        positiveButtonText: String? = null,
+        positiveButtonBlock: (() -> Unit)? = null,
+        negativeButtonText: String? = null,
+        negativeButtonBlock: (() -> Unit)? = null,
+        neutralButtonText: String? = null,
+        neutralButtonBlock: (() -> Unit)? = null,
+        allowCancel: Boolean = true,
     ) {
         if (!this::timeoutAlertDialog.isInitialized) {
             timeoutAlertDialog = AlertDialog.Builder(activity).apply {
                 setTitle(R.string.timeout_title)
-                /*
-                 * Prevent dismissing the dialog from pressing outside as it will only
-                 * show a blank screen below the dialog.
-                 */
-                setCancelable(false)
-                /*
-                 * If user presses back button to close the dialog without selecting anything,
-                 * close App Lounge.
-                 */
-                setOnKeyListener { dialog, keyCode, _ ->
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss()
-                        activity.finish()
+                if (!allowCancel) {
+                    /*
+                     * Prevent dismissing the dialog from pressing outside as it will only
+                     * show a blank screen below the dialog.
+                     */
+                    setCancelable(false)
+                    /*
+                     * If user presses back button to close the dialog without selecting anything,
+                     * close App Lounge.
+                     */
+                    setOnKeyListener { dialog, keyCode, _ ->
+                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            dialog.dismiss()
+                            activity.finish()
+                        }
+                        true
                     }
-                    true
                 }
             }.create()
         }
 
         timeoutAlertDialog.apply {
-            /*
-             * Set retry button.
-             */
-            setButton(DialogInterface.BUTTON_POSITIVE, activity.getString(R.string.retry)) {_, _ ->
-                positiveButtonBlock()
+            setMessage(message)
+            positiveButtonText?.let {
+                setButton(DialogInterface.BUTTON_POSITIVE, it) { _, _ ->
+                    positiveButtonBlock?.invoke()
+                }
             }
-            /*
-             * Set message based on apps from GPlay of cleanapk.
-             */
-            setMessage(
-                activity.getString(
-                    when (applicationTypeFromPreferences) {
-                        FusedAPIImpl.APP_TYPE_ANY -> R.string.timeout_desc_gplay
-                        else -> R.string.timeout_desc_cleanapk
-                    }
-                )
-            )
-            /*
-             * Show "Open Setting" only for GPlay apps.
-             */
-            if (applicationTypeFromPreferences == FusedAPIImpl.APP_TYPE_ANY) {
-                setButton(
-                    DialogInterface.BUTTON_NEUTRAL,
-                    activity.getString(R.string.open_settings)
-                ) { _, _ ->
-                    openSettings()
+            negativeButtonText?.let {
+                setButton(DialogInterface.BUTTON_NEGATIVE, it) { _, _ ->
+                    negativeButtonBlock?.invoke()
+                }
+            }
+            neutralButtonText?.let {
+                setButton(DialogInterface.BUTTON_NEUTRAL, it) { _, _ ->
+                    neutralButtonBlock?.invoke()
                 }
             }
         }

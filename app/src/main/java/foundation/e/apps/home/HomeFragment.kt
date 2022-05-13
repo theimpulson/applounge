@@ -33,6 +33,7 @@ import foundation.e.apps.AppInfoFetchViewModel
 import foundation.e.apps.AppProgressViewModel
 import foundation.e.apps.MainActivityViewModel
 import foundation.e.apps.R
+import foundation.e.apps.api.fused.FusedAPIImpl
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.application.subFrags.ApplicationDialogFragment
@@ -114,12 +115,24 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             if (!homeViewModel.isFusedHomesEmpty(it.first)) {
                 homeParentRVAdapter.setData(it.first)
             } else if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
-                mainActivityViewModel.displayTimeoutAlertDialog(requireActivity(), {
-                    showLoadingShimmer()
-                    mainActivityViewModel.retryFetchingTokenAfterTimeout()
-                }, {
-                    openSettings()
-                }, it.second)
+                mainActivityViewModel.displayTimeoutAlertDialog(
+                    activity = requireActivity(),
+                    message = if (it.second == FusedAPIImpl.APP_TYPE_ANY) {
+                        getString(R.string.timeout_desc_gplay)
+                    } else {
+                        getString(R.string.timeout_desc_cleanapk)
+                    },
+                    positiveButtonText = getString(R.string.retry),
+                    positiveButtonBlock = {
+                        showLoadingShimmer()
+                        mainActivityViewModel.retryFetchingTokenAfterTimeout()
+                    },
+                    negativeButtonText = getString(R.string.open_settings),
+                    negativeButtonBlock = {
+                        openSettings()
+                    },
+                    allowCancel = false,
+                )
             }
         }
 
