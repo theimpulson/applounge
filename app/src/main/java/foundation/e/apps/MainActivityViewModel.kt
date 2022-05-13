@@ -41,7 +41,6 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.exceptions.ApiException
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import foundation.e.apps.api.fused.FusedAPIImpl
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
@@ -210,7 +209,9 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun setFirstTokenFetchTime() {
-        firstAuthDataFetchTime = SystemClock.uptimeMillis()
+        if (firstAuthDataFetchTime == 0L) {
+            firstAuthDataFetchTime = SystemClock.uptimeMillis()
+        }
     }
 
     fun isTimeEligibleForTokenRefresh(): Boolean {
@@ -225,6 +226,7 @@ class MainActivityViewModel @Inject constructor(
      * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
      */
     fun retryFetchingTokenAfterTimeout() {
+        firstAuthDataFetchTime = 0
         setFirstTokenFetchTime()
         authValidity.postValue(false)
     }
