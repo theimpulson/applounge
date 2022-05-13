@@ -126,43 +126,57 @@ class MainActivityViewModel @Inject constructor(
         if (!this::timeoutAlertDialog.isInitialized) {
             timeoutAlertDialog = AlertDialog.Builder(activity).apply {
                 setTitle(R.string.timeout_title)
-                if (!allowCancel) {
-                    /*
-                     * Prevent dismissing the dialog from pressing outside as it will only
-                     * show a blank screen below the dialog.
-                     */
-                    setCancelable(false)
-                    /*
-                     * If user presses back button to close the dialog without selecting anything,
-                     * close App Lounge.
-                     */
-                    setOnKeyListener { dialog, keyCode, _ ->
-                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                            dialog.dismiss()
-                            activity.finish()
-                        }
-                        true
-                    }
-                }
             }.create()
         }
 
         timeoutAlertDialog.apply {
+            if (!allowCancel) {
+                /*
+                 * Prevent dismissing the dialog from pressing outside as it will only
+                 * show a blank screen below the dialog.
+                 */
+                setCancelable(false)
+                /*
+                 * If user presses back button to close the dialog without selecting anything,
+                 * close App Lounge.
+                 */
+                setOnKeyListener { dialog, keyCode, _ ->
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss()
+                        activity.finish()
+                    }
+                    true
+                }
+            } else {
+                setCancelable(true)
+            }
+
+            /*
+             * Set message
+             */
             setMessage(message)
+
+            /*
+             * Set buttons. The code may seem long and repetitive, but this works,
+             * most other approaches do not update the button texts.
+             */
             positiveButtonText?.let {
                 setButton(DialogInterface.BUTTON_POSITIVE, it) { _, _ ->
                     positiveButtonBlock?.invoke()
                 }
+                getButton(DialogInterface.BUTTON_POSITIVE)?.text = it
             }
             negativeButtonText?.let {
                 setButton(DialogInterface.BUTTON_NEGATIVE, it) { _, _ ->
                     negativeButtonBlock?.invoke()
                 }
+                getButton(DialogInterface.BUTTON_NEGATIVE)?.text = it
             }
             neutralButtonText?.let {
                 setButton(DialogInterface.BUTTON_NEUTRAL, it) { _, _ ->
                     neutralButtonBlock?.invoke()
                 }
+                getButton(DialogInterface.BUTTON_NEUTRAL)?.text = it
             }
         }
 
