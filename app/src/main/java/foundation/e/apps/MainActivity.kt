@@ -45,6 +45,7 @@ import foundation.e.apps.setup.signin.SignInViewModel
 import foundation.e.apps.updates.UpdatesNotifier
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.interfaces.TimeoutFragment
 import foundation.e.apps.utils.modules.CommonUtilsModule
 import kotlinx.coroutines.launch
 import java.io.File
@@ -140,6 +141,11 @@ class MainActivity : AppCompatActivity() {
                         generateAuthDataBasedOnUserType(user)
                     } else {
                         Log.d(TAG, "Timeout validating auth data!")
+                        val lastFragment = navHostFragment.childFragmentManager.fragments[0]
+                        if (lastFragment is TimeoutFragment) {
+                            Log.d(TAG, "Displaying timeout from MainActivity!")
+                            lastFragment.onTimeout()
+                        }
                     }
                 }
             } else {

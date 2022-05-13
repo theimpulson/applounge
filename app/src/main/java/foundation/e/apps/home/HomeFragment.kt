@@ -44,13 +44,14 @@ import foundation.e.apps.manager.download.data.DownloadProgress
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.interfaces.TimeoutFragment
 import foundation.e.apps.utils.modules.CommonUtilsModule.safeNavigate
 import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
+class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, TimeoutFragment {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -114,30 +115,36 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             binding.parentRV.visibility = View.VISIBLE
             if (!homeViewModel.isFusedHomesEmpty(it.first)) {
                 homeParentRVAdapter.setData(it.first)
-            } else if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
-                mainActivityViewModel.displayTimeoutAlertDialog(
-                    activity = requireActivity(),
-                    message = if (it.second == FusedAPIImpl.APP_TYPE_ANY) {
-                        getString(R.string.timeout_desc_gplay)
-                    } else {
-                        getString(R.string.timeout_desc_cleanapk)
-                    },
-                    positiveButtonText = getString(R.string.retry),
-                    positiveButtonBlock = {
-                        showLoadingShimmer()
-                        mainActivityViewModel.retryFetchingTokenAfterTimeout()
-                    },
-                    negativeButtonText = getString(R.string.open_settings),
-                    negativeButtonBlock = {
-                        openSettings()
-                    },
-                    allowCancel = false,
-                )
+            } else {
+                onTimeout()
             }
         }
 
         appProgressViewModel.downloadProgress.observe(viewLifecycleOwner) {
             updateProgressOfDownloadingAppItemViews(homeParentRVAdapter, it)
+        }
+    }
+
+    override fun onTimeout() {
+        if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
+            mainActivityViewModel.displayTimeoutAlertDialog(
+                activity = requireActivity(),
+                message = if (homeViewModel.getApplicationCategoryPreference() == FusedAPIImpl.APP_TYPE_ANY) {
+                    getString(R.string.timeout_desc_gplay)
+                } else {
+                    getString(R.string.timeout_desc_cleanapk)
+                },
+                positiveButtonText = getString(R.string.retry),
+                positiveButtonBlock = {
+                    showLoadingShimmer()
+                    mainActivityViewModel.retryFetchingTokenAfterTimeout()
+                },
+                negativeButtonText = getString(R.string.open_settings),
+                negativeButtonBlock = {
+                    openSettings()
+                },
+                allowCancel = false,
+            )
         }
     }
 
