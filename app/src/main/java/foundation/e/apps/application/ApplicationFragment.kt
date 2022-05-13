@@ -25,7 +25,9 @@ import android.os.Bundle
 import android.text.Html
 import android.text.format.Formatter
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
@@ -44,11 +46,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.AppInfoFetchViewModel
-import foundation.e.apps.MainActivity
-import foundation.e.apps.MainActivityViewModel
-import foundation.e.apps.PrivacyInfoViewModel
-import foundation.e.apps.R
+import foundation.e.apps.*
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.application.model.ApplicationScreenshotsRVAdapter
@@ -64,6 +62,7 @@ import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class ApplicationFragment : Fragment(R.layout.fragment_application) {
@@ -256,6 +255,10 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 }
             }
 
+            if (appInfoFetchViewModel.isAppInBlockedList(it)) {
+                binding.snackbarLayout.visibility = View.VISIBLE
+            }
+
             observeDownloadStatus(view)
             fetchAppTracker(it)
         }
@@ -414,6 +417,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             text = when {
                 mainActivityViewModel.checkUnsupportedApplication(fusedApp) ->
                     getString(R.string.not_available)
+                appInfoFetchViewModel.isAppInBlockedList(fusedApp) -> getString(R.string.force_installation)
                 fusedApp.isFree -> getString(R.string.install)
                 else -> fusedApp.price
             }
@@ -423,15 +427,19 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 }
                 applicationIcon?.let {
                     if (fusedApp.isFree) {
-                        mainActivityViewModel.getApplication(fusedApp, it)
+                        installApplication(fusedApp, it)
                     } else {
                         if (!mainActivityViewModel.shouldShowPaidAppsSnackBar(fusedApp)) {
                             ApplicationDialogFragment(
                                 title = getString(R.string.dialog_title_paid_app, fusedApp.name),
-                                message = getString(R.string.dialog_paidapp_message, fusedApp.name, fusedApp.price),
+                                message = getString(
+                                    R.string.dialog_paidapp_message,
+                                    fusedApp.name,
+                                    fusedApp.price
+                                ),
                                 positiveButtonText = getString(R.string.dialog_confirm),
                                 positiveButtonAction = {
-                                    mainActivityViewModel.getApplication(fusedApp, it)
+                                    installApplication(fusedApp, it)
                                 },
                                 cancelButtonText = getString(R.string.dialog_cancel),
                             ).show(childFragmentManager, "ApplicationFragment")
@@ -442,6 +450,24 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
         }
         downloadPB.visibility = View.GONE
         appSize.visibility = View.VISIBLE
+    }
+
+    private fun installApplication(
+        fusedApp: FusedApp,
+        it: ImageView
+    ) {
+        if (appInfoFetchViewModel.isAppInBlockedList(fusedApp)) {
+            ApplicationDialogFragment(
+                title = getString(R.string.this_app_may_not_work_properly),
+                message = getString(R.string.may_not_work_warning_message),
+                positiveButtonText = getString(R.string.ok),
+                positiveButtonAction = {
+                    mainActivityViewModel.getApplication(fusedApp, it)
+                }
+            )
+        } else {
+            mainActivityViewModel.getApplication(fusedApp, it)
+        }
     }
 
     private fun handleUpdatable(
@@ -504,7 +530,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             return
         }
         val downloadedSize = "${
-        Formatter.formatFileSize(requireContext(), progressResult.second).substringBefore(" MB")
+            Formatter.formatFileSize(requireContext(), progressResult.second).substringBefore(" MB")
         }/${Formatter.formatFileSize(requireContext(), progressResult.first)}"
         val progressPercentage =
             ((progressResult.second / progressResult.first.toDouble()) * 100f).toInt()

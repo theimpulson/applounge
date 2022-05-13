@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import foundation.e.apps.api.BlockedAppRepository
 import foundation.e.apps.api.fdroid.FdroidRepository
 import foundation.e.apps.api.fdroid.models.FdroidEntity
 import foundation.e.apps.api.fused.data.FusedApp
@@ -27,6 +28,7 @@ class AppInfoFetchViewModel @Inject constructor(
     private val fdroidRepository: FdroidRepository,
     private val gPlayAPIRepository: GPlayAPIRepository,
     private val dataStoreModule: DataStoreModule,
+    private val blockedAppRepository: BlockedAppRepository,
     private val gson: Gson
 ) : ViewModel() {
 
@@ -82,5 +84,9 @@ class AppInfoFetchViewModel @Inject constructor(
                 emit(false)
             }
         }
+    }
+
+    fun isAppInBlockedList(fusedApp: FusedApp): Boolean {
+        return blockedAppRepository.getBlockedAppPackages().contains(fusedApp.package_name)
     }
 }

@@ -22,6 +22,7 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
+import foundation.e.apps.api.BlockedAppRepository
 import foundation.e.apps.manager.pkg.PkgManagerBR
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.manager.workmanager.InstallWorkManager
@@ -46,6 +47,9 @@ class AppLoungeApplication : Application(), Configuration.Provider {
     @Inject
     lateinit var dataStoreModule: DataStoreModule
 
+    @Inject
+    lateinit var blockedAppRepository: BlockedAppRepository
+
     override fun onCreate() {
         super.onCreate()
 
@@ -60,6 +64,8 @@ class AppLoungeApplication : Application(), Configuration.Provider {
                 dataStoreModule.saveTOCStatus(false, "")
             }
         }
+
+        blockedAppRepository.fetchUpdateOfAppWarningList()
     }
 
     override fun getWorkManagerConfiguration() =

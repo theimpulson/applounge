@@ -160,31 +160,63 @@ class ApplicationListRVAdapter(
                 }
                 else -> Log.wtf(TAG, "${searchApp.package_name} is from an unknown origin")
             }
-            when (searchApp.status) {
-                Status.INSTALLED -> {
-                    handleInstalled(view, searchApp)
-                }
-                Status.UPDATABLE -> {
-                    handleUpdatable(view, searchApp)
-                }
-                Status.UNAVAILABLE -> {
-                    handleUnavailable(view, searchApp)
-                }
-                Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
-                    handleDownloading(view, searchApp)
-                }
-                Status.INSTALLING, Status.UNINSTALLING -> {
-                    handleInstalling(view, holder)
-                }
-                Status.BLOCKED -> {
-                    handleBlocked(view)
-                }
-                Status.INSTALLATION_ISSUE -> {
-                    handleInstallationIssue(view, searchApp)
-                }
+
+            if (appInfoFetchViewModel.isAppInBlockedList(searchApp)) {
+                setupShowMoreButton(searchApp, view)
+            } else {
+                setupInstallButton(searchApp, view, holder)
             }
 
             showCalculatedPrivacyScoreData(searchApp, view)
+        }
+    }
+
+    private fun ApplicationListItemBinding.setupInstallButton(
+        searchApp: FusedApp,
+        view: View,
+        holder: ViewHolder
+    ) {
+        installButton.visibility = View.VISIBLE
+        showMore.visibility = View.GONE
+        when (searchApp.status) {
+            Status.INSTALLED -> {
+                handleInstalled(view, searchApp)
+            }
+            Status.UPDATABLE -> {
+                handleUpdatable(view, searchApp)
+            }
+            Status.UNAVAILABLE -> {
+                handleUnavailable(view, searchApp)
+            }
+            Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
+                handleDownloading(view, searchApp)
+            }
+            Status.INSTALLING, Status.UNINSTALLING -> {
+                handleInstalling(view, holder)
+            }
+            Status.BLOCKED -> {
+                handleBlocked(view)
+            }
+            Status.INSTALLATION_ISSUE -> {
+                handleInstallationIssue(view, searchApp)
+            }
+        }
+    }
+
+    private fun ApplicationListItemBinding.setupShowMoreButton(
+        searchApp: FusedApp,
+        view: View
+    ) {
+        installButton.visibility = View.GONE
+        showMore.visibility = View.VISIBLE
+        showMore.setOnClickListener {
+            val action =
+                ApplicationListFragmentDirections.actionApplicationListFragmentToApplicationFragment(
+                    searchApp._id,
+                    searchApp.package_name,
+                    searchApp.origin
+                )
+            view.findNavController().navigate(action)
         }
     }
 
