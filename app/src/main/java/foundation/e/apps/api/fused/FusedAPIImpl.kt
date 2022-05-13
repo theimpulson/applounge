@@ -111,6 +111,10 @@ class FusedAPIImpl @Inject constructor(
         return true
     }
 
+    fun getApplicationCategoryPreference(): String {
+        return preferenceManagerModule.preferredApplicationType()
+    }
+
     /*
      * Offload fetching application to a different method to dynamically fallback to a different
      * app source if the user selected app source times out.

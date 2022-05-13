@@ -42,6 +42,10 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.isFusedHomesEmpty(fusedHomes)
     }
 
+    fun getApplicationCategoryPreference(): String {
+        return fusedAPIImpl.getApplicationCategoryPreference()
+    }
+
     suspend fun validateAuthData(authData: AuthData): Boolean {
         return fusedAPIImpl.validateAuthData(authData)
     }

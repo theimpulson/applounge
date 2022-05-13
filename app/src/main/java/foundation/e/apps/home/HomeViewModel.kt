@@ -47,6 +47,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun getApplicationCategoryPreference(): String {
+        return fusedAPIRepository.getApplicationCategoryPreference()
+    }
+
     fun isFusedHomesEmpty(fusedHomes: List<FusedHome>): Boolean {
         return fusedAPIRepository.isFusedHomesEmpty(fusedHomes)
     }
