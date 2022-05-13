@@ -83,7 +83,7 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.getSearchSuggestions(query, authData)
     }
 
-    suspend fun fetchAuthData(): Unit? {
+    suspend fun fetchAuthData(): Boolean {
         return fusedAPIImpl.fetchAuthData()
     }
 

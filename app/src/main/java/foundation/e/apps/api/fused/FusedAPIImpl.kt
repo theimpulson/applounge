@@ -206,7 +206,7 @@ class FusedAPIImpl @Inject constructor(
         return gPlayAPIRepository.getSearchSuggestions(query, authData)
     }
 
-    suspend fun fetchAuthData(): Unit? {
+    suspend fun fetchAuthData(): Boolean {
         return gPlayAPIRepository.fetchAuthData()
     }
 
