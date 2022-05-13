@@ -235,7 +235,19 @@ class MainActivityViewModel @Inject constructor(
         if (!authRequestRunning) {
             authRequestRunning = true
             viewModelScope.launch {
-                fusedAPIRepository.fetchAuthData()
+                /*
+                 * If getting auth data failed, try getting again.
+                 * Sending false in authValidity, triggers observer in MainActivity,
+                 * causing it to destroy credentials and try to regenerate auth data.
+                 *
+                 * Issue:
+                 * https://gitlab.e.foundation/e/backlog/-/issues/5413
+                 * https://gitlab.e.foundation/e/backlog/-/issues/5404
+                 */
+                if (!fusedAPIRepository.fetchAuthData()) {
+                    authRequestRunning = false
+                    authValidity.postValue(false)
+                }
             }
         }
     }
