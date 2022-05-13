@@ -31,10 +31,10 @@ import foundation.e.apps.R
 import foundation.e.apps.categories.model.CategoriesRVAdapter
 import foundation.e.apps.databinding.FragmentAppsBinding
 import foundation.e.apps.utils.enums.ResultStatus
-import foundation.e.apps.utils.interfaces.TimeoutFragment
+import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
 
 @AndroidEntryPoint
-class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragment {
+class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface {
     private var _binding: FragmentAppsBinding? = null
     private val binding get() = _binding!!
 

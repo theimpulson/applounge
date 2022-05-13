@@ -1,5 +1,5 @@
 package foundation.e.apps.utils.interfaces
 
-interface TimeoutFragment {
+interface TimeoutFragmentInterface {
     fun onTimeout()
 }

@@ -26,10 +26,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
 import foundation.e.apps.categories.model.CategoriesVPAdapter
 import foundation.e.apps.databinding.FragmentCategoriesBinding
-import foundation.e.apps.utils.interfaces.TimeoutFragment
+import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
 
 @AndroidEntryPoint
-class CategoriesFragment : Fragment(R.layout.fragment_categories), TimeoutFragment {
+class CategoriesFragment : Fragment(R.layout.fragment_categories), TimeoutFragmentInterface {
     private var _binding: FragmentCategoriesBinding? = null
     private val binding get() = _binding!!
 
@@ -57,7 +57,7 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories), TimeoutFragme
 
     override fun onTimeout() {
         childFragmentManager.fragments[0]?.let {
-            if (it is TimeoutFragment) it.onTimeout()
+            if (it is TimeoutFragmentInterface) it.onTimeout()
         }
     }
 }

@@ -45,14 +45,14 @@ import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.ResultStatus
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
-import foundation.e.apps.utils.interfaces.TimeoutFragment
+import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
 import foundation.e.apps.utils.modules.CommonUtilsModule.safeNavigate
 import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, TimeoutFragment {
+class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, TimeoutFragmentInterface {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
