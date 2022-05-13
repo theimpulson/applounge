@@ -80,7 +80,7 @@ class FusedAPIRepository @Inject constructor(
         )
     }
 
-    suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<FusedCategory> {
+    suspend fun getCategoriesList(type: Category.Type, authData: AuthData): Triple<List<FusedCategory>, String, ResultStatus> {
         return fusedAPIImpl.getCategoriesList(type, authData)
     }
 

@@ -163,17 +163,39 @@ class FusedAPIImpl @Inject constructor(
         return Pair(list, apiStatus)
     }
 
-    suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<FusedCategory> {
+    /*
+     * Return three elements from the function.
+     * - List<FusedCategory> : List of categories.
+     * - String : String of application type - By default it is the value in preferences.
+     * In case there is any failure, for a specific type in handleAllSourcesCategories(),
+     * the string value is of that type.
+     * - ResultStatus : ResultStatus - by default is ResultStatus.OK. But in case there is a failure in
+     * any application category type, then it takes value of that failure.
+     *
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
+     */
+    suspend fun getCategoriesList(type: Category.Type, authData: AuthData): Triple<List<FusedCategory>, String, ResultStatus> {
         val categoriesList = mutableListOf<FusedCategory>()
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
+        var apiStatus: ResultStatus = ResultStatus.OK
+        var applicationCategoryType = preferredApplicationType
 
         if (preferredApplicationType != APP_TYPE_ANY) {
-            handleCleanApkCategories(preferredApplicationType, categoriesList, type)
+            handleCleanApkCategories(preferredApplicationType, categoriesList, type).run {
+                if (this != ResultStatus.OK) {
+                    apiStatus = this
+                }
+            }
         } else {
-            handleAllSourcesCategories(categoriesList, type, authData)
+            handleAllSourcesCategories(categoriesList, type, authData).run {
+                if (first != ResultStatus.OK) {
+                    apiStatus = first
+                    applicationCategoryType = second
+                }
+            }
         }
         categoriesList.sortBy { item -> item.title.lowercase() }
-        return categoriesList
+        return Triple(categoriesList, applicationCategoryType, apiStatus)
     }
 
     /**
@@ -383,18 +405,19 @@ class FusedAPIImpl @Inject constructor(
         preferredApplicationType: String,
         categoriesList: MutableList<FusedCategory>,
         type: Category.Type
-    ) {
-        val data = getCleanApkCategories(preferredApplicationType)
-
-        data?.let { category ->
-            categoriesList.addAll(
-                getFusedCategoryBasedOnCategoryType(
-                    category,
-                    type,
-                    getCategoryTag(preferredApplicationType)
+    ): ResultStatus {
+        return runCodeBlockWithTimeout({
+            val data = getCleanApkCategories(preferredApplicationType)
+            data?.let { category ->
+                categoriesList.addAll(
+                    getFusedCategoryBasedOnCategoryType(
+                        category,
+                        type,
+                        getCategoryTag(preferredApplicationType)
+                    )
                 )
-            )
-        }
+            }
+        })
     }
 
     private fun getCategoryTag(preferredApplicationType: String): AppTag {
@@ -413,35 +436,116 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
+    /*
+     * Function to populate a given category list, from all GPlay categories, open source categories,
+     * and PWAs.
+     *
+     * Returns: Pair of:
+     * - ResultStatus - by default ResultStatus.OK, but can be different in case of an error in any category.
+     * - String - Application category type having error. If no error, then blank string.
+     *
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
+     */
     private suspend fun handleAllSourcesCategories(
         categoriesList: MutableList<FusedCategory>,
         type: Category.Type,
         authData: AuthData
-    ) {
-        var data = getOpenSourceCategories()
-        data?.let {
-            categoriesList.addAll(
-                getFusedCategoryBasedOnCategoryType(
-                    it,
-                    type,
-                    AppTag.OpenSource(context.getString(R.string.open_source))
+    ): Pair<ResultStatus, String> {
+        var data: Categories? = null
+        var apiStatus = ResultStatus.OK
+        var errorApplicationCategory = ""
+
+        /*
+         * Try within timeout limit for open source native apps categories.
+         */
+        runCodeBlockWithTimeout({
+            data = getOpenSourceCategories()
+            data?.let {
+                categoriesList.addAll(
+                    getFusedCategoryBasedOnCategoryType(
+                        it,
+                        type,
+                        AppTag.OpenSource(context.getString(R.string.open_source))
+                    )
                 )
-            )
-        }
-        data = getPWAsCategories()
-        data?.let {
-            categoriesList.addAll(
-                getFusedCategoryBasedOnCategoryType(
-                    it, type, AppTag.PWA(context.getString(R.string.pwa))
+            }
+        }, {
+            errorApplicationCategory = APP_TYPE_OPEN
+            apiStatus = ResultStatus.TIMEOUT
+        }, {
+            errorApplicationCategory = APP_TYPE_OPEN
+            apiStatus = ResultStatus.UNKNOWN
+        })
+
+
+        /*
+         * Try within timeout limit to get PWA categories
+         */
+        runCodeBlockWithTimeout({
+            data = getPWAsCategories()
+            data?.let {
+                categoriesList.addAll(
+                    getFusedCategoryBasedOnCategoryType(
+                        it, type, AppTag.PWA(context.getString(R.string.pwa))
+                    )
                 )
-            )
+            }
+        }, {
+            errorApplicationCategory = APP_TYPE_PWA
+            apiStatus = ResultStatus.TIMEOUT
+        }, {
+            errorApplicationCategory = APP_TYPE_PWA
+            apiStatus = ResultStatus.UNKNOWN
+        })
+
+        /*
+         * Try within timeout limit to get native app categories from Play Store
+         */
+        runCodeBlockWithTimeout({
+            val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
+                val category = app.transformToFusedCategory()
+                updateCategoryDrawable(category, app)
+                category
+            }
+            categoriesList.addAll(playResponse)
+        }, {
+            errorApplicationCategory = APP_TYPE_ANY
+            apiStatus = ResultStatus.TIMEOUT
+        }, {
+            errorApplicationCategory = APP_TYPE_ANY
+            apiStatus = ResultStatus.UNKNOWN
+        })
+
+        return Pair(apiStatus, errorApplicationCategory)
+    }
+
+    /**
+     * Run a block of code with timeout. Returns status.
+     *
+     * @param block Main block to execute within [timeoutDurationInMillis] limit.
+     * @param timeoutBlock Optional code to execute in case of timeout.
+     * @param exceptionBlock Optional code to execute in case of an exception other than timeout.
+     *
+     * @return Instance of [ResultStatus] based on whether [block] was executed within timeout limit.
+     */
+    private suspend fun runCodeBlockWithTimeout(
+        block: suspend () -> Unit,
+        timeoutBlock: (() -> Unit)? = null,
+        exceptionBlock: (() -> Unit)? = null,
+    ): ResultStatus {
+        return try {
+            withTimeout(timeoutDurationInMillis) {
+                block()
+            }
+            ResultStatus.OK
+        } catch (e: TimeoutCancellationException) {
+            timeoutBlock?.invoke()
+            ResultStatus.TIMEOUT
+        } catch (e: Exception) {
+            e.printStackTrace()
+            exceptionBlock?.invoke()
+            ResultStatus.UNKNOWN
         }
-        val playResponse = gPlayAPIRepository.getCategoriesList(type, authData).map { app ->
-            val category = app.transformToFusedCategory()
-            updateCategoryDrawable(category, app)
-            category
-        }
-        categoriesList.addAll(playResponse)
     }
 
     private fun updateCategoryDrawable(
