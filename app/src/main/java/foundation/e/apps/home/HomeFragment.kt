@@ -42,6 +42,7 @@ import foundation.e.apps.home.model.HomeChildRVAdapter
 import foundation.e.apps.home.model.HomeParentRVAdapter
 import foundation.e.apps.manager.download.data.DownloadProgress
 import foundation.e.apps.manager.pkg.PkgManagerModule
+import foundation.e.apps.utils.enums.ResultStatus
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
 import foundation.e.apps.utils.interfaces.TimeoutFragment
@@ -113,7 +114,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
         homeViewModel.homeScreenData.observe(viewLifecycleOwner) {
             binding.shimmerLayout.visibility = View.GONE
             binding.parentRV.visibility = View.VISIBLE
-            if (!homeViewModel.isFusedHomesEmpty(it.first)) {
+            if (it.second == ResultStatus.OK) {
                 homeParentRVAdapter.setData(it.first)
             } else {
                 onTimeout()

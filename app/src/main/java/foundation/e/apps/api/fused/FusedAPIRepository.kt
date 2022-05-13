@@ -25,6 +25,7 @@ import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.api.fused.data.FusedCategory
 import foundation.e.apps.api.fused.data.FusedHome
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
+import foundation.e.apps.utils.enums.ResultStatus
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import javax.inject.Inject
@@ -34,7 +35,7 @@ import javax.inject.Singleton
 class FusedAPIRepository @Inject constructor(
     private val fusedAPIImpl: FusedAPIImpl
 ) {
-    suspend fun getHomeScreenData(authData: AuthData): Pair<List<FusedHome>, String> {
+    suspend fun getHomeScreenData(authData: AuthData): Pair<List<FusedHome>, ResultStatus> {
         return fusedAPIImpl.getHomeScreenData(authData)
     }
 

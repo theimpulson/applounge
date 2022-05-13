@@ -47,6 +47,7 @@ import foundation.e.apps.utils.enums.AppTag
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
+import foundation.e.apps.utils.enums.ResultStatus
 import foundation.e.apps.utils.modules.CommonUtilsModule.timeoutDurationInMillis
 import foundation.e.apps.utils.modules.PWAManagerModule
 import foundation.e.apps.utils.modules.PreferenceManagerModule
@@ -83,20 +84,16 @@ class FusedAPIImpl @Inject constructor(
     private var TAG = FusedAPIImpl::class.java.simpleName
 
     /**
-     * Pass application source type along with list of apps.
-     * Application source type may change in case of timeout of GPlay/cleanapk api.
+     * Pass list of FusedHome and status.
+     * Second argument can be of [ResultStatus.TIMEOUT] to indicate timeout.
      *
-     * The second item of the Pair can be one of [APP_TYPE_ANY], [APP_TYPE_OPEN], [APP_TYPE_PWA].
-     *
-     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
+     * Issue:
+     * https://gitlab.e.foundation/e/backlog/-/issues/5404
+     * https://gitlab.e.foundation/e/backlog/-/issues/5413
      */
-    suspend fun getHomeScreenData(authData: AuthData): Pair<List<FusedHome>, String> {
+    suspend fun getHomeScreenData(authData: AuthData): Pair<List<FusedHome>, ResultStatus> {
         val preferredApplicationType = preferenceManagerModule.preferredApplicationType()
-        val initialData = getHomeScreenDataBasedOnApplicationType(authData, preferredApplicationType)
-        if (isFusedHomesEmpty(initialData.first)) {
-            Log.d(TAG, "Received empty home data.")
-        }
-        return initialData
+        return getHomeScreenDataBasedOnApplicationType(authData, preferredApplicationType)
     }
 
     /**
@@ -124,8 +121,9 @@ class FusedAPIImpl @Inject constructor(
     private suspend fun getHomeScreenDataBasedOnApplicationType(
         authData: AuthData,
         applicationType: String
-    ): Pair<List<FusedHome>, String> {
+    ): Pair<List<FusedHome>, ResultStatus> {
         val list = mutableListOf<FusedHome>()
+        var apiStatus = ResultStatus.OK
         try {
             /*
              * Each category of home apps (example "Top Free Apps") will have its own timeout.
@@ -156,11 +154,13 @@ class FusedAPIImpl @Inject constructor(
             }
         } catch (e: TimeoutCancellationException) {
             e.printStackTrace()
+            apiStatus = ResultStatus.TIMEOUT
             Log.d(TAG, "Timed out fetching home data for type: $applicationType")
         } catch (e: Exception) {
+            apiStatus = ResultStatus.UNKNOWN
             e.printStackTrace()
         }
-        return Pair(list, applicationType)
+        return Pair(list, apiStatus)
     }
 
     suspend fun getCategoriesList(type: Category.Type, authData: AuthData): List<FusedCategory> {
