@@ -19,6 +19,7 @@
 package foundation.e.apps.categories
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
@@ -57,7 +58,10 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories), TimeoutFragme
 
     override fun onTimeout() {
         childFragmentManager.fragments[0]?.let {
-            if (it is TimeoutFragmentInterface) it.onTimeout()
+            if (it is TimeoutFragmentInterface) {
+                Log.d(TAG, "Showing timeout on Categories fragment: " + it::class.java.name)
+                it.onTimeout()
+            }
         }
     }
 }

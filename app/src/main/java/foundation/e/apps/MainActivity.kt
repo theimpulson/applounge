@@ -143,7 +143,8 @@ class MainActivity : AppCompatActivity() {
                         Log.d(TAG, "Timeout validating auth data!")
                         val lastFragment = navHostFragment.childFragmentManager.fragments[0]
                         if (lastFragment is TimeoutFragmentInterface) {
-                            Log.d(TAG, "Displaying timeout from MainActivity!")
+                            Log.d(TAG, "Displaying timeout from MainActivity on fragment: "
+                                    + lastFragment::class.java.name)
                             lastFragment.onTimeout()
                         }
                     }
