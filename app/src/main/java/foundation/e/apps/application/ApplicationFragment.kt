@@ -60,6 +60,7 @@ import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.ResultStatus
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
 import foundation.e.apps.utils.modules.CommonUtilsModule.LIST_OF_NULL
 import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.Dispatchers
@@ -67,7 +68,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ApplicationFragment : Fragment(R.layout.fragment_application) {
+class ApplicationFragment : Fragment(R.layout.fragment_application), TimeoutFragmentInterface {
 
     private val args: ApplicationFragmentArgs by navArgs()
     private val TAG = ApplicationFragment::class.java.simpleName
@@ -140,6 +141,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
         applicationViewModel.fusedApp.observe(viewLifecycleOwner) { resultPair ->
             if (resultPair.second != ResultStatus.OK) {
+                onTimeout()
                 return@observe
             }
 
@@ -153,6 +155,8 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
              * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
              */
             val it = resultPair.first
+
+            mainActivityViewModel.dismissTimeoutDialog()
 
             if (applicationViewModel.appStatus.value == null) {
                 applicationViewModel.appStatus.value = it.status
@@ -278,6 +282,25 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
 
         applicationViewModel.errorMessageLiveData.observe(viewLifecycleOwner) {
             (requireActivity() as MainActivity).showSnackbarMessage(getString(it))
+        }
+    }
+
+    override fun onTimeout() {
+        if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
+            mainActivityViewModel.displayTimeoutAlertDialog(
+                activity = requireActivity(),
+                message = getString(R.string.timeout_desc_cleanapk),
+                positiveButtonText = getString(R.string.retry),
+                positiveButtonBlock = {
+                    showLoadingProgressBar()
+                    mainActivityViewModel.retryFetchingTokenAfterTimeout()
+                },
+                negativeButtonText = getString(R.string.close),
+                negativeButtonBlock = {
+                    requireActivity().onBackPressed()
+                },
+                allowCancel = false,
+            )
         }
     }
 
@@ -551,6 +574,11 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             binding.applicationLayout.visibility = View.VISIBLE
             binding.progressBar.visibility = View.GONE
         }
+    }
+
+    private fun showLoadingProgressBar() {
+        binding.applicationLayout.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
     }
 
     private fun updatePrivacyScore() {
