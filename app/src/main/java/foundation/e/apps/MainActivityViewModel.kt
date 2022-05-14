@@ -47,7 +47,6 @@ import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.manager.workmanager.InstallWorkManager
-import foundation.e.apps.settings.SettingsFragment
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
@@ -95,7 +94,7 @@ class MainActivityViewModel @Inject constructor(
      *
      * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
      */
-    private lateinit var timeoutAlertDialog: AlertDialog
+    private var timeoutAlertDialog: AlertDialog? = null
 
     /**
      * Display timeout alert dialog.
@@ -123,13 +122,13 @@ class MainActivityViewModel @Inject constructor(
         neutralButtonBlock: (() -> Unit)? = null,
         allowCancel: Boolean = true,
     ) {
-        if (!this::timeoutAlertDialog.isInitialized) {
-            timeoutAlertDialog = AlertDialog.Builder(activity).apply {
-                setTitle(R.string.timeout_title)
-            }.create()
-        }
+        val timeoutAlertDialogBuilder = AlertDialog.Builder(activity).apply {
 
-        timeoutAlertDialog.apply {
+            /*
+             * Set title.
+             */
+            setTitle(R.string.timeout_title)
+
             if (!allowCancel) {
                 /*
                  * Prevent dismissing the dialog from pressing outside as it will only
@@ -157,30 +156,34 @@ class MainActivityViewModel @Inject constructor(
             setMessage(message)
 
             /*
-             * Set buttons. The code may seem long and repetitive, but this works,
-             * most other approaches do not update the button texts.
+             * Set buttons.
              */
             positiveButtonText?.let {
-                setButton(DialogInterface.BUTTON_POSITIVE, it) { _, _ ->
+                setPositiveButton(it) {_, _ ->
                     positiveButtonBlock?.invoke()
                 }
-                getButton(DialogInterface.BUTTON_POSITIVE)?.text = it
             }
             negativeButtonText?.let {
-                setButton(DialogInterface.BUTTON_NEGATIVE, it) { _, _ ->
+                setNegativeButton(it) {_, _ ->
                     negativeButtonBlock?.invoke()
                 }
-                getButton(DialogInterface.BUTTON_NEGATIVE)?.text = it
             }
             neutralButtonText?.let {
-                setButton(DialogInterface.BUTTON_NEUTRAL, it) { _, _ ->
+                setNeutralButton(it) {_, _ ->
                     neutralButtonBlock?.invoke()
                 }
-                getButton(DialogInterface.BUTTON_NEUTRAL)?.text = it
             }
         }
 
-        timeoutAlertDialog.show()
+        /*
+         * Dismiss alert dialog if already being shown
+         */
+        try {
+            timeoutAlertDialog?.dismiss()
+        } catch (_: Exception) {}
+
+        timeoutAlertDialog = timeoutAlertDialogBuilder.create()
+        timeoutAlertDialog?.show()
     }
 
     /**
@@ -188,9 +191,7 @@ class MainActivityViewModel @Inject constructor(
      * Returs false if it is not initialised.
      */
     fun isTimeoutDialogDisplayed(): Boolean {
-        return if (this::timeoutAlertDialog.isInitialized) {
-            timeoutAlertDialog.isShowing
-        } else false
+        return timeoutAlertDialog?.isShowing == true
     }
 
     /**
@@ -201,7 +202,7 @@ class MainActivityViewModel @Inject constructor(
     fun dismissTimeoutDialog() {
         if (isTimeoutDialogDisplayed()) {
             try {
-                timeoutAlertDialog.dismiss()
+                timeoutAlertDialog?.dismiss()
             } catch (_: Exception) {}
         }
     }
