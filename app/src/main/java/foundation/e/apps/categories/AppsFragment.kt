@@ -53,6 +53,12 @@ class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface 
                         authData
                     )
                 }
+            } ?: run {
+                /*
+                 * Try refreshing authData if null.
+                 * This will also trigger timeout if not yet done on this fragment.
+                 */
+                mainActivityViewModel.retryFetchingTokenAfterTimeout()
             }
 
             val categoriesRVAdapter = CategoriesRVAdapter()

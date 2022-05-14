@@ -53,6 +53,12 @@ class GamesFragment : Fragment(R.layout.fragment_games), TimeoutFragmentInterfac
                         authData
                     )
                 }
+            } ?: run {
+                /*
+                 * Try refreshing authData if null.
+                 * This will also trigger timeout if not yet done on this fragment.
+                 */
+                mainActivityViewModel.retryFetchingTokenAfterTimeout()
             }
         }
 
