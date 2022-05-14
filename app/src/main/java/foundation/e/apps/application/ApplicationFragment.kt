@@ -57,6 +57,7 @@ import foundation.e.apps.databinding.FragmentApplicationBinding
 import foundation.e.apps.manager.download.data.DownloadProgress
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.Origin
+import foundation.e.apps.utils.enums.ResultStatus
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
 import foundation.e.apps.utils.modules.CommonUtilsModule.LIST_OF_NULL
@@ -137,7 +138,22 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             applicationViewModel.updateApplicationStatus(list)
         }
 
-        applicationViewModel.fusedApp.observe(viewLifecycleOwner) {
+        applicationViewModel.fusedApp.observe(viewLifecycleOwner) { resultPair ->
+            if (resultPair.second != ResultStatus.OK) {
+                return@observe
+            }
+
+            /*
+             * Previously fusedApp only had instance of FusedApp.
+             * As such previously all reference was simply using "it", the default variable in
+             * the scope. But now "it" is Pair(FusedApp, ResultStatus), not an instance of FusedApp.
+             *
+             * Avoid Git diffs by using a variable named "it".
+             *
+             * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
+             */
+            val it = resultPair.first
+
             if (applicationViewModel.appStatus.value == null) {
                 applicationViewModel.appStatus.value = it.status
             }
@@ -233,7 +249,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                     ).show(childFragmentManager, TAG)
                 }
                 appTrackers.setOnClickListener {
-                    val fusedApp = applicationViewModel.fusedApp.value
+                    val fusedApp = applicationViewModel.fusedApp.value?.first
                     var trackers =
                         privacyInfoViewModel.getTrackerListText(fusedApp)
 
@@ -270,7 +286,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             val installButton = binding.downloadInclude.installButton
             val downloadPB = binding.downloadInclude.progressLayout
             val appSize = binding.downloadInclude.appSize
-            val fusedApp = applicationViewModel.fusedApp.value ?: FusedApp()
+            val fusedApp = applicationViewModel.fusedApp.value?.first ?: FusedApp()
 
             when (status) {
                 Status.INSTALLED -> handleInstalled(
@@ -538,7 +554,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
     }
 
     private fun updatePrivacyScore() {
-        val privacyScore = privacyInfoViewModel.getPrivacyScore(applicationViewModel.fusedApp.value)
+        val privacyScore = privacyInfoViewModel.getPrivacyScore(applicationViewModel.fusedApp.value?.first)
         if (privacyScore != -1) {
             val appPrivacyScore = binding.ratingsInclude.appPrivacyScore
             appPrivacyScore.text = getString(

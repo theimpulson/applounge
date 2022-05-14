@@ -383,18 +383,24 @@ class FusedAPIImpl @Inject constructor(
         packageName: String,
         authData: AuthData,
         origin: Origin
-    ): FusedApp {
-        val response = if (origin == Origin.CLEANAPK) {
-            cleanAPKRepository.getAppOrPWADetailsByID(id).body()?.app
-        } else {
-            val app = gPlayAPIRepository.getAppDetails(packageName, authData)
-            app?.transformToFusedApp()
-        }
-        response?.let {
-            it.updateStatus()
-            it.updateType()
-        }
-        return response ?: FusedApp()
+    ): Pair<FusedApp, ResultStatus> {
+
+        var response : FusedApp? = null
+
+        val status = runCodeBlockWithTimeout({
+            response = if (origin == Origin.CLEANAPK) {
+                cleanAPKRepository.getAppOrPWADetailsByID(id).body()?.app
+            } else {
+                val app = gPlayAPIRepository.getAppDetails(packageName, authData)
+                app?.transformToFusedApp()
+            }
+            response?.let {
+                it.updateStatus()
+                it.updateType()
+            }
+        })
+
+        return Pair(response ?: FusedApp(), status)
     }
 
     /*
