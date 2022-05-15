@@ -204,28 +204,30 @@ class FusedAPIImpl @Inject constructor(
      * @param authData [AuthData]
      * @return A list of nullable [FusedApp]
      */
-    suspend fun getSearchResults(query: String, authData: AuthData): List<FusedApp> {
+    suspend fun getSearchResults(query: String, authData: AuthData): Pair<List<FusedApp>, ResultStatus> {
         val fusedResponse = mutableListOf<FusedApp>()
 
-        when (preferenceManagerModule.preferredApplicationType()) {
-            APP_TYPE_ANY -> {
-                fusedResponse.addAll(getCleanAPKSearchResults(query))
-                fusedResponse.addAll(getGplaySearchResults(query, authData))
-            }
-            APP_TYPE_OPEN -> {
-                fusedResponse.addAll(getCleanAPKSearchResults(query))
-            }
-            APP_TYPE_PWA -> {
-                fusedResponse.addAll(
-                    getCleanAPKSearchResults(
-                        query,
-                        CleanAPKInterface.APP_SOURCE_ANY,
-                        CleanAPKInterface.APP_TYPE_PWA
+        val status = runCodeBlockWithTimeout({
+            when (preferenceManagerModule.preferredApplicationType()) {
+                APP_TYPE_ANY -> {
+                    fusedResponse.addAll(getCleanAPKSearchResults(query))
+                    fusedResponse.addAll(getGplaySearchResults(query, authData))
+                }
+                APP_TYPE_OPEN -> {
+                    fusedResponse.addAll(getCleanAPKSearchResults(query))
+                }
+                APP_TYPE_PWA -> {
+                    fusedResponse.addAll(
+                        getCleanAPKSearchResults(
+                            query,
+                            CleanAPKInterface.APP_SOURCE_ANY,
+                            CleanAPKInterface.APP_TYPE_PWA
+                        )
                     )
-                )
+                }
             }
-        }
-        return fusedResponse.distinctBy { it.package_name }
+        })
+        return Pair(fusedResponse.distinctBy { it.package_name }, status)
     }
 
     suspend fun getSearchSuggestions(query: String, authData: AuthData): List<SearchSuggestEntry> {

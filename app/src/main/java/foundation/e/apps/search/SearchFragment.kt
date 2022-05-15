@@ -172,18 +172,20 @@ class SearchFragment :
         }
 
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
-            val searchList = searchViewModel.searchResult.value?.toMutableList()
-            searchList?.let {
+            val searchList = searchViewModel.searchResult.value?.first?.toMutableList() ?: emptyList()
+            searchList.let {
                 mainActivityViewModel.updateStatusOfFusedApps(searchList, list)
             }
-            searchViewModel.searchResult.value = searchList
+            searchViewModel.searchResult.apply {
+                value = Pair(searchList, value?.second)
+            }
         }
 
         searchViewModel.searchResult.observe(viewLifecycleOwner) {
-            if (it.isNullOrEmpty()) {
+            if (it.first.isNullOrEmpty()) {
                 noAppsFoundLayout?.visibility = View.VISIBLE
             } else {
-                listAdapter?.setData(it)
+                listAdapter?.setData(it.first)
                 shimmerLayout?.visibility = View.GONE
                 recyclerView?.visibility = View.VISIBLE
                 noAppsFoundLayout?.visibility = View.GONE

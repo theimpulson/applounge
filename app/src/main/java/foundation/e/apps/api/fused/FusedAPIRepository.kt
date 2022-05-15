@@ -96,7 +96,7 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.fetchAuthData(email, aasToken)
     }
 
-    suspend fun getSearchResults(query: String, authData: AuthData): List<FusedApp> {
+    suspend fun getSearchResults(query: String, authData: AuthData): Pair<List<FusedApp>, ResultStatus> {
         return fusedAPIImpl.getSearchResults(query, authData)
     }
 
