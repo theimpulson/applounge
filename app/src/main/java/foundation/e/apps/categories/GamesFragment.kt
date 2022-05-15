@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
@@ -45,21 +46,15 @@ class GamesFragment : Fragment(R.layout.fragment_games), TimeoutFragmentInterfac
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGamesBinding.bind(view)
 
-        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { hasInternet ->
-            mainActivityViewModel.authData.value?.let { authData ->
-                if (hasInternet) {
-                    categoriesViewModel.getCategoriesList(
-                        Category.Type.GAME,
-                        authData
-                    )
-                }
-            } ?: run {
-                /*
-                 * Try refreshing authData if null.
-                 * This will also trigger timeout if not yet done on this fragment.
-                 */
-                mainActivityViewModel.retryFetchingTokenAfterTimeout()
-            }
+        /*
+         * Explanation of double observers in HomeFragment.kt
+         */
+
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) {
+            refreshDataOrRefreshToken(mainActivityViewModel)
+        }
+        mainActivityViewModel.authData.observe(viewLifecycleOwner) {
+            refreshDataOrRefreshToken(mainActivityViewModel)
         }
 
         val categoriesRVAdapter = CategoriesRVAdapter()
@@ -103,6 +98,13 @@ class GamesFragment : Fragment(R.layout.fragment_games), TimeoutFragmentInterfac
                 allowCancel = !categoriesViewModel.isCategoriesEmpty(),
             )
         }
+    }
+
+    override fun refreshData(authData: AuthData) {
+        categoriesViewModel.getCategoriesList(
+            Category.Type.GAME,
+            authData
+        )
     }
 
     private fun showLoadingShimmer() {

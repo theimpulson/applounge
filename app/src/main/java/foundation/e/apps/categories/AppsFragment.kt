@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.data.models.Category
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.MainActivityViewModel
@@ -45,38 +46,37 @@ class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface 
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAppsBinding.bind(view)
 
-        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { hasInternet ->
-            mainActivityViewModel.authData.value?.let { authData ->
-                if (hasInternet) {
-                    categoriesViewModel.getCategoriesList(
-                        Category.Type.APPLICATION,
-                        authData
-                    )
-                }
-            } ?: run {
-                /*
-                 * Try refreshing authData if null.
-                 * This will also trigger timeout if not yet done on this fragment.
-                 */
-                mainActivityViewModel.retryFetchingTokenAfterTimeout()
-            }
+        /*
+         * Explanation of double observers in HomeFragment.kt
+         */
 
-            val categoriesRVAdapter = CategoriesRVAdapter()
-            val recyclerView = binding.recyclerView
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) {
+            refreshDataOrRefreshToken(mainActivityViewModel)
+        }
+        mainActivityViewModel.authData.observe(viewLifecycleOwner) {
+            refreshDataOrRefreshToken(mainActivityViewModel)
+        }
 
-            recyclerView.apply {
-                adapter = categoriesRVAdapter
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                visibility = View.GONE
-            }
+        /*
+         * Code regarding is just moved outside the observers.
+         * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
+         */
 
-            categoriesViewModel.categoriesList.observe(viewLifecycleOwner) {
-                categoriesRVAdapter.setData(it.first)
-                binding.shimmerLayout.visibility = View.GONE
-                recyclerView.visibility = View.VISIBLE
-                if (it.third != ResultStatus.OK) {
-                    onTimeout()
-                }
+        val categoriesRVAdapter = CategoriesRVAdapter()
+        val recyclerView = binding.recyclerView
+
+        recyclerView.apply {
+            adapter = categoriesRVAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            visibility = View.GONE
+        }
+
+        categoriesViewModel.categoriesList.observe(viewLifecycleOwner) {
+            categoriesRVAdapter.setData(it.first)
+            binding.shimmerLayout.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+            if (it.third != ResultStatus.OK) {
+                onTimeout()
             }
         }
     }
@@ -103,6 +103,13 @@ class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface 
                 allowCancel = !categoriesViewModel.isCategoriesEmpty(),
             )
         }
+    }
+
+    override fun refreshData(authData: AuthData) {
+        categoriesViewModel.getCategoriesList(
+            Category.Type.APPLICATION,
+            authData
+        )
     }
 
     private fun showLoadingShimmer() {
