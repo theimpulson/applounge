@@ -28,6 +28,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.aurora.gplayapi.data.models.AuthData
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.AppInfoFetchViewModel
 import foundation.e.apps.AppProgressViewModel
@@ -119,10 +120,10 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
          */
 
         mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) {
-            refreshDataOrRefreshToken()
+            refreshDataOrRefreshToken(mainActivityViewModel)
         }
         mainActivityViewModel.authData.observe(viewLifecycleOwner) {
-            refreshDataOrRefreshToken()
+            refreshDataOrRefreshToken(mainActivityViewModel)
         }
 
         val homeParentRVAdapter = HomeParentRVAdapter(
@@ -189,18 +190,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
         }
     }
 
-    /*
-     * Offload loading home data to a different function, to allow retrying mechanism.
-     */
-    private fun refreshDataOrRefreshToken() {
-        if (mainActivityViewModel.internetConnection.value == true) {
-            mainActivityViewModel.authData.value?.let { authData ->
-                mainActivityViewModel.dismissTimeoutDialog()
-                homeViewModel.getHomeScreenData(authData)
-            } ?: run {
-                mainActivityViewModel.retryFetchingTokenAfterTimeout()
-            }
-        }
+    override fun refreshData(authData: AuthData) {
+        homeViewModel.getHomeScreenData(authData)
     }
 
     private fun showLoadingShimmer() {
