@@ -40,6 +40,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.aurora.gplayapi.data.models.AuthData
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
@@ -100,17 +101,15 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), TimeoutFrag
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentApplicationBinding.bind(view)
 
-        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) { hasInternet ->
-            mainActivityViewModel.authData.observe(viewLifecycleOwner) { authData ->
-                if (hasInternet) {
-                    applicationViewModel.getApplicationDetails(
-                        args.id,
-                        args.packageName,
-                        authData,
-                        args.origin
-                    )
-                }
-            }
+        /*
+         * Explanation of double observers in HomeFragment.kt
+         */
+
+        mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) {
+            refreshDataOrRefreshToken(mainActivityViewModel)
+        }
+        mainActivityViewModel.authData.observe(viewLifecycleOwner) {
+            refreshDataOrRefreshToken(mainActivityViewModel)
         }
 
         val startDestination = findNavController().graph.startDestination
@@ -302,6 +301,15 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), TimeoutFrag
                 allowCancel = false,
             )
         }
+    }
+
+    override fun refreshData(authData: AuthData) {
+        applicationViewModel.getApplicationDetails(
+            args.id,
+            args.packageName,
+            authData,
+            args.origin
+        )
     }
 
     private fun observeDownloadStatus(view: View) {
