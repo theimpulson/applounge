@@ -81,14 +81,7 @@ class GamesFragment : Fragment(R.layout.fragment_games), TimeoutFragmentInterfac
             mainActivityViewModel.displayTimeoutAlertDialog(
                 activity = requireActivity(),
                 message = getString(R.string.timeout_desc_cleanapk),
-                positiveButtonText = if (!categoriesViewModel.isCategoriesEmpty()) {
-                    /*
-                     * It may happen that both GPlay and cleanapk is unreachable.
-                     * In that case of user presses OK to dismiss the dialog,
-                     * only blank screen will be shown.
-                     */
-                    getString(android.R.string.ok)
-                } else null,
+                positiveButtonText = getString(android.R.string.ok),
                 positiveButtonBlock = {},
                 negativeButtonText = getString(R.string.retry),
                 negativeButtonBlock = {
