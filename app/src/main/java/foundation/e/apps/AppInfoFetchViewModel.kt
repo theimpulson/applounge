@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import foundation.e.apps.api.BlockedAppRepository
+import foundation.e.apps.api.cleanapk.blockedApps.BlockedAppRepository
 import foundation.e.apps.api.fdroid.FdroidRepository
 import foundation.e.apps.api.fdroid.models.FdroidEntity
 import foundation.e.apps.api.fused.data.FusedApp

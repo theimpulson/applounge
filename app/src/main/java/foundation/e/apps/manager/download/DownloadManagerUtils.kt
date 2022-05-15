@@ -54,16 +54,21 @@ class DownloadManagerUtils @Inject constructor(
             mutex.withLock {
                 delay(1500) // Waiting for downloadmanager to publish the progress of last bytes
                 val fusedDownload = fusedManagerRepository.getFusedDownload(downloadId)
-                fusedDownload.downloadIdMap[downloadId] = true
-                fusedManagerRepository.updateFusedDownload(fusedDownload)
-                val downloaded = fusedDownload.downloadIdMap.values.filter { it }.size
-                Log.d(
-                    TAG,
-                    "===> updateDownloadStatus: ${fusedDownload.name}: $downloadId: $downloaded/${fusedDownload.downloadIdMap.size} "
-                )
-                if (downloaded == fusedDownload.downloadIdMap.size) {
-                    fusedManagerRepository.moveOBBFileToOBBDirectory(fusedDownload)
-                    fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLING)
+                if (fusedDownload.id.isNotEmpty()) {
+                    fusedDownload.downloadIdMap[downloadId] = true
+                    fusedManagerRepository.updateFusedDownload(fusedDownload)
+                    val downloaded = fusedDownload.downloadIdMap.values.filter { it }.size
+                    Log.d(
+                        TAG,
+                        "===> updateDownloadStatus: ${fusedDownload.name}: $downloadId: $downloaded/${fusedDownload.downloadIdMap.size} "
+                    )
+                    if (downloaded == fusedDownload.downloadIdMap.size) {
+                        fusedManagerRepository.moveOBBFileToOBBDirectory(fusedDownload)
+                        fusedManagerRepository.updateDownloadStatus(
+                            fusedDownload,
+                            Status.INSTALLING
+                        )
+                    }
                 }
             }
         }

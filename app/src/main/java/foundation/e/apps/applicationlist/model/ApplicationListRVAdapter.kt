@@ -162,7 +162,7 @@ class ApplicationListRVAdapter(
             }
 
             if (appInfoFetchViewModel.isAppInBlockedList(searchApp)) {
-                setupShowMoreButton(searchApp, view)
+                setupShowMoreButton()
             } else {
                 setupInstallButton(searchApp, view, holder)
             }
@@ -203,21 +203,9 @@ class ApplicationListRVAdapter(
         }
     }
 
-    private fun ApplicationListItemBinding.setupShowMoreButton(
-        searchApp: FusedApp,
-        view: View
-    ) {
+    private fun ApplicationListItemBinding.setupShowMoreButton() {
         installButton.visibility = View.GONE
         showMore.visibility = View.VISIBLE
-        showMore.setOnClickListener {
-            val action =
-                ApplicationListFragmentDirections.actionApplicationListFragmentToApplicationFragment(
-                    searchApp._id,
-                    searchApp.package_name,
-                    searchApp.origin
-                )
-            view.findNavController().navigate(action)
-        }
     }
 
     private fun ApplicationListItemBinding.handleInstallationIssue(

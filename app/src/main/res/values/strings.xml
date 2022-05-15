@@ -107,7 +107,7 @@
     <string name="app_not_found">Your application was not found.</string>
     <string name="show_more">Show more</string>
     <string name="this_app_may_not_work_properly">This app may not work properly!</string>
-    <string name="may_not_work_warning_message">Forcing installation will allow you to download and install it, but it won\'t guarantee that it will work.  Attempting to install unsupported apps may cause crashes or slow down the system.  We\'re working on improving compatiblity with this application in a near future.</string>
+    <string name="may_not_work_warning_message">Forcing installation will allow you to download and install it, but it won\'t guarantee that it will work.&lt;br /&gt;&lt;br /&gt;Attempting to install unsupported apps may cause crashes or slow down the system.&lt;br /&gt;&lt;br /&gt;We\'re working on improving compatiblity with this application in a near future.</string>
 
 
     <!-- Updates Fragment -->

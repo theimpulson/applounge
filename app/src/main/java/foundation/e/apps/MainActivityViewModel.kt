@@ -37,6 +37,7 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.exceptions.ApiException
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import foundation.e.apps.api.cleanapk.blockedApps.BlockedAppRepository
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
@@ -60,7 +61,8 @@ class MainActivityViewModel @Inject constructor(
     private val dataStoreModule: DataStoreModule,
     private val fusedAPIRepository: FusedAPIRepository,
     private val fusedManagerRepository: FusedManagerRepository,
-    private val pkgManagerModule: PkgManagerModule
+    private val pkgManagerModule: PkgManagerModule,
+    private val blockedAppRepository: BlockedAppRepository
 ) : ViewModel() {
 
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
@@ -351,5 +353,9 @@ class MainActivityViewModel @Inject constructor(
             }
             it.status = downloadingItem?.status ?: fusedAPIRepository.getFusedAppInstallationStatus(it)
         }
+    }
+
+    fun updateAppWarningList() {
+        blockedAppRepository.fetchUpdateOfAppWarningList()
     }
 }

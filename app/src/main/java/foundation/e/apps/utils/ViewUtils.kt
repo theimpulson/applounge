@@ -2,7 +2,6 @@ package foundation.e.apps.utils
 
 import android.content.res.Resources
 
-
 fun Int.toDP(): Int {
     return (this / Resources.getSystem().displayMetrics.density).toInt()
 }

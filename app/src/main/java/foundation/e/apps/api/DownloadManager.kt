@@ -1,11 +1,30 @@
-package foundation.e.apps.api.cleanapk.data.download
+/*
+ * Apps  Quickly and easily install Android apps onto your device!
+ * Copyright (C) 2022  E FOUNDATION
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+package foundation.e.apps.api
 
 import android.app.DownloadManager
 import android.net.Uri
 import android.util.Log
-import foundation.e.apps.manager.workmanager.InstallAppWorker
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.io.File
 import javax.inject.Inject
@@ -19,30 +38,39 @@ class DownloadManager @Inject constructor(
     private val downloadManager: DownloadManager,
     @Named("cacheDir") private val cacheDir: String,
     private val downloadManagerQuery: DownloadManager.Query,
-    ) {
+) {
     private var isDownloading = false
 
-    fun downloadFile(url: String, fileName: String): Long {
-        val directoryFile = File(cacheDir)
+    fun downloadFileInCache(
+        url: String,
+        subDirectoryPath: String = "",
+        fileName: String,
+        downloadCompleted: ((Boolean, String) -> Unit)?
+    ): Long {
+        val directoryFile = File(cacheDir + subDirectoryPath)
         val downloadFile = File("$cacheDir/$fileName")
-        if(!directoryFile.exists()) {
+        if (!directoryFile.exists()) {
             directoryFile.mkdirs()
         }
-//        if(downloadFile.exists()) {
-//            downloadFile.delete()
-//        }
+        if (downloadFile.exists()) {
+            downloadFile.delete()
+        }
         val request = DownloadManager.Request(Uri.parse(url))
             .setTitle("Downloading...")
             .setDestinationUri(Uri.fromFile(downloadFile))
         val downloadId = downloadManager.enqueue(request)
         isDownloading = true
-        tickerFlow(1.seconds).onEach {
-            checkDownloadProgress(downloadId)
-        }
+        tickerFlow(.5.seconds).onEach {
+            checkDownloadProgress(downloadId, downloadFile.absolutePath, downloadCompleted)
+        }.launchIn(CoroutineScope(Dispatchers.IO))
         return downloadId
     }
 
-    private fun checkDownloadProgress(downloadId: Long, fileName: String = "") {
+    private fun checkDownloadProgress(
+        downloadId: Long,
+        filePath: String = "",
+        downloadCompleted: ((Boolean, String) -> Unit)?
+    ) {
         downloadManager.query(downloadManagerQuery.setFilterById(downloadId))
             .use { cursor ->
                 if (cursor.moveToFirst()) {
@@ -56,18 +84,22 @@ class DownloadManager @Inject constructor(
                         cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
                     Log.d(
                         "DownloadManager",
-                        "checkDownloadProcess: $fileName=> $bytesDownloadedSoFar/$totalSizeBytes $status"
+                        "checkDownloadProcess: $filePath=> $bytesDownloadedSoFar/$totalSizeBytes $status"
                     )
                     if (status == DownloadManager.STATUS_FAILED) {
                         Log.d(
                             "DownloadManager",
-                            "Download Failed: $fileName=> $bytesDownloadedSoFar/$totalSizeBytes $status"
+                            "Download Failed: $filePath=> $bytesDownloadedSoFar/$totalSizeBytes $status"
                         )
-                    } else if(status == DownloadManager.STATUS_SUCCESSFUL) {
+                        isDownloading = false
+                        downloadCompleted?.invoke(false, filePath)
+                    } else if (status == DownloadManager.STATUS_SUCCESSFUL) {
                         Log.d(
                             "DownloadManager",
-                            "Download Successful: $fileName=> $bytesDownloadedSoFar/$totalSizeBytes $status"
+                            "Download Successful: $filePath=> $bytesDownloadedSoFar/$totalSizeBytes $status"
                         )
+                        isDownloading = false
+                        downloadCompleted?.invoke(true, filePath)
                     }
                 }
             }

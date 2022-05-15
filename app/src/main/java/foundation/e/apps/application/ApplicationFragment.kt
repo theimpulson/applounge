@@ -25,9 +25,7 @@ import android.os.Bundle
 import android.text.Html
 import android.text.format.Formatter
 import android.util.Log
-import android.view.Gravity
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
@@ -46,7 +44,11 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.*
+import foundation.e.apps.AppInfoFetchViewModel
+import foundation.e.apps.MainActivity
+import foundation.e.apps.MainActivityViewModel
+import foundation.e.apps.PrivacyInfoViewModel
+import foundation.e.apps.R
 import foundation.e.apps.api.cleanapk.CleanAPKInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.application.model.ApplicationScreenshotsRVAdapter
@@ -62,7 +64,6 @@ import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class ApplicationFragment : Fragment(R.layout.fragment_application) {
@@ -464,7 +465,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
                 positiveButtonAction = {
                     mainActivityViewModel.getApplication(fusedApp, it)
                 }
-            )
+            ).show(childFragmentManager, "ApplicationFragment")
         } else {
             mainActivityViewModel.getApplication(fusedApp, it)
         }
@@ -530,7 +531,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             return
         }
         val downloadedSize = "${
-            Formatter.formatFileSize(requireContext(), progressResult.second).substringBefore(" MB")
+        Formatter.formatFileSize(requireContext(), progressResult.second).substringBefore(" MB")
         }/${Formatter.formatFileSize(requireContext(), progressResult.first)}"
         val progressPercentage =
             ((progressResult.second / progressResult.first.toDouble()) * 100f).toInt()

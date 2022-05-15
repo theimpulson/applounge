@@ -34,6 +34,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import okhttp3.Cache
 import java.lang.reflect.Modifier
 import javax.inject.Named
@@ -151,5 +154,11 @@ object CommonUtilsModule {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    @Provides
+    @Named("ioCoroutineScope")
+    fun getIOCoroutineScope(): CoroutineScope {
+        return CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
 }
