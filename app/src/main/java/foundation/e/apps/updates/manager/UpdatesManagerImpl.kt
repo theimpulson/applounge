@@ -47,7 +47,7 @@ class UpdatesManagerImpl @Inject constructor(
                 authData,
                 Origin.CLEANAPK
             )
-            cleanAPKList.forEach {
+            cleanAPKList.first.forEach {
                 if (it.package_name in pkgList) pkgList.remove(it.package_name)
                 if (it.status == Status.UPDATABLE) updateList.add(it)
             }
@@ -58,7 +58,7 @@ class UpdatesManagerImpl @Inject constructor(
                 authData,
                 Origin.GPLAY
             )
-            gPlayList.forEach {
+            gPlayList.first.forEach {
                 if (it.status == Status.UPDATABLE) updateList.add(it)
             }
         }

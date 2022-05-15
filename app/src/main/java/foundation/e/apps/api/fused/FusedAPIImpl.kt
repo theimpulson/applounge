@@ -293,28 +293,40 @@ class FusedAPIImpl @Inject constructor(
         }
     }
 
-    suspend fun getPWAApps(category: String): List<FusedApp>? {
-        val response = getPWAAppsResponse(category)
-        response?.apps?.forEach {
-            it.updateStatus()
-            it.updateType()
-        }
-        return response?.apps
+    suspend fun getPWAApps(category: String): Pair<List<FusedApp>, ResultStatus> {
+        var list = mutableListOf<FusedApp>()
+        val status = runCodeBlockWithTimeout({
+            val response = getPWAAppsResponse(category)
+            response?.apps?.forEach {
+                it.updateStatus()
+                it.updateType()
+                list.add(it)
+            }
+        })
+        return Pair(list, status)
     }
 
-    suspend fun getOpenSourceApps(category: String): List<FusedApp>? {
-        val response = getOpenSourceAppsResponse(category)
-        response?.apps?.forEach {
-            it.updateStatus()
-            it.updateType()
-        }
-        return response?.apps
+    suspend fun getOpenSourceApps(category: String): Pair<List<FusedApp>, ResultStatus> {
+        val list = mutableListOf<FusedApp>()
+        val status = runCodeBlockWithTimeout({
+            val response = getOpenSourceAppsResponse(category)
+            response?.apps?.forEach {
+                it.updateStatus()
+                it.updateType()
+                list.add(it)
+            }
+        })
+        return Pair(list, status)
     }
 
-    suspend fun getPlayStoreApps(browseUrl: String, authData: AuthData): List<FusedApp> {
-        return gPlayAPIRepository.listApps(browseUrl, authData).map { app ->
-            app.transformToFusedApp()
-        }
+    suspend fun getPlayStoreApps(browseUrl: String, authData: AuthData): Pair<List<FusedApp>, ResultStatus> {
+        var list = mutableListOf<FusedApp>()
+        val status = runCodeBlockWithTimeout({
+            list.addAll(gPlayAPIRepository.listApps(browseUrl, authData).map { app ->
+                app.transformToFusedApp()
+            })
+        })
+        return Pair(list, status)
     }
 
     suspend fun getPlayStoreAppCategoryUrls(browseUrl: String, authData: AuthData): List<String> {
@@ -324,58 +336,75 @@ class FusedAPIImpl @Inject constructor(
     suspend fun getAppsAndNextClusterUrl(
         browseUrl: String,
         authData: AuthData
-    ): Pair<List<FusedApp>, String> {
-        return gPlayAPIRepository.getAppsAndNextClusterUrl(browseUrl, authData).let {
-            Pair(it.first.map { app -> app.transformToFusedApp() }, it.second)
-        }
+    ): Triple<List<FusedApp>, String, ResultStatus> {
+        val appsList = mutableListOf<FusedApp>()
+        var nextUrl = ""
+        val status = runCodeBlockWithTimeout({
+            val gPlayResult = gPlayAPIRepository.getAppsAndNextClusterUrl(browseUrl, authData)
+            appsList.addAll(gPlayResult.first.map { app -> app.transformToFusedApp() })
+            nextUrl = gPlayResult.second
+        })
+
+        return Triple(appsList, nextUrl, status)
     }
 
     suspend fun getApplicationDetails(
         packageNameList: List<String>,
         authData: AuthData,
         origin: Origin
-    ): List<FusedApp> {
+    ): Pair<List<FusedApp>, ResultStatus> {
         val list = mutableListOf<FusedApp>()
-        val response = if (origin == Origin.CLEANAPK) {
-            val pkgList = mutableListOf<FusedApp>()
-            packageNameList.forEach {
-                val result = cleanAPKRepository.searchApps(
-                    keyword = it,
-                    by = "package_name"
-                ).body()
-                if (result?.apps?.isNotEmpty() == true && result.numberOfResults == 1) {
-                    pkgList.add(result.apps[0])
-                }
-            }
-            pkgList
-        } else {
-            gPlayAPIRepository.getAppDetails(packageNameList, authData).map { app ->
-                /*
-                 * Some apps are restricted to locations. Example "com.skype.m2".
-                 * For restricted apps, check if it is possible to get their specific app info.
-                 *
-                 * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5174
-                 */
-                if (app.restriction != Constants.Restriction.NOT_RESTRICTED) {
-                    try {
-                        gPlayAPIRepository.getAppDetails(app.packageName, authData)
-                            ?.transformToFusedApp() ?: FusedApp()
-                    } catch (e: Exception) {
-                        FusedApp()
+
+        val status = runCodeBlockWithTimeout({
+
+            /*
+             * Code is just moved inside timeout block.
+             * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
+             */
+
+            val response = if (origin == Origin.CLEANAPK) {
+                val pkgList = mutableListOf<FusedApp>()
+                packageNameList.forEach {
+                    val result = cleanAPKRepository.searchApps(
+                        keyword = it,
+                        by = "package_name"
+                    ).body()
+                    if (result?.apps?.isNotEmpty() == true && result.numberOfResults == 1) {
+                        pkgList.add(result.apps[0])
                     }
-                } else {
-                    app.transformToFusedApp()
+                }
+                pkgList
+            } else {
+                gPlayAPIRepository.getAppDetails(packageNameList, authData).map { app ->
+                    /*
+                     * Some apps are restricted to locations. Example "com.skype.m2".
+                     * For restricted apps, check if it is possible to get their specific app info.
+                     *
+                     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5174
+                     */
+                    if (app.restriction != Constants.Restriction.NOT_RESTRICTED) {
+                        try {
+                            gPlayAPIRepository.getAppDetails(app.packageName, authData)
+                                ?.transformToFusedApp() ?: FusedApp()
+                        } catch (e: Exception) {
+                            FusedApp()
+                        }
+                    } else {
+                        app.transformToFusedApp()
+                    }
                 }
             }
-        }
-        response.forEach {
-            if (it.package_name.isNotBlank()) {
-                it.updateStatus()
-                it.updateType()
-                list.add(it)
+            response.forEach {
+                if (it.package_name.isNotBlank()) {
+                    it.updateStatus()
+                    it.updateType()
+                    list.add(it)
+                }
             }
-        }
-        return list
+
+        })
+
+        return Pair(list, status)
     }
 
     suspend fun getApplicationDetails(

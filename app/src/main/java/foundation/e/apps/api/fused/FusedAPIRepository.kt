@@ -55,7 +55,7 @@ class FusedAPIRepository @Inject constructor(
         packageNameList: List<String>,
         authData: AuthData,
         origin: Origin
-    ): List<FusedApp> {
+    ): Pair<List<FusedApp>, ResultStatus> {
         return fusedAPIImpl.getApplicationDetails(packageNameList, authData, origin)
     }
 
@@ -108,7 +108,7 @@ class FusedAPIRepository @Inject constructor(
         return fusedAPIImpl.getPlayStoreAppCategoryUrls(browseUrl, authData)
     }
 
-    suspend fun getAppsAndNextClusterUrl(browseUrl: String, authData: AuthData): Pair<List<FusedApp>, String> {
+    suspend fun getAppsAndNextClusterUrl(browseUrl: String, authData: AuthData): Triple<List<FusedApp>, String, ResultStatus> {
         return fusedAPIImpl.getAppsAndNextClusterUrl(browseUrl, authData)
     }
 
@@ -117,10 +117,10 @@ class FusedAPIRepository @Inject constructor(
         browseUrl: String,
         authData: AuthData,
         source: String
-    ): List<FusedApp> {
+    ): Pair<List<FusedApp>, ResultStatus> {
         return when (source) {
-            "Open Source" -> fusedAPIImpl.getOpenSourceApps(category) ?: listOf()
-            "PWA" -> fusedAPIImpl.getPWAApps(category) ?: listOf()
+            "Open Source" -> fusedAPIImpl.getOpenSourceApps(category)
+            "PWA" -> fusedAPIImpl.getPWAApps(category)
             else -> fusedAPIImpl.getPlayStoreApps(browseUrl, authData)
         }
     }

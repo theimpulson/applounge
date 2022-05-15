@@ -88,11 +88,13 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
 
     private fun observeDownloadList() {
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
-            val appList = viewModel.appListLiveData.value?.toMutableList()
-            appList?.let {
+            val appList = viewModel.appListLiveData.value?.first?.toMutableList() ?: emptyList()
+            appList.let {
                 mainActivityViewModel.updateStatusOfFusedApps(it, list)
             }
-            viewModel.appListLiveData.value = appList
+            viewModel.appListLiveData.apply {
+                value = Pair(appList, value?.second)
+            }
         }
     }
 
@@ -148,7 +150,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         }
 
         viewModel.appListLiveData.observe(viewLifecycleOwner) {
-            listAdapter?.setData(it)
+            listAdapter?.setData(it.first)
             if (!isDownloadObserverAdded) {
                 observeDownloadList()
                 isDownloadObserverAdded = true
