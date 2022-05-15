@@ -82,7 +82,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
 
         mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) {
             mainActivityViewModel.authData.observe(viewLifecycleOwner) {
-                refreshHomeData()
+                refreshDataOrRefreshToken()
             }
         }
 
@@ -153,11 +153,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
     /*
      * Offload loading home data to a different function, to allow retrying mechanism.
      */
-    private fun refreshHomeData() {
+    private fun refreshDataOrRefreshToken() {
         if (mainActivityViewModel.internetConnection.value == true) {
             mainActivityViewModel.authData.value?.let { authData ->
                 mainActivityViewModel.dismissTimeoutDialog()
                 homeViewModel.getHomeScreenData(authData)
+            } ?: run {
+                mainActivityViewModel.retryFetchingTokenAfterTimeout()
             }
         }
     }
