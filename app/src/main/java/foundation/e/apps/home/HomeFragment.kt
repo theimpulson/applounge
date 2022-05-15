@@ -80,10 +80,49 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
             }
         }
 
+        /*
+         * Previous code:
+         * internetConnection.observe {
+         *     authData.observe {
+         *         // refresh data here.
+         *     }
+         * }
+         *
+         * Code regarding data fetch is placed in two separate observers compared to nested
+         * observers as was done previously.
+         *
+         * refreshDataOrRefreshToken() already checks for internet connectivity and authData.
+         * If authData is null, it requests to fetch new token data.
+         *
+         * With previous nested observer code (commit 8ca1647d), try the following:
+         * 1. Put garbage value in "Proxy" of APN settings of device,
+         *    this will cause host unreachable error.
+         * 2. Open App Lounge. Let it show timeout dialog.
+         * 3. Click "Open Settings", now immediately open Home tab again.
+         * 4. Home keeps loading without any timeout error.
+         *
+         * Why is this happening?
+         * In case of host unreachable error, the authData is itself blank/null. This does not allow
+         * it to get "observed". But mainActivityViewModel.internetConnection always has a value,
+         * and is observable.
+         * When we open Home tab again from Settings tab, no refresh action is performed as
+         * authData.observe {} does not observe anything.
+         *
+         * In the new code, the first observer will always be executed on fragment attach
+         * (as mainActivityViewModel.internetConnection always has a value and is observable),
+         * this will call refreshDataOrRefreshToken(), which will refresh authData if it is null.
+         * Now with new valid authData, the second observer (authData.observe{}) will again call
+         * refreshDataOrRefreshToken() which will now fetch correct data.
+         *
+         *
+         * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
+         */
+
         mainActivityViewModel.internetConnection.observe(viewLifecycleOwner) {
-            mainActivityViewModel.authData.observe(viewLifecycleOwner) {
-                refreshDataOrRefreshToken()
-            }
+            refreshDataOrRefreshToken()
+        }
+        mainActivityViewModel.authData.observe(viewLifecycleOwner) {
+            refreshDataOrRefreshToken()
         }
 
         val homeParentRVAdapter = HomeParentRVAdapter(
