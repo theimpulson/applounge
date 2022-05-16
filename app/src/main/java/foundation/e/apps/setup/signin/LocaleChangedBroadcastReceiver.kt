@@ -21,9 +21,11 @@ package foundation.e.apps.setup.signin
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.e.apps.MainActivity
 import foundation.e.apps.utils.modules.DataStoreModule
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +46,8 @@ class LocaleChangedBroadcastReceiver : BroadcastReceiver() {
     @Inject
     lateinit var cache: Cache
 
+    private val TAG = LocaleChangedBroadcastReceiver::class.java.simpleName
+
     override fun onReceive(context: Context, intent: Intent) {
         GlobalScope.launch {
            try{
@@ -55,7 +59,7 @@ class LocaleChangedBroadcastReceiver : BroadcastReceiver() {
                    cache.evictAll()
                }
            }catch (ex :Exception){
-               ex.printStackTrace()
+               Log.e(TAG, ex.message.toString())
            }
 
         }
