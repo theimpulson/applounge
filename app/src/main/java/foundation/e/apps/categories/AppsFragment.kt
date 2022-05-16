@@ -92,7 +92,7 @@ class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface 
                     showLoadingUI()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
-                allowCancel = !categoriesViewModel.isCategoriesEmpty(),
+                allowCancel = true,
             )
         }
     }

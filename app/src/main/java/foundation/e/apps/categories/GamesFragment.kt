@@ -87,7 +87,7 @@ class GamesFragment : Fragment(R.layout.fragment_games), TimeoutFragmentInterfac
                     showLoadingUI()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
-                allowCancel = !categoriesViewModel.isCategoriesEmpty(),
+                allowCancel = true,
             )
         }
     }
