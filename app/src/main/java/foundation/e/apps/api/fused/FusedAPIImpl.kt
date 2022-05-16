@@ -357,56 +357,97 @@ class FusedAPIImpl @Inject constructor(
     ): Pair<List<FusedApp>, ResultStatus> {
         val list = mutableListOf<FusedApp>()
 
-        val status = runCodeBlockWithTimeout({
+        val response: Pair<List<FusedApp>, ResultStatus> =
+            if (origin == Origin.CLEANAPK) {
+                getAppDetailsListFromCleanapk(packageNameList)
+            } else {
+                getAppDetailsListFromGPlay(packageNameList, authData)
+            }
+
+        response.first.forEach {
+            if (it.package_name.isNotBlank()) {
+                it.updateStatus()
+                it.updateType()
+                list.add(it)
+            }
+        }
+
+        return Pair(list, response.second)
+    }
+
+    /*
+     * Get app details of a list of apps from cleanapk.
+     * Returns list of FusedApp and ResultStatus - which will reflect timeout if even one app fails.
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
+     */
+    private suspend fun getAppDetailsListFromCleanapk(
+        packageNameList: List<String>,
+    ): Pair<List<FusedApp>, ResultStatus> {
+        var status = ResultStatus.OK
+        val fusedAppList = mutableListOf<FusedApp>()
+
+        /*
+         * Fetch result of each cleanapk search with separate timeout,
+         * i.e. check timeout for individual package query.
+         */
+        for (packageName in packageNameList) {
+            status = runCodeBlockWithTimeout({
+                cleanAPKRepository.searchApps(
+                    keyword = packageName,
+                    by = "package_name"
+                ).body()?.run {
+                    if (apps.isNotEmpty() && numberOfResults == 1) {
+                        fusedAppList.add(apps[0])
+                    }
+                }
+            })
 
             /*
-             * Code is just moved inside timeout block.
-             * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
+             * If status is not ok, immediately return.
              */
+            if (status != ResultStatus.OK) {
+                return Pair(fusedAppList, status)
+            }
+        }
 
-            val response = if (origin == Origin.CLEANAPK) {
-                val pkgList = mutableListOf<FusedApp>()
-                packageNameList.forEach {
-                    val result = cleanAPKRepository.searchApps(
-                        keyword = it,
-                        by = "package_name"
-                    ).body()
-                    if (result?.apps?.isNotEmpty() == true && result.numberOfResults == 1) {
-                        pkgList.add(result.apps[0])
+        return Pair(fusedAppList, status)
+    }
+
+    /*
+     * Get app details of a list of apps from Google Play store.
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
+     */
+    private suspend fun getAppDetailsListFromGPlay(
+        packageNameList: List<String>,
+        authData: AuthData,
+    ): Pair<List<FusedApp>, ResultStatus> {
+        var fusedAppList = listOf<FusedApp>()
+
+        /*
+         * Old code moved from getApplicationDetails()
+         */
+        val status = runCodeBlockWithTimeout({
+            fusedAppList = gPlayAPIRepository.getAppDetails(packageNameList, authData).map { app ->
+                /*
+                 * Some apps are restricted to locations. Example "com.skype.m2".
+                 * For restricted apps, check if it is possible to get their specific app info.
+                 *
+                 * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5174
+                 */
+                if (app.restriction != Constants.Restriction.NOT_RESTRICTED) {
+                    try {
+                        gPlayAPIRepository.getAppDetails(app.packageName, authData)
+                            ?.transformToFusedApp() ?: FusedApp()
+                    } catch (e: Exception) {
+                        FusedApp()
                     }
-                }
-                pkgList
-            } else {
-                gPlayAPIRepository.getAppDetails(packageNameList, authData).map { app ->
-                    /*
-                     * Some apps are restricted to locations. Example "com.skype.m2".
-                     * For restricted apps, check if it is possible to get their specific app info.
-                     *
-                     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5174
-                     */
-                    if (app.restriction != Constants.Restriction.NOT_RESTRICTED) {
-                        try {
-                            gPlayAPIRepository.getAppDetails(app.packageName, authData)
-                                ?.transformToFusedApp() ?: FusedApp()
-                        } catch (e: Exception) {
-                            FusedApp()
-                        }
-                    } else {
-                        app.transformToFusedApp()
-                    }
+                } else {
+                    app.transformToFusedApp()
                 }
             }
-            response.forEach {
-                if (it.package_name.isNotBlank()) {
-                    it.updateStatus()
-                    it.updateType()
-                    list.add(it)
-                }
-            }
-
         })
 
-        return Pair(list, status)
+        return Pair(fusedAppList, status)
     }
 
     suspend fun getApplicationDetails(
