@@ -19,6 +19,7 @@ package foundation.e.apps.api.cleanapk.blockedApps
 
 import com.google.gson.Gson
 import foundation.e.apps.api.DownloadManager
+import foundation.e.apps.manager.fused.FileManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -30,18 +31,20 @@ import javax.inject.Singleton
 class BlockedAppRepository @Inject constructor(
     private val downloadManager: DownloadManager,
     private val gson: Gson,
+    @Named("cacheDir") private val cacheDir: String,
     @Named("ioCoroutineScope") private val coroutineScope: CoroutineScope
 ) {
 
     companion object {
-        const val APP_WARNING_LIST_FILE_URL =
+        private const val APP_WARNING_LIST_FILE_URL =
             "https://gitlab.e.foundation/e/os/blocklist-app-lounge/-/raw/main/app-lounge-warning-list.json?inline=false"
+        private const val WARNING_LIST_FILE_NAME = "app-lounge-warning-list.json"
     }
 
     private var blockedAppInfoList: AppWarningInfo? = null
 
     fun getBlockedAppPackages(): List<String> {
-        return blockedAppInfoList?.not_working_apps ?: listOf()
+        return blockedAppInfoList?.notWorkingApps ?: listOf()
     }
 
     fun fetchUpdateOfAppWarningList() {
@@ -57,7 +60,9 @@ class BlockedAppRepository @Inject constructor(
 
     private fun parseBlockedAppDataFromFile(path: String) {
         coroutineScope.launch {
-            val downloadedFile = File(path)
+            val outputPath = "$cacheDir/warning_list/"
+            FileManager.moveFile("$cacheDir/", WARNING_LIST_FILE_NAME, outputPath)
+            val downloadedFile = File(outputPath + WARNING_LIST_FILE_NAME)
             val blockedAppInfoJson = String(downloadedFile.inputStream().readBytes())
             blockedAppInfoList = gson.fromJson(blockedAppInfoJson, AppWarningInfo::class.java)
         }

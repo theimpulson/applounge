@@ -18,4 +18,6 @@
 
 package foundation.e.apps.api.cleanapk.blockedApps
 
-data class AppWarningInfo(val not_working_apps: List<String>)
+import com.google.gson.annotations.SerializedName
+
+data class AppWarningInfo(@SerializedName("not_working_apps") val notWorkingApps: List<String>)

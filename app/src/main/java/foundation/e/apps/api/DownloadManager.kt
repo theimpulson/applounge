@@ -52,9 +52,6 @@ class DownloadManager @Inject constructor(
         if (!directoryFile.exists()) {
             directoryFile.mkdirs()
         }
-        if (downloadFile.exists()) {
-            downloadFile.delete()
-        }
         val request = DownloadManager.Request(Uri.parse(url))
             .setTitle("Downloading...")
             .setDestinationUri(Uri.fromFile(downloadFile))
