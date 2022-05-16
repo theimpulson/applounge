@@ -294,7 +294,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), TimeoutFrag
                     showLoadingProgressBar()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
-                negativeButtonText = getString(R.string.close),
+                negativeButtonText = getString(android.R.string.ok),
                 negativeButtonBlock = {
                     requireActivity().onBackPressed()
                 },
