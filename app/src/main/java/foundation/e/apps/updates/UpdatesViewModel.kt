@@ -47,4 +47,8 @@ class UpdatesViewModel @Inject constructor(
             )
         }
     }
+
+    fun getApplicationCategoryPreference(): String {
+        return updatesManagerRepository.getApplicationCategoryPreference()
+    }
 }

@@ -76,4 +76,8 @@ class UpdatesManagerImpl @Inject constructor(
         }
         return Pair(updateList, status)
     }
+
+    fun getApplicationCategoryPreference(): String {
+        return fusedAPIRepository.getApplicationCategoryPreference()
+    }
 }
