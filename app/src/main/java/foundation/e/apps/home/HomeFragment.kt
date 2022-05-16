@@ -171,7 +171,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
         if (homeViewModel.isFusedHomesEmpty() && !mainActivityViewModel.isTimeoutDialogDisplayed()) {
             mainActivityViewModel.displayTimeoutAlertDialog(
                 activity = requireActivity(),
-                message = if (homeViewModel.getApplicationCategoryPreference() == FusedAPIImpl.APP_TYPE_ANY) {
+                message =
+                if (homeViewModel.getApplicationCategoryPreference() == FusedAPIImpl.APP_TYPE_ANY) {
                     getString(R.string.timeout_desc_gplay)
                 } else {
                     getString(R.string.timeout_desc_cleanapk)
@@ -181,11 +182,14 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
                     showLoadingShimmer()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
-                negativeButtonText = getString(R.string.open_settings),
+                negativeButtonText =
+                if (homeViewModel.getApplicationCategoryPreference() == FusedAPIImpl.APP_TYPE_ANY) {
+                    getString(R.string.open_settings)
+                } else null,
                 negativeButtonBlock = {
                     openSettings()
                 },
-                allowCancel = false,
+                allowCancel = true,
             )
         }
     }
