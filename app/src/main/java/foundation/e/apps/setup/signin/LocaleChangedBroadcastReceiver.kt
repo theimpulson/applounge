@@ -46,13 +46,18 @@ class LocaleChangedBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         GlobalScope.launch {
-            val authDataJson = dataStoreModule.getAuthDataSync()
-            val authData = gson.fromJson(authDataJson, AuthData::class.java)
-            authData.locale = context.resources.configuration.locales[0]
-            dataStoreModule.saveCredentials(authData)
-            withContext(Dispatchers.IO) {
-                cache.evictAll()
-            }
+           try{
+               val authDataJson = dataStoreModule.getAuthDataSync()
+               val authData = gson.fromJson(authDataJson, AuthData::class.java)
+               authData.locale = context.resources.configuration.locales[0]
+               dataStoreModule.saveCredentials(authData)
+               withContext(Dispatchers.IO) {
+                   cache.evictAll()
+               }
+           }catch (ex :Exception){
+               ex.printStackTrace()
+           }
+
         }
     }
 }
