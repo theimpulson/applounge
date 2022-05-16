@@ -140,7 +140,7 @@ class MainActivityViewModel @Inject constructor(
             /*
              * Set retry button.
              */
-            setButton(DialogInterface.BUTTON_POSITIVE, activity.getString(R.string.retry)) {_, _ ->
+            setButton(DialogInterface.BUTTON_POSITIVE, activity.getString(R.string.retry)) { _, _ ->
                 positiveButtonBlock()
             }
             /*
