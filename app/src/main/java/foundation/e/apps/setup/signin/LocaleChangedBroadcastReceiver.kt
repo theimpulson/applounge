@@ -25,7 +25,6 @@ import android.util.Log
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.MainActivity
 import foundation.e.apps.utils.modules.DataStoreModule
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -50,18 +49,17 @@ class LocaleChangedBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         GlobalScope.launch {
-           try{
-               val authDataJson = dataStoreModule.getAuthDataSync()
-               val authData = gson.fromJson(authDataJson, AuthData::class.java)
-               authData.locale = context.resources.configuration.locales[0]
-               dataStoreModule.saveCredentials(authData)
-               withContext(Dispatchers.IO) {
-                   cache.evictAll()
-               }
-           }catch (ex :Exception){
-               Log.e(TAG, ex.message.toString())
-           }
-
+            try {
+                val authDataJson = dataStoreModule.getAuthDataSync()
+                val authData = gson.fromJson(authDataJson, AuthData::class.java)
+                authData.locale = context.resources.configuration.locales[0]
+                dataStoreModule.saveCredentials(authData)
+                withContext(Dispatchers.IO) {
+                    cache.evictAll()
+                }
+            } catch (ex: Exception) {
+                Log.e(TAG, ex.message.toString())
+            }
         }
     }
 }
