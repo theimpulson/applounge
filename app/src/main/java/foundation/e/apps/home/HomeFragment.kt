@@ -179,7 +179,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
                 },
                 positiveButtonText = getString(R.string.retry),
                 positiveButtonBlock = {
-                    showLoadingShimmer()
+                    showLoadingUI()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
                 negativeButtonText =
@@ -198,7 +198,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
         homeViewModel.getHomeScreenData(authData)
     }
 
-    private fun showLoadingShimmer() {
+    private fun showLoadingUI() {
         binding.shimmerLayout.visibility = View.VISIBLE
         binding.parentRV.visibility = View.GONE
     }

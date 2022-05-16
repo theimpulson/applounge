@@ -237,7 +237,7 @@ class SearchFragment :
                 message = getString(R.string.timeout_desc_cleanapk),
                 positiveButtonText = getString(R.string.retry),
                 positiveButtonBlock = {
-                    showLoadingShimmer()
+                    showLoadingUI()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
                 negativeButtonText = getString(android.R.string.ok),
@@ -251,7 +251,7 @@ class SearchFragment :
         searchViewModel.getSearchResults(searchText, authData)
     }
 
-    private fun showLoadingShimmer() {
+    private fun showLoadingUI() {
         binding.shimmerLayout.visibility = View.VISIBLE
         binding.recyclerView.visibility = View.GONE
     }

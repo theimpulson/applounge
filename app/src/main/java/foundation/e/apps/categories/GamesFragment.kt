@@ -85,7 +85,7 @@ class GamesFragment : Fragment(R.layout.fragment_games), TimeoutFragmentInterfac
                 positiveButtonBlock = {},
                 negativeButtonText = getString(R.string.retry),
                 negativeButtonBlock = {
-                    showLoadingShimmer()
+                    showLoadingUI()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
                 allowCancel = !categoriesViewModel.isCategoriesEmpty(),
@@ -100,7 +100,7 @@ class GamesFragment : Fragment(R.layout.fragment_games), TimeoutFragmentInterfac
         )
     }
 
-    private fun showLoadingShimmer() {
+    private fun showLoadingUI() {
         binding.shimmerLayout.visibility = View.VISIBLE
         binding.recyclerView.visibility = View.GONE
     }

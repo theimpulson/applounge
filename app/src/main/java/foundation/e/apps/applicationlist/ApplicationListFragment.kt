@@ -188,7 +188,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                 message = getString(R.string.timeout_desc_cleanapk),
                 positiveButtonText = getString(R.string.retry),
                 positiveButtonBlock = {
-                    showLoadingShimmer()
+                    showLoadingUI()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
                 negativeButtonText = getString(android.R.string.ok),
@@ -226,7 +226,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         }
     }
 
-    private fun showLoadingShimmer() {
+    private fun showLoadingUI() {
         binding.shimmerLayout.visibility = View.VISIBLE
         binding.recyclerView.visibility = View.GONE
     }

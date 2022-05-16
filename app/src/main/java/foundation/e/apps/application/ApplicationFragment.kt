@@ -291,7 +291,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), TimeoutFrag
                 message = getString(R.string.timeout_desc_cleanapk),
                 positiveButtonText = getString(R.string.retry),
                 positiveButtonBlock = {
-                    showLoadingProgressBar()
+                    showLoadingUI()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
                 negativeButtonText = getString(android.R.string.ok),
@@ -584,7 +584,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), TimeoutFrag
         }
     }
 
-    private fun showLoadingProgressBar() {
+    private fun showLoadingUI() {
         binding.applicationLayout.visibility = View.GONE
         binding.progressBar.visibility = View.VISIBLE
     }

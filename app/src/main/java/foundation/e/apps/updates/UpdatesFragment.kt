@@ -164,7 +164,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, 
                 },
                 positiveButtonText = getString(R.string.retry),
                 positiveButtonBlock = {
-                    showLoadingProgressBar()
+                    showLoadingUI()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
                 negativeButtonText =
@@ -186,7 +186,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, 
         }
     }
 
-    private fun showLoadingProgressBar() {
+    private fun showLoadingUI() {
         binding.button.isEnabled = false
         binding.noUpdates.visibility = View.GONE
         binding.progressBar.visibility = View.VISIBLE
