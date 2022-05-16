@@ -198,11 +198,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
     }
 
     private fun showLoadingUI() {
+        binding.shimmerLayout.startShimmer()
         binding.shimmerLayout.visibility = View.VISIBLE
         binding.parentRV.visibility = View.GONE
     }
 
     private fun stopLoadingUI() {
+        binding.shimmerLayout.stopShimmer()
         binding.shimmerLayout.visibility = View.GONE
         binding.parentRV.visibility = View.VISIBLE
     }
