@@ -186,9 +186,12 @@ class SearchFragment :
             searchList.let {
                 mainActivityViewModel.updateStatusOfFusedApps(searchList, list)
             }
-            searchViewModel.searchResult.apply {
-                value = Pair(searchList, value?.second)
-            }
+
+            /*
+             * Done in one line, so that on Ctrl+click on searchResult,
+             * we can see that it is being updated here.
+             */
+            searchViewModel.searchResult.apply { value = Pair(searchList, value?.second) }
         }
 
 

@@ -96,9 +96,12 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
             appList.let {
                 mainActivityViewModel.updateStatusOfFusedApps(it, list)
             }
-            viewModel.appListLiveData.apply {
-                value = Pair(appList, value?.second)
-            }
+
+            /*
+             * Done in one line, so that on Ctrl+click on appListLiveData,
+             * we can see that it is being updated here.
+             */
+            viewModel.appListLiveData.apply { value = Pair(appList, value?.second) }
         }
     }
 
