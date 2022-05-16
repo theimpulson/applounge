@@ -3,6 +3,11 @@ package foundation.e.apps.utils.interfaces
 import com.aurora.gplayapi.data.models.AuthData
 import foundation.e.apps.MainActivityViewModel
 
+/*
+ * Interface for fragments which can display a timeout dialog
+ * for network calls exceeding timeout limit.
+ * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
+ */
 interface TimeoutFragmentInterface {
     fun onTimeout()
 
