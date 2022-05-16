@@ -203,9 +203,9 @@ class MainActivity : AppCompatActivity() {
             if (it.isNotEmpty()) {
                 startInstallationOfPurchasedApp(viewModel, it)
                 ApplicationDialogFragment(
-                    title = "Purchase complete!",
-                    message = "Your app will automatically be downloaded in this device",
-                    positiveButtonText = "OK"
+                    title = getString(R.string.purchase_complete),
+                    message = getString(R.string.download_automatically_message),
+                    positiveButtonText = getString(R.string.ok)
                 ).show(supportFragmentManager, TAG)
             }
         }
@@ -253,7 +253,11 @@ class MainActivity : AppCompatActivity() {
             if (fusedDownload != null) {
                 InstallWorkManager.enqueueWork(fusedDownload)
             } else {
-                showSnackbarMessage(getString(R.string.paid_app_anonymous_message))
+                ApplicationDialogFragment(
+                    title = getString(R.string.purchase_error),
+                    message = getString(R.string.something_went_wrong),
+                    positiveButtonText = getString(R.string.ok)
+                ).show(supportFragmentManager, TAG)
             }
         }
     }

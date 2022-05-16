@@ -188,12 +188,20 @@ class MainActivityViewModel @Inject constructor(
      *
      * Issue: https://gitlab.e.foundation/e/os/backlog/-/issues/178
      */
-    fun checkUnsupportedApplication(fusedApp: FusedApp, alertDialogContext: Context? = null): Boolean {
+    fun checkUnsupportedApplication(
+        fusedApp: FusedApp,
+        alertDialogContext: Context? = null
+    ): Boolean {
         if (!fusedApp.isFree && fusedApp.price.isBlank()) {
             alertDialogContext?.let { context ->
                 AlertDialog.Builder(context).apply {
                     setTitle(R.string.unsupported_app_title)
-                    setMessage(context.getString(R.string.unsupported_app_unreleased, fusedApp.name))
+                    setMessage(
+                        context.getString(
+                            R.string.unsupported_app_unreleased,
+                            fusedApp.name
+                        )
+                    )
                     setPositiveButton(android.R.string.ok, null)
                 }.show()
             }
@@ -288,6 +296,9 @@ class MainActivityViewModel @Inject constructor(
                         Origin.GPLAY,
                         fusedDownload
                     )
+                } catch (e: ApiException.AppNotPurchased) {
+                    Log.e(TAG, e.stackTraceToString())
+                    return null
                 } catch (e: Exception) {
                     Log.e(TAG, e.stackTraceToString())
                     _errorMessage.value = e
@@ -344,12 +355,16 @@ class MainActivityViewModel @Inject constructor(
         emitSource(ReactiveNetwork().observeInternetConnectivity().asLiveData(Dispatchers.Default))
     }
 
-    fun updateStatusOfFusedApps(fusedAppList: List<FusedApp>, fusedDownloadList: List<FusedDownload>) {
+    fun updateStatusOfFusedApps(
+        fusedAppList: List<FusedApp>,
+        fusedDownloadList: List<FusedDownload>
+    ) {
         fusedAppList.forEach {
             val downloadingItem = fusedDownloadList.find { fusedDownload ->
                 fusedDownload.origin == it.origin && (fusedDownload.packageName == it.package_name || fusedDownload.id == it._id)
             }
-            it.status = downloadingItem?.status ?: fusedAPIRepository.getFusedAppInstallationStatus(it)
+            it.status =
+                downloadingItem?.status ?: fusedAPIRepository.getFusedAppInstallationStatus(it)
         }
     }
 }
