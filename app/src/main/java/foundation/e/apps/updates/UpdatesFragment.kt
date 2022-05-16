@@ -137,8 +137,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, 
                 observeDownloadList()
                 isDownloadObserverAdded = true
             }
-            binding.progressBar.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
+            stopLoadingUI()
             if (!it.first.isNullOrEmpty()) {
                 binding.button.isEnabled = true
                 binding.noUpdates.visibility = View.GONE
@@ -191,6 +190,11 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, 
         binding.noUpdates.visibility = View.GONE
         binding.progressBar.visibility = View.VISIBLE
         binding.recyclerView.visibility = View.INVISIBLE
+    }
+
+    private fun stopLoadingUI() {
+        binding.progressBar.visibility = View.GONE
+        binding.recyclerView.visibility = View.VISIBLE
     }
 
     private fun observeDownloadList() {

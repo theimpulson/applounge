@@ -579,14 +579,18 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), TimeoutFrag
     private fun fetchAppTracker(fusedApp: FusedApp) {
         privacyInfoViewModel.getAppPrivacyInfoLiveData(fusedApp).observe(viewLifecycleOwner) {
             updatePrivacyScore()
-            binding.applicationLayout.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.GONE
+            stopLoadingUI()
         }
     }
 
     private fun showLoadingUI() {
         binding.applicationLayout.visibility = View.GONE
         binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun stopLoadingUI() {
+        binding.applicationLayout.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
     }
 
     private fun updatePrivacyScore() {

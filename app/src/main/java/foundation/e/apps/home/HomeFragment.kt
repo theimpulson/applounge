@@ -152,8 +152,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
         }
 
         homeViewModel.homeScreenData.observe(viewLifecycleOwner) {
-            binding.shimmerLayout.visibility = View.GONE
-            binding.parentRV.visibility = View.VISIBLE
+            stopLoadingUI()
             if (it.second == ResultStatus.OK) {
                 mainActivityViewModel.dismissTimeoutDialog()
                 homeParentRVAdapter.setData(it.first)
@@ -201,6 +200,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
     private fun showLoadingUI() {
         binding.shimmerLayout.visibility = View.VISIBLE
         binding.parentRV.visibility = View.GONE
+    }
+
+    private fun stopLoadingUI() {
+        binding.shimmerLayout.visibility = View.GONE
+        binding.parentRV.visibility = View.VISIBLE
     }
 
     private fun updateProgressOfDownloadingAppItemViews(

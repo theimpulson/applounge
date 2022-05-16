@@ -72,9 +72,8 @@ class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface 
         }
 
         categoriesViewModel.categoriesList.observe(viewLifecycleOwner) {
+            stopLoadingUI()
             categoriesRVAdapter.setData(it.first)
-            binding.shimmerLayout.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
             if (it.third != ResultStatus.OK) {
                 onTimeout()
             }
@@ -108,6 +107,11 @@ class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface 
     private fun showLoadingUI() {
         binding.shimmerLayout.visibility = View.VISIBLE
         binding.recyclerView.visibility = View.GONE
+    }
+
+    private fun stopLoadingUI() {
+        binding.shimmerLayout.visibility = View.GONE
+        binding.recyclerView.visibility = View.VISIBLE
     }
 
     override fun onResume() {

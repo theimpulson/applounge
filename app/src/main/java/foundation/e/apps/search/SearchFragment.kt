@@ -216,8 +216,7 @@ class SearchFragment :
                 noAppsFoundLayout?.visibility = View.VISIBLE
             } else {
                 listAdapter?.setData(it.first)
-                shimmerLayout?.visibility = View.GONE
-                recyclerView?.visibility = View.VISIBLE
+                stopLoadingUI()
                 noAppsFoundLayout?.visibility = View.GONE
             }
             if (searchText.isNotBlank() && it.second != ResultStatus.OK) {
@@ -254,6 +253,11 @@ class SearchFragment :
     private fun showLoadingUI() {
         binding.shimmerLayout.visibility = View.VISIBLE
         binding.recyclerView.visibility = View.GONE
+    }
+
+    private fun stopLoadingUI() {
+        binding.shimmerLayout.visibility = View.GONE
+        binding.recyclerView.visibility = View.VISIBLE
     }
 
     override fun onResume() {
