@@ -188,7 +188,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
                 negativeButtonBlock = {
                     openSettings()
                 },
-                allowCancel = true,
+                allowCancel = false,
             )
         }
     }
