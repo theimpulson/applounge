@@ -202,11 +202,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.isAppPurchased.observe(this) {
             if (it.isNotEmpty()) {
                 startInstallationOfPurchasedApp(viewModel, it)
-                ApplicationDialogFragment(
-                    title = getString(R.string.purchase_complete),
-                    message = getString(R.string.download_automatically_message),
-                    positiveButtonText = getString(R.string.ok)
-                ).show(supportFragmentManager, TAG)
             }
         }
 
@@ -252,6 +247,11 @@ class MainActivity : AppCompatActivity() {
             val fusedDownload = viewModel.updateAwaitingForPurchasedApp(it)
             if (fusedDownload != null) {
                 InstallWorkManager.enqueueWork(fusedDownload)
+                ApplicationDialogFragment(
+                    title = getString(R.string.purchase_complete),
+                    message = getString(R.string.download_automatically_message),
+                    positiveButtonText = getString(R.string.ok)
+                ).show(supportFragmentManager, TAG)
             } else {
                 ApplicationDialogFragment(
                     title = getString(R.string.purchase_error),

@@ -297,10 +297,10 @@ class MainActivityViewModel @Inject constructor(
                         fusedDownload
                     )
                 } catch (e: ApiException.AppNotPurchased) {
-                    Log.e(TAG, e.stackTraceToString())
+                    e.printStackTrace()
                     return null
                 } catch (e: Exception) {
-                    Log.e(TAG, e.stackTraceToString())
+                    e.printStackTrace()
                     _errorMessage.value = e
                     return null
                 }
