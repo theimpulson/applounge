@@ -18,14 +18,18 @@
 
 package foundation.e.apps
 
-import android.app.AlertDialog
+import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.os.Build
+import android.os.SystemClock
 import android.util.Base64
 import android.util.Log
+import android.view.KeyEvent
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -38,16 +42,19 @@ import com.aurora.gplayapi.exceptions.ApiException
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.cleanapk.blockedApps.BlockedAppRepository
+import foundation.e.apps.api.fused.FusedAPIImpl
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
 import foundation.e.apps.manager.fused.FusedManagerRepository
 import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.manager.workmanager.InstallWorkManager
+import foundation.e.apps.settings.SettingsFragment
 import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.modules.CommonUtilsModule.timeoutDurationInMillis
 import foundation.e.apps.utils.modules.DataStoreModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -78,6 +85,116 @@ class MainActivityViewModel @Inject constructor(
     val purchaseDeclined: MutableLiveData<String> = MutableLiveData()
     var authRequestRunning = false
 
+    /*
+     * Store the time when auth data is fetched for the first time.
+     * If we try to fetch auth data after timeout, then don't allow it.
+     *
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
+     */
+    var firstAuthDataFetchTime = 0L
+
+    /*
+     * Alert dialog to show to user if App Lounge times out.
+     *
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
+     */
+    private lateinit var timeoutAlertDialog: AlertDialog
+
+    /**
+     * Display timeout alert dialog.
+     *
+     * @param activity Activity class. Basically the MainActivity.
+     * @param positiveButtonBlock Code block when "Retry" is pressed.
+     * @param openSettings Code block when "Open Settings" button is pressed.
+     * This should open the [SettingsFragment] fragment.
+     * @param applicationTypeFromPreferences Application type string, can be one of
+     * [FusedAPIImpl.APP_TYPE_ANY], [FusedAPIImpl.APP_TYPE_OPEN], [FusedAPIImpl.APP_TYPE_PWA]
+     */
+    fun displayTimeoutAlertDialog(
+        activity: Activity,
+        positiveButtonBlock: () -> Unit,
+        openSettings: () -> Unit,
+        applicationTypeFromPreferences: String,
+    ) {
+        if (!this::timeoutAlertDialog.isInitialized) {
+            timeoutAlertDialog = AlertDialog.Builder(activity).apply {
+                setTitle(R.string.timeout_title)
+                /*
+                 * Prevent dismissing the dialog from pressing outside as it will only
+                 * show a blank screen below the dialog.
+                 */
+                setCancelable(false)
+                /*
+                 * If user presses back button to close the dialog without selecting anything,
+                 * close App Lounge.
+                 */
+                setOnKeyListener { dialog, keyCode, _ ->
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss()
+                        activity.finish()
+                    }
+                    true
+                }
+            }.create()
+        }
+
+        timeoutAlertDialog.apply {
+            /*
+             * Set retry button.
+             */
+            setButton(DialogInterface.BUTTON_POSITIVE, activity.getString(R.string.retry)) { _, _ ->
+                positiveButtonBlock()
+            }
+            /*
+             * Set message based on apps from GPlay of cleanapk.
+             */
+            setMessage(
+                activity.getString(
+                    when (applicationTypeFromPreferences) {
+                        FusedAPIImpl.APP_TYPE_ANY -> R.string.timeout_desc_gplay
+                        else -> R.string.timeout_desc_cleanapk
+                    }
+                )
+            )
+            /*
+             * Show "Open Setting" only for GPlay apps.
+             */
+            if (applicationTypeFromPreferences == FusedAPIImpl.APP_TYPE_ANY) {
+                setButton(
+                    DialogInterface.BUTTON_NEUTRAL,
+                    activity.getString(R.string.open_settings)
+                ) { _, _ ->
+                    openSettings()
+                }
+            }
+        }
+
+        timeoutAlertDialog.show()
+    }
+
+    /**
+     * Returns true if [timeoutAlertDialog] is displaying.
+     * Returs false if it is not initialised.
+     */
+    fun isTimeoutDialogDisplayed(): Boolean {
+        return if (this::timeoutAlertDialog.isInitialized) {
+            timeoutAlertDialog.isShowing
+        } else false
+    }
+
+    /**
+     * Dismisses the [timeoutAlertDialog] if it is being displayed.
+     * Does nothing if it is not being displayed.
+     * Caller need not check if the dialog is being displayed.
+     */
+    fun dismissTimeoutDialog() {
+        if (isTimeoutDialogDisplayed()) {
+            try {
+                timeoutAlertDialog.dismiss()
+            } catch (_: Exception) {}
+        }
+    }
+
     // Downloads
     val downloadList = fusedManagerRepository.getDownloadLiveList()
     var installInProgress = false
@@ -92,6 +209,26 @@ class MainActivityViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "MainActivityViewModel"
+    }
+
+    fun setFirstTokenFetchTime() {
+        firstAuthDataFetchTime = SystemClock.uptimeMillis()
+    }
+
+    fun isTimeEligibleForTokenRefresh(): Boolean {
+        return (SystemClock.uptimeMillis() - firstAuthDataFetchTime) <= timeoutDurationInMillis
+    }
+
+    /*
+     * This method resets the last recorded token fetch time.
+     * Then it posts authValidity as false. This causes the observer in MainActivity to destroyCredentials
+     * and fetch new token.
+     *
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
+     */
+    fun retryFetchingTokenAfterTimeout() {
+        setFirstTokenFetchTime()
+        authValidity.postValue(false)
     }
 
     fun getAuthData() {

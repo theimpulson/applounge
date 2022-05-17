@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity() {
                     User.ANONYMOUS -> {
                         if (viewModel.authDataJson.value.isNullOrEmpty() && !viewModel.authRequestRunning) {
                             Log.d(TAG, "Fetching new authentication data")
+                            viewModel.setFirstTokenFetchTime()
                             viewModel.getAuthData()
                         }
                     }
@@ -99,6 +100,7 @@ class MainActivity : AppCompatActivity() {
                     User.GOOGLE -> {
                         if (viewModel.authData.value == null && !viewModel.authRequestRunning) {
                             Log.d(TAG, "Fetching new authentication data")
+                            viewModel.setFirstTokenFetchTime()
                             signInViewModel.fetchAuthData()
                         }
                     }
@@ -134,7 +136,11 @@ class MainActivity : AppCompatActivity() {
             if (it != true) {
                 Log.d(TAG, "Authentication data validation failed!")
                 viewModel.destroyCredentials { user ->
-                    generateAuthDataBasedOnUserType(user)
+                    if (viewModel.isTimeEligibleForTokenRefresh()) {
+                        generateAuthDataBasedOnUserType(user)
+                    } else {
+                        Log.d(TAG, "Timeout validating auth data!")
+                    }
                 }
             } else {
                 Log.d(TAG, "Authentication data is valid!")

@@ -33,11 +33,21 @@ class HomeViewModel @Inject constructor(
     private val fusedAPIRepository: FusedAPIRepository
 ) : ViewModel() {
 
-    var homeScreenData: MutableLiveData<List<FusedHome>> = MutableLiveData()
+    /*
+     * Hold list of applications, as well as application source type.
+     * Source type may change from user selected preference in case of timeout.
+     *
+     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
+     */
+    var homeScreenData: MutableLiveData<Pair<List<FusedHome>, String>> = MutableLiveData()
 
     fun getHomeScreenData(authData: AuthData) {
         viewModelScope.launch {
             homeScreenData.postValue(fusedAPIRepository.getHomeScreenData(authData))
         }
+    }
+
+    fun isFusedHomesEmpty(fusedHomes: List<FusedHome>): Boolean {
+        return fusedAPIRepository.isFusedHomesEmpty(fusedHomes)
     }
 }

@@ -157,6 +157,14 @@
 
     <!-- No Internet Fragment -->
     <string name="no_internet_message">Can\'t connect! Please check your internet connection and try again</string>
+    
+    <!--Timeout-->
+    <string name="timeout_title">Timeout fetching applications!</string>
+    <string name="timeout_desc_gplay">Some network issue is preventing fetching all applications.
+        \n\nOpen settings to look for Open source apps or PWAs only.
+    </string>
+    <string name="timeout_desc_cleanapk">Some network issue is preventing fetching all applications.</string>
+    <string name="open_settings">Open Settings</string>
 
     <!--    paid app message-->
     <string name="dialog_title_paid_app"><![CDATA[Purchase <b>%1$s</b>]]></string>

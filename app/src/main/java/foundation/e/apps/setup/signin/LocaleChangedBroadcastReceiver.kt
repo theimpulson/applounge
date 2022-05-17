@@ -21,6 +21,7 @@ package foundation.e.apps.setup.signin
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.aurora.gplayapi.data.models.AuthData
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,14 +45,20 @@ class LocaleChangedBroadcastReceiver : BroadcastReceiver() {
     @Inject
     lateinit var cache: Cache
 
+    private val TAG = LocaleChangedBroadcastReceiver::class.java.simpleName
+
     override fun onReceive(context: Context, intent: Intent) {
         GlobalScope.launch {
-            val authDataJson = dataStoreModule.getAuthDataSync()
-            val authData = gson.fromJson(authDataJson, AuthData::class.java)
-            authData.locale = context.resources.configuration.locales[0]
-            dataStoreModule.saveCredentials(authData)
-            withContext(Dispatchers.IO) {
-                cache.evictAll()
+            try {
+                val authDataJson = dataStoreModule.getAuthDataSync()
+                val authData = gson.fromJson(authDataJson, AuthData::class.java)
+                authData.locale = context.resources.configuration.locales[0]
+                dataStoreModule.saveCredentials(authData)
+                withContext(Dispatchers.IO) {
+                    cache.evictAll()
+                }
+            } catch (ex: Exception) {
+                Log.e(TAG, ex.message.toString())
             }
         }
     }
