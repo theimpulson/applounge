@@ -191,9 +191,7 @@ class SearchFragment :
 
 
             }
-            recyclerView!!.post { // Call smooth scroll
-                recyclerView!!.smoothScrollToPosition(0)
-            }
+            recyclerView!!.postDelayed(Runnable { kotlin.run { recyclerView!!.scrollToPosition(0) } }, 1000)
         }
     }
 
