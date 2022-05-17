@@ -153,6 +153,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, 
 
     override fun onTimeout() {
         if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
+            stopLoadingUI()
             mainActivityViewModel.displayTimeoutAlertDialog(
                 activity = requireActivity(),
                 message =

@@ -168,6 +168,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
 
     override fun onTimeout() {
         if (homeViewModel.isFusedHomesEmpty() && !mainActivityViewModel.isTimeoutDialogDisplayed()) {
+            stopLoadingUI()
             mainActivityViewModel.displayTimeoutAlertDialog(
                 activity = requireActivity(),
                 message =

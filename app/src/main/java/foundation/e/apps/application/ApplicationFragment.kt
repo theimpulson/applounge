@@ -286,6 +286,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), TimeoutFrag
 
     override fun onTimeout() {
         if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
+            stopLoadingUI()
             mainActivityViewModel.displayTimeoutAlertDialog(
                 activity = requireActivity(),
                 message = getString(R.string.timeout_desc_cleanapk),
