@@ -40,7 +40,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.*
+import foundation.e.apps.AppInfoFetchViewModel
+import foundation.e.apps.AppProgressViewModel
+import foundation.e.apps.MainActivityViewModel
+import foundation.e.apps.PrivacyInfoViewModel
+import foundation.e.apps.R
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.application.subFrags.ApplicationDialogFragment
