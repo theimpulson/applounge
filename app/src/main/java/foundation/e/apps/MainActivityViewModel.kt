@@ -53,6 +53,7 @@ import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.enums.User
 import foundation.e.apps.utils.modules.CommonUtilsModule.timeoutDurationInMillis
 import foundation.e.apps.utils.modules.DataStoreModule
+import foundation.e.apps.utils.modules.TimeoutModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.beryukhov.reactivenetwork.ReactiveNetwork
@@ -65,7 +66,8 @@ class MainActivityViewModel @Inject constructor(
     private val dataStoreModule: DataStoreModule,
     private val fusedAPIRepository: FusedAPIRepository,
     private val fusedManagerRepository: FusedManagerRepository,
-    private val pkgManagerModule: PkgManagerModule
+    private val pkgManagerModule: PkgManagerModule,
+    private val timeoutModule: TimeoutModule,
 ) : ViewModel() {
 
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
@@ -90,26 +92,7 @@ class MainActivityViewModel @Inject constructor(
     var firstAuthDataFetchTime = 0L
 
     /*
-     * Alert dialog to show to user if App Lounge times out.
-     *
-     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
-     */
-    private var timeoutAlertDialog: AlertDialog? = null
-
-    /**
-     * Display timeout alert dialog.
-     *
-     * @param activity Activity class. Basically the MainActivity.
-     * @param message Alert dialog body.
-     * @param positiveButtonText Positive button text. Example "Retry"
-     * @param positiveButtonBlock Code block when [positiveButtonText] is pressed.
-     * @param negativeButtonText Negative button text. Example "Retry"
-     * @param negativeButtonBlock Code block when [negativeButtonText] is pressed.
-     * @param positiveButtonText Positive button text. Example "Retry"
-     * @param positiveButtonBlock Code block when [positiveButtonText] is pressed.
-     *
-     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
-     * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
+     * Moved to TimeoutModule class
      */
     fun displayTimeoutAlertDialog(
         activity: Activity,
@@ -122,89 +105,25 @@ class MainActivityViewModel @Inject constructor(
         neutralButtonBlock: (() -> Unit)? = null,
         allowCancel: Boolean = true,
     ) {
-        val timeoutAlertDialogBuilder = AlertDialog.Builder(activity).apply {
-
-            /*
-             * Set title.
-             */
-            setTitle(R.string.timeout_title)
-
-            if (!allowCancel) {
-                /*
-                 * Prevent dismissing the dialog from pressing outside as it will only
-                 * show a blank screen below the dialog.
-                 */
-                setCancelable(false)
-                /*
-                 * If user presses back button to close the dialog without selecting anything,
-                 * close App Lounge.
-                 */
-                setOnKeyListener { dialog, keyCode, _ ->
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss()
-                        activity.finish()
-                    }
-                    true
-                }
-            } else {
-                setCancelable(true)
-            }
-
-            /*
-             * Set message
-             */
-            setMessage(message)
-
-            /*
-             * Set buttons.
-             */
-            positiveButtonText?.let {
-                setPositiveButton(it) {_, _ ->
-                    positiveButtonBlock?.invoke()
-                }
-            }
-            negativeButtonText?.let {
-                setNegativeButton(it) {_, _ ->
-                    negativeButtonBlock?.invoke()
-                }
-            }
-            neutralButtonText?.let {
-                setNeutralButton(it) {_, _ ->
-                    neutralButtonBlock?.invoke()
-                }
-            }
-        }
-
-        /*
-         * Dismiss alert dialog if already being shown
-         */
-        try {
-            timeoutAlertDialog?.dismiss()
-        } catch (_: Exception) {}
-
-        timeoutAlertDialog = timeoutAlertDialogBuilder.create()
-        timeoutAlertDialog?.show()
+        timeoutModule.displayTimeoutAlertDialog(
+            activity,
+            message,
+            positiveButtonText,
+            positiveButtonBlock,
+            negativeButtonText,
+            negativeButtonBlock,
+            neutralButtonText,
+            neutralButtonBlock,
+            allowCancel
+        )
     }
 
-    /**
-     * Returns true if [timeoutAlertDialog] is displaying.
-     * Returs false if it is not initialised.
-     */
     fun isTimeoutDialogDisplayed(): Boolean {
-        return timeoutAlertDialog?.isShowing == true
+        return timeoutModule.isTimeoutDialogDisplayed()
     }
 
-    /**
-     * Dismisses the [timeoutAlertDialog] if it is being displayed.
-     * Does nothing if it is not being displayed.
-     * Caller need not check if the dialog is being displayed.
-     */
     fun dismissTimeoutDialog() {
-        if (isTimeoutDialogDisplayed()) {
-            try {
-                timeoutAlertDialog?.dismiss()
-            } catch (_: Exception) {}
-        }
+        timeoutModule.dismissTimeoutDialog()
     }
 
     // Downloads
