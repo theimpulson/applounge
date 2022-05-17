@@ -162,8 +162,7 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
                 observeDownloadList()
                 isDownloadObserverAdded = true
             }
-            binding.shimmerLayout.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
+            stopLoadingUI()
             if (it.second != ResultStatus.OK) {
                 onTimeout()
             }
@@ -227,8 +226,15 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
     }
 
     private fun showLoadingUI() {
+        binding.shimmerLayout.startShimmer()
         binding.shimmerLayout.visibility = View.VISIBLE
         binding.recyclerView.visibility = View.GONE
+    }
+
+    private fun stopLoadingUI() {
+        binding.shimmerLayout.stopShimmer()
+        binding.shimmerLayout.visibility = View.GONE
+        binding.recyclerView.visibility = View.VISIBLE
     }
 
     private fun updateProgressOfDownloadingItems(
