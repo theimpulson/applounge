@@ -254,4 +254,9 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, 
         view?.findNavController()
             ?.safeNavigate(R.id.updatesFragment, R.id.action_updatesFragment_to_SettingsFragment)
     }
+
+    override fun onResume() {
+        super.onResume()
+        resetTimeoutDialogLock()
+    }
 }

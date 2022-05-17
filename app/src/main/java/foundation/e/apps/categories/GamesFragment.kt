@@ -119,6 +119,7 @@ class GamesFragment : Fragment(R.layout.fragment_games), TimeoutFragmentInterfac
 
     override fun onResume() {
         super.onResume()
+        resetTimeoutDialogLock()
         binding.shimmerLayout.startShimmer()
     }
 

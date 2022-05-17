@@ -26,6 +26,11 @@ interface TimeoutFragmentInterface {
      * fetch the information for the fragment.
      */
     var timeoutDialogShownLock: Boolean
+
+    /*
+     * Do call this in the "Retry" button block of timeout dialog.
+     * Also call this in onResume(), otherwise after screen off, the timeout dialog may not appear.
+     */
     fun resetTimeoutDialogLock() {
         timeoutDialogShownLock = false
     }

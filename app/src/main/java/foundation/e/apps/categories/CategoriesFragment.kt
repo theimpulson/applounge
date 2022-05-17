@@ -59,7 +59,17 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories), TimeoutFragme
     }
 
     override fun onTimeout() {
-        childFragmentManager.fragments[0]?.let {
+        val position = binding.viewPager.currentItem
+
+        val fragment = childFragmentManager.fragments.find {
+            when (position) {
+                0 -> it is AppsFragment
+                1 -> it is GamesFragment
+                else -> false
+            }
+        }
+
+        fragment?.let {
             if (it is TimeoutFragmentInterface) {
                 Log.d(TAG, "Showing timeout on Categories fragment: " + it::class.java.name)
                 it.onTimeout()

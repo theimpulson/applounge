@@ -270,6 +270,7 @@ class SearchFragment :
 
     override fun onResume() {
         super.onResume()
+        resetTimeoutDialogLock()
         binding.shimmerLayout.startShimmer()
     }
 

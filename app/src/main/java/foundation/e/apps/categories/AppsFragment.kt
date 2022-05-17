@@ -124,6 +124,7 @@ class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface 
 
     override fun onResume() {
         super.onResume()
+        resetTimeoutDialogLock()
         binding.shimmerLayout.startShimmer()
     }
 
