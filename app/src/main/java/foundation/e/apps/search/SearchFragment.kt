@@ -22,6 +22,7 @@ import android.app.Activity
 import android.database.MatrixCursor
 import android.os.Bundle
 import android.provider.BaseColumns
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -39,11 +40,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aurora.gplayapi.SearchSuggestEntry
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
-import foundation.e.apps.AppInfoFetchViewModel
-import foundation.e.apps.AppProgressViewModel
-import foundation.e.apps.MainActivityViewModel
-import foundation.e.apps.PrivacyInfoViewModel
-import foundation.e.apps.R
+import foundation.e.apps.*
 import foundation.e.apps.api.fused.FusedAPIInterface
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.application.subFrags.ApplicationDialogFragment
@@ -172,6 +169,7 @@ class SearchFragment :
         }
 
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
+
             val searchList = searchViewModel.searchResult.value?.toMutableList()
             searchList?.let {
                 mainActivityViewModel.updateStatusOfFusedApps(searchList, list)
@@ -180,16 +178,25 @@ class SearchFragment :
         }
 
         searchViewModel.searchResult.observe(viewLifecycleOwner) {
+
+            Log.e("TAG", "........................................16")
             if (it.isNullOrEmpty()) {
                 noAppsFoundLayout?.visibility = View.VISIBLE
             } else {
+
                 listAdapter?.setData(it)
                 shimmerLayout?.visibility = View.GONE
                 recyclerView?.visibility = View.VISIBLE
                 noAppsFoundLayout?.visibility = View.GONE
+
+
+            }
+            recyclerView!!.post { // Call smooth scroll
+                recyclerView!!.smoothScrollToPosition(0)
             }
         }
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -202,6 +209,7 @@ class SearchFragment :
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
+
         query?.let { text ->
             hideKeyboard(activity as Activity)
             view?.requestFocus()
@@ -228,7 +236,9 @@ class SearchFragment :
     }
 
     override fun onSuggestionClick(position: Int): Boolean {
+
         searchViewModel.searchSuggest.value?.let {
+
             searchView?.setQuery(it[position].suggestedQuery, true)
         }
         return true
