@@ -179,7 +179,7 @@ class SearchFragment :
 
         searchViewModel.searchResult.observe(viewLifecycleOwner) {
 
-            Log.e("TAG", "........................................16")
+
             if (it.isNullOrEmpty()) {
                 noAppsFoundLayout?.visibility = View.VISIBLE
             } else {
@@ -188,13 +188,10 @@ class SearchFragment :
                 shimmerLayout?.visibility = View.GONE
                 recyclerView?.visibility = View.VISIBLE
                 noAppsFoundLayout?.visibility = View.GONE
-
-
             }
             recyclerView!!.postDelayed(Runnable { kotlin.run { recyclerView!!.scrollToPosition(0) } }, 1000)
         }
     }
-
 
     override fun onResume() {
         super.onResume()
