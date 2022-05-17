@@ -42,6 +42,8 @@ class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface 
     private val categoriesViewModel: CategoriesViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
+    override var timeoutDialogShownLock: Boolean = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAppsBinding.bind(view)
@@ -84,6 +86,7 @@ class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface 
         if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
             stopLoadingUI()
             mainActivityViewModel.displayTimeoutAlertDialog(
+                timeoutFragment = this,
                 activity = requireActivity(),
                 message = getString(R.string.timeout_desc_cleanapk),
                 positiveButtonText = getString(android.R.string.ok),
@@ -91,6 +94,7 @@ class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface 
                 negativeButtonText = getString(R.string.retry),
                 negativeButtonBlock = {
                     showLoadingUI()
+                    resetTimeoutDialogLock()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
                 allowCancel = true,

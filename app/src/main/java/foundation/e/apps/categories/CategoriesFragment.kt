@@ -36,6 +36,8 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories), TimeoutFragme
 
     private val TAG = CategoriesFragment::class.java.simpleName
 
+    override var timeoutDialogShownLock: Boolean = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCategoriesBinding.bind(view)

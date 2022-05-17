@@ -74,6 +74,8 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
     private val binding get() = _binding!!
     private var isDownloadObserverAdded = false
 
+    override var timeoutDialogShownLock: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -184,11 +186,13 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
         if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
             stopLoadingUI()
             mainActivityViewModel.displayTimeoutAlertDialog(
+                timeoutFragment = this,
                 activity = requireActivity(),
                 message = getString(R.string.timeout_desc_cleanapk),
                 positiveButtonText = getString(R.string.retry),
                 positiveButtonBlock = {
                     showLoadingUI()
+                    resetTimeoutDialogLock()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
                 negativeButtonText = getString(android.R.string.ok),

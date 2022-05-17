@@ -96,6 +96,8 @@ class SearchFragment :
      */
     private var searchText = ""
 
+    override var timeoutDialogShownLock: Boolean = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchBinding.bind(view)
@@ -233,11 +235,13 @@ class SearchFragment :
         if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
             stopLoadingUI()
             mainActivityViewModel.displayTimeoutAlertDialog(
+                timeoutFragment = this,
                 activity = requireActivity(),
                 message = getString(R.string.timeout_desc_cleanapk),
                 positiveButtonText = getString(R.string.retry),
                 positiveButtonBlock = {
                     showLoadingUI()
+                    resetTimeoutDialogLock()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
                 negativeButtonText = getString(android.R.string.ok),

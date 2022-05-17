@@ -74,6 +74,8 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, 
 
     private var isDownloadObserverAdded = false
 
+    override var timeoutDialogShownLock: Boolean = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentUpdatesBinding.bind(view)
@@ -155,6 +157,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, 
         if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
             stopLoadingUI()
             mainActivityViewModel.displayTimeoutAlertDialog(
+                timeoutFragment = this,
                 activity = requireActivity(),
                 message =
                 if (updatesViewModel.getApplicationCategoryPreference() == FusedAPIImpl.APP_TYPE_ANY) {
@@ -165,6 +168,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, 
                 positiveButtonText = getString(R.string.retry),
                 positiveButtonBlock = {
                     showLoadingUI()
+                    resetTimeoutDialogLock()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
                 negativeButtonText =

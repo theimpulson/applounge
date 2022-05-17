@@ -69,6 +69,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
     @Inject
     lateinit var pwaManagerModule: PWAManagerModule
 
+    override var timeoutDialogShownLock: Boolean = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
@@ -170,6 +172,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
         if (homeViewModel.isFusedHomesEmpty() && !mainActivityViewModel.isTimeoutDialogDisplayed()) {
             stopLoadingUI()
             mainActivityViewModel.displayTimeoutAlertDialog(
+                timeoutFragment = this,
                 activity = requireActivity(),
                 message =
                 if (homeViewModel.getApplicationCategoryPreference() == FusedAPIImpl.APP_TYPE_ANY) {
@@ -180,6 +183,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
                 positiveButtonText = getString(R.string.retry),
                 positiveButtonBlock = {
                     showLoadingUI()
+                    resetTimeoutDialogLock()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
                 },
                 negativeButtonText =

@@ -51,6 +51,7 @@ import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.enums.User
+import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
 import foundation.e.apps.utils.modules.CommonUtilsModule.timeoutDurationInMillis
 import foundation.e.apps.utils.modules.DataStoreModule
 import foundation.e.apps.utils.modules.TimeoutModule
@@ -95,6 +96,7 @@ class MainActivityViewModel @Inject constructor(
      * Moved to TimeoutModule class
      */
     fun displayTimeoutAlertDialog(
+        timeoutFragment: TimeoutFragmentInterface,
         activity: Activity,
         message: String,
         positiveButtonText: String? = null,
@@ -106,6 +108,7 @@ class MainActivityViewModel @Inject constructor(
         allowCancel: Boolean = true,
     ) {
         timeoutModule.displayTimeoutAlertDialog(
+            timeoutFragment,
             activity,
             message,
             positiveButtonText,
