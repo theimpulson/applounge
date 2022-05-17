@@ -12,6 +12,25 @@ interface TimeoutFragmentInterface {
     fun onTimeout()
 
     /*
+     * Override as false!
+     *
+     * Set this to true when timeout dialog is once shown.
+     * Set to false if user clicks "Retry".
+     * Use this to prevent repeatedly showing timeout dialog.
+     *
+     * Setting the value to true is automatically done from TimeoutModule.displayTimeoutAlertDialog().
+     * To set it as false, call resetTimeoutDialogLock() from the fragment.
+     *
+     * Timeout dialog maybe shown multiple times from MainActivity authData observer,
+     * MainActivityViewModel.downloadList observer, or simply from timing out while
+     * fetch the information for the fragment.
+     */
+    var timeoutDialogShownLock: Boolean
+    fun resetTimeoutDialogLock() {
+        timeoutDialogShownLock = false
+    }
+
+    /*
      * Recommended to put code to refresh data inside this block.
      * But call refreshDataOrRefreshToken() to execute the refresh.
      */

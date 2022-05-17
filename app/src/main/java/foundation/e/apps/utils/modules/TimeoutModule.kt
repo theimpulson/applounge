@@ -6,6 +6,7 @@ import android.view.KeyEvent
 import androidx.appcompat.app.AlertDialog
 import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.R
+import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,6 +38,7 @@ class TimeoutModule @Inject constructor(
      * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
      */
     fun displayTimeoutAlertDialog(
+        timeoutFragment: TimeoutFragmentInterface,
         activity: Activity,
         message: String,
         positiveButtonText: String? = null,
@@ -47,6 +49,14 @@ class TimeoutModule @Inject constructor(
         neutralButtonBlock: (() -> Unit)? = null,
         allowCancel: Boolean = true,
     ) {
+
+        /*
+         * If timeout dialog is already shown, don't proceed.
+         */
+        if (timeoutFragment.timeoutDialogShownLock) {
+            return
+        }
+
         val timeoutAlertDialogBuilder = AlertDialog.Builder(activity).apply {
 
             /*
@@ -109,6 +119,11 @@ class TimeoutModule @Inject constructor(
 
         timeoutAlertDialog = timeoutAlertDialogBuilder.create()
         timeoutAlertDialog?.show()
+
+        /*
+         * Mark timeout dialog is already shown.
+         */
+        timeoutFragment.timeoutDialogShownLock = true
     }
 
     /**
