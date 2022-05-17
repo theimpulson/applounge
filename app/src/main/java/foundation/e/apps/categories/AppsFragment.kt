@@ -99,6 +99,7 @@ class AppsFragment : Fragment(R.layout.fragment_apps), TimeoutFragmentInterface 
     }
 
     override fun refreshData(authData: AuthData) {
+        showLoadingUI()
         categoriesViewModel.getCategoriesList(
             Category.Type.APPLICATION,
             authData

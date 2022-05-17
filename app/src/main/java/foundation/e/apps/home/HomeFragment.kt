@@ -195,6 +195,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface, Timeou
     }
 
     override fun refreshData(authData: AuthData) {
+        showLoadingUI()
         homeViewModel.getHomeScreenData(authData)
     }
 

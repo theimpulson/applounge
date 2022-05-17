@@ -305,6 +305,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), TimeoutFrag
     }
 
     override fun refreshData(authData: AuthData) {
+        showLoadingUI()
         applicationViewModel.getApplicationDetails(
             args.id,
             args.packageName,

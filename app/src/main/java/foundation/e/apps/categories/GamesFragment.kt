@@ -94,6 +94,7 @@ class GamesFragment : Fragment(R.layout.fragment_games), TimeoutFragmentInterfac
     }
 
     override fun refreshData(authData: AuthData) {
+        showLoadingUI()
         categoriesViewModel.getCategoriesList(
             Category.Type.GAME,
             authData

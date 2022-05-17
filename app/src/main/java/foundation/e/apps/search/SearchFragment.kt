@@ -248,6 +248,7 @@ class SearchFragment :
     }
 
     override fun refreshData(authData: AuthData) {
+        showLoadingUI()
         searchViewModel.getSearchResults(searchText, authData)
     }
 

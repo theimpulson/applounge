@@ -180,6 +180,7 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, 
     }
 
     override fun refreshData(authData: AuthData) {
+        showLoadingUI()
         updatesViewModel.getUpdates(authData)
         binding.button.setOnClickListener {
             UpdatesWorkManager.startUpdateAllWork(requireContext().applicationContext)

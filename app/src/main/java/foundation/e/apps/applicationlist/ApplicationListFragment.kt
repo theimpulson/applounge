@@ -199,6 +199,8 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
     }
 
     override fun refreshData(authData: AuthData) {
+        showLoadingUI()
+
         /*
          * Code moved from onResume()
          */
