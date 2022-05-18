@@ -42,6 +42,7 @@ import com.aurora.gplayapi.exceptions.ApiException
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.e.apps.api.cleanapk.blockedApps.BlockedAppRepository
+import foundation.e.apps.api.ecloud.EcloudRepository
 import foundation.e.apps.api.fused.FusedAPIImpl
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
@@ -69,7 +70,8 @@ class MainActivityViewModel @Inject constructor(
     private val fusedAPIRepository: FusedAPIRepository,
     private val fusedManagerRepository: FusedManagerRepository,
     private val pkgManagerModule: PkgManagerModule,
-    private val blockedAppRepository: BlockedAppRepository
+    private val ecloudRepository: EcloudRepository,
+    private val blockedAppRepository: BlockedAppRepository,
 ) : ViewModel() {
 
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
@@ -229,6 +231,18 @@ class MainActivityViewModel @Inject constructor(
     fun retryFetchingTokenAfterTimeout() {
         setFirstTokenFetchTime()
         authValidity.postValue(false)
+    }
+
+    fun uploadFaultyTokenToEcloud(description: String){
+        viewModelScope.launch {
+            authData.value?.let { authData ->
+                val email: String = authData.run {
+                    if (email != "null") email
+                    else userProfile?.email ?: "null"
+                }
+                ecloudRepository.uploadFaultyEmail(email, description)
+            }
+        }
     }
 
     fun getAuthData() {

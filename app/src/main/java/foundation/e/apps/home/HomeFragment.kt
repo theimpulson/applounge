@@ -114,6 +114,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FusedAPIInterface {
             if (!homeViewModel.isFusedHomesEmpty(it.first)) {
                 homeParentRVAdapter.setData(it.first)
             } else if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
+                mainActivityViewModel.uploadFaultyTokenToEcloud("From " + this::class.java.name)
                 mainActivityViewModel.displayTimeoutAlertDialog(requireActivity(), {
                     showLoadingShimmer()
                     mainActivityViewModel.retryFetchingTokenAfterTimeout()
