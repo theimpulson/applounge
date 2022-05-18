@@ -222,6 +222,8 @@ class MainActivity : AppCompatActivity() {
         if (!CommonUtilsModule.isNetworkAvailable(this)) {
             showNoInternet()
         }
+
+        viewModel.updateAppWarningList()
     }
 
     private fun handleFusedDownloadQueued(

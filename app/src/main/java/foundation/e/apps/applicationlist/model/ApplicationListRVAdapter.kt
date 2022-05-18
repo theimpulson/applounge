@@ -165,28 +165,11 @@ class ApplicationListRVAdapter(
                 else -> Log.wtf(TAG, "${searchApp.package_name} is from an unknown origin")
             }
             removeIsPurchasedObserver(holder)
-            when (searchApp.status) {
-                Status.INSTALLED -> {
-                    handleInstalled(view, searchApp)
-                }
-                Status.UPDATABLE -> {
-                    handleUpdatable(view, searchApp)
-                }
-                Status.UNAVAILABLE -> {
-                    handleUnavailable(view, searchApp, holder)
-                }
-                Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
-                    handleDownloading(view, searchApp)
-                }
-                Status.INSTALLING, Status.UNINSTALLING -> {
-                    handleInstalling(view, holder)
-                }
-                Status.BLOCKED -> {
-                    handleBlocked(view)
-                }
-                Status.INSTALLATION_ISSUE -> {
-                    handleInstallationIssue(view, searchApp)
-                }
+
+            if (appInfoFetchViewModel.isAppInBlockedList(searchApp)) {
+                setupShowMoreButton()
+            } else {
+                setupInstallButton(searchApp, view, holder)
             }
 
             showCalculatedPrivacyScoreData(searchApp, view)
@@ -195,6 +178,43 @@ class ApplicationListRVAdapter(
 
     private fun removeIsPurchasedObserver(holder: ViewHolder) {
         holder.isPurchasedLiveData.removeObservers(lifecycleOwner)
+    }
+
+    private fun ApplicationListItemBinding.setupInstallButton(
+        searchApp: FusedApp,
+        view: View,
+        holder: ViewHolder
+    ) {
+        installButton.visibility = View.VISIBLE
+        showMore.visibility = View.GONE
+        when (searchApp.status) {
+            Status.INSTALLED -> {
+                handleInstalled(view, searchApp)
+            }
+            Status.UPDATABLE -> {
+                handleUpdatable(view, searchApp)
+            }
+            Status.UNAVAILABLE -> {
+                handleUnavailable(view, searchApp, holder)
+            }
+            Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
+                handleDownloading(view, searchApp)
+            }
+            Status.INSTALLING, Status.UNINSTALLING -> {
+                handleInstalling(view, holder)
+            }
+            Status.BLOCKED -> {
+                handleBlocked(view)
+            }
+            Status.INSTALLATION_ISSUE -> {
+                handleInstallationIssue(view, searchApp)
+            }
+        }
+    }
+
+    private fun ApplicationListItemBinding.setupShowMoreButton() {
+        installButton.visibility = View.GONE
+        showMore.visibility = View.VISIBLE
     }
 
     private fun ApplicationListItemBinding.handleInstallationIssue(
