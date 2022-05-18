@@ -193,7 +193,11 @@ class SearchFragment :
                 recyclerView?.visibility = View.VISIBLE
                 noAppsFoundLayout?.visibility = View.GONE
             }
-            recyclerView!!.postDelayed(Runnable { kotlin.run { recyclerView!!.scrollToPosition(0) } }, 1000)
+            listAdapter?.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    recyclerView!!.scrollToPosition(0)
+                }
+            })
         }
     }
 
