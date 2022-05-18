@@ -172,6 +172,7 @@ class SearchFragment :
         }
 
         mainActivityViewModel.downloadList.observe(viewLifecycleOwner) { list ->
+
             val searchList = searchViewModel.searchResult.value?.toMutableList()
             searchList?.let {
                 mainActivityViewModel.updateStatusOfFusedApps(searchList, list)
@@ -180,14 +181,21 @@ class SearchFragment :
         }
 
         searchViewModel.searchResult.observe(viewLifecycleOwner) {
+
             if (it.isNullOrEmpty()) {
                 noAppsFoundLayout?.visibility = View.VISIBLE
             } else {
+
                 listAdapter?.setData(it)
                 shimmerLayout?.visibility = View.GONE
                 recyclerView?.visibility = View.VISIBLE
                 noAppsFoundLayout?.visibility = View.GONE
             }
+            listAdapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    recyclerView!!.scrollToPosition(0)
+                }
+            })
         }
     }
 
@@ -202,6 +210,7 @@ class SearchFragment :
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
+
         query?.let { text ->
             hideKeyboard(activity as Activity)
             view?.requestFocus()
@@ -228,7 +237,9 @@ class SearchFragment :
     }
 
     override fun onSuggestionClick(position: Int): Boolean {
+
         searchViewModel.searchSuggest.value?.let {
+
             searchView?.setQuery(it[position].suggestedQuery, true)
         }
         return true
