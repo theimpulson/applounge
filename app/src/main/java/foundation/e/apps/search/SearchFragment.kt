@@ -22,7 +22,6 @@ import android.app.Activity
 import android.database.MatrixCursor
 import android.os.Bundle
 import android.provider.BaseColumns
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -183,7 +182,6 @@ class SearchFragment :
 
         searchViewModel.searchResult.observe(viewLifecycleOwner) {
 
-
             if (it.isNullOrEmpty()) {
                 noAppsFoundLayout?.visibility = View.VISIBLE
             } else {
@@ -193,7 +191,7 @@ class SearchFragment :
                 recyclerView?.visibility = View.VISIBLE
                 noAppsFoundLayout?.visibility = View.GONE
             }
-            listAdapter?.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+            listAdapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                     recyclerView!!.scrollToPosition(0)
                 }
