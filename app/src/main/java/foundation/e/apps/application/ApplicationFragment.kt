@@ -418,7 +418,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             text = when {
                 mainActivityViewModel.checkUnsupportedApplication(fusedApp) ->
                     getString(R.string.not_available)
-                appInfoFetchViewModel.isAppInBlockedList(fusedApp) -> getString(R.string.force_installation)
                 fusedApp.isFree -> getString(R.string.install)
                 else -> fusedApp.price
             }
@@ -461,7 +460,7 @@ class ApplicationFragment : Fragment(R.layout.fragment_application) {
             ApplicationDialogFragment(
                 title = getString(R.string.this_app_may_not_work_properly),
                 message = getString(R.string.may_not_work_warning_message),
-                positiveButtonText = getString(R.string.ok),
+                positiveButtonText = getString(R.string.install_anyway),
                 positiveButtonAction = {
                     mainActivityViewModel.getApplication(fusedApp, it)
                 }
