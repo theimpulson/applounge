@@ -28,6 +28,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import foundation.e.apps.api.ecloud.EcloudApiInterface
 import foundation.e.apps.api.exodus.ExodusTrackerApi
 import foundation.e.apps.api.fdroid.FdroidApiInterface
 import okhttp3.Cache
@@ -92,6 +93,17 @@ object RetrofitModule {
             .addConverterFactory(yamlFactory)
             .build()
             .create(FdroidApiInterface::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideEcloudApi(okHttpClient: OkHttpClient, moshi: Moshi): EcloudApiInterface {
+        return Retrofit.Builder()
+            .baseUrl(EcloudApiInterface.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+            .create(EcloudApiInterface::class.java)
     }
 
     @Singleton
