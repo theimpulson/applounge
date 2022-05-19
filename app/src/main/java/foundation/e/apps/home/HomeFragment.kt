@@ -153,7 +153,7 @@ class HomeFragment : TimeoutFragment(R.layout.fragment_home), FusedAPIInterface 
         homeViewModel.homeScreenData.observe(viewLifecycleOwner) {
             stopLoadingUI()
             if (it.second == ResultStatus.OK) {
-                mainActivityViewModel.dismissTimeoutDialog()
+                dismissTimeoutDialog()
                 homeParentRVAdapter.setData(it.first)
             } else {
                 onTimeout()
@@ -166,9 +166,9 @@ class HomeFragment : TimeoutFragment(R.layout.fragment_home), FusedAPIInterface 
     }
 
     override fun onTimeout() {
-        if (homeViewModel.isFusedHomesEmpty() && !mainActivityViewModel.isTimeoutDialogDisplayed()) {
+        if (homeViewModel.isFusedHomesEmpty() && !isTimeoutDialogDisplayed()) {
             stopLoadingUI()
-            mainActivityViewModel.displayTimeoutAlertDialog(
+            displayTimeoutAlertDialog(
                 timeoutFragment = this,
                 activity = requireActivity(),
                 message =

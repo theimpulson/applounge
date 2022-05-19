@@ -75,9 +75,9 @@ class GamesFragment : TimeoutFragment(R.layout.fragment_games) {
     }
 
     override fun onTimeout() {
-        if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
+        if (!isTimeoutDialogDisplayed()) {
             stopLoadingUI()
-            mainActivityViewModel.displayTimeoutAlertDialog(
+            displayTimeoutAlertDialog(
                 timeoutFragment = this,
                 activity = requireActivity(),
                 message = getString(R.string.timeout_desc_cleanapk),

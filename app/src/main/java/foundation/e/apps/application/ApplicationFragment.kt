@@ -154,7 +154,7 @@ class ApplicationFragment : TimeoutFragment(R.layout.fragment_application) {
              */
             val it = resultPair.first
 
-            mainActivityViewModel.dismissTimeoutDialog()
+            dismissTimeoutDialog()
 
             if (applicationViewModel.appStatus.value == null) {
                 applicationViewModel.appStatus.value = it.status
@@ -284,9 +284,9 @@ class ApplicationFragment : TimeoutFragment(R.layout.fragment_application) {
     }
 
     override fun onTimeout() {
-        if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
+        if (!isTimeoutDialogDisplayed()) {
             stopLoadingUI()
-            mainActivityViewModel.displayTimeoutAlertDialog(
+            displayTimeoutAlertDialog(
                 timeoutFragment = this,
                 activity = requireActivity(),
                 message = getString(R.string.timeout_desc_cleanapk),

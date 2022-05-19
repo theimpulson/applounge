@@ -151,9 +151,9 @@ class UpdatesFragment : TimeoutFragment(R.layout.fragment_updates), FusedAPIInte
     }
 
     override fun onTimeout() {
-        if (!mainActivityViewModel.isTimeoutDialogDisplayed()) {
+        if (!isTimeoutDialogDisplayed()) {
             stopLoadingUI()
-            mainActivityViewModel.displayTimeoutAlertDialog(
+            displayTimeoutAlertDialog(
                 timeoutFragment = this,
                 activity = requireActivity(),
                 message =

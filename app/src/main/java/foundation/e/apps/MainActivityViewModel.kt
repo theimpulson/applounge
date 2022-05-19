@@ -49,10 +49,8 @@ import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.Type
 import foundation.e.apps.utils.enums.User
-import foundation.e.apps.utils.parentFragment.TimeoutFragment
 import foundation.e.apps.utils.modules.CommonUtilsModule.timeoutDurationInMillis
 import foundation.e.apps.utils.modules.DataStoreModule
-import foundation.e.apps.utils.modules.TimeoutModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.beryukhov.reactivenetwork.ReactiveNetwork
@@ -66,7 +64,6 @@ class MainActivityViewModel @Inject constructor(
     private val fusedAPIRepository: FusedAPIRepository,
     private val fusedManagerRepository: FusedManagerRepository,
     private val pkgManagerModule: PkgManagerModule,
-    private val timeoutModule: TimeoutModule,
 ) : ViewModel() {
 
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
@@ -89,43 +86,6 @@ class MainActivityViewModel @Inject constructor(
      * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5404
      */
     var firstAuthDataFetchTime = 0L
-
-    /*
-     * Moved to TimeoutModule class
-     */
-    fun displayTimeoutAlertDialog(
-        timeoutFragment: TimeoutFragment,
-        activity: Activity,
-        message: String,
-        positiveButtonText: String? = null,
-        positiveButtonBlock: (() -> Unit)? = null,
-        negativeButtonText: String? = null,
-        negativeButtonBlock: (() -> Unit)? = null,
-        neutralButtonText: String? = null,
-        neutralButtonBlock: (() -> Unit)? = null,
-        allowCancel: Boolean = true,
-    ) {
-        timeoutModule.displayTimeoutAlertDialog(
-            timeoutFragment,
-            activity,
-            message,
-            positiveButtonText,
-            positiveButtonBlock,
-            negativeButtonText,
-            negativeButtonBlock,
-            neutralButtonText,
-            neutralButtonBlock,
-            allowCancel
-        )
-    }
-
-    fun isTimeoutDialogDisplayed(): Boolean {
-        return timeoutModule.isTimeoutDialogDisplayed()
-    }
-
-    fun dismissTimeoutDialog() {
-        timeoutModule.dismissTimeoutDialog()
-    }
 
     // Downloads
     val downloadList = fusedManagerRepository.getDownloadLiveList()
