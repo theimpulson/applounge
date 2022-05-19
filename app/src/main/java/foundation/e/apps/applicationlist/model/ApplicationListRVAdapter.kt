@@ -26,6 +26,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -78,7 +80,9 @@ class ApplicationListRVAdapter(
         .build()
 
     inner class ViewHolder(val binding: ApplicationListItemBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root) {
+        var isPurchasedLiveData: LiveData<Boolean> = MutableLiveData()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -160,32 +164,57 @@ class ApplicationListRVAdapter(
                 }
                 else -> Log.wtf(TAG, "${searchApp.package_name} is from an unknown origin")
             }
-            when (searchApp.status) {
-                Status.INSTALLED -> {
-                    handleInstalled(view, searchApp)
-                }
-                Status.UPDATABLE -> {
-                    handleUpdatable(view, searchApp)
-                }
-                Status.UNAVAILABLE -> {
-                    handleUnavailable(view, searchApp)
-                }
-                Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
-                    handleDownloading(view, searchApp)
-                }
-                Status.INSTALLING, Status.UNINSTALLING -> {
-                    handleInstalling(view, holder)
-                }
-                Status.BLOCKED -> {
-                    handleBlocked(view)
-                }
-                Status.INSTALLATION_ISSUE -> {
-                    handleInstallationIssue(view, searchApp)
-                }
+            removeIsPurchasedObserver(holder)
+
+            if (appInfoFetchViewModel.isAppInBlockedList(searchApp)) {
+                setupShowMoreButton()
+            } else {
+                setupInstallButton(searchApp, view, holder)
             }
 
             showCalculatedPrivacyScoreData(searchApp, view)
         }
+    }
+
+    private fun removeIsPurchasedObserver(holder: ViewHolder) {
+        holder.isPurchasedLiveData.removeObservers(lifecycleOwner)
+    }
+
+    private fun ApplicationListItemBinding.setupInstallButton(
+        searchApp: FusedApp,
+        view: View,
+        holder: ViewHolder
+    ) {
+        installButton.visibility = View.VISIBLE
+        showMore.visibility = View.GONE
+        when (searchApp.status) {
+            Status.INSTALLED -> {
+                handleInstalled(view, searchApp)
+            }
+            Status.UPDATABLE -> {
+                handleUpdatable(view, searchApp)
+            }
+            Status.UNAVAILABLE -> {
+                handleUnavailable(view, searchApp, holder)
+            }
+            Status.QUEUED, Status.AWAITING, Status.DOWNLOADING -> {
+                handleDownloading(view, searchApp)
+            }
+            Status.INSTALLING, Status.UNINSTALLING -> {
+                handleInstalling(view, holder)
+            }
+            Status.BLOCKED -> {
+                handleBlocked(view)
+            }
+            Status.INSTALLATION_ISSUE -> {
+                handleInstallationIssue(view, searchApp)
+            }
+        }
+    }
+
+    private fun ApplicationListItemBinding.setupShowMoreButton() {
+        installButton.visibility = View.GONE
+        showMore.visibility = View.VISIBLE
     }
 
     private fun ApplicationListItemBinding.handleInstallationIssue(
@@ -308,9 +337,10 @@ class ApplicationListRVAdapter(
     private fun ApplicationListItemBinding.handleUnavailable(
         view: View,
         searchApp: FusedApp,
+        holder: ViewHolder,
     ) {
         installButton.apply {
-            updateUIByPaymentType(searchApp, this, this@handleUnavailable)
+            updateUIByPaymentType(searchApp, this, this@handleUnavailable, holder)
             setTextColor(context.getColor(R.color.colorAccent))
             backgroundTintList =
                 ContextCompat.getColorStateList(view.context, android.R.color.transparent)
@@ -331,7 +361,8 @@ class ApplicationListRVAdapter(
     private fun updateUIByPaymentType(
         searchApp: FusedApp,
         materialButton: MaterialButton,
-        applicationListItemBinding: ApplicationListItemBinding
+        applicationListItemBinding: ApplicationListItemBinding,
+        holder: ViewHolder
     ) {
         when {
             mainActivityViewModel.checkUnsupportedApplication(searchApp) -> {
@@ -347,7 +378,8 @@ class ApplicationListRVAdapter(
                 materialButton.isEnabled = false
                 materialButton.text = ""
                 applicationListItemBinding.progressBarInstall.visibility = View.VISIBLE
-                appInfoFetchViewModel.isAppPurchased(searchApp).observe(lifecycleOwner) {
+                holder.isPurchasedLiveData = appInfoFetchViewModel.isAppPurchased(searchApp)
+                holder.isPurchasedLiveData.observe(lifecycleOwner) {
                     materialButton.isEnabled = true
                     applicationListItemBinding.progressBarInstall.visibility = View.GONE
                     materialButton.text =

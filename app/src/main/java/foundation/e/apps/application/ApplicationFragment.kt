@@ -227,7 +227,7 @@ class ApplicationFragment : TimeoutFragment(R.layout.fragment_application) {
             binding.infoInclude.apply {
                 appUpdatedOn.text = getString(
                     R.string.updated_on,
-                    if (args.origin == Origin.CLEANAPK) it.last_modified.split(" ")[0] else it.last_modified
+                    if (args.origin == Origin.CLEANAPK) getString(R.string.not_available) else it.last_modified
                 )
                 appRequires.text = getString(R.string.min_android_version, notAvailable)
                 appVersion.text = getString(
@@ -272,6 +272,10 @@ class ApplicationFragment : TimeoutFragment(R.layout.fragment_application) {
                         trackers
                     ).show(childFragmentManager, TAG)
                 }
+            }
+
+            if (appInfoFetchViewModel.isAppInBlockedList(it)) {
+                binding.snackbarLayout.visibility = View.VISIBLE
             }
 
             observeDownloadStatus(view)
@@ -473,15 +477,19 @@ class ApplicationFragment : TimeoutFragment(R.layout.fragment_application) {
                 }
                 applicationIcon?.let {
                     if (fusedApp.isFree) {
-                        mainActivityViewModel.getApplication(fusedApp, it)
+                        installApplication(fusedApp, it)
                     } else {
                         if (!mainActivityViewModel.shouldShowPaidAppsSnackBar(fusedApp)) {
                             ApplicationDialogFragment(
                                 title = getString(R.string.dialog_title_paid_app, fusedApp.name),
-                                message = getString(R.string.dialog_paidapp_message, fusedApp.name, fusedApp.price),
+                                message = getString(
+                                    R.string.dialog_paidapp_message,
+                                    fusedApp.name,
+                                    fusedApp.price
+                                ),
                                 positiveButtonText = getString(R.string.dialog_confirm),
                                 positiveButtonAction = {
-                                    mainActivityViewModel.getApplication(fusedApp, it)
+                                    installApplication(fusedApp, it)
                                 },
                                 cancelButtonText = getString(R.string.dialog_cancel),
                             ).show(childFragmentManager, "ApplicationFragment")
@@ -492,6 +500,24 @@ class ApplicationFragment : TimeoutFragment(R.layout.fragment_application) {
         }
         downloadPB.visibility = View.GONE
         appSize.visibility = View.VISIBLE
+    }
+
+    private fun installApplication(
+        fusedApp: FusedApp,
+        it: ImageView
+    ) {
+        if (appInfoFetchViewModel.isAppInBlockedList(fusedApp)) {
+            ApplicationDialogFragment(
+                title = getString(R.string.this_app_may_not_work_properly),
+                message = getString(R.string.may_not_work_warning_message),
+                positiveButtonText = getString(R.string.install_anyway),
+                positiveButtonAction = {
+                    mainActivityViewModel.getApplication(fusedApp, it)
+                }
+            ).show(childFragmentManager, "ApplicationFragment")
+        } else {
+            mainActivityViewModel.getApplication(fusedApp, it)
+        }
     }
 
     private fun handleUpdatable(

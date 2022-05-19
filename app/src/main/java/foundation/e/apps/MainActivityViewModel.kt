@@ -39,6 +39,9 @@ import com.aurora.gplayapi.data.models.AuthData
 import com.aurora.gplayapi.exceptions.ApiException
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import foundation.e.apps.api.cleanapk.blockedApps.BlockedAppRepository
+import foundation.e.apps.api.ecloud.EcloudRepository
+import foundation.e.apps.api.fused.FusedAPIImpl
 import foundation.e.apps.api.fused.FusedAPIRepository
 import foundation.e.apps.api.fused.data.FusedApp
 import foundation.e.apps.manager.database.fusedDownload.FusedDownload
@@ -64,6 +67,8 @@ class MainActivityViewModel @Inject constructor(
     private val fusedAPIRepository: FusedAPIRepository,
     private val fusedManagerRepository: FusedManagerRepository,
     private val pkgManagerModule: PkgManagerModule,
+    private val ecloudRepository: EcloudRepository,
+    private val blockedAppRepository: BlockedAppRepository,
 ) : ViewModel() {
 
     val authDataJson: LiveData<String> = dataStoreModule.authData.asLiveData()
@@ -124,6 +129,18 @@ class MainActivityViewModel @Inject constructor(
         firstAuthDataFetchTime = 0
         setFirstTokenFetchTime()
         authValidity.postValue(false)
+    }
+
+    fun uploadFaultyTokenToEcloud(description: String){
+        viewModelScope.launch {
+            authData.value?.let { authData ->
+                val email: String = authData.run {
+                    if (email != "null") email
+                    else userProfile?.email ?: "null"
+                }
+                ecloudRepository.uploadFaultyEmail(email, description)
+            }
+        }
     }
 
     fun getAuthData() {
@@ -234,12 +251,20 @@ class MainActivityViewModel @Inject constructor(
      *
      * Issue: https://gitlab.e.foundation/e/os/backlog/-/issues/178
      */
-    fun checkUnsupportedApplication(fusedApp: FusedApp, alertDialogContext: Context? = null): Boolean {
+    fun checkUnsupportedApplication(
+        fusedApp: FusedApp,
+        alertDialogContext: Context? = null
+    ): Boolean {
         if (!fusedApp.isFree && fusedApp.price.isBlank()) {
             alertDialogContext?.let { context ->
                 AlertDialog.Builder(context).apply {
                     setTitle(R.string.unsupported_app_title)
-                    setMessage(context.getString(R.string.unsupported_app_unreleased, fusedApp.name))
+                    setMessage(
+                        context.getString(
+                            R.string.unsupported_app_unreleased,
+                            fusedApp.name
+                        )
+                    )
                     setPositiveButton(android.R.string.ok, null)
                 }.show()
             }
@@ -334,8 +359,11 @@ class MainActivityViewModel @Inject constructor(
                         Origin.GPLAY,
                         fusedDownload
                     )
+                } catch (e: ApiException.AppNotPurchased) {
+                    e.printStackTrace()
+                    return null
                 } catch (e: Exception) {
-                    Log.e(TAG, e.stackTraceToString())
+                    e.printStackTrace()
                     _errorMessage.value = e
                     return null
                 }
@@ -390,12 +418,20 @@ class MainActivityViewModel @Inject constructor(
         emitSource(ReactiveNetwork().observeInternetConnectivity().asLiveData(Dispatchers.Default))
     }
 
-    fun updateStatusOfFusedApps(fusedAppList: List<FusedApp>, fusedDownloadList: List<FusedDownload>) {
+    fun updateStatusOfFusedApps(
+        fusedAppList: List<FusedApp>,
+        fusedDownloadList: List<FusedDownload>
+    ) {
         fusedAppList.forEach {
             val downloadingItem = fusedDownloadList.find { fusedDownload ->
                 fusedDownload.origin == it.origin && (fusedDownload.packageName == it.package_name || fusedDownload.id == it._id)
             }
-            it.status = downloadingItem?.status ?: fusedAPIRepository.getFusedAppInstallationStatus(it)
+            it.status =
+                downloadingItem?.status ?: fusedAPIRepository.getFusedAppInstallationStatus(it)
         }
+    }
+
+    fun updateAppWarningList() {
+        blockedAppRepository.fetchUpdateOfAppWarningList()
     }
 }

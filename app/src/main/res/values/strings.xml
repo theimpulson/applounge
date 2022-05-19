@@ -105,6 +105,9 @@
     <string name="unknown_error">Unknown Error!</string>
     <string name="not_enough_storage">There is not enough space available to download this application!</string>
     <string name="app_not_found">Your application was not found.</string>
+    <string name="something_went_wrong">Something went wrong!</string>
+    <string name="show_more">Show more</string>
+
 
     <!-- Updates Fragment -->
     <string name="update_all">Update All</string>
@@ -168,9 +171,16 @@
     <string name="dialog_confirm">CONFIRM</string>
     <string name="dialog_cancel">CANCEL</string>
     <string name="paid_app_anonymous_message">Paid apps cannot be installed in anonymous mode. Please log into your Google account to install paid apps.</string>
-    
+    <string name="purchase_complete">Purchase complete!</string>
+    <string name="download_automatically_message">Your app will automatically be downloaded in this device</string>
+    <string name="purchase_error">Purchase error!</string>
+
     <!--Unsupported app-->
     <string name="unsupported_app_title">Unsupported app!</string>
     <string name="unsupported_app_unreleased">The app %s is currently unsupported. This can be because the app is not yet widely released, or there is some other error.</string>
+    <string name="install_anyway">Install anyway</string>
+    <string name="this_app_may_not_work_properly">This app may not work properly!</string>
+    <string name="may_not_work_warning_message">Forcing installation will allow you to download and install it, but it won\'t guarantee that it will work.&lt;br /&gt;&lt;br /&gt;Attempting to install unsupported apps may cause crashes or slow down the system.&lt;br /&gt;&lt;br /&gt;We\'re working on improving compatiblity with this application in a near future.</string>
+
 
 </resources>

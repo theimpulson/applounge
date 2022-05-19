@@ -21,6 +21,7 @@ package foundation.e.apps.home
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -167,6 +168,7 @@ class HomeFragment : TimeoutFragment(R.layout.fragment_home), FusedAPIInterface 
 
     override fun onTimeout() {
         if (homeViewModel.isFusedHomesEmpty() && !isTimeoutDialogDisplayed()) {
+            mainActivityViewModel.uploadFaultyTokenToEcloud("From " + this::class.java.name)
             stopLoadingUI()
             displayTimeoutAlertDialog(
                 timeoutFragment = this,

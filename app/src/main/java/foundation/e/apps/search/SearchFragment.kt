@@ -217,6 +217,11 @@ class SearchFragment :
                 stopLoadingUI()
                 noAppsFoundLayout?.visibility = View.GONE
             }
+            listAdapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    recyclerView!!.scrollToPosition(0)
+                }
+            })
             if (searchText.isNotBlank() && it.second != ResultStatus.OK) {
                 /*
                  * If blank check is not performed then timeout dialog keeps
