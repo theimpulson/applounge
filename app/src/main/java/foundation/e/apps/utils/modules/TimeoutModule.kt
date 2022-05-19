@@ -23,7 +23,7 @@ import android.view.KeyEvent
 import androidx.appcompat.app.AlertDialog
 import dagger.hilt.android.qualifiers.ApplicationContext
 import foundation.e.apps.R
-import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
+import foundation.e.apps.utils.parentFragment.TimeoutFragment
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,7 +55,7 @@ class TimeoutModule @Inject constructor(
      * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
      */
     fun displayTimeoutAlertDialog(
-        timeoutFragment: TimeoutFragmentInterface,
+        timeoutFragment: TimeoutFragment,
         activity: Activity,
         message: String,
         positiveButtonText: String? = null,

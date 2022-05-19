@@ -20,7 +20,6 @@ package foundation.e.apps.categories
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,17 +31,15 @@ import foundation.e.apps.R
 import foundation.e.apps.categories.model.CategoriesRVAdapter
 import foundation.e.apps.databinding.FragmentGamesBinding
 import foundation.e.apps.utils.enums.ResultStatus
-import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
+import foundation.e.apps.utils.parentFragment.TimeoutFragment
 
 @AndroidEntryPoint
-class GamesFragment : Fragment(R.layout.fragment_games), TimeoutFragmentInterface {
+class GamesFragment : TimeoutFragment(R.layout.fragment_games) {
     private var _binding: FragmentGamesBinding? = null
     private val binding get() = _binding!!
 
     private val categoriesViewModel: CategoriesViewModel by viewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
-
-    override var timeoutDialogShownLock: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

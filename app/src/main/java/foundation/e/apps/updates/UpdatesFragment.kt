@@ -21,7 +21,6 @@ package foundation.e.apps.updates
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -48,14 +47,14 @@ import foundation.e.apps.updates.manager.UpdatesWorkManager
 import foundation.e.apps.utils.enums.ResultStatus
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
-import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
+import foundation.e.apps.utils.parentFragment.TimeoutFragment
 import foundation.e.apps.utils.modules.CommonUtilsModule.safeNavigate
 import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, TimeoutFragmentInterface {
+class UpdatesFragment : TimeoutFragment(R.layout.fragment_updates), FusedAPIInterface {
 
     private var _binding: FragmentUpdatesBinding? = null
     private val binding get() = _binding!!
@@ -73,8 +72,6 @@ class UpdatesFragment : Fragment(R.layout.fragment_updates), FusedAPIInterface, 
     private val appProgressViewModel: AppProgressViewModel by viewModels()
 
     private var isDownloadObserverAdded = false
-
-    override var timeoutDialogShownLock: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

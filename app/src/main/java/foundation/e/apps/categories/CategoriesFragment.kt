@@ -21,22 +21,20 @@ package foundation.e.apps.categories
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.fragment.app.Fragment
+import com.aurora.gplayapi.data.models.AuthData
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.e.apps.R
 import foundation.e.apps.categories.model.CategoriesVPAdapter
 import foundation.e.apps.databinding.FragmentCategoriesBinding
-import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
+import foundation.e.apps.utils.parentFragment.TimeoutFragment
 
 @AndroidEntryPoint
-class CategoriesFragment : Fragment(R.layout.fragment_categories), TimeoutFragmentInterface {
+class CategoriesFragment : TimeoutFragment(R.layout.fragment_categories) {
     private var _binding: FragmentCategoriesBinding? = null
     private val binding get() = _binding!!
 
     private val TAG = CategoriesFragment::class.java.simpleName
-
-    override var timeoutDialogShownLock: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,10 +68,12 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories), TimeoutFragme
         }
 
         fragment?.let {
-            if (it is TimeoutFragmentInterface) {
+            if (it is TimeoutFragment) {
                 Log.d(TAG, "Showing timeout on Categories fragment: " + it::class.java.name)
                 it.onTimeout()
             }
         }
     }
+
+    override fun refreshData(authData: AuthData) {}
 }

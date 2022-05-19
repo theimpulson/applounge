@@ -31,7 +31,6 @@ import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -61,7 +60,7 @@ import foundation.e.apps.utils.enums.Origin
 import foundation.e.apps.utils.enums.ResultStatus
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
-import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
+import foundation.e.apps.utils.parentFragment.TimeoutFragment
 import foundation.e.apps.utils.modules.CommonUtilsModule.LIST_OF_NULL
 import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.Dispatchers
@@ -69,7 +68,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ApplicationFragment : Fragment(R.layout.fragment_application), TimeoutFragmentInterface {
+class ApplicationFragment : TimeoutFragment(R.layout.fragment_application) {
 
     private val args: ApplicationFragmentArgs by navArgs()
     private val TAG = ApplicationFragment::class.java.simpleName
@@ -89,8 +88,6 @@ class ApplicationFragment : Fragment(R.layout.fragment_application), TimeoutFrag
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
     private var applicationIcon: ImageView? = null
-
-    override var timeoutDialogShownLock: Boolean = false
 
     companion object {
         private const val PRIVACY_SCORE_SOURCE_CODE_URL =

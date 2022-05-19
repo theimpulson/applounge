@@ -21,7 +21,6 @@ package foundation.e.apps.applicationlist
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -47,14 +46,13 @@ import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.ResultStatus
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
-import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
+import foundation.e.apps.utils.parentFragment.TimeoutFragment
 import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ApplicationListFragment : Fragment(R.layout.fragment_application_list), FusedAPIInterface,
-    TimeoutFragmentInterface {
+class ApplicationListFragment : TimeoutFragment(R.layout.fragment_application_list), FusedAPIInterface {
 
     private val args: ApplicationListFragmentArgs by navArgs()
 
@@ -73,8 +71,6 @@ class ApplicationListFragment : Fragment(R.layout.fragment_application_list), Fu
     private var _binding: FragmentApplicationListBinding? = null
     private val binding get() = _binding!!
     private var isDownloadObserverAdded = false
-
-    override var timeoutDialogShownLock: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

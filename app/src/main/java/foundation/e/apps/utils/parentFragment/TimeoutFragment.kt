@@ -15,8 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package foundation.e.apps.utils.interfaces
+package foundation.e.apps.utils.parentFragment
 
+import androidx.annotation.LayoutRes
+import androidx.fragment.app.Fragment
 import com.aurora.gplayapi.data.models.AuthData
 import foundation.e.apps.MainActivityViewModel
 
@@ -25,8 +27,8 @@ import foundation.e.apps.MainActivityViewModel
  * for network calls exceeding timeout limit.
  * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
  */
-interface TimeoutFragmentInterface {
-    fun onTimeout()
+abstract class TimeoutFragment(@LayoutRes layoutId: Int): Fragment(layoutId) {
+    abstract fun onTimeout()
 
     /*
      * Override as false!
@@ -42,7 +44,7 @@ interface TimeoutFragmentInterface {
      * MainActivityViewModel.downloadList observer, or simply from timing out while
      * fetch the information for the fragment.
      */
-    var timeoutDialogShownLock: Boolean
+    var timeoutDialogShownLock: Boolean = false
 
     /*
      * Do call this in the "Retry" button block of timeout dialog.
@@ -56,7 +58,7 @@ interface TimeoutFragmentInterface {
      * Recommended to put code to refresh data inside this block.
      * But call refreshDataOrRefreshToken() to execute the refresh.
      */
-    fun refreshData(authData: AuthData) {}
+    abstract fun refreshData(authData: AuthData)
 
     /*
      * Checks if network connectivity is present.

@@ -29,7 +29,6 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -54,18 +53,17 @@ import foundation.e.apps.manager.pkg.PkgManagerModule
 import foundation.e.apps.utils.enums.ResultStatus
 import foundation.e.apps.utils.enums.Status
 import foundation.e.apps.utils.enums.User
-import foundation.e.apps.utils.interfaces.TimeoutFragmentInterface
+import foundation.e.apps.utils.parentFragment.TimeoutFragment
 import foundation.e.apps.utils.modules.PWAManagerModule
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment :
-    Fragment(R.layout.fragment_search),
+    TimeoutFragment(R.layout.fragment_search),
     SearchView.OnQueryTextListener,
     SearchView.OnSuggestionListener,
-    FusedAPIInterface,
-    TimeoutFragmentInterface {
+    FusedAPIInterface {
 
     @Inject
     lateinit var pkgManagerModule: PkgManagerModule
@@ -95,8 +93,6 @@ class SearchFragment :
      * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
      */
     private var searchText = ""
-
-    override var timeoutDialogShownLock: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
