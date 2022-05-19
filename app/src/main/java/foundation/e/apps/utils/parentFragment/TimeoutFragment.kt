@@ -23,22 +23,21 @@ import com.aurora.gplayapi.data.models.AuthData
 import foundation.e.apps.MainActivityViewModel
 
 /*
- * Interface for fragments which can display a timeout dialog
+ * Parent class (extending fragment) for fragments which can display a timeout dialog
  * for network calls exceeding timeout limit.
  * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5413
  */
 abstract class TimeoutFragment(@LayoutRes layoutId: Int): Fragment(layoutId) {
+
     abstract fun onTimeout()
 
     /*
-     * Override as false!
-     *
      * Set this to true when timeout dialog is once shown.
      * Set to false if user clicks "Retry".
      * Use this to prevent repeatedly showing timeout dialog.
      *
      * Setting the value to true is automatically done from TimeoutModule.displayTimeoutAlertDialog().
-     * To set it as false, call resetTimeoutDialogLock() from the fragment.
+     * To set it as false, call resetTimeoutDialogLock().
      *
      * Timeout dialog maybe shown multiple times from MainActivity authData observer,
      * MainActivityViewModel.downloadList observer, or simply from timing out while
