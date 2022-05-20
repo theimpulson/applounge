@@ -85,24 +85,27 @@ class GPlayAPIImpl @Inject constructor(
     suspend fun getSearchResults(query: String, authData: AuthData): List<App> {
         val searchData = mutableListOf<App>()
         withContext(Dispatchers.IO) {
+            /*
+             * Variable names and logic made same as that of Aurora store.
+             * Issue: https://gitlab.e.foundation/e/backlog/-/issues/5171
+             */
             val searchHelper = SearchHelper(authData).using(gPlayHttpClient)
-            val searchResult = searchHelper.searchResults(query)
-            searchData.addAll(searchResult.appList)
+            val searchBundle = searchHelper.searchResults(query)
 
-            // Fetch more results in case the given result is a promoted app
-            if (searchData.size == 1) {
-                val bundleSet: MutableSet<SearchBundle.SubBundle> = searchResult.subBundles
-                do {
-                    val searchBundle = searchHelper.next(bundleSet)
-                    if (searchBundle.appList.isNotEmpty()) {
-                        searchData.addAll(searchBundle.appList)
+            var nextSubBundleSet: MutableSet<SearchBundle.SubBundle>
+            do {
+                nextSubBundleSet = searchBundle.subBundles
+                val newSearchBundle = searchHelper.next(nextSubBundleSet)
+                if (newSearchBundle.appList.isNotEmpty()) {
+                    searchBundle.apply {
+                        subBundles.clear()
+                        subBundles.addAll(newSearchBundle.subBundles)
+                        appList.addAll(newSearchBundle.appList)
                     }
-                    bundleSet.apply {
-                        clear()
-                        addAll(searchBundle.subBundles)
-                    }
-                } while (bundleSet.isNotEmpty())
-            }
+                }
+            } while (nextSubBundleSet.isNotEmpty())
+
+            searchData.addAll(searchBundle.appList)
         }
         return searchData
     }
