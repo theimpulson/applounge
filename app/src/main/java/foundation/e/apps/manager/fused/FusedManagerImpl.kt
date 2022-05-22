@@ -115,6 +115,7 @@ class FusedManagerImpl @Inject constructor(
                         Log.d(TAG, "installApp: ENDED ${fusedDownload.name} ${list.size}")
                     } catch (e: Exception) {
                         installationIssue(fusedDownload)
+                        throw e
                     }
                 }
             }

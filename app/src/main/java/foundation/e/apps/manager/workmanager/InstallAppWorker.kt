@@ -27,6 +27,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.takeWhile
+import kotlinx.coroutines.sync.Mutex
+import java.lang.RuntimeException
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -59,6 +61,8 @@ class InstallAppWorker @AssistedInject constructor(
         private val atomicInteger = AtomicInteger(100)
     }
 
+    private val mutex = Mutex(true)
+
     override suspend fun doWork(): Result {
         var fusedDownload: FusedDownload? = null
         try {
@@ -75,15 +79,19 @@ class InstallAppWorker @AssistedInject constructor(
                     )
                 )
                 startAppInstallationProcess(it)
+                mutex.lock()
             }
-            Log.d(TAG, "doWork: RESULT SUCCESS: ${fusedDownload?.name}")
-            return Result.success()
+//            Log.d(TAG, "doWork: RESULT SUCCESS: ${fusedDownload?.name}")
+//            return Result.success()
         } catch (e: Exception) {
             Log.e(TAG, "doWork: Failed: ${e.stackTraceToString()}")
             fusedDownload?.let {
                 fusedManagerRepository.installationIssue(it)
             }
-            return Result.failure()
+//            return Result.failure()
+        } finally {
+            Log.d(TAG, "doWork: RESULT SUCCESS: ${fusedDownload?.name}")
+            return Result.success()
         }
     }
 
@@ -94,10 +102,10 @@ class InstallAppWorker @AssistedInject constructor(
         Log.d(TAG, "===> doWork: Download started ${fusedDownload.name} ${fusedDownload.status}")
         if (fusedDownload.type == Type.NATIVE) {
             isDownloading = true
-            tickerFlow(1.seconds)
-                .onEach {
-                    checkDownloadProcess(fusedDownload)
-                }.launchIn(CoroutineScope(Dispatchers.IO))
+//            tickerFlow(1.seconds)
+//                .onEach {
+//                    checkDownloadProcess(fusedDownload)
+//                }.launchIn(CoroutineScope(Dispatchers.IO))
             observeDownload(fusedDownload)
         }
     }
@@ -141,19 +149,28 @@ class InstallAppWorker @AssistedInject constructor(
             .collect { fusedDownload ->
                 if (fusedDownload == null) {
                     isDownloading = false
+                    mutex.unlock()
                     return@collect
                 }
                 Log.d(
                     TAG,
                     "doWork: flow collect ===> ${fusedDownload.name} ${fusedDownload.status}"
                 )
-                handleFusedDownloadStatus(fusedDownload)
+                try {
+                    handleFusedDownloadStatus(fusedDownload)
+                } catch (e: Exception) {
+                    Log.e(TAG, "observeDownload: ", e)
+                    mutex.unlock()
+                }
             }
     }
 
-    private fun handleFusedDownloadStatus(fusedDownload: FusedDownload) {
+    private suspend fun handleFusedDownloadStatus(fusedDownload: FusedDownload) {
         when (fusedDownload.status) {
             Status.AWAITING, Status.DOWNLOADING -> {
+            }
+            Status.DOWNLOADED -> {
+                fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLING)
             }
             Status.INSTALLING -> {
                 Log.d(
@@ -165,8 +182,12 @@ class InstallAppWorker @AssistedInject constructor(
                 isDownloading = false
                 Log.d(
                     TAG,
-                    "===> doWork: Installed/Failed started ${fusedDownload.name} ${fusedDownload.status}"
+                    "===> doWork: Installed/Failed: ${fusedDownload.name} ${fusedDownload.status}"
                 )
+//                if(fusedDownload.status == Status.INSTALLATION_ISSUE) {
+//                    throw RuntimeException("Installation error occurred")
+//                }
+                mutex.unlock()
             }
             else -> {
                 isDownloading = false
@@ -187,7 +208,7 @@ class InstallAppWorker @AssistedInject constructor(
 
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as
-                NotificationManager
+                    NotificationManager
         // Create a Notification channel if necessary
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val mChannel = NotificationChannel(

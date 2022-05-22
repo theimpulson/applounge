@@ -23,6 +23,7 @@ enum class Status {
     UPDATABLE,
     INSTALLING,
     DOWNLOADING,
+    DOWNLOADED,
     UNAVAILABLE,
     UNINSTALLING,
     QUEUED,

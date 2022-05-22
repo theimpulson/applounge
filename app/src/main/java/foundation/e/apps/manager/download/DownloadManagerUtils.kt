@@ -64,10 +64,12 @@ class DownloadManagerUtils @Inject constructor(
                     )
                     if (downloaded == fusedDownload.downloadIdMap.size) {
                         fusedManagerRepository.moveOBBFileToOBBDirectory(fusedDownload)
-                        fusedManagerRepository.updateDownloadStatus(
-                            fusedDownload,
-                            Status.INSTALLING
-                        )
+                        fusedDownload.status = Status.DOWNLOADED
+                        fusedManagerRepository.updateFusedDownload(fusedDownload)
+//                        fusedManagerRepository.updateDownloadStatus(
+//                            fusedDownload,
+//                            Status.INSTALLING
+//                        )
                     }
                 }
             }
