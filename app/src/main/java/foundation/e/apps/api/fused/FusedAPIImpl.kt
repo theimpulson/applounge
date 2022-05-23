@@ -179,7 +179,30 @@ class FusedAPIImpl @Inject constructor(
      * @return A list of nullable [FusedApp]
      */
     suspend fun getSearchResults(query: String, authData: AuthData): List<FusedApp> {
-        val fusedResponse = mutableListOf<FusedApp>()
+        val fusedResponse = ArrayList<FusedApp>()
+
+        /*
+         * Search cleanapk and GPlay if the search term is a package name.
+         * Issue: https://gitlab.e.foundation/e/backlog/-/issues/2629
+         */
+        try {
+            getApplicationDetails(query, query, authData, Origin.CLEANAPK).let {
+                /* Cleanapk always returns something, it is never null.
+                 * If nothing is found, it returns a blank FusedApp() object.
+                 * Blank result to be filtered out.
+                 */
+                if (it.package_name.isNotBlank()) fusedResponse.add(it)
+            }
+        } catch (_: Exception) {}
+        if (preferenceManagerModule.preferredApplicationType() == APP_TYPE_ANY) {
+            try {
+                /*
+                 * Surrounding with try-catch because if query is not a package name,
+                 * then GPlay throws an error.
+                 */
+                fusedResponse.add(getApplicationDetails(query, query, authData, Origin.GPLAY))
+            } catch (_: Exception) {}
+        }
 
         when (preferenceManagerModule.preferredApplicationType()) {
             APP_TYPE_ANY -> {
