@@ -1,6 +1,6 @@
 /*
+ * Copyright ECORP SAS 2022
  * Apps  Quickly and easily install Android apps onto your device!
- * Copyright (C) 2021  E FOUNDATION
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ enum class Status {
     UPDATABLE,
     INSTALLING,
     DOWNLOADING,
+    DOWNLOADED,
     UNAVAILABLE,
     UNINSTALLING,
     QUEUED,

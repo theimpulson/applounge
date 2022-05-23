@@ -1,3 +1,21 @@
+/*
+ * Copyright ECORP SAS 2022
+ * Apps  Quickly and easily install Android apps onto your device!
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package foundation.e.apps.manager.workmanager
 
 import android.app.DownloadManager
@@ -27,6 +45,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.takeWhile
+import kotlinx.coroutines.sync.Mutex
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -59,6 +78,8 @@ class InstallAppWorker @AssistedInject constructor(
         private val atomicInteger = AtomicInteger(100)
     }
 
+    private val mutex = Mutex(true)
+
     override suspend fun doWork(): Result {
         var fusedDownload: FusedDownload? = null
         try {
@@ -75,15 +96,16 @@ class InstallAppWorker @AssistedInject constructor(
                     )
                 )
                 startAppInstallationProcess(it)
+                mutex.lock()
             }
-            Log.d(TAG, "doWork: RESULT SUCCESS: ${fusedDownload?.name}")
-            return Result.success()
         } catch (e: Exception) {
             Log.e(TAG, "doWork: Failed: ${e.stackTraceToString()}")
             fusedDownload?.let {
                 fusedManagerRepository.installationIssue(it)
             }
-            return Result.failure()
+        } finally {
+            Log.d(TAG, "doWork: RESULT SUCCESS: ${fusedDownload?.name}")
+            return Result.success()
         }
     }
 
@@ -141,19 +163,29 @@ class InstallAppWorker @AssistedInject constructor(
             .collect { fusedDownload ->
                 if (fusedDownload == null) {
                     isDownloading = false
+                    unlockMutex()
                     return@collect
                 }
                 Log.d(
                     TAG,
                     "doWork: flow collect ===> ${fusedDownload.name} ${fusedDownload.status}"
                 )
-                handleFusedDownloadStatus(fusedDownload)
+                try {
+                    handleFusedDownloadStatus(fusedDownload)
+                } catch (e: Exception) {
+                    Log.e(TAG, "observeDownload: ", e)
+                    isDownloading = false
+                    unlockMutex()
+                }
             }
     }
 
-    private fun handleFusedDownloadStatus(fusedDownload: FusedDownload) {
+    private suspend fun handleFusedDownloadStatus(fusedDownload: FusedDownload) {
         when (fusedDownload.status) {
             Status.AWAITING, Status.DOWNLOADING -> {
+            }
+            Status.DOWNLOADED -> {
+                fusedManagerRepository.updateDownloadStatus(fusedDownload, Status.INSTALLING)
             }
             Status.INSTALLING -> {
                 Log.d(
@@ -163,18 +195,26 @@ class InstallAppWorker @AssistedInject constructor(
             }
             Status.INSTALLED, Status.INSTALLATION_ISSUE -> {
                 isDownloading = false
+                unlockMutex()
                 Log.d(
                     TAG,
-                    "===> doWork: Installed/Failed started ${fusedDownload.name} ${fusedDownload.status}"
+                    "===> doWork: Installed/Failed: ${fusedDownload.name} ${fusedDownload.status}"
                 )
             }
             else -> {
                 isDownloading = false
+                unlockMutex()
                 Log.wtf(
                     TAG,
                     "===> ${fusedDownload.name} is in wrong state ${fusedDownload.status}"
                 )
             }
+        }
+    }
+
+    private fun unlockMutex() {
+        if (mutex.isLocked) {
+            mutex.unlock()
         }
     }
 
