@@ -233,7 +233,7 @@ class MainActivityViewModel @Inject constructor(
         authValidity.postValue(false)
     }
 
-    fun uploadFaultyTokenToEcloud(description: String){
+    fun uploadFaultyTokenToEcloud(description: String) {
         viewModelScope.launch {
             authData.value?.let { authData ->
                 val email: String = authData.run {

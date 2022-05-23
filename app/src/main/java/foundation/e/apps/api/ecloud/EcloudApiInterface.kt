@@ -33,5 +33,4 @@ interface EcloudApiInterface {
         @Body faultyToken: FaultyToken,
         @Header("Content-Type") contentType: String = "application/json",
     )
-
 }
