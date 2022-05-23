@@ -72,7 +72,7 @@
     <string name="updates">Aktualisierungen</string>
     <string name="manually_install_updates_notification_text">App-Aktualisierungen werden nicht automatisch installiert</string>
     <string name="updates_notification_unmetered_network_warning">Auf ein unlimitiertes Netzwerk warten</string>
-    <string name="no_permission_found">Keine runtime android Berechtigung gefunden!</string>
+    <string name="no_permission_found">Keine „runtime android“-Berechtigung gefunden!</string>
     <string name="no_tracker_found">Keine Tracker/Verfolger gefunden!</string>
     <string name="no_internet_message">Keine Verbindung möglich. Bitte überprüfe die Internetverbindung und versuche es erneut</string>
     <string name="menu_home">Start</string>
@@ -116,4 +116,12 @@
     <string name="timeout_title">Zeit abgelaufen beim Holen von Apps!</string>
     <string name="app_not_found">Deine App wurde nicht gefunden.</string>
     <string name="installing">Wird installiert</string>
+    <string name="may_not_work_warning_message">Die Installation zu erzwingen, erlaubt es dir, die App herunterzuladen und zu installieren, garantiert aber nicht, dass sie funktioniert.<br/><br/> Zu versuchen, nicht unterstützte Apps zu installieren, kann Abstürze verursachen oder das System verlangsamen.<br/><br/>Wir arbeiten daran, die Kompatibilität mit dieser Anwendung in naher Zukunft zu verbessern.</string>
+    <string name="this_app_may_not_work_properly">Diese App könnte nicht korrekt funktionieren!</string>
+    <string name="install_anyway">Trotzdem installieren</string>
+    <string name="purchase_error">Fehler beim Kauf!</string>
+    <string name="download_automatically_message">Deine App wird automatisch auf dieses Gerät heruntergeladen werden</string>
+    <string name="purchase_complete">Kauf abgeschlossen!</string>
+    <string name="show_more">Mehr anzeigen</string>
+    <string name="something_went_wrong">Etwas ist schiefgegangen!</string>
 </resources>
