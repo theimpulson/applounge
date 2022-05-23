@@ -186,7 +186,7 @@ class ApplicationListRVAdapter(
         holder: ViewHolder
     ) {
         installButton.visibility = View.VISIBLE
-        showMore.visibility = View.GONE
+        showMore.visibility = View.INVISIBLE
         when (searchApp.status) {
             Status.INSTALLED -> {
                 handleInstalled(view, searchApp)
@@ -213,7 +213,7 @@ class ApplicationListRVAdapter(
     }
 
     private fun ApplicationListItemBinding.setupShowMoreButton() {
-        installButton.visibility = View.GONE
+        installButton.visibility = View.INVISIBLE
         showMore.visibility = View.VISIBLE
     }
 
