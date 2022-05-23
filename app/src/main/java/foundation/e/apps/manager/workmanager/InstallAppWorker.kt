@@ -81,14 +81,11 @@ class InstallAppWorker @AssistedInject constructor(
                 startAppInstallationProcess(it)
                 mutex.lock()
             }
-//            Log.d(TAG, "doWork: RESULT SUCCESS: ${fusedDownload?.name}")
-//            return Result.success()
         } catch (e: Exception) {
             Log.e(TAG, "doWork: Failed: ${e.stackTraceToString()}")
             fusedDownload?.let {
                 fusedManagerRepository.installationIssue(it)
             }
-//            return Result.failure()
         } finally {
             Log.d(TAG, "doWork: RESULT SUCCESS: ${fusedDownload?.name}")
             return Result.success()
@@ -102,10 +99,10 @@ class InstallAppWorker @AssistedInject constructor(
         Log.d(TAG, "===> doWork: Download started ${fusedDownload.name} ${fusedDownload.status}")
         if (fusedDownload.type == Type.NATIVE) {
             isDownloading = true
-//            tickerFlow(1.seconds)
-//                .onEach {
-//                    checkDownloadProcess(fusedDownload)
-//                }.launchIn(CoroutineScope(Dispatchers.IO))
+            tickerFlow(1.seconds)
+                .onEach {
+                    checkDownloadProcess(fusedDownload)
+                }.launchIn(CoroutineScope(Dispatchers.IO))
             observeDownload(fusedDownload)
         }
     }
@@ -149,7 +146,7 @@ class InstallAppWorker @AssistedInject constructor(
             .collect { fusedDownload ->
                 if (fusedDownload == null) {
                     isDownloading = false
-                    mutex.unlock()
+                    unlockMutex()
                     return@collect
                 }
                 Log.d(
@@ -160,7 +157,8 @@ class InstallAppWorker @AssistedInject constructor(
                     handleFusedDownloadStatus(fusedDownload)
                 } catch (e: Exception) {
                     Log.e(TAG, "observeDownload: ", e)
-                    mutex.unlock()
+                    isDownloading = false
+                    unlockMutex()
                 }
             }
     }
@@ -180,22 +178,26 @@ class InstallAppWorker @AssistedInject constructor(
             }
             Status.INSTALLED, Status.INSTALLATION_ISSUE -> {
                 isDownloading = false
+                unlockMutex()
                 Log.d(
                     TAG,
                     "===> doWork: Installed/Failed: ${fusedDownload.name} ${fusedDownload.status}"
                 )
-//                if(fusedDownload.status == Status.INSTALLATION_ISSUE) {
-//                    throw RuntimeException("Installation error occurred")
-//                }
-                mutex.unlock()
             }
             else -> {
                 isDownloading = false
+                unlockMutex()
                 Log.wtf(
                     TAG,
                     "===> ${fusedDownload.name} is in wrong state ${fusedDownload.status}"
                 )
             }
+        }
+    }
+
+    private fun unlockMutex() {
+        if(mutex.isLocked) {
+            mutex.unlock()
         }
     }
 
